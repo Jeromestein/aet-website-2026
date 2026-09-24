@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
 import {
   ArrowRight,
@@ -11,7 +12,8 @@ import {
   FileCheck2,
   MessageCircle,
   Plus,
-  ShieldCheck,
+  SquarePen,
+  Phone,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
 const old = "https://www.americantranslationservice.com";
@@ -75,39 +77,24 @@ export default function Home() {
         <div className="hero-band">
         <section className="hero wrap">
           <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="status-dot" /> OPENING DOORS SINCE 2009
-            </div>
             <h1>
-              Your next
-              <br />
-              chapter.
-              <br />
-              <em>Recognized.</em>
+              <span>Professional</span>{" "}
+              <span>Translation &amp;</span>{" "}
+              <span>Evaluation Services</span>
             </h1>
             <p className="hero-description">
-              You’ve worked hard to get here.
-              <br />
-              We help your education and your words
-              <br className="desktop-break" /> take you further.
+              Professional translations and credential evaluations trusted by USCIS, colleges, and government agencies nationwide.
             </p>
             <div className="hero-buttons">
-              <a className="button primary" href={apply}>
-                Start your application <ArrowUpRight size={19} />
+              <a className="button primary hero-apply" href={apply}>
+                <SquarePen size={19} aria-hidden="true" /> Apply Now
               </a>
-              <a className="text-link" href="#services">
-                Explore services <ArrowRight size={17} />
+              <a className="button hero-contact" href={old + "/e-contact.php"}>
+                <Phone size={18} aria-hidden="true" /> Contact Us
               </a>
             </div>
-            <div className="hero-proof">
-              <span className="proof-icon">
-                <ShieldCheck size={22} />
-              </span>
-              <span>
-                Credential evaluation & certified translation
-                <br />
-                <strong>Personal support. Global possibilities.</strong>
-              </span>
+            <div className="hero-credentials">
+              <Image src="/images/bbb.jpg" alt="BBB A+ Rating" width={1650} height={870} sizes="180px" />
             </div>
           </div>
           <div className="hero-visual">
@@ -152,6 +139,7 @@ export default function Home() {
           </div>
         </section>
         </div>
+        <InstitutionCarousel />
         <section className="trust-strip">
           <div className="wrap trust-inner">
             <p>
@@ -424,13 +412,9 @@ export default function Home() {
         <div className="wrap">
           <div className="footer-main">
             <div className="footer-brand">
-              <a href="#" className="footer-wordmark">
-                AET
+              <a href="#" className="footer-wordmark" aria-label="AET home">
+                <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services" width={520} height={120} />
               </a>
-              <p>
-                American Education
-                <br />& Translation Services
-              </p>
               <span>Global expertise. Personal attention.</span>
             </div>
             <div>

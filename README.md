@@ -28,11 +28,15 @@ Only `/` is rebuilt. Application and pre-evaluation buttons connect to the exist
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 
+## Design specification
+
+See [design.md](design.md) for AET color and typography rules, exact homepage copy, layout dimensions, component behavior, and responsive implementation details.
+
 ## Editing
 
 - `app/page.tsx`: page content, service links, testimonials, and FAQs.
 - `app/globals.css`: base responsive styles and motion. Reduced-motion preferences are respected.
-- `app/reference-style.css`: IRFC-inspired styling adapted to AET blue: photo-led hero, rounded cards, pill buttons, and soft tonal surfaces.
+- `app/reference-style.css`: AET visual styling: photo-led hero, rounded cards, pill buttons, and soft tonal surfaces.
 - `components/navigation.tsx`: mobile navigation, language links, and progressive scroll reveals.
 - `app/layout.tsx`: page metadata.
 - `public/images/`: locally copied assets; see ASSETS.md.

@@ -1,10 +1,15 @@
 :root {
-  --ink: #142d40;
-  --muted: #66717a;
-  --orange: #dd572f;
-  --paper: #fbfaf7;
-  --line: #e2e5e3;
-  --blue: #eaf0f3;
+  --ink: #18334e;
+  --muted: #5b6d7e;
+  --paper: #f8fbfe;
+  --blue: #eaf4fc;
+  --surface: #ffffff;
+  --line: #d9e5ef;
+  --action-blue: #284f75;
+  --accent: #507fa6;
+  --footer: #142e45;
+  --orange: #c7471d;
+  --orange-hover: #a93816;
 }
 * {
   box-sizing: border-box;
@@ -46,7 +51,7 @@ button {
   color: inherit;
 }
 ::selection {
-  background: #f5c4ab;
+  background: var(--blue);
 }
 h1,
 h2,

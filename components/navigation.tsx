@@ -26,9 +26,9 @@ export function Navigation() {
       <div className="nav-shell">
         <a href="#" className="brand" aria-label="AET home">
           <Image
-            src="/images/aet-logo.png"
-            width={425}
-            height={82}
+            src="/brand/aet-logo-header.svg"
+            width={520}
+            height={120}
             alt="American Education and Translation Services"
             priority
           />
