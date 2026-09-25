@@ -17,8 +17,9 @@ Open http://localhost:3021. The development port is configured in `package.json`
 
 ```sh
 pnpm typecheck
-pnpm run build
 ```
+
+Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
 
 Import this directory's repository into Vercel, choose the Next.js preset, and keep the default build/output settings. No environment variables, database, or external API keys are required. Deployment is intentionally left to the owner.
 
@@ -28,9 +29,20 @@ Only `/` is rebuilt. Application and pre-evaluation buttons connect to the exist
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 
-## Design specification
+## Documentation
 
-See [design.md](design.md) for AET color and typography rules, exact homepage copy, layout dimensions, component behavior, and responsive implementation details.
+- [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
+- [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
+- [Agent guidance](AGENTS.md): reading order and project working rules.
+
+The design guide specifies intended behavior; check the status file before treating a requirement as implemented.
+
+## Existing action destinations
+
+- Application: https://app.americantranslationservice.com/credential-evaluation-application
+- Preliminary assessment: https://app.americantranslationservice.com/degree-equivalency-tool
+
+Validate routes, metadata, and the intended deployment before launch. Do not submit applications, contact forms, or payments during link checks.
 
 ## Editing
 
