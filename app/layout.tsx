@@ -3,15 +3,16 @@ import "./fonts.css";
 import "./globals.css";
 import "./reference-style.css";
 import "./scroll-stories.css";
+import "./home-design.css";
 export const metadata: Metadata = {
   manifest: "/site.webmanifest",
-  title: "AET | Your next chapter. Recognized.",
+  title: "AET | Professional Translation & Evaluation Services",
   description:
-    "Move forward with professional credential evaluations and certified translations. American Education and Translation Services, serving your next chapter since 2009.",
+    "Professional translations and credential evaluations trusted by USCIS, colleges, and government agencies nationwide.",
   openGraph: {
-    title: "AET | Your next chapter. Recognized.",
+    title: "AET | Professional Translation & Evaluation Services",
     description:
-      "Credential evaluation and professional translation, with people who care about what comes next.",
+      "Professional translation and foreign credential evaluation services.",
     type: "website",
   },
 };

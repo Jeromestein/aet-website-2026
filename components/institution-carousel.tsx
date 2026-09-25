@@ -81,7 +81,7 @@ export function InstitutionCarousel() {
     <section id="institutions" className={styles.section} aria-labelledby="institutions-title" data-ready={ready}>
       <div className={`wrap ${styles.heading}`}>
         <span className="eyebrow">RECOGNITION THAT GOES FURTHER</span>
-        <h2 id="institutions-title">Trusted by leading institutions.</h2>
+        <h2 id="institutions-title">Trusted by Leading Institutions</h2>
         <p>Our credential evaluation services are recognized and accepted by educational institutions, government agencies, and professional organizations across the United States.</p>
       </div>
       <div className={styles.carousel} role="group" aria-label="Institution logos, two rows" aria-roledescription="carousel">

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Menu, X, Globe2, ChevronDown } from "lucide-react";
 const legacy = "https://www.americantranslationservice.com";
@@ -9,72 +9,51 @@ const links = [
   { label: "About AET", href: legacy + "/e-aboutus.php" },
 ];
 export function Navigation() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const menu = useRef<HTMLDetailsElement>(null);
+  const language = useRef<HTMLDetailsElement>(null);
+  const closeMenu = () => {
+    if (!menu.current?.open) return;
+    menu.current.open = false;
+    requestAnimationFrame(() => menu.current?.querySelector("summary")?.focus({ preventScroll: true }));
+  };
   useEffect(() => {
-    function close(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setOpen(false);
-        ref.current?.querySelector<HTMLButtonElement>(".menu-toggle")?.focus();
+    const close = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      closeMenu();
+      if (language.current?.open) {
+        language.current.open = false;
+        language.current.querySelector("summary")?.focus();
       }
-    }
+    };
     document.addEventListener("keydown", close);
     return () => document.removeEventListener("keydown", close);
   }, []);
   return (
-    <header className="header" ref={ref}>
+    <header className="header">
       <div className="nav-shell">
         <a href="#" className="brand" aria-label="AET home">
-          <Image
-            src="/brand/aet-logo-header.svg"
-            width={520}
-            height={120}
-            alt="American Education and Translation Services"
-            priority
-          />
+          <Image src="/brand/aet-logo-header.svg" width={520} height={120}
+            alt="American Education and Translation Services" loading="eager" />
         </a>
-        <nav
-          aria-label="Main navigation"
-          className={open ? "nav-links is-open" : "nav-links"}
-          id="main-navigation"
-        >
-          {links.map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setOpen(false)}>
-              {l.label}
-            </a>
-          ))}
-          <a className="mobile-contact" href={legacy + "/e-contact.php"}>
-            Contact us <ArrowUpRight size={16} />
-          </a>
+        <nav aria-label="Main navigation" className="nav-links">
+          {links.map((link) => <a key={link.label} href={link.href}>{link.label}</a>)}
         </nav>
         <div className="nav-actions">
-          <details className="language">
-            <summary aria-label="Choose language">
-              <Globe2 size={16} />
-              <span>EN</span>
-              <ChevronDown size={12} />
-            </summary>
+          <details className="language" ref={language}>
+            <summary aria-label="Choose language"><Globe2 size={16} /><span>EN</span><ChevronDown size={12} /></summary>
             <div className="language-options">
-              <a href={legacy + "/home-zh.php"} lang="zh">
-                中文
-              </a>
-              <a href={legacy + "/home-es.php"} lang="es">
-                Español
-              </a>
+              <a href={legacy + "/home-zh.php"} lang="zh">中文</a>
+              <a href={legacy + "/home-es.php"} lang="es">Español</a>
             </div>
           </details>
-          <a href={legacy + "/e-contact.php"} className="nav-contact">
-            Let’s talk <ArrowUpRight size={17} />
-          </a>
-          <button
-            className="menu-toggle"
-            onClick={() => setOpen(!open)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="main-navigation"
-          >
-            {open ? <X /> : <Menu />}
-          </button>
+          <a href={legacy + "/e-contact.php"} className="nav-contact">Contact Us <ArrowUpRight size={17} /></a>
+          <details className="mobile-menu" ref={menu}>
+            <summary className="menu-toggle" aria-label="Main menu"><Menu className="menu-open-icon" /><X className="menu-close-icon" /></summary>
+            <nav className="mobile-links" aria-label="Mobile navigation">
+              {links.map((link) => <a key={link.label} href={link.href} onClick={closeMenu}>{link.label}<ArrowUpRight size={18} /></a>)}
+              <a href={legacy + "/e-contact.php"} onClick={closeMenu}>Contact Us <ArrowUpRight size={18} /></a>
+            </nav>
+          </details>
         </div>
       </div>
     </header>

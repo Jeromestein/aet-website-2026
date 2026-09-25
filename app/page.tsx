@@ -1,10 +1,10 @@
 import Image from "next/image";
+import { CardRail } from "@/components/card-rail";
 import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
 import {
   ArrowRight,
   ArrowUpRight,
-  Check,
   CheckCheck,
   GraduationCap,
   Languages,
@@ -22,30 +22,10 @@ const apply =
 const pre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
 const services = [
-  {
-    icon: Languages,
-    number: "02",
-    title: "Certified translation",
-    text: "Your words, understood. Certified and notarized translations for immigration, education, and everyday life.",
-    href: "/e-notarized.php",
-    tag: "100+ language pairs",
-  },
-  {
-    icon: MessageCircle,
-    number: "03",
-    title: "Interpretation",
-    text: "Connect with confidence. Professional interpretation for the conversations that matter most.",
-    href: "/e-interpretation.php",
-    tag: "A more human connection",
-  },
-  {
-    icon: FileCheck2,
-    number: "04",
-    title: "Specialized services",
-    text: "Expert opinion letters, technical translation, visa services, and document authentication.",
-    href: "/e-expert-opinion-letter.php",
-    tag: "Support beyond translation",
-  },
+  { icon: Languages, number: "02", title: "Certified Translation", text: "Certified / Notarized Translation. Used for: USCIS / Colleges / DMV etc.", href: "/e-notarized.php", tag: "Translation" },
+  { icon: MessageCircle, number: "03", title: "Interpretation", text: "Professional Interpretation covers most metropolitan areas.", href: "/e-interpretation.php", tag: "Interpretation" },
+  { icon: FileCheck2, number: "04", title: "Technical Translation", text: "Including Scientific / Industrial / Medical / Business / Legal / Education Translation.", href: "/e-tech-translation.php", tag: "Specialized translation" },
+  { icon: Globe2, number: "05", title: "Visa Services", text: "China, Canada, Schengen(Europe), UK, Japan, Korea, etc.", href: "/e-visaservice.php", tag: "Visa services" },
 ];
 const faqs = [
   [
@@ -58,7 +38,7 @@ const faqs = [
   ],
   [
     "Can I start my application online?",
-    "Yes. Use Start your application to access our existing online application portal. You can also contact our team for guidance on the service and documents you need.",
+    "Yes. Use Apply Now to access our existing online application portal. You can also contact our team for guidance on the service and documents you need.",
   ],
   [
     "What languages do you work with?",
@@ -103,38 +83,9 @@ export default function Home() {
                 src="/images/hero.webp"
                 alt="Professional seated at a desk with a laptop"
                 fill
-                sizes="(max-width: 760px) 100vw, 48vw"
-                priority
+                sizes="(max-width: 760px) max(100vw, 640px), max(65vw, 1422px)"
+                loading="eager"
               />
-              <div className="photo-caption">
-                <span className="mini-label">
-                  BEYOND BORDERS. TOWARD YOUR FUTURE.
-                </span>
-                <p>
-                  A world of opportunity.
-                  <br />A partner by your side.
-                </p>
-              </div>
-            </div>
-            <div className="floating-card">
-              <div className="badge-icon">
-                <GraduationCap size={27} />
-              </div>
-              <div>
-                <span>YOUR AMBITION, TRANSLATED.</span>
-                <strong>
-                  Local expertise.
-                  <br />
-                  Global understanding.
-                </strong>
-              </div>
-              <span className="badge-check">
-                <Check size={14} />
-              </span>
-            </div>
-            <div className="photo-index">
-              <span>01 — A NEW BEGINNING</span>
-              <span>USA ↗ WORLD</span>
             </div>
           </div>
         </section>
@@ -143,9 +94,9 @@ export default function Home() {
         <section className="trust-strip">
           <div className="wrap trust-inner">
             <p>
-              EXPERIENCE YOU CAN
+              AET
               <br />
-              <strong>move forward with.</strong>
+              <strong>Experience &amp; Membership</strong>
             </p>
             <div className="stat">
               <strong>
@@ -188,15 +139,11 @@ export default function Home() {
             <div>
               <span className="eyebrow">01 / WHAT WE DO</span>
               <h2>
-                Big ambitions.
-                <br />
-                The right support.
+                Foreign Credential Evaluation
               </h2>
             </div>
             <p>
-              From a new degree to a new beginning,
-              <br />
-              we make your next step feel simpler.
+              Professional evaluation of international educational credentials for employment, immigration, and education purposes in the United States.
             </p>
           </div>
           <div className="services-grid">
@@ -212,33 +159,29 @@ export default function Home() {
               <div>
                 <span className="small-label">OUR CORE EXPERTISE</span>
                 <h3>
-                  Foreign credential
-                  <br />
-                  evaluation
+                  Types of Evaluations We Offer
                 </h3>
-                <p>
-                  Turn your international education into a clear U.S.
-                  equivalency. For your career, your education, and what comes
-                  next.
-                </p>
               </div>
-              <div className="service-tags">
-                <span>Document by document</span>
-                <span>Course by course</span>
-              </div>
+              <dl className="evaluation-types">
+                <div><dt>Document by Document Evaluation</dt><dd>Basic evaluation that includes U.S. degree equivalency only. Often satisfies requirements for employment and immigration.</dd></div>
+                <div><dt>Course by Course Evaluation</dt><dd>Complete report including U.S. degree equivalency, credits, grades, and GPA. Recommended for college admission, licensing, and USCIS RFE.</dd></div>
+                <div><dt>Expert Opinion Letters</dt><dd>Pairs relevant professional experience with academic coursework to determine U.S. degree equivalency.</dd></div>
+              </dl>
               <div className="card-bottom">
-                <span>Explore evaluations</span>
+                <span>Learn More About FCE</span>
                 <span className="circle-arrow">
                   <ArrowUpRight size={21} />
                 </span>
               </div>
             </a>
-            <div className="service-list">
+            <div className="other-services"><h3 className="rail-heading">Other Services</h3>
+            <CardRail className="service-list" label="Other services">
               {services.map((s) => (
                 <a
                   href={old + s.href}
                   className="service-row"
                   key={s.number}
+                  data-rail-card
                   data-reveal
                 >
                   <span className="service-icon">
@@ -252,13 +195,13 @@ export default function Home() {
                   <ArrowUpRight className="row-arrow" size={23} />
                 </a>
               ))}
-            </div>
+            </CardRail></div>
           </div>
           <div className="service-footnote">
             <Globe2 size={17} />
-            <span>Built around your goals. Wherever you’re starting from.</span>
+            <span>Translation and evaluation services.</span>
             <a href={old + "/e-contact.php"}>
-              Find your service <ArrowRight size={16} />
+              Contact Us <ArrowRight size={16} />
             </a>
           </div>
         </section>
@@ -273,28 +216,22 @@ export default function Home() {
                 sizes="(max-width: 760px) max(100vw, 516px), max(50vw, 854px)"
               />
               <span className="image-note">
-                YOUR EDUCATION IS JUST THE BEGINNING.
+                PRE-EVALUATION SERVICES
               </span>
             </div>
             <div className="preview-copy">
-              <span className="eyebrow">A LITTLE CLARITY GOES A LONG WAY</span>
+              <span className="eyebrow">YOUR EDUCATIONAL QUALIFICATIONS</span>
               <h2>
-                Not sure where
-                <br />
-                your degree
-                <br />
-                <em>can take you?</em>
+                Pre-Evaluation Services
               </h2>
               <p>
-                Start with a pre-evaluation. Explore how your international
-                education may compare to a U.S. degree before taking the next
-                step.
+                Not sure what your foreign degree is equivalent to in the U.S.? Our comprehensive pre-evaluation service provides instant insights about your educational qualifications, helping you understand how your international credentials translate in the American education system.
               </p>
               <a href={pre} className="button light">
-                Explore your degree equivalency <ArrowUpRight size={18} />
+                Start Your Pre-Evaluation <ArrowUpRight size={18} />
               </a>
               <span className="preview-note">
-                A preliminary assessment. A more informed beginning.
+                A preliminary assessment before formal credential evaluation.
               </span>
             </div>
           </div>
@@ -303,12 +240,10 @@ export default function Home() {
           <div className="section-heading" data-reveal>
             <div>
               <span className="eyebrow">
-                03 / REAL PEOPLE. REAL NEXT CHAPTERS.
+                03 / CLIENT FEEDBACK
               </span>
               <h2>
-                Good words.
-                <br />
-                From the people we help.
+                What Our Clients Say
               </h2>
             </div>
             <div className="rating-note">
@@ -318,9 +253,9 @@ export default function Home() {
               <span>Client experiences with AET</span>
             </div>
           </div>
-          <div className="review-grid">
-            <article className="review-card" data-reveal>
-              <span className="quote-mark">“</span>
+          <CardRail className="review-grid" label="Client testimonials">
+            <article className="review-card" data-rail-card data-reveal>
+              <span className="quote-mark" aria-hidden="true">“</span>
               <blockquote>
                 It is a good company that will give you a good service. I’ve
                 just used their credential evaluation service and I strongly
@@ -338,8 +273,8 @@ export default function Home() {
                 <CheckCheck size={20} />
               </div>
             </article>
-            <article className="review-card" data-reveal>
-              <span className="quote-mark">“</span>
+            <article className="review-card" data-rail-card data-reveal>
+              <span className="quote-mark" aria-hidden="true">“</span>
               <blockquote>
                 American Education Translation Services did a great job
                 evaluating my foreign credentials for professional licensing.
@@ -356,18 +291,16 @@ export default function Home() {
                 <CheckCheck size={20} />
               </div>
             </article>
-          </div>
+          </CardRail>
         </section>
         <section className="faq-section wrap" id="questions">
           <div data-reveal>
-            <span className="eyebrow">A FEW THINGS YOU MIGHT BE WONDERING</span>
+            <span className="eyebrow">QUESTIONS & ANSWERS</span>
             <h2>
-              Clear answers.
-              <br />
-              Confident next steps.
+              Frequently Asked Questions
             </h2>
             <a href={old + "/e-contact.php"} className="text-link">
-              Ask us anything <ArrowUpRight size={18} />
+              Contact Us <ArrowUpRight size={18} />
             </a>
           </div>
           <div className="faq-list" data-reveal>
@@ -385,22 +318,18 @@ export default function Home() {
         <section className="closing wrap" data-reveal>
           <div>
             <span className="eyebrow">
-              YOUR FUTURE DOESN’T STOP AT A BORDER.
+              GET STARTED
             </span>
             <h2>
-              Let’s open the
-              <br />
-              <em>next door.</em>
+              Start Application
             </h2>
           </div>
           <div>
             <p>
-              Wherever you want to go,
-              <br />
-              we’re here to help you move forward.
+              Choose your evaluation type based on your purpose.
             </p>
             <a className="button primary" href={apply}>
-              Start your application <ArrowUpRight size={19} />
+              <SquarePen size={19} /> Apply Now
             </a>
           </div>
           <span className="closing-decoration" aria-hidden="true">
@@ -415,7 +344,7 @@ export default function Home() {
               <a href="#" className="footer-wordmark" aria-label="AET home">
                 <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services" width={520} height={120} />
               </a>
-              <span>Global expertise. Personal attention.</span>
+              <span>Professional Translation & Evaluation Services.</span>
             </div>
             <div>
               <h3>EXPLORE</h3>
@@ -433,7 +362,7 @@ export default function Home() {
               <a href={old + "/e-fee.php"}>Service fees</a>
             </div>
             <div className="offices">
-              <h3>LOCAL ROOTS. GLOBAL REACH.</h3>
+              <h3>OUR OFFICES</h3>
               <p>
                 {[
                   { n: "Miami", p: "miami" },

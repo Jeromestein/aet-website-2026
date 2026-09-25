@@ -1,10 +1,10 @@
 .section {
   --logo-gap: 20px;
-  padding: 86px 0 64px;
+  padding: 96px 0;
   background: var(--blue);
   scroll-margin-top: 110px;
 }
-.heading { text-align: center; margin-bottom: 44px; }
+.heading { text-align: center; margin-bottom: 56px; }
 .heading > span { display: block; margin-bottom: 18px; }
 .heading h2 { max-width: 760px; margin: 0 auto 22px; }
 .heading p { max-width: 710px; margin: 0 auto; font-size: 14px; line-height: 1.9; color: var(--muted); }
@@ -31,9 +31,9 @@
 }
 @keyframes institutions-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @media (max-width: 600px) {
-  .section { --logo-gap: 12px; padding: 60px 0 42px; }
-  .heading { margin-bottom: 30px; }
-  .heading h2 { font-size: 30px; }
+  .section { --logo-gap: 12px; padding: 64px 0; }
+  .heading { margin-bottom: 48px; }
+  .heading h2 { font-size: clamp(2rem, 8vw, 3rem); }
   .heading p { font-size: 12px; line-height: 1.85; }
   .card { width: 188px; height: 116px; }
   .logo { width: 148px; height: 76px; }
@@ -41,3 +41,12 @@
   .footer p { font-size: 12px; }
   .footer a { font-size: 11px; margin: 12px 0 0; }
 }
+
+/* Keep supporting copy at the shared reading size. */
+.heading p, .footer p { font-size: 1rem; line-height: 1.75; }
+.footer a { font-size: .94rem; min-height: 44px; }
+
+/* Keyboard users can inspect every logo while motion is paused. */
+.section[data-ready="true"] .row:focus { overflow-x: auto; mask-image: none; }
+.section[data-ready="true"] .row:focus .track { animation: none; }
+.section[data-ready="true"] .row:focus .duplicate { display: none; }

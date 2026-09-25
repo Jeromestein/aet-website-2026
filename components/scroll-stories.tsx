@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { CardRail } from "./card-rail";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, FileCheck2, Globe2, GraduationCap } from "lucide-react";
 
 const facts = [
-  { value: "15+", title: "Years of experience", text: "Helping people move forward through education, language, and opportunity.", Icon: GraduationCap },
-  { value: "100+", title: "Language pairs", text: "Connecting your documents to a world of possibilities.", Icon: Globe2 },
-  { value: "2009", title: "An ATA member since", text: "American Education and Translation Services. Experience you can build on.", Icon: FileCheck2 },
+  { value: "15+", title: "Years of experience", text: "Thousands of certified evaluations submitted.", Icon: GraduationCap },
+  { value: "100+", title: "Language pairs", text: "English, Chinese, Spanish, French, German, Russian, Arabic, and more.", Icon: Globe2 },
+  { value: "2009", title: "An ATA member since", text: "Member of the American Translators Association.", Icon: FileCheck2 },
 ];
 
 export function ImpactStory() {
@@ -15,7 +16,7 @@ export function ImpactStory() {
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 851px) and (prefers-reduced-motion: no-preference)");
+    const media = window.matchMedia("(min-width: 851px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)");
     let frame = 0;
     const sync = () => {
       frame = 0;
@@ -41,22 +42,22 @@ export function ImpactStory() {
   };
   return <section ref={root} className={`impact-story ${enhanced ? "is-enhanced" : ""}`} id="at-a-glance" aria-labelledby="impact-title">
     <div className="impact-scene wrap">
-      <div className="impact-intro"><span className="eyebrow">AET AT A GLANCE</span><h2 id="impact-title">A world of possibility.<br />A team beside you.</h2><p>The experience and language expertise behind your next chapter.</p><span className="story-hint">A little perspective. A lot of possibility.</span></div>
-      <div className="impact-orbit">
+      <div className="impact-intro"><span className="eyebrow">AET AT A GLANCE</span><h2 id="impact-title">Why Choose Us</h2><p>Professional translation and credential evaluation services.</p></div>
+      <CardRail className="impact-orbit" label="AET facts">
         <span className="orbit-spark spark-one" aria-hidden="true" /><span className="orbit-spark spark-two" aria-hidden="true" />
-        {facts.map(({ value, title, text, Icon }, i) => <article key={value} className={`impact-fact ${i === active ? "is-active" : ""}`} aria-hidden={enhanced ? i !== active : undefined}>
+        {facts.map(({ value, title, text, Icon }, i) => <article data-rail-card key={value} className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`} aria-hidden={enhanced ? i !== active : undefined}>
           <Icon className="fact-icon" size={54} strokeWidth={1.1} aria-hidden="true" /><strong>{value}</strong><h3>{title}</h3><p>{text}</p>
         </article>)}
         <div className="story-dots" aria-label="AET highlights">{facts.map((fact, i) => <button key={fact.value} type="button" aria-label={`Show ${fact.title}`} aria-pressed={active === i} onClick={() => select(i)}><span /></button>)}</div>
-      </div>
+      </CardRail>
     </div>
   </section>;
 }
 
 const steps = [
-  { label: "YOUR GOAL", title: "Start with what comes next.", text: "Studying, working, or starting a new chapter? Choose the service that fits your plans.", image: "/images/hero.webp", alt: "A woman working at her laptop", caption: "Tell us your goal" },
-  { label: "YOUR DOCUMENTS", title: "Keep every step clear and organized.", text: "Complete your application and provide the documents needed for your chosen service. Our team is here to help with questions along the way.", image: "/images/document-consultation.jpg", alt: "Two women reviewing documents together in a bright office", caption: "Share your documents" },
-  { label: "YOUR NEXT CHAPTER", title: "Move forward with confidence.", text: "Our team prepares your evaluation or translation, with personal support along the way. So you can focus on the possibilities ahead.", image: "/images/graduates.jpg", alt: "Graduates celebrating their academic achievement", caption: "Take your next step" },
+  { label: "YOUR GOAL", title: "Choose your evaluation type", text: "Choose your evaluation type based on your purpose.", image: "/images/hero.webp", alt: "A woman working at her laptop", caption: "Choose your evaluation type" },
+  { label: "YOUR DOCUMENTS", title: "Provide your documents", text: "Complete our application form. Submit documents to any of our offices.", image: "/images/document-consultation.jpg", alt: "Two women reviewing documents together in a bright office", caption: "Application and documents" },
+  { label: "YOUR RESULTS", title: "Receive your evaluation", text: "Contact our team for guidance on your evaluation report and next steps.", image: "/images/graduates.jpg", alt: "Graduates celebrating their academic achievement", caption: "Your evaluation and next steps" },
 ];
 
 function StepVisual({ index }: { index: number }) {
@@ -71,11 +72,14 @@ function StepVisual({ index }: { index: number }) {
 export function ProcessStory() {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  const [enhanced, setEnhanced] = useState(false);
   useEffect(() => {
+    const media = window.matchMedia("(min-width: 851px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)");
     const cards = Array.from(root.current?.querySelectorAll<HTMLElement>(".journey-stage") ?? []);
     let frame = 0;
     const sync = () => {
       frame = 0;
+      if (!media.matches) return;
       const middle = window.innerHeight * .55;
       let closest = 0;
       let distance = Infinity;
@@ -83,16 +87,18 @@ export function ProcessStory() {
       setActive(closest);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(sync); };
-    schedule();
+    const configure = () => { setEnhanced(media.matches); schedule(); };
+    configure();
+    media.addEventListener("change", configure);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
-    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
+    return () => { media.removeEventListener("change", configure); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
   }, []);
-  return <section ref={root} className="journey-story" id="process" aria-labelledby="journey-title"><div className="wrap">
-    <div className="journey-heading"><span className="eyebrow">02 / A CLEAR PATH FORWARD</span><h2 id="journey-title">Less paperwork.<br />More possibility.</h2><p>One connected process. Personal support from the first question to your next step.</p></div>
+  return <section ref={root} className={`journey-story ${enhanced ? "is-enhanced" : ""}`} id="process" aria-labelledby="journey-title"><div className="wrap">
+    <div className="journey-heading"><span className="eyebrow">02 / A CLEAR PATH FORWARD</span><h2 id="journey-title">Simple 3-Step Process</h2><p>Choose your evaluation type based on your purpose.</p></div>
     <div className="journey-layout"><div className="journey-media">
       {steps.map((step, i) => <div key={step.label} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}><StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div></div>)}
       <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.label} className={i <= active ? "is-active" : ""} />)}</div>
-    </div><div className="journey-stages">{steps.map((step, i) => <article key={step.label} className={`journey-stage ${i === active ? "is-active" : ""}`}><div className="journey-mobile-image"><StepVisual index={i} /></div><div className="journey-card"><span className="journey-number">0{i + 1}</span><div><span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>{i === 2 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">Let’s get started <ArrowUpRight size={18} /></a>}</div></div></article>)}</div></div>
+    </div><div className="journey-stages">{steps.map((step, i) => <article key={step.label} className={`journey-stage ${i === active ? "is-active" : ""}`}><div className="journey-mobile-image"><StepVisual index={i} /></div><div className="journey-card"><span className="journey-number">0{i + 1}</span><div><span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>{i === 2 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">Start Application <ArrowUpRight size={18} /></a>}</div></div></article>)}</div></div>
   </div></section>;
 }

@@ -48,7 +48,10 @@ Validate routes, metadata, and the intended deployment before launch. Do not sub
 
 - `app/page.tsx`: page content, service links, testimonials, and FAQs.
 - `app/globals.css`: base responsive styles and motion. Reduced-motion preferences are respected.
-- `app/reference-style.css`: AET visual styling: photo-led hero, rounded cards, pill buttons, and soft tonal surfaces.
+- `app/reference-style.css`: shared AET surfaces, photo treatment, and logo presentation.
+- `app/home-design.css`: final design-guide typography, spacing, responsive rails, and native menu styling.
+- `components/card-rail.tsx`: progressive previous/next controls over native horizontal scrolling.
+- `components/scroll-stories.tsx`: fact selectors and process imagery, with unpinned reduced-motion and no-JavaScript fallbacks.
 - `components/navigation.tsx`: mobile navigation, language links, and progressive scroll reveals.
 - `app/layout.tsx`: page metadata.
 - `public/images/`: locally copied assets; see ASSETS.md.

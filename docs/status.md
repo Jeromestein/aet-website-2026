@@ -2,68 +2,73 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
-Status updated September 25, 2026 against implementation checkpoint `f3860e9`
-and the current design targets. This update records previously completed checks
-and known implementation gaps; it is not a new full-page acceptance test.
-Checked items must be rechecked if later layout or content changes affect them.
+Updated September 25, 2026 after the homepage design pass. This records local
+implementation and checks, not production deployment or accessibility certification.
 
-### Completed — 5 Items
+### Implemented and locally checked
 
-- [x] AET name, header/footer logos, and full-map browser icon are correct.
-      Header and footer artwork were visually checked on desktop and mobile;
-      the selected full-map icon was inspected and icon endpoints verified.
-- [x] Pale blue, cool white, navy, and orange follow their defined roles.
-      Shared color tokens are in use. The Apply Now button uses `#C7471D`
-      with white text; computed colors and desktop/mobile appearance were checked.
-- [x] Hero text and button labels match the fixed copy; BBB artwork is visible.
-      The desktop and mobile Hero states were visually checked.
-- [x] Institution logos appear immediately below Hero in two right-moving rows,
-      without white cards or a visible pause button.
-      The component implements these requirements and was previously previewed.
-      Reduced-motion and keyboard behavior remain part of the wider pending audit.
-- [x] Institution supporting text and Explore all institutions remain together.
-      The required sentence and partner-page destination are present in the component.
+- [x] Retained AET header/footer artwork, the full-map icon assets, shared palette,
+      exact Hero heading/description/actions, and BBB A+ artwork below the actions.
+      Header, Hero, and footer inspected in the Codex in-app browser.
+- [x] Applied the enlarged Poppins hierarchy, Fraunces facts heading, Gaegu figures,
+      1280px content limit, section spacing, and larger card padding. The four-digit
+      2009 figure has a separate scale and fits its desktop and mobile panels.
+- [x] Preserved two institution rows of eight logos with 72/80-second rightward
+      cycles, no logo tiles or pause button, and the required supporting sentence/link.
+      Focus stops movement and exposes native scrolling through all logos; reduced
+      motion and no JavaScript leave the original groups scrollable without duplicates.
+- [x] Restored separate legacy descriptions for Document by Document Evaluation,
+      Course by Course Evaluation, and Expert Opinion Letters in the featured card.
+      Supporting service names, testimonial text and attributions, existing facts,
+      FAQ processing time, and existing destinations remain in place.
+      Source: the legacy site's `home-content.html`, documented in ASSETS.md.
+- [x] Kept all ten homepage sections in the design-guide order. The three process
+      stages now cover choosing an evaluation, providing the application/documents,
+      and receiving an evaluation with a contact-team next step. No delivery guarantee
+      or new processing-time claim was added.
+- [x] Implemented native mobile rails for facts, supporting services, and testimonials
+      at 760px and below. Each uses 88% cards, 16px gaps, proximity snapping, an exposed
+      next-card edge, and progressive previous/next controls. All last cards are fully
+      reachable; previous/next end states and native keyboard scrolling were checked.
+      Required process steps, FAQs, Hero, and footer remain in vertical flow.
+- [x] Desktop facts and process imagery enhance only above 850px, with at least 720px
+      viewport height and no reduced-motion preference. Smaller/shorter viewports,
+      reduced motion, and no JavaScript expose all content without pinned switching.
+      Desktop selectors, the 2009 card, and changing process imagery were inspected.
+- [x] Mobile navigation and language selection use native disclosures. Menu selection
+      and Escape close the enhanced mobile menu and return focus to its trigger.
+      Native menu and FAQ opening also work with JavaScript disabled.
+- [x] Retained the 1920 x 1080 graduation source, 2560 x 1440 Hero source, and
+      1600 x 2400 consultation source. Responsive image sizing and crops were checked;
+      consultation imagery retains both faces and their documents. No broken images
+      were found in the final browser check.
+- [x] `pnpm typecheck` and `git diff --check` pass. No production build was run.
 
-### Partially Completed — 4 Items
+### Verification evidence
 
-- [ ] Poppins, Fraunces, and Gaegu follow their assigned roles and enlarged scale;
-      four-digit figures use the compact metric size and remain unclipped.
-      **Done:** the three families and their roles are implemented.
-      **Remaining:** enlarged sizes, the four-digit variation, and clipping checks
-      after applying the new typography targets.
-- [ ] Service wording, testimonials, facts, and link destinations remain faithful
-      to the existing AET content.
-      **Done:** fixed Hero and institution wording is aligned.
-      **Remaining:** replace the remaining aspirational headings and descriptions;
-      complete the section-by-section copy, attribution, fact, and destination audit.
-- [ ] Graduation imagery is retained, sharp at display size, and cropped correctly.
-      **Done:** the selected graduation image remains in the page.
-      **Remaining:** verify source resolution, responsive image selection, and crop
-      at the final desktop and mobile dimensions after layout changes.
-- [ ] TypeScript and browser checks pass; deployment checks are completed by the
-      owner before launch.
-      **Done:** TypeScript passed before checkpoint `f3860e9`. Earlier browser
-      checks covered the Hero, logos, icons, and selected desktop/mobile sections.
-      **Remaining:** repeat the relevant checks after implementation changes and
-      complete deployment validation on the owner's chosen deployment.
+- Existing owner-run preview: `http://localhost:3021`; no server was started/restarted.
+- Codex in-app browser: 320, 390, 760, 850, and 1440px checks, plus the 761px navigation
+  boundary. Hero, services, mobile card navigation, native menu, desktop facts,
+  process photos, pre-evaluation, expanded FAQ, and footer were inspected.
+- Supplemental Playwright: the five required widths have no page overflow or
+  overflowing headings/buttons. With reduced motion, no fact is hidden, pinned
+  switching is off, and running page animations are absent.
+- JavaScript-disabled checks: mobile menu and FAQ work, all three native rails can
+  scroll, facts stay visible, and every process image is positioned above its copy.
+  Desktop fallback images have explicit containing blocks and there is no page overflow.
+- Enlargement checks: 200% root-text sizing at 1440px and 720 x 500 reflow (the CSS
+  viewport equivalent of 200% zoom at 1440 x 1000). The Hero also wraps within its
+  column after text enlargement. These are simulations, not a native browser-zoom test.
+- Screenshots and raw checks are under `output/playwright/`. `aet-desktop.png` and
+  `aet-mobile.png` show the final Hero; section captures show facts, rail end states,
+  and the mobile footer. Full-page captures use reduced motion to expose all content.
 
-### Pending — 4 Items
+### Remaining pre-launch checks
 
-- [ ] Headings, paragraphs, and cards have the specified breathing room without
-      reducing important copy to preserve the old layout.
-      Apply the new content width, section spacing, and card padding together
-      with the enlarged type scale, then inspect wrapping and section balance.
-- [ ] Mobile service, testimonial, and at-a-glance fact rails expose all cards and
-      actions with manual horizontal scrolling and snap alignment. Required process
-      steps and essential content remain vertical.
-      Implement the three rails at 760px and below; the current mobile groups still
-      use stacked layouts. Preserve a partial next-card cue and disable autoplay.
-      Verify touch, keyboard access, focus visibility, last-card reachability,
-      reduced motion, no-JavaScript behavior, and normal vertical page scrolling.
-- [ ] Desktop, mobile, zoom, keyboard access, focus, alt text, disclosures, and
-      reduced-motion behavior have been checked on the actual page.
-      Complete the full acceptance pass, including 200% zoom and reduced motion.
-      Earlier spot checks do not satisfy this combined requirement.
-- [ ] Application, contact, payment, office, language, and legal destinations work.
-      Audit all actual destinations for availability and correct routing without
-      submitting applications, contact forms, or payments.
+- [ ] Native browser 200% zoom, physical-device touch, and a full screen-reader /
+      contrast audit. Keyboard and disclosure spot checks are not a full WCAG audit.
+- [ ] Live availability and final production routing of all application, contact,
+      payment, office, language, and legal destinations. This design pass preserves
+      their targets; it does not submit forms or validate external workflows.
+- [ ] Owner-managed deployment and production checks. No commit, push, or deployment
+      was performed as part of this design pass.
