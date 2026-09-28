@@ -6,3 +6,9 @@ out/
 !.env.example
 *.tsbuildinfo
 .DS_Store
+
+# Playwright generated artifacts
+/output/playwright/
+/playwright-report/
+/test-results/
+/.playwright-cli/
