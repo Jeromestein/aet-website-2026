@@ -5,6 +5,29 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Why Choose Us BBB emphasis — September 28, 2026
+
+- Follow-up: replaced the organization-name-only caption with highest-rating
+  context and a commitment to dependable service, clear communication, and
+  customer care. Highest-rating terminology follows
+  [BBB's rating overview](https://www.bbb.org/about/overview-of-ratings).
+- Follow-up checks: Codex in-app browser at 1440px and 390px confirms readable
+  copy; mobile has no page overflow. Typecheck and diff whitespace checks pass.
+  Screenshots: `output/playwright/why-choose-bbb-copy-desktop-2026-09-28.png`
+  and `output/playwright/why-choose-bbb-copy-mobile-2026-09-28.png`.
+
+- Removed the duplicate Experience & Membership strip below the institutions.
+- Added the existing transparent BBB A+ Rating artwork beneath the Why Choose Us
+  introduction with a Better Business Bureau caption. It remains visible while
+  the original experience, language, and ATA fact panels change.
+- Codex in-app browser: inspected the updated section at 1440px, 390px, and 320px;
+  the badge loads and there is no page overflow. Confirmed the strip is absent
+  and scrolled to the ATA panel with the BBB artwork still visible.
+- `pnpm typecheck` and `git diff --check` passed using the existing port-3021
+  server. No production build or deployment was performed.
+- Screenshots: `output/playwright/why-choose-bbb-desktop-2026-09-28.png` and
+  `output/playwright/why-choose-bbb-mobile-2026-09-28.png`.
+
 ### Hero layout refinement — September 28, 2026
 
 - Set the wide-desktop title to three lines and reduced excess Hero height. Limited
@@ -50,7 +73,7 @@ implementation and checks, not production deployment or accessibility certificat
       Supporting service names, testimonial text and attributions, existing facts,
       FAQ processing time, and existing destinations remain in place.
       Source: the legacy site's `home-content.html`, documented in ASSETS.md.
-- [x] Kept all ten homepage sections in the design-guide order. The three process
+- [x] Kept the homepage sections in the design-guide order. The three process
       stages now cover choosing an evaluation, providing the application/documents,
       and receiving an evaluation with a contact-team next step. No delivery guarantee
       or new processing-time claim was added.

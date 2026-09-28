@@ -31,6 +31,9 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
 .impact-scene { padding-block: 104px; gap: 5%; }
 .impact-intro h2 { font-size: clamp(3.2rem, 5.3vw, 6.3rem); line-height: .98; }
 .impact-intro p { font-size: clamp(1rem, 1.4vw, 1.18rem); max-width: 570px; line-height: 1.75; }
+.impact-rating { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); display: grid; gap: 10px; justify-items: start; }
+.impact-rating img { display: block; width: 288px; max-width: 100%; height: auto; }
+.impact-rating > p { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 480px; margin: 0; }
 .impact-fact { padding: 48px 32px; }
 .impact-fact strong { font-size: clamp(9rem, 15vw, 15rem); line-height: .8; }
 .impact-fact.wide-figure strong { font-size: clamp(6.3rem, 11vw, 10rem); }
@@ -162,6 +165,8 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .impact-scene { padding-block: 64px; gap: 28px; }
   .impact-intro h2 { font-size: clamp(2.65rem, 12vw, 3.7rem); }
   .impact-intro p { font-size: 1rem; }
+  .impact-rating { margin-top: 24px; padding-top: 24px; }
+  .impact-rating img { width: 240px; }
   .impact-orbit.card-rail { min-height: 0; }
   .impact-orbit > .orbit-spark, .impact-orbit > .story-dots { display: none; }
   .impact-fact { border-radius: 32px; padding: 40px 24px; }

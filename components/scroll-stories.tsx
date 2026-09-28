@@ -42,7 +42,15 @@ export function ImpactStory() {
   };
   return <section ref={root} className={`impact-story ${enhanced ? "is-enhanced" : ""}`} id="at-a-glance" aria-labelledby="impact-title">
     <div className="impact-scene wrap">
-      <div className="impact-intro"><span className="eyebrow">AET AT A GLANCE</span><h2 id="impact-title">Why Choose Us</h2><p>Professional translation and credential evaluation services.</p></div>
+      <div className="impact-intro">
+        <span className="eyebrow">AET AT A GLANCE</span>
+        <h2 id="impact-title">Why Choose Us</h2>
+        <p>Professional translation and credential evaluation services.</p>
+        <div className="impact-rating">
+          <Image src="/images/bbb-hero-transparent.png" alt="BBB A+ Rating" width={2172} height={724} sizes="(max-width: 760px) 240px, 288px" />
+          <p>Rated A+ by the Better Business Bureau, its highest rating. We’re committed to dependable service, clear communication, and customer care.</p>
+        </div>
+      </div>
       <CardRail className="impact-orbit" label="AET facts">
         <span className="orbit-spark spark-one" aria-hidden="true" /><span className="orbit-spark spark-two" aria-hidden="true" />
         {facts.map(({ value, title, text, Icon }, i) => <article data-rail-card key={value} className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`} aria-hidden={enhanced ? i !== active : undefined}>

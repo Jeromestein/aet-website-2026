@@ -91,48 +91,6 @@ export default function Home() {
         </section>
         </div>
         <InstitutionCarousel />
-        <section className="trust-strip">
-          <div className="wrap trust-inner">
-            <p>
-              AET
-              <br />
-              <strong>Experience &amp; Membership</strong>
-            </p>
-            <div className="stat">
-              <strong>
-                15<span>+</span>
-              </strong>
-              <span>Years of experience</span>
-            </div>
-            <div className="stat">
-              <strong>
-                100<span>+</span>
-              </strong>
-              <span>Language pairs</span>
-            </div>
-            <div className="membership">
-              <Image
-                src="/images/ata.jpg"
-                alt="American Translators Association"
-                width={86}
-                height={62}
-              />
-              <span>
-                ATA member
-                <br />
-                <strong>Since 2009</strong>
-              </span>
-            </div>
-            <div className="membership bbb">
-              <Image
-                src="/images/bbb.jpg"
-                alt="BBB A+ rating"
-                width={112}
-                height={60}
-              />
-            </div>
-          </div>
-        </section>
         <ImpactStory />
         <section className="section wrap" id="services">
           <div className="section-heading" data-reveal>

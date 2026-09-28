@@ -142,14 +142,13 @@ Let content determine the height on mobile and when text is enlarged.
 | --- | --- | --- |
 | 1 | Hero | Fixed text, two actions, BBB artwork, professional photo on pale blue |
 | 2 | Institutions | Two logo rows immediately after Hero; same background, supporting sentence and link |
-| 3 | Experience strip | Existing experience, language, and ATA information |
-| 4 | AET at a glance | Fraunces heading, organic fact panels, large Gaegu figures |
-| 5 | Services | Featured evaluation card plus supporting services |
-| 6 | Process | Three numbered steps: choose a service, provide documents, receive results/support |
-| 7 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
-| 8 | Client feedback | Original testimonials and attribution |
-| 9 | Questions | Native expandable questions and contact action |
-| 10 | Closing and footer | Clear next step, practical navigation, legal links |
+| 3 | AET at a glance | Fraunces heading, persistent BBB A+ Rating with highest-rating context and a service commitment beneath the introduction, organic fact panels with experience, language coverage, and ATA membership |
+| 4 | Services | Featured evaluation card plus supporting services |
+| 5 | Process | Three numbered steps: choose a service, provide documents, receive results/support |
+| 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
+| 7 | Client feedback | Original testimonials and attribution |
+| 8 | Questions | Native expandable questions and contact action |
+| 9 | Closing and footer | Clear next step, practical navigation, legal links |
 
 **Header/footer:** full AET logos; concise service/process/about links, language
 selector, and contact action. Mobile menu closes on selection or Escape and returns
