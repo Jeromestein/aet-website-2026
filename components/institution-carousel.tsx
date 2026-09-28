@@ -20,7 +20,8 @@ const institutions = [
   },
   {
     "src": "/images/institutions/uoalegal.jpeg",
-    "name": "UOA Legal Immigration Attorneys"
+    "name": "UOA Legal Immigration Attorneys",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/California-state-board-of-PHARMACY.png",
@@ -28,7 +29,8 @@ const institutions = [
   },
   {
     "src": "/images/institutions/Angelo-State-University.png",
-    "name": "Angelo State University"
+    "name": "Angelo State University",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/GCU.png",
@@ -36,11 +38,13 @@ const institutions = [
   },
   {
     "src": "/images/institutions/FLORIDA-LEGAL-GROUP.png",
-    "name": "Florida Legal Group"
+    "name": "Florida Legal Group",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/NYC-FIRE-DEPARTMENT.png",
-    "name": "NYC Fire Department"
+    "name": "NYC Fire Department",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/ISBE.png",
@@ -48,7 +52,8 @@ const institutions = [
   },
   {
     "src": "/images/institutions/USC.png",
-    "name": "Universidad del Sagrado Corazón (USC)"
+    "name": "Universidad del Sagrado Corazón (USC)",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/NMPED.png",
@@ -60,7 +65,8 @@ const institutions = [
   },
   {
     "src": "/images/institutions/COLLIER-SHERIFF.png",
-    "name": "Collier County Sheriff's Office"
+    "name": "Collier County Sheriff's Office",
+    "format": "emblem"
   },
   {
     "src": "/images/institutions/Universal_Technical_Institute_Logo.jpg",
@@ -92,8 +98,8 @@ export function InstitutionCarousel() {
                 <ul className={`${styles.group} ${duplicate ? styles.duplicate : ""}`} key={String(duplicate)} aria-hidden={duplicate || undefined}>
                   {row.map((institution) => (
                     <li className={styles.card} key={institution.src} title={institution.name}>
-                      <div className={styles.logo}>
-                        <Image src={institution.src} alt={duplicate ? "" : institution.name} fill sizes="(max-width: 600px) 148px, 200px" />
+                      <div className={styles.logo} data-format={institution.format}>
+                        <Image src={institution.src} alt={duplicate ? "" : institution.name} fill sizes={institution.format === "emblem" ? "(max-width: 600px) 64px, 80px" : "(max-width: 600px) 148px, 200px"} />
                       </div>
                     </li>
                   ))}

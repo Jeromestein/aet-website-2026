@@ -1,25 +1,26 @@
 .section {
   --logo-gap: 20px;
-  padding: 96px 0;
+  padding: 72px 0;
   background: var(--blue);
   scroll-margin-top: 110px;
 }
-.heading { text-align: center; margin-bottom: 56px; }
+.heading { text-align: center; margin-bottom: 32px; }
 .heading > span { display: block; margin-bottom: 18px; }
 .heading h2 { max-width: 760px; margin: 0 auto 22px; }
-.heading p { max-width: 710px; margin: 0 auto; font-size: 14px; line-height: 1.9; color: var(--muted); }
-.carousel { mix-blend-mode: multiply; max-width: 1600px; margin: 0 auto; display: grid; gap: var(--logo-gap); }
+.heading p { max-width: 710px; margin: 0 auto; font-size: 1rem; line-height: 1.75; color: var(--muted); }
+.carousel { mix-blend-mode: multiply; max-width: 1600px; margin: 0 auto; display: grid; gap: 12px; }
 .row { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #9cb8cb transparent; padding-block: 5px; }
 .row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .track { display: flex; width: max-content; }
 .group { display: flex; gap: var(--logo-gap); padding: 0 var(--logo-gap) 0 0; margin: 0; list-style: none; }
-.card { width: 252px; height: 146px; flex: 0 0 auto; display: grid; place-items: center; }
+.card { width: 232px; height: 112px; flex: 0 0 auto; display: grid; place-items: center; }
 .logo { position: relative; width: 200px; height: 88px; }
+.logo[data-format="emblem"] { width: 80px; height: 80px; }
 .logo img { object-fit: contain; }
 .duplicate { display: none; }
-.footer { margin-top: 30px; text-align: center; }
-.footer p { max-width: 920px; margin: 0 auto; font-size: 13px; line-height: 2; color: var(--muted); text-wrap: pretty; }
-.footer a { display: inline-flex; align-items: center; gap: 8px; margin-left: 12px; white-space: nowrap; color: var(--ink); }
+.footer { margin-top: 24px; text-align: center; }
+.footer p { max-width: 920px; margin: 0 auto; font-size: 1rem; line-height: 1.75; color: var(--muted); text-wrap: pretty; }
+.footer a { display: inline-flex; align-items: center; gap: 8px; margin-left: 12px; white-space: nowrap; color: var(--ink); font-size: .94rem; min-height: 44px; }
 @media (prefers-reduced-motion: no-preference) {
   .section[data-ready="true"] .row { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); }
   .section[data-ready="true"] .duplicate { display: flex; }
@@ -31,20 +32,18 @@
 }
 @keyframes institutions-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @media (max-width: 600px) {
-  .section { --logo-gap: 12px; padding: 64px 0; }
-  .heading { margin-bottom: 48px; }
-  .heading h2 { font-size: clamp(2rem, 8vw, 3rem); }
-  .heading p { font-size: 12px; line-height: 1.85; }
-  .card { width: 188px; height: 116px; }
-  .logo { width: 148px; height: 76px; }
-  .footer { margin-top: 24px; }
-  .footer p { font-size: 12px; }
-  .footer a { font-size: 11px; margin: 12px 0 0; }
+  .section { --logo-gap: 12px; padding: 40px 0; }
+  .heading { margin-bottom: 24px; }
+  .heading > span { margin-bottom: 12px; }
+  .heading h2 { font-size: clamp(2rem, 8vw, 3rem); margin-bottom: 16px; }
+  .heading p, .footer p { line-height: 1.6; }
+  .carousel { gap: 8px; }
+  .card { width: 156px; height: 88px; }
+  .logo { width: 148px; height: 68px; }
+  .logo[data-format="emblem"] { width: 64px; height: 64px; }
+  .footer { margin-top: 20px; }
+  .footer a { display: flex; width: fit-content; max-width: 100%; margin: 8px auto 0; }
 }
-
-/* Keep supporting copy at the shared reading size. */
-.heading p, .footer p { font-size: 1rem; line-height: 1.75; }
-.footer a { font-size: .94rem; min-height: 44px; }
 
 /* Keyboard users can inspect every logo while motion is paused. */
 .section[data-ready="true"] .row:focus { overflow-x: auto; mask-image: none; }

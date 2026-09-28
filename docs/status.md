@@ -5,6 +5,21 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Institution spacing refinement — September 28, 2026
+
+- Reduced section padding, introduction spacing, logo slot dimensions, and row
+  gaps. Balanced square emblems against wordmarks without cropping artwork.
+- Kept the existing wording and two moving rows. Mobile copy remains 16px with
+  1.6 line height; the footer link has its own line and a 44px minimum target.
+- Codex in-app browser: visually inspected the institution section at 320px,
+  390px, and 1440px with no page overflow. At 390px, section height decreased
+  from 877px to 706px (about 20%). Confirmed focus stops each row's animation
+  and exposes native scrolling; normal cycles remain 72/80 seconds.
+- `pnpm typecheck` and `git diff --check` passed using the existing port-3021
+  server. No production build or deployment was performed.
+- Screenshots: `output/playwright/institutions-mobile-2026-09-28.png` and
+  `output/playwright/institutions-desktop-2026-09-28.png`.
+
 ### Why Choose Us BBB emphasis — September 28, 2026
 
 - Follow-up: replaced the organization-name-only caption with highest-rating

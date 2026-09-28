@@ -194,7 +194,12 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
   Use seamless linear cycles around 72/80 seconds. No white tiles, borders, shadows,
   or visible pause button. Pause on hover/focus; hide duplicate groups from assistive
   tools. At reduced motion, remove auto-movement and allow native horizontal scrolling.
-  Logo slots are about 252 x 146px on desktop and 188 x 116px below 600px; contain images.
+  Use compact logo slots: 232 x 112px on desktop and 156 x 88px below 600px;
+  contain images without cropping. Limit square emblems to 80px / 64px so they
+  balance the wider wordmarks. Use 72px / 40px section padding, 32px / 24px from
+  introduction to logos, and 12px / 8px between rows. On mobile, keep supporting
+  copy at 16px with 1.6 line height and place the footer link on its own line with
+  a minimum 44px target height.
 - **Facts:** above 850px, a sticky composition may change facts with scroll and labeled
   selectors. Allow about 230vh with the inner panel below the header. At 760px and
   below, use the manual card rail. At 761–850px, use an unpinned layout. Reduced motion
