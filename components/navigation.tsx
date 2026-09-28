@@ -5,6 +5,7 @@ import { Globe2, ChevronDown } from "lucide-react";
 import styles from "./navigation.module.css";
 
 const legacy = "https://www.americantranslationservice.com";
+const application = "https://app.americantranslationservice.com/credential-evaluation-application";
 const links = [
   { label: "Home", href: "/" },
   { label: "Evaluation", href: legacy + "/e-evaluation.php" },
@@ -68,7 +69,7 @@ export function Navigation() {
         event.preventDefault(); first?.focus();
       }
     };
-    const breakpoint = window.matchMedia("(max-width: 1080px)");
+    const breakpoint = window.matchMedia("(max-width: 1200px)");
     const onResize = () => { closeMenu(false); closeDesktop(); };
     document.addEventListener("pointerdown", onPointer);
     document.addEventListener("focusin", onFocus);
@@ -124,6 +125,7 @@ export function Navigation() {
             {languages.map((item) => <a key={item.lang} href={item.href} lang={item.lang} aria-current={item.lang === "en" ? "page" : undefined}>{item.label}</a>)}
           </div>
         </details>
+        <a className={`${styles.application} ${styles.desktopApplication}`} href={application}>Online Application</a>
         <details className={styles.mobileMenu} ref={menu} onToggle={(event) => {
           setMenuOpen(event.currentTarget.open);
           if (!event.currentTarget.open) event.currentTarget.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((item) => { item.open = false; });
@@ -148,6 +150,7 @@ export function Navigation() {
                 ))}
               </ul>
             </nav>
+            <a className={styles.application} href={application} onClick={() => closeMenu()}>Online Application</a>
             <div className={styles.mobileLanguages} aria-label="Language">
               <span className={styles.languageLabel}><Globe2 size={17} aria-hidden="true" />Language</span>
               <div>{languages.map((item) => <a key={item.lang} href={item.href} lang={item.lang} aria-current={item.lang === "en" ? "page" : undefined} onClick={() => closeMenu()}>{item.label}</a>)}</div>

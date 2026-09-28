@@ -172,6 +172,20 @@ implementation and checks, not production deployment or accessibility certificat
   `output/playwright/testimonials-google-desktop-2026-09-28.png` and
   `output/playwright/testimonials-google-mobile-2026-09-28.png`.
 
+### Header online application action — September 28, 2026
+
+- Added an orange Online Application button at the desktop header's far right,
+  linking to `https://app.americantranslationservice.com/credential-evaluation-application`.
+  The same action appears below the navigation inside the mobile menu.
+- Moved the compact-header breakpoint to 1200px to leave room for the new action;
+  mobile still shows only the logo and hamburger in the closed header.
+- Codex in-app browser: visually verified 1440px and 1201px desktop layouts and
+  open mobile menus at 390px and 320px. Confirmed the application href, no overflow
+  at the narrow desktop/mobile checks, and Escape closing the menu. No application
+  was submitted. Typecheck and diff whitespace checks passed; no build or deployment.
+- Screenshots: `output/playwright/header-application-desktop-2026-09-28.png`
+  and `output/playwright/header-application-mobile-2026-09-28.png`.
+
 ### Header redesign — September 28, 2026
 
 - Adopted the IRFC header structure: translucent light desktop bar, centered

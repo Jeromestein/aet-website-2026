@@ -169,14 +169,17 @@ Omit the standalone closing Start Application panel and the service-card footer
 strip containing “Translation and evaluation services.” and Contact Us.
 
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
-navigation, and a separate language selector. Keep the legacy labels and order:
+navigation, a separate language selector, and an orange Online Application button
+at the far right linking to the existing credential-evaluation application.
+Keep the legacy labels and order:
 Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
 retained service links listed in README.md; languages are English, 中文, and Español. Home stays on the
 rebuilt homepage; other destinations retain the legacy paths.
 
-At 1080px and below, show only the logo and one circular two-line menu button.
+At 1200px and below, show only the logo and one circular two-line menu button.
 Open a navy panel filling the viewport below the 76px header, with numbered
-navigation rows, an expandable Services list, and language choices at the bottom.
+navigation rows, an expandable Services list, an Online Application button below
+the navigation, and language choices at the bottom.
 The panel scrolls when content exceeds the viewport. With JavaScript, lock background
 scrolling and focus while open; close on selection or Escape, restore trigger focus,
 and clear open menus when crossing the desktop breakpoint. Native disclosures
@@ -270,7 +273,7 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
   150–250ms transitions; card hover elevation stays within 3px. Decorative motion is slow.
 - **Reduced motion:** stop continuous movement, pinned fact changes, and smooth scrolling.
   Keep content visible without enhancement; never make animation necessary to read it.
-- **Responsive behavior:** use the compact header at 1080px and below and mobile Hero below 760px; preserve about 110px
+- **Responsive behavior:** use the compact header at 1200px and below and mobile Hero below 760px; preserve about 110px
   anchor clearance. Permit taller sections, wrapping, and stacked layouts at 200% zoom.
   Only designated rails may overflow horizontally; the page itself must not.
 

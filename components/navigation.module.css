@@ -20,7 +20,7 @@
 .shell {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 20px;
   height: 86px;
   max-width: 1392px;
   margin-inline: auto;
@@ -49,8 +49,10 @@
 .languageOptions { left: auto; right: 0; width: 160px; transform: none; }
 .languageOptions [aria-current="page"] { background: var(--blue); }
 .mobileMenu { display: none; }
+.application { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; min-height: 46px; padding: 12px 20px; border-radius: 999px; background: var(--orange); color: var(--surface); font-size: .875rem; font-weight: 600; line-height: 1.4; white-space: nowrap; transition: background 180ms ease; }
+.application:hover { background: var(--orange-hover); }
 
-@media (1080px < width <= 1200px) {
+@media (1200px < width <= 1320px) {
   .shell { gap: 20px; padding-inline: 24px; }
   .brand { flex-basis: 260px; }
   .desktopList { gap: 18px; }
@@ -58,10 +60,10 @@
   .language { padding-left: 16px; }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1200px) {
   .shell { height: 76px; padding-inline: 24px; justify-content: space-between; gap: 20px; }
   .brand { flex: 0 1 260px; min-width: 0; }
-  .desktop, .language { display: none; }
+  .desktop, .language, .desktopApplication { display: none; }
   .mobileMenu { display: block; flex: 0 0 auto; }
   .menuToggle { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; width: 48px; height: 48px; border: 1px solid #ffffffb8; border-radius: 50%; background: #dcebf7ad; box-shadow: inset 0 1px #ffffffeb, 0 8px 20px #18334e12; }
   .menuToggle span { width: 20px; height: 1.5px; background: var(--ink); transition: transform 220ms ease; }
