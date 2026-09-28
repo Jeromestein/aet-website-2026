@@ -62,6 +62,17 @@ implementation and checks, not production deployment or accessibility certificat
 - Evidence: `output/playwright/services-retained-desktop-2026-09-28.png` and
   `output/playwright/services-retained-mobile-2026-09-28.png`.
 
+### Logo wordmark size — September 28, 2026
+
+- Enlarged the complete header/footer wordmark by 7.5%, tightened its spacing,
+  and proportionally reduced the emblem within the unchanged outer dimensions.
+  Updated both SVG and transparent PNG exports; wording and colors are unchanged.
+- Codex in-app browser: inspected header/footer at 1440px and 390px, plus the 320px header.
+  Logos load with complete text and no page overflow. Export alpha bounds remain
+  inside the canvas, and `git diff --check` passed.
+- Evidence: `output/playwright/logo-size-desktop-2026-09-28.png` and
+  `output/playwright/logo-size-mobile-2026-09-28.png`. No build or deployment.
+
 ### Restored legacy logo wording — September 28, 2026
 
 - Restored the full two-line wording in the header/footer SVG and PNG lockups:

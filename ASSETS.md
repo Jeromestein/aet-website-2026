@@ -132,3 +132,8 @@ embedded emblem, 520:120 canvas, transparent background, and light/dark colors
 are retained. Poppins Semibold glyphs are exported as vector outlines from the
 local licensed font; matching PNG exports remain 1560 x 360. No AI regeneration
 was used for this text correction. Image alternative text includes the full name.
+
+Logo readability follow-up: enlarged the outlined wordmark by 7.5%, moved its
+start from x=158 to x=132, and proportionally reduced the embedded emblem to
+120 x 88 within the unchanged 520 x 120 canvas. Full wording and colors remain
+unchanged; synchronized the transparent 1560 x 360 PNG exports.
