@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { TestimonialCarousel } from "@/components/testimonial-carousel";
+import { SiteFooter } from "@/components/site-footer";
 import { CardRail } from "@/components/card-rail";
 import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
@@ -239,62 +240,7 @@ export default function Home() {
         </section>
         <TestimonialCarousel />
       </main>
-      <footer className="footer">
-        <div className="wrap">
-          <div className="footer-main">
-            <div className="footer-brand">
-              <a href="#" className="footer-wordmark" aria-label="AET home">
-                <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services" width={520} height={120} />
-              </a>
-              <span>Professional Translation & Evaluation Services.</span>
-            </div>
-            <div>
-              <h3>EXPLORE</h3>
-              <a href="#services">Our services</a>
-              <a href={old + "/e-aboutus.php"}>About AET</a>
-              <a href={old + "/blog/"}>Insights & resources</a>
-              <a href={old + "/e-pay.php"}>Make a payment</a>
-            </div>
-            <div>
-              <h3>LET’S CONNECT</h3>
-              <a href={old + "/e-contact.php"}>
-                Contact our team <ArrowUpRight size={14} />
-              </a>
-              <a href={apply}>Start an application</a>
-              <a href={old + "/e-fee.php"}>Service fees</a>
-            </div>
-            <div className="offices">
-              <h3>OUR OFFICES</h3>
-              <p>
-                {[
-                  { n: "Miami", p: "miami" },
-                  { n: "Boston", p: "boston" },
-                  { n: "San Francisco", p: "san-francisco" },
-                  { n: "Los Angeles", p: "los-angeles" },
-                  { n: "New York", p: "nyc" },
-                  { n: "Beijing", p: "beijing" },
-                ].map((o) => (
-                  <a key={o.p} href={old + "/e-office-" + o.p + ".php"}>
-                    {o.n}
-                    <ArrowUpRight size={12} />
-                  </a>
-                ))}
-              </p>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <span>
-              © {new Date().getFullYear()} American Education and Translation
-              Services.
-            </span>
-            <div>
-              <a href={old + "/e-privacy-policy.php"}>Privacy policy</a>
-              <a href={old + "/e-terms-of-use.php"}>Terms of use</a>
-              <a href="#">Back to top ↑</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

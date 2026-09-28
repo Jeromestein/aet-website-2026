@@ -54,6 +54,36 @@ implementation and checks, not production deployment or accessibility certificat
   `output/playwright/header-mobile-2026-09-28.png`, and
   `output/playwright/header-mobile-menu-2026-09-28.png`.
 
+### Footer icons and office list — September 28, 2026
+
+- Removed every diagonal arrow from the footer and removed New York and San
+  Francisco from its office links at the owner's request. Added recognizable
+  monochrome LinkedIn, Yelp, Facebook, and Google icons beside their labels.
+- Codex in-app browser: checked the footer at 1440px and social icons at 390px;
+  confirmed four social SVGs, no arrow icons, no removed office links, visible
+  keyboard focus, and no mobile page overflow. Typecheck and diff checks passed.
+- Screenshots: `output/playwright/footer-social-desktop-2026-09-28.png` and
+  `output/playwright/footer-social-mobile-2026-09-28.png`.
+
+### Legacy footer redesign — September 28, 2026
+
+- Restored all 22 destinations from the legacy `footer.html`: five services,
+  four popular links, six offices, four social/review links, and three blog/legal
+  links. Preserved the original labels and 2009 - Present copyright statement.
+- Added a scoped, server-rendered footer component with the existing AET logo,
+  IRFC-inspired navy brand/navigation layout, and a separate legal row. Mobile
+  keeps services full-width above the popular-links and office columns.
+- Codex in-app browser: visually checked the desktop footer at 1440px and both
+  halves of the mobile footer at 390px. DOM checks at 320, 390, 760, 850, and
+  1440px found no page/footer overflow and all links have at least 44px height.
+  Confirmed logo loading, visible keyboard focus, and no captured console errors.
+- Compared rendered link destinations against the local legacy footer: all 22
+  match. External destination availability was not re-tested.
+- `pnpm typecheck` and `git diff --check` passed on the existing port-3021 server.
+  No production build or deployment was performed.
+- Screenshots: `output/playwright/footer-desktop-2026-09-28.png` and
+  `output/playwright/footer-mobile-2026-09-28.png`.
+
 ### Homepage testimonial carousel — September 28, 2026
 
 - Replaced the two-review section with all five legacy testimonials and original

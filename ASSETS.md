@@ -85,3 +85,12 @@ The business panel displayed 5.0 out of 5 (209 reviews at the time of checking).
 The section displays the score without a hard-coded review count and links to
 that search with tracking parameters removed. This rating is a verified snapshot,
 not an automatically updating feed.
+
+## Footer social icons — September 28, 2026
+
+`components/social-icon.tsx` contains the LinkedIn, Yelp, Facebook, and Google
+brand outlines from the legacy site's `font-awesome-4.7.0/fonts/fontawesome-webfont.svg`
+(glyphs F08C, F1E9, F082, F1A0). Font Awesome 4.7 font artwork is by Dave Gandy
+and licensed under SIL OFL 1.1: https://fontawesome.com/v4/license/. The outlines
+are rendered as monochrome SVGs beside the existing platform labels. Brand names
+and marks remain the property of their owners.

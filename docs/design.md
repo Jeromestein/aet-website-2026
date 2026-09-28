@@ -166,8 +166,15 @@ and clear open menus when crossing the desktop breakpoint. Native disclosures
 preserve basic menu access without JavaScript. Desktop dropdowns close on Escape,
 outside interaction, or moving keyboard focus away.
 
-**Footer:** full AET logo; groups service/resource/payment, contact/application,
-and existing office links. Keep privacy, terms, and business details accurate.
+**Footer:** uses an IRFC-inspired navy layout with the AET logo and social links at
+left, three navigation columns at right, and a thin divider above the legal row.
+Preserve the legacy footer labels and destinations: Top Service, More Services,
+Popular Links, Office, LinkedIn, Yelp, Facebook, Google, Blog, Terms of Use, and
+Privacy Policy. Keep the original 2009 - Present copyright wording. On mobile,
+place the brand and services above the two-column popular-links/office area; keep
+all content visible in normal flow with at least 44px link targets. Show only Miami,
+Boston, Los Angeles, and Beijing in the footer office list. Use recognizable brand
+icons beside the social-link labels, and omit diagonal arrows throughout the footer.
 
 **Actions:** orange Apply Now with edit icon; outlined blue Contact Us with phone icon.
 Other actions use blue or text links; dark sections use pale buttons. Hero buttons
