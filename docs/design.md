@@ -44,7 +44,7 @@ attributions; shorten only when meaning and qualifications remain intact.
 
 | Placement | Asset under `public/brand/` | Display rule |
 | --- | --- | --- |
-| Light header | `aet-logo-header.svg` | About 259px wide on desktop, 170–202px on mobile |
+| Light header | `aet-logo-header.svg` | 300px wide on desktop, 202–220px on phones |
 | Navy footer | `aet-logo-footer.svg` | Up to 280px wide, contained by its column |
 | Standalone emblem | `aet-emblem.png` | Larger brand placements |
 | Browser and application icons | `aet-icon-16/32/48/192/512.png` | Exported from `aet-browser-icon-source.png` |
@@ -151,9 +151,22 @@ Let content determine the height on mobile and when text is enlarged.
 | 9 | Client feedback | Five original testimonials and avatars in a manual carousel immediately before the footer |
 | 10 | Footer | Practical navigation and legal links |
 
-**Header/footer:** full AET logos; concise service/process/about links, language
-selector, and contact action. Mobile menu closes on selection or Escape and returns
-focus to its trigger. Footer groups service/resource/payment, contact/application,
+**Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
+navigation, and a separate language selector. Keep the legacy labels and order:
+Home, Evaluation, Services, Contact, Payment, Blog. Services contains all nine
+legacy service links; languages are English, 中文, and Español. Home stays on the
+rebuilt homepage; other destinations retain the legacy paths.
+
+At 1080px and below, show only the logo and one circular two-line menu button.
+Open a navy panel filling the viewport below the 76px header, with numbered
+navigation rows, an expandable Services list, and language choices at the bottom.
+The panel scrolls when content exceeds the viewport. With JavaScript, lock background
+scrolling and focus while open; close on selection or Escape, restore trigger focus,
+and clear open menus when crossing the desktop breakpoint. Native disclosures
+preserve basic menu access without JavaScript. Desktop dropdowns close on Escape,
+outside interaction, or moving keyboard focus away.
+
+**Footer:** full AET logo; groups service/resource/payment, contact/application,
 and existing office links. Keep privacy, terms, and business details accurate.
 
 **Actions:** orange Apply Now with edit icon; outlined blue Contact Us with phone icon.
@@ -223,7 +236,7 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
   150–250ms transitions; card hover elevation stays within 3px. Decorative motion is slow.
 - **Reduced motion:** stop continuous movement, pinned fact changes, and smooth scrolling.
   Keep content visible without enhancement; never make animation necessary to read it.
-- **Responsive behavior:** use mobile header/Hero below 760px; preserve about 110px
+- **Responsive behavior:** use the compact header at 1080px and below and mobile Hero below 760px; preserve about 110px
   anchor clearance. Permit taller sections, wrapping, and stacked layouts at 200% zoom.
   Only designated rails may overflow horizontally; the page itself must not.
 

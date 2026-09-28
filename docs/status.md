@@ -25,6 +25,35 @@ implementation and checks, not production deployment or accessibility certificat
   `output/playwright/testimonials-google-desktop-2026-09-28.png` and
   `output/playwright/testimonials-google-mobile-2026-09-28.png`.
 
+### Header redesign — September 28, 2026
+
+- Adopted the IRFC header structure: translucent light desktop bar, centered
+  navigation, separate language control, circular mobile toggle, and a navy
+  viewport-height mobile menu with numbered rows and expandable service links.
+  Retained AET artwork, fonts, and blue palette.
+- Restored Home, Evaluation, Services, Contact, Payment, and Blog from the legacy
+  `americantranslationservice.com/header.html`, including all nine Services links
+  and English/Chinese/Spanish options. Home points to this rebuilt homepage;
+  service, contact, payment, blog, and translated pages retain legacy destinations.
+- At 1080px and below, only the logo and hamburger remain in the top bar.
+  Native disclosures support basic access without JavaScript; enhancements add
+  Escape/outside/focus-away dismissal, focus containment, background scroll
+  locking, selection closing, and breakpoint resets.
+- Codex in-app browser: visually inspected desktop at 1440px and 1081px, phones
+  at 390px and 320px, desktop service/language dropdowns, mobile open/closed
+  states, and the expanded nine-service list. Verified keyboard expansion,
+  Escape focus restoration, language-to-logo focus wrap, and Home selection
+  closing the mobile panel. Scrolled the expanded list to its final service
+  and the lower navigation/language choices. Physical touch was not tested.
+- Width checks at 320, 390, 760, 850, 1080, 1081, 1200, and 1440px found no page
+  overflow. Reduced-motion and no-JavaScript fallbacks were inspected in code,
+  not separately browser-emulated for this change.
+- `pnpm typecheck` and `git diff --check` passed. Used the existing port-3021
+  preview; no server restart, production build, commit, push, or deployment.
+- Screenshots: `output/playwright/header-desktop-2026-09-28.png`,
+  `output/playwright/header-mobile-2026-09-28.png`, and
+  `output/playwright/header-mobile-menu-2026-09-28.png`.
+
 ### Homepage testimonial carousel — September 28, 2026
 
 - Replaced the two-review section with all five legacy testimonials and original
