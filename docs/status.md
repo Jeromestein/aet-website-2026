@@ -118,6 +118,59 @@ implementation and checks, not production deployment or accessibility certificat
 - Screenshots: `output/playwright/institutions-mobile-2026-09-28.png` and
   `output/playwright/institutions-desktop-2026-09-28.png`.
 
+### Fact scroll exit correction — September 28, 2026
+
+- Replaced viewport-based progress estimates with the actual sticky range:
+  section height minus scene height, starting at the scene's CSS top offset.
+  Each fact receives an equal interval; selectors land in its midpoint.
+- Section height derives from the fact count (one viewport plus 65vh per fact),
+  giving the last fact a full interval before the scene unpins.
+- Supplemental Playwright real-wheel checks at 1440x1000, 1512x800, and 1920x720:
+  facts appear as 15+, 100+, 2009, A+, and 5 at 10/30/50/70/90 percent;
+  scene top remains 100px through 98 percent, and moves upward after 100 percent.
+  The active card stays within the viewport at the sampled pinned positions.
+- Codex in-app browser: scrolled from BBB to Google at 1440x1000 and confirmed
+  the fifth card stays pinned. At 390px the native mobile rail still advances,
+  with natural section height and no horizontal overflow. Reduced-motion check
+  exposes all five facts and disables all sphere animations.
+- `pnpm typecheck` and `git diff --check` passed; used the existing port-3021
+  server. No production build or deployment was performed.
+- Screenshot: `output/playwright/facts-scroll-fifth-held-2026-09-28.png`.
+
+### Fifth Google review fact — September 28, 2026
+
+- Added a fifth fact panel for five-star Google reviews, with five gold stars
+  and a summary of the existing testimonial themes: responsive communication,
+  professional evaluations, and helpful service. This describes five-star
+  reviews, not a verified aggregate Google score or review count.
+- Extended the desktop section to 360vh to preserve reading time for five facts.
+- Codex in-app browser: selected the fifth panel at 1440px and navigated the
+  mobile rail to 5/5 at 390px. The final next control is disabled; the copy fits
+  and neither viewport has page overflow. Typecheck and diff checks passed.
+- Screenshots: `output/playwright/google-fifth-card-desktop-2026-09-28.png`
+  and `output/playwright/google-fifth-card-mobile-2026-09-28.png`.
+
+### Fourth BBB fact and floating spheres — September 28, 2026
+
+- Moved the BBB explanation from the introduction into a fourth fact panel with
+  a large A+, a Better Business Bureau heading, and the highest-rating/service
+  commitment copy. Added the fourth selector and retained native mobile rails.
+- Added eight decorative spheres (six on mobile) behind the content. Independent
+  slow drift combines with vertical-scroll or mobile-rail position changes.
+  Extended the desktop section to 295vh to retain reading time for all four facts.
+- Codex in-app browser: checked desktop at 1440px and mobile at 390px/320px.
+  Selected the fourth desktop panel and advanced the mobile rail to 4/4 with
+  its next control disabled. Copy fits and mobile has no page overflow.
+  Confirmed the desktop scroll progress changes from 0 to 1 and the first
+  sphere moves by 45px horizontally and 75px vertically.
+- Supplemental Playwright reduced-motion check: pinned switching is disabled,
+  all four facts are visible, all eight spheres have no animation or transform,
+  and the desktop page has no horizontal overflow.
+- `pnpm typecheck` and `git diff --check` passed. Used the existing port-3021
+  server; no production build or deployment was performed.
+- Screenshots: `output/playwright/bbb-fourth-card-desktop-2026-09-28.png` and
+  `output/playwright/bbb-fourth-card-mobile-2026-09-28.png`.
+
 ### Why Choose Us BBB emphasis — September 28, 2026
 
 - Follow-up: replaced the organization-name-only caption with highest-rating

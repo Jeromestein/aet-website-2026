@@ -1,16 +1,17 @@
 .impact-story { background: radial-gradient(ellipse at 85% 60%,#dfedf8,transparent 60%),#f0f7fc; position: relative; }
-.impact-scene { display:grid;grid-template-columns:1fr 1.1fr;gap:5%;align-items:center;padding-block:90px; }
+.impact-scene { position:relative;isolation:isolate;display:grid;grid-template-columns:1fr 1.1fr;gap:5%;align-items:center;padding-block:90px; }
 .impact-intro h2 { font-size:clamp(36px,4vw,58px);letter-spacing:-2px;margin:24px 0; }
 .impact-intro p { color:var(--muted);max-width:390px;font-size:17px;line-height:1.9; }
 .story-hint { display:block;font-size:10px;letter-spacing:.6px;color:var(--muted);margin-top:38px; }
 .impact-orbit { position:relative; }
 .impact-fact { text-align:center;padding:45px 30px;margin:20px 0;background:linear-gradient(135deg,var(--surface),#e4eff9);border:1px solid var(--line);border-radius:44% 56% 43% 57% / 56% 45% 55% 44%;box-shadow:0 25px 70px #35597612; }
+.fact-review-stars { display:flex;justify-content:center;gap:6px;color:#ba944d;margin:0 auto 20px; }
 .fact-icon { margin:0 auto 14px;color:#779fbf; }
 .impact-fact strong { display:block;font-size:clamp(65px,8vw,116px);font-weight:500;letter-spacing:-6px;line-height:1.1;color:var(--action-blue); }
 .impact-fact h3 { font-size:24px;margin:20px 0 12px; }
 .impact-fact p { max-width:340px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.8; }
 .story-dots { display:none; }
-.impact-story.is-enhanced { height:230vh; }
+.impact-story.is-enhanced { height:calc(100vh + var(--fact-count) * 65vh); }
 .is-enhanced .impact-scene { position:sticky;top:100px;min-height:calc(100vh - 110px);padding-block:30px; }
 .is-enhanced .impact-orbit { min-height:min(560px,75vh);display:grid;align-items:center; }
 .is-enhanced .impact-fact { grid-area:1/1;min-height:min(520px,68vh);display:flex;flex-direction:column;justify-content:center;margin:0;opacity:0;visibility:hidden;transform:translateY(25px) scale(.96);transition:opacity .55s,transform .65s,visibility .55s; }
@@ -19,10 +20,29 @@
 .story-dots button { width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;cursor:pointer; }
 .story-dots button span { width:7px;height:7px;border-radius:20px;background:#b5c9da;transition:width .3s,background .3s; }
 .story-dots button[aria-pressed=true] span { width:27px;background:var(--action-blue); }
-.orbit-spark { position:absolute;z-index:1;border-radius:50%;pointer-events:none;background:#cfdfed; }
-.spark-one { width:28px;height:28px;top:8%;right:6%;animation:orbit-drift 7s ease-in-out infinite; }
-.spark-two { width:14px;height:14px;bottom:8%;left:2%;background:#dacfae;animation:orbit-drift 9s ease-in-out infinite reverse; }
-@keyframes orbit-drift { 50% { transform:translate(8px,-18px); } }
+/* The outer sphere follows scroll; its inner surface drifts independently. */
+.impact-scene > .impact-intro, .impact-scene > .rail-shell { position:relative;z-index:1; }
+.impact-bubbles { position:absolute;inset-block:0;left:50%;width:100vw;transform:translateX(-50%);overflow:clip;pointer-events:none;z-index:0; }
+.impact-bubble { position:absolute;width:var(--size);height:var(--size);transform:translate3d(calc(var(--impact-progress,0) * var(--travel-x)),calc(var(--impact-progress,0) * var(--travel-y)),0); }
+.impact-bubble i { display:block;width:100%;height:100%;border-radius:50%;background:var(--bubble-color,#cbdfee80); }
+.impact-story[data-motion="true"] .impact-bubble i { animation:impact-float var(--duration,12s) ease-in-out infinite alternate;animation-delay:var(--delay,0s); }
+.bubble-1 { --size:112px;--travel-x:45px;--travel-y:75px;--delay:-3s;top:10%;left:6%; }
+.bubble-2 { --size:190px;--travel-x:35px;--travel-y:-100px;--duration:16s;--delay:-7s;--bubble-color:#d6e6f45c;top:49%;left:-9%; }
+.bubble-3 { --size:24px;--travel-x:-45px;--travel-y:65px;--duration:10s;--bubble-color:#dacfae80;top:16%;left:46%; }
+.bubble-4 { --size:42px;--travel-x:-55px;--travel-y:90px;--duration:13s;--delay:-5s;top:9%;right:5%; }
+.bubble-5 { --size:82px;--travel-x:-55px;--travel-y:-100px;--duration:15s;--delay:-9s;--bubble-color:#bcd4e85e;bottom:13%;right:0; }
+.bubble-6 { --size:48px;--travel-x:60px;--travel-y:-70px;--duration:11s;--delay:-2s;bottom:9%;left:24%; }
+.bubble-7 { --size:18px;--travel-x:75px;--travel-y:-65px;--duration:9s;--delay:-6s;--bubble-color:#dacfae99;bottom:15%;left:49%; }
+.bubble-8 { --size:28px;--travel-x:-65px;--travel-y:45px;--duration:14s;--delay:-4s;--bubble-color:#b8d2e680;top:40%;left:52%; }
+@keyframes impact-float { from { transform:translate3d(-5px,8px,0); } to { transform:translate3d(9px,-14px,0); } }
+@media (max-width:760px) {
+  .impact-bubble { width:calc(var(--size) * .6);height:calc(var(--size) * .6); }
+  .bubble-2,.bubble-8 { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .impact-bubble { transform:none; }
+  .impact-story[data-motion="true"] .impact-bubble i { animation:none; }
+}
 .journey-story { background:radial-gradient(ellipse at 0 40%,#365e7b,transparent 65%),var(--ink);color:var(--surface);padding:95px 0 70px; }
 .journey-heading { max-width:760px;margin-bottom:55px; }
 .journey-story .eyebrow { color:#b9d1e4; }
@@ -61,14 +81,13 @@
 .impact-intro p { font-size:15px; }.story-hint { display:none; }
 .impact-orbit { display:grid;gap:15px;grid-template-columns:repeat(3,1fr); }
 .impact-fact { border-radius:26px;padding:28px 14px;margin:0; }.impact-fact strong { font-size:49px;letter-spacing:-2px; }.impact-fact h3 { font-size:17px; }.impact-fact p { font-size:12px; }.fact-icon { width:36px;height:36px; }
-.orbit-spark { display:none; }
 .journey-story { padding-block:65px; }.journey-heading { margin-bottom:36px; }.journey-layout { display:block; }.journey-media { display:none; }.journey-stage { display:block;min-height:0;margin-top:28px; }.journey-mobile-image { display:block;position:relative;height:320px;border-radius:26px 26px 0 0;overflow:hidden;background:#dbeaf5; }.journey-card { border-radius:0 0 26px 26px;padding:28px; }.journey-stage:not(.is-active) .journey-card { opacity:1;transform:none; }.document-sheet { max-width:270px;padding:18px;height:87%; }.document-sheet > svg { width:35px;height:35px; }.document-sheet strong { font-size:25px;margin:8px 0; }.document-sheet > span { margin-bottom:8px; }
 }
 @media(max-width:540px) {
 .impact-orbit { grid-template-columns:1fr; }.impact-fact { padding:30px 25px;border-radius:38% 45% 35% 42%; }.impact-fact strong { font-size:68px; }.impact-fact h3 { font-size:22px; }.impact-fact p { font-size:14px; }.impact-intro h2 { font-size:34px; }.journey-card { gap:16px;padding:26px 22px; }.journey-number { width:37px;height:37px;font-size:11px; }.journey-card h3 { font-size:25px; }.journey-card p { font-size:14px; }.journey-mobile-image { height:290px; }
 }
 @media(prefers-reduced-motion:reduce) {
-.orbit-spark { animation:none; }.journey-photo,.journey-card,.impact-fact { transition:none; }.journey-stage:not(.is-active) .journey-card { opacity:1;transform:none; }
+.journey-photo,.journey-card,.impact-fact { transition:none; }.journey-stage:not(.is-active) .journey-card { opacity:1;transform:none; }
 }
 
 /* Match the IRFC impact and connected-story typography. */

@@ -142,7 +142,7 @@ Let content determine the height on mobile and when text is enlarged.
 | --- | --- | --- |
 | 1 | Hero | Fixed text, two actions, BBB artwork, professional photo on pale blue |
 | 2 | Institutions | Two logo rows immediately after Hero; same background, supporting sentence and link |
-| 3 | AET at a glance | Fraunces heading, persistent BBB A+ Rating with highest-rating context and a service commitment beneath the introduction, organic fact panels with experience, language coverage, and ATA membership |
+| 3 | AET at a glance | Fraunces heading, five organic fact panels for experience, language coverage, ATA membership, BBB A+, and five-star Google reviews |
 | 4 | Services | Featured evaluation card plus supporting services |
 | 5 | Process | Three numbered steps: choose a service, provide documents, receive results/support |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
@@ -232,10 +232,16 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
   at either end. Use native horizontal scrolling without autoplay, and disable
   smooth movement under reduced motion. Omit undated relative timestamps.
 - **Facts:** above 850px, a sticky composition may change facts with scroll and labeled
-  selectors. Allow about 230vh with the inner panel below the header. At 760px and
+  selectors. Allocate 65vh of scrolling per fact plus one viewport for the scene
+  (425vh for five facts), with the inner panel below the header. Map switching to
+  the actual sticky travel distance in equal intervals so the final fact has a
+  full reading interval before the scene exits. At 760px and
   below, use the manual card rail. At 761–850px, use an unpinned layout. Reduced motion
   or unavailable JavaScript must disable sticky fact switching and expose all facts;
   preserve the manual rail on mobile.
+- **Fact background:** pale-blue spheres with restrained gold accents drift slowly
+  and shift with vertical scrolling or mobile card swipes. Keep them behind content,
+  non-interactive, and hidden from assistive technology. Reduced motion freezes them.
 - **Process:** desktop uses sticky imagery and numbered cards; transitions take
   550–700ms. At 850px and below, stack each image above its description. Do not put
   required steps, FAQs, Hero copy, or footer information into swipe-only rails.
