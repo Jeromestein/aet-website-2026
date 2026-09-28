@@ -6,8 +6,6 @@ const legacy = "https://www.americantranslationservice.com";
 const services = [
   ["Certified Translation", "/e-notarized.php"],
   ["Interpretation", "/e-interpretation.php"],
-  ["Visa", "/e-visaservice.php"],
-  ["Consular Authentication", "/e-authentication.php"],
 ];
 const popular = [
   ["Service Fee", "/e-fee.php"],

@@ -29,6 +29,26 @@ Only `/` is rebuilt. Application and pre-evaluation buttons connect to the exist
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 
+## Service scope
+
+As requested by the owner on September 28, 2026, the Services menu retains only:
+
+- Certified Translation
+- Technical Translation
+- Interpretation
+- Expert Opinion Letters
+- General Translation
+- Notarization
+
+Visa Services, Editing/Proofreading, and China Consular Authentication are removed
+from the rebuilt website's desktop/mobile navigation, homepage service cards,
+and footer wherever previously listed. Do not reintroduce their labels or links
+when copying content from the legacy website. Foreign Credential Evaluation,
+its evaluation types, and Pre-Evaluation Services remain available.
+
+This scope applies to this rebuilt homepage; it does not delete legacy website
+pages or change the separate application portal.
+
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.

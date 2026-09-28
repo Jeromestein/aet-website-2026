@@ -5,6 +5,37 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Reduced service scope — September 28, 2026
+
+- Removed Visa Services, Editing/Proofreading, and China Consular Authentication
+  from both navigation menus. Removed the Visa Services homepage card and the
+  Visa / Consular Authentication footer links. The other six menu services remain.
+- Recorded the retained services and exclusions in README.md and aligned the
+  design guide. Legacy pages and the separate application portal were not changed.
+- Codex in-app browser: verified the expanded six-item desktop menu at 1440px
+  and mobile menu at 390px, the mobile service rail reaching Technical Translation
+  at 3 / 3, and the mobile footer. No removed service destination remains in the
+  homepage DOM; the mobile page has no horizontal overflow.
+- `pnpm typecheck` and `git diff --check` passed. Reused the existing development
+  server; no build, restart, push, or deployment.
+- Evidence: `output/playwright/services-retained-desktop-2026-09-28.png` and
+  `output/playwright/services-retained-mobile-2026-09-28.png`.
+
+### Restored FCE introduction and benefits — September 28, 2026
+
+- Restored “What is Foreign Credential Evaluation?” and its complete paragraph,
+  plus “Why Choose AET for FCE?” and all four benefits from the legacy
+  `americantranslationservice.com/home-content.html`, preserving the wording.
+- Placed the content before the existing evaluation/services cards. Desktop uses
+  two columns; at 850px and below the introduction and benefits stack in reading order.
+- Codex in-app browser: visually verified the new content at 1440px and 390px.
+  Width checks at 320, 390, 760, 850, and 1440px found no horizontal page overflow;
+  the new text also fits its containers at the narrow and intermediate widths.
+- `pnpm typecheck` and `git diff --check` passed. Reused the owner's port-3021
+  server; no build, restart, push, or deployment.
+- Evidence: `output/playwright/fce-desktop-2026-09-28.png` and
+  `output/playwright/fce-mobile-2026-09-28.png`.
+
 ### Transparent browser icons — September 28, 2026
 
 - Replaced browser PNG/ICO and manifest icon exports with transparent-background

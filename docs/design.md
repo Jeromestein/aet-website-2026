@@ -33,7 +33,10 @@ and government agencies nationwide. Keep this sentence with **Explore all instit
 
 Use the existing service names: Foreign Credential Evaluation; Document by Document
 Evaluation; Course by Course Evaluation; Expert Opinion Letters; Pre-Evaluation
-Services; Certified Translation; Interpretation; Technical Translation; Visa Services.
+Services; Certified Translation; Interpretation; Technical Translation;
+General Translation; Notarization. Exclude Visa Services, Editing/Proofreading,
+and China Consular Authentication from navigation, service cards, and footer
+links, following the service scope in README.md.
 Retain original supporting headings such as Why Choose Us, Other Services, and
 What Our Clients Say where applicable. Preserve original descriptions and testimonial
 attributions; shorten only when meaning and qualifications remain intact.
@@ -154,8 +157,8 @@ Let content determine the height on mobile and when text is enlarged.
 
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
 navigation, and a separate language selector. Keep the legacy labels and order:
-Home, Evaluation, Services, Contact, Payment, Blog. Services contains all nine
-legacy service links; languages are English, 中文, and Español. Home stays on the
+Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
+retained service links listed in README.md; languages are English, 中文, and Español. Home stays on the
 rebuilt homepage; other destinations retain the legacy paths.
 
 At 1080px and below, show only the logo and one circular two-line menu button.

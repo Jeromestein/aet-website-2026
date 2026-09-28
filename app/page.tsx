@@ -15,6 +15,7 @@ import {
   Plus,
   SquarePen,
   Phone,
+  CircleCheck,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
 const old = "https://www.americantranslationservice.com";
@@ -26,7 +27,6 @@ const services = [
   { icon: Languages, number: "02", title: "Certified Translation", text: "Certified / Notarized Translation. Used for: USCIS / Colleges / DMV etc.", href: "/e-notarized.php", tag: "Translation" },
   { icon: MessageCircle, number: "03", title: "Interpretation", text: "Professional Interpretation covers most metropolitan areas.", href: "/e-interpretation.php", tag: "Interpretation" },
   { icon: FileCheck2, number: "04", title: "Technical Translation", text: "Including Scientific / Industrial / Medical / Business / Legal / Education Translation.", href: "/e-tech-translation.php", tag: "Specialized translation" },
-  { icon: Globe2, number: "05", title: "Visa Services", text: "China, Canada, Schengen(Europe), UK, Japan, Korea, etc.", href: "/e-visaservice.php", tag: "Visa services" },
 ];
 const faqs = [
   [
@@ -104,6 +104,28 @@ export default function Home() {
             <p>
               Professional evaluation of international educational credentials for employment, immigration, and education purposes in the United States.
             </p>
+          </div>
+          <div className="fce-overview">
+            <div className="fce-introduction">
+              <h3>What is Foreign Credential Evaluation?</h3>
+              <p>
+                Foreign Credential Evaluation is a service provided by professional
+                evaluation agencies to evaluate educational backgrounds, test
+                scores, and professional experiences obtained outside the United
+                States. It's essential for foreign nationals seeking work
+                authorization (H1B), immigration status, employment, education, and
+                other purposes in the US.
+              </p>
+            </div>
+            <div className="fce-benefits">
+              <h3>Why Choose AET for FCE?</h3>
+              <ul>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Fast Processing:</strong> 7 business days (expedite available)</span></li>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Competitive Pricing:</strong> Starting at $100</span></li>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Quick Response:</strong> Email replies within 30 minutes</span></li>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Online Payment:</strong> Convenient payment options</span></li>
+              </ul>
+            </div>
           </div>
           <div className="services-grid">
             <a
