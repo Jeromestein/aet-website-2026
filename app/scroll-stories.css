@@ -52,8 +52,11 @@
 .journey-media { position:sticky;top:130px;height:min(620px,70vh);border-radius:36px;overflow:hidden;background:#dbeaf5; }
 .journey-photo { position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s,visibility .7s; }
 .journey-photo.is-active { opacity:1;visibility:visible; }
-.journey-photo > img,.journey-mobile-image > img { object-fit:cover;object-position:38% center; }
-.journey-photo:after { content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#102f4bcc);pointer-events:none; }
+.journey-photo { background:var(--surface); }
+.journey-screen-label { position:absolute;inset:0 0 auto;padding:16px 24px;border-bottom:1px solid var(--line);background:var(--blue);color:var(--action-blue);font-size:10px;font-weight:600;letter-spacing:1.2px; }
+.journey-screen { position:absolute;inset:58px 16px 116px; }
+.journey-screen img { object-fit:contain; }
+.journey-photo:after { content:"";position:absolute;inset:auto 0 0;height:100px;background:var(--ink);pointer-events:none; }
 .journey-caption { position:absolute;z-index:1;bottom:40px;left:28px;right:20px;display:flex;gap:18px;align-items:center;font-size:13px; }
 .journey-caption > span,.journey-number { display:grid;place-items:center;width:52px;height:52px;flex-shrink:0;border-radius:50%;background:#dcebf6;color:var(--action-blue);font-size:14px;font-weight:600; }
 .journey-progress { position:absolute;z-index:2;bottom:18px;left:28px;right:28px;display:flex;gap:7px; }
@@ -114,7 +117,3 @@
 @media (max-width: 540px) {
   .impact-fact strong { font-size: 112px; }
 }
-
-/* Keep both faces and the shared documents in view when cropping the portrait. */
-.journey-photo > .consultation-image,
-.journey-mobile-image > .consultation-image { object-position: 50% 66%; }

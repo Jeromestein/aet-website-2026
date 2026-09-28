@@ -68,6 +68,11 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
 .journey-story:not(.is-enhanced) .journey-mobile-image { display: block; position: relative; overflow: hidden; border-radius: 28px 28px 0 0; height: 360px; }
 .journey-story:not(.is-enhanced) .journey-stage { display: block; min-height: 0; margin-top: 32px; }
 .journey-story:not(.is-enhanced) .journey-card { opacity: 1; transform: none; border-radius: 0 0 28px 28px; }
+.journey-heading .journey-apply { margin-top:32px;min-height:68px;padding:18px 28px;gap:14px;background:var(--orange);color:var(--surface);border:2px solid #ffffffb3;border-radius:12px;font-size:clamp(1rem,1.7vw,1.35rem);box-shadow:0 12px 30px #081c3340; }
+.journey-heading .journey-apply:hover { background:var(--orange-hover); }
+.journey-heading .journey-apply:focus-visible { outline:3px solid var(--surface);outline-offset:5px; }
+.journey-story:not(.is-enhanced) .journey-mobile-image { height:auto;aspect-ratio:725 / 690;background:var(--surface);max-height:640px; }
+.journey-mobile-image .journey-screen { inset:58px 12px 18px; }
 .preview-copy { padding: 48px; }
 .preview-copy .eyebrow { font-size: .75rem; }
 .preview-copy h2 { font-size: clamp(2.15rem, 3.6vw, 3.8rem); line-height: 1.12; overflow-wrap: anywhere; }
@@ -171,7 +176,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .journey-heading h2 { font-size: clamp(2.5rem, 12vw, 3.45rem); line-height: 1.04; }
   .journey-heading { margin-bottom: 48px; }
   .journey-heading p, .journey-card p { font-size: 1rem; }
-  .journey-story:not(.is-enhanced) .journey-mobile-image { height: 320px; }
+  .journey-heading .journey-apply { width:100%;padding-inline:16px;justify-content:center; }
   .journey-card { padding: 28px 24px; gap: 16px; }
   .journey-card h3 { font-size: 1.65rem; }
   .journey-card .eyebrow { font-size: .75rem; }

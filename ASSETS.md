@@ -16,8 +16,23 @@ The hero photograph is used illustratively; no identity or employment relationsh
 
 ## Licensed stock photography
 
-- `public/images/document-consultation.jpg`: "Two Women Looking at Files in the Office" by Mizuno K, [Pexels photo 12903274](https://www.pexels.com/photo/two-women-looking-at-files-in-the-office-12903274/). Downloaded September 23, 2026 at 1600 px width. Used in the document submission step under the [Pexels License](https://www.pexels.com/license/). Illustrative stock photography; the people are not identified as AET employees or clients.
+- `public/images/document-consultation.jpg`: "Two Women Looking at Files in the Office" by Mizuno K, [Pexels photo 12903274](https://www.pexels.com/photo/two-women-looking-at-files-in-the-office-12903274/). Downloaded September 23, 2026 at 1600 px width under the [Pexels License](https://www.pexels.com/license/). Former process illustration, retained as an unused asset after replacement with application screenshots. The people are not identified as AET employees or clients.
 - The existing `graduates.jpg` remains in use at the user's request.
+
+## Online application screenshots — September 28, 2026
+
+Captured directly in the Codex in-app browser from
+https://app.americantranslationservice.com/credential-evaluation-application.
+The PNGs under `public/images/application/` are cropped screenshots, with no
+recreated interface or altered form content:
+
+- `evaluation-type.png`: expanded Service Type menu and sample-report links.
+- `client-information.png`: application title, progress stages, and empty client form.
+- `office-selection.png`: expanded Office menu and request-detail guidance.
+
+No personal data was entered, no files were uploaded, and no application was submitted.
+Placeholder examples belong to the live form. Office options record the live menu
+at capture time; the image illustrates office selection, not document upload.
 
 ## Typography
 

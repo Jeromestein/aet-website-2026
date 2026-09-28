@@ -5,6 +5,29 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Process application screenshots and CTA — September 28, 2026
+
+- Added a prominent orange Start Application button below the process introduction,
+  linking to the owner's credential-evaluation application URL. Mobile uses a
+  full-width button; keyboard focus has a visible white outline.
+- Replaced all three process photographs with screenshots captured from the live
+  application's Service Type menu, Client Information form, and Office menu.
+  Restored the legacy three-step sequence: choose evaluation type, complete the
+  application, and submit documents to an office. The third image illustrates
+  office selection; it does not represent an upload or successful submission.
+- Screenshots keep their proportions and full content in white frames. Desktop
+  retains the scrolling image transitions; mobile stacks each image with its copy.
+- Codex in-app browser: visually checked all three stages at 1440px and 390px,
+  plus the CTA at 320px. No horizontal page overflow at these widths. All active
+  screenshots loaded. Keyboard activation of the new CTA reached the exact live
+  application URL. No personal data, uploads, or application submissions were used.
+- `pnpm typecheck` and `git diff --check` passed. Reused the owner's port-3021
+  server; no build, server restart, push, or deployment.
+- Evidence: `output/playwright/process-desktop-2026-09-28.png`,
+  `process-step2-2026-09-28.png`, `process-step3-2026-09-28.png`, and
+  `process-mobile-2026-09-28.png` in the same directory. Reduced-motion and
+  no-JavaScript behavior was not separately browser-tested in this change.
+
 ### Google rating and equal-height testimonials — September 28, 2026
 
 - Shortened xiao h to the second original paragraph at the owner's request.
@@ -240,9 +263,8 @@ implementation and checks, not production deployment or accessibility certificat
       FAQ processing time, and existing destinations remain in place.
       Source: the legacy site's `home-content.html`, documented in ASSETS.md.
 - [x] Kept the homepage sections in the design-guide order. The three process
-      stages now cover choosing an evaluation, providing the application/documents,
-      and receiving an evaluation with a contact-team next step. No delivery guarantee
-      or new processing-time claim was added.
+      stages cover choosing an evaluation type, completing the application,
+      and submitting documents to an office, illustrated by live application screenshots.
 - [x] Implemented native mobile rails for facts, supporting services, and testimonials
       at 760px and below. Each uses 88% cards, 16px gaps, proximity snapping, an exposed
       next-card edge, and progressive previous/next controls. All last cards are fully

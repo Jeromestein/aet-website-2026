@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { CardRail } from "./card-rail";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowUpRight, FileCheck2, Globe2, GraduationCap, ShieldCheck, Star } from "lucide-react";
+import { ArrowUpRight, FileCheck2, Globe2, GraduationCap, ShieldCheck, SquarePen, Star } from "lucide-react";
 
 const facts = [
   { value: "15+", title: "Years of experience", text: "Thousands of certified evaluations submitted.", Icon: GraduationCap },
@@ -102,18 +102,14 @@ export function ImpactStory() {
 }
 
 const steps = [
-  { label: "YOUR GOAL", title: "Choose your evaluation type", text: "Choose your evaluation type based on your purpose.", image: "/images/hero.webp", alt: "A woman working at her laptop", caption: "Choose your evaluation type" },
-  { label: "YOUR DOCUMENTS", title: "Provide your documents", text: "Complete our application form. Submit documents to any of our offices.", image: "/images/document-consultation.jpg", alt: "Two women reviewing documents together in a bright office", caption: "Application and documents" },
-  { label: "YOUR RESULTS", title: "Receive your evaluation", text: "Contact our team for guidance on your evaluation report and next steps.", image: "/images/graduates.jpg", alt: "Graduates celebrating their academic achievement", caption: "Your evaluation and next steps" },
+  { label: "YOUR GOAL", title: "Choose your evaluation type", text: "Choose your evaluation type based on your purpose.", image: "/images/application/evaluation-type.png", alt: "AET application Service Type menu showing evaluation for USCIS, employment, and education", caption: "Choose your evaluation type" },
+  { label: "YOUR APPLICATION", title: "Complete our application form", text: "Enter your client information, evaluee information, and service details in our online application.", image: "/images/application/client-information.png", alt: "AET online application showing the Client Information form and four application stages", caption: "Complete your application" },
+  { label: "YOUR DOCUMENTS", title: "Submit your documents", text: "Submit documents to any of our offices. Select your office in the application form.", image: "/images/application/office-selection.png", alt: "AET application Office menu showing Los Angeles, Miami, and San Francisco", caption: "Select your office" },
 ];
 
 function StepVisual({ index }: { index: number }) {
   const step = steps[index];
-  // Landscape photos fill a portrait frame: request pixels for the covered height too.
-  const sizes = index === 1
-    ? "(max-width: 850px) 90vw, 48vw"
-    : "(max-width: 540px) max(90vw, 516px), (max-width: 850px) max(90vw, 569px), max(48vw, min(1103px, 124.45vh))";
-  return <Image src={step.image} alt={step.alt} fill sizes={sizes} className={index === 1 ? "consultation-image" : undefined} />;
+  return <><div className="journey-screen-label">AET ONLINE APPLICATION</div><div className="journey-screen"><Image src={step.image} alt={step.alt} fill sizes="(max-width: 850px) 90vw, 48vw" /></div></>;
 }
 
 export function ProcessStory() {
@@ -142,7 +138,7 @@ export function ProcessStory() {
     return () => { media.removeEventListener("change", configure); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
   }, []);
   return <section ref={root} className={`journey-story ${enhanced ? "is-enhanced" : ""}`} id="process" aria-labelledby="journey-title"><div className="wrap">
-    <div className="journey-heading"><span className="eyebrow">02 / A CLEAR PATH FORWARD</span><h2 id="journey-title">Simple 3-Step Process</h2><p>Choose your evaluation type based on your purpose.</p></div>
+    <div className="journey-heading"><span className="eyebrow">02 / A CLEAR PATH FORWARD</span><h2 id="journey-title">Simple 3-Step Process</h2><p>Choose your evaluation type based on your purpose.</p><a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application"><SquarePen size={24} aria-hidden="true" />Start Application<ArrowUpRight size={24} aria-hidden="true" /></a></div>
     <div className="journey-layout"><div className="journey-media">
       {steps.map((step, i) => <div key={step.label} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}><StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div></div>)}
       <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.label} className={i <= active ? "is-active" : ""} />)}</div>
