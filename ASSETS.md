@@ -10,7 +10,7 @@ Source: `/Users/plusone/Desktop/Code/server-54.213.58.23/americantranslationserv
 | public/images/ata.jpg       | images/ata2.jpg                |
 | public/images/bbb.jpg       | images/BBB2.jpg                |
 
-Service descriptions and FAQs are adapted from the existing homepage and its linked service descriptions. Nicole Truong and Niva E testimonials are reproduced from `home-content.html` with typographic punctuation changes. Experience, language coverage, ATA membership and BBB imagery originate from the existing site; they have not been independently recertified. No new institutional endorsements or review counts are introduced.
+Service descriptions and FAQs are adapted from the existing homepage and its linked service descriptions. All five client testimonials come from `home-content.html`; at the owner’s request, xiao h uses only the second original paragraph as an excerpt, while the other four reviews remain complete. Undated relative timestamps are omitted. Experience, language coverage, ATA membership and BBB imagery originate from the existing site; they have not been independently recertified. No new institutional endorsements or review counts are introduced.
 
 The hero photograph is used illustratively; no identity or employment relationship is asserted. All photos remain local. Interface icons use lucide-react (ISC license).
 
@@ -69,3 +69,19 @@ mark for a pale-blue Hero. Preserve the BBB torch, lettering, SM and proportions
 remove the surrounding border and white/navy backplates. Place the exact text
 “A+ Rating” in navy beside a thin separator. No additional words, stars, shields,
 certification claims, shadows, gradients, or mockup background.
+
+## Client testimonial carousel — September 28, 2026
+
+The five avatars in `public/images/testimonials/` are unchanged copies of the
+legacy `images/testimonials/` files: `xiao_h.png`,
+`North-American-Economic-Herald.png`, `Andrew-Ryan.png`, `Nicole Truong.png`
+(renamed `Nicole-Truong.png`), and `Niva-E.png`. Names, five-star ratings, and
+review text in `components/testimonials.json` come from the same
+legacy homepage. These are existing reviews, not a newly fetched review feed.
+
+Google rating checked September 28, 2026 in the owner-provided Google search:
+[American Education and Translation Services (AET), Florida](https://www.google.com/search?q=american+education+and+translation+services+%28aet%29+florida).
+The business panel displayed 5.0 out of 5 (209 reviews at the time of checking).
+The section displays the score without a hard-coded review count and links to
+that search with tracking parameters removed. This rating is a verified snapshot,
+not an automatically updating feed.

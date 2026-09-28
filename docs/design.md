@@ -146,9 +146,10 @@ Let content determine the height on mobile and when text is enlarged.
 | 4 | Services | Featured evaluation card plus supporting services |
 | 5 | Process | Three numbered steps: choose a service, provide documents, receive results/support |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
-| 7 | Client feedback | Original testimonials and attribution |
-| 8 | Questions | Native expandable questions and contact action |
-| 9 | Closing and footer | Clear next step, practical navigation, legal links |
+| 7 | Questions | Native expandable questions and contact action |
+| 8 | Closing | Clear application next step |
+| 9 | Client feedback | Five original testimonials and avatars in a manual carousel immediately before the footer |
+| 10 | Footer | Practical navigation and legal links |
 
 **Header/footer:** full AET logos; concise service/process/about links, language
 selector, and contact action. Mobile menu closes on selection or Escape and returns
@@ -200,6 +201,16 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
   introduction to logos, and 12px / 8px between rows. On mobile, keep supporting
   copy at 16px with 1.6 line height and place the footer link on its own line with
   a minimum 44px target height.
+- **Client feedback carousel:** show two cards on desktop and one 88%-width card
+  with a next-card cue at 760px and below. Preserve all five legacy reviews,
+  using the second original paragraph as the owner-requested xiao h excerpt,
+  and keep avatars proportional. All cards share the tallest natural card height
+  at each viewport, without changing height between slides or truncating text.
+  Highlight the verified Google 5.0 rating beside the heading and link to the
+  owner-provided Google search for more reviews.
+  Keep previous/next controls and the visible range above the cards; buttons wrap
+  at either end. Use native horizontal scrolling without autoplay, and disable
+  smooth movement under reduced motion. Omit undated relative timestamps.
 - **Facts:** above 850px, a sticky composition may change facts with scroll and labeled
   selectors. Allow about 230vh with the inner panel below the header. At 760px and
   below, use the manual card rail. At 761–850px, use an unpinned layout. Reduced motion

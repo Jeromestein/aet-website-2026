@@ -1,0 +1,35 @@
+.section { padding-top: 24px; }
+.heading { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-bottom: 40px; }
+.heading h2 { max-width: 760px; margin-bottom: 0; }
+.heading > div:first-child { min-width: 0; }
+.googleRating { flex: 0 0 260px; padding: 8px 0 8px 32px; border-left: 1px solid var(--line); }
+.googleLabel { display: block; font-size: 1rem; font-weight: 600; color: var(--ink); }
+.ratingScore { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.ratingScore strong { font-size: 2.5rem; font-weight: 600; line-height: 1.2; letter-spacing: -.04em; }
+.ratingStars { color: #ad6900; font-size: 1.25rem; letter-spacing: 3px; white-space: nowrap; }
+.googleRating a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--action-blue); font-size: .875rem; font-weight: 600; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line); }
+.googleRating a:hover { text-decoration-color: currentColor; }
+.googleRating a:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 4px; border-radius: 4px; }
+.rail { position: relative; display: flex; align-items: stretch; gap: 24px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #9cb8cb transparent; padding-bottom: 16px; }
+.card { flex: 0 0 calc((100% - 24px) / 2); min-width: 0; padding: 36px; border: 1px solid var(--line); border-radius: 28px; background: var(--blue); scroll-snap-align: start; }
+.person { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.person img { flex: 0 0 48px; width: 48px; height: 48px; aspect-ratio: 1; border-radius: 50%; object-fit: contain; }
+.person h3 { font-size: 1.0625rem; font-weight: 600; line-height: 1.5; margin: 0 0 4px; overflow-wrap: anywhere; }
+.stars { color: #ad6900; font-size: 1.125rem; letter-spacing: 3px; white-space: nowrap; }
+.card blockquote { margin: 0; }
+.card p { font-size: 1rem; line-height: 1.8; margin: 0; }
+.card p + p { margin-top: 20px; }
+.controls { display: flex; align-items: center; justify-content: end; gap: 12px; margin-bottom: 24px; }
+.controls > span { margin-right: auto; color: var(--muted); font-size: .875rem; }
+.controls button { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); cursor: pointer; }
+.controls button:hover { border-color: var(--action-blue); background: var(--blue); }
+.controls button:focus-visible, .rail:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 4px; }
+@media (max-width: 760px) {
+  .section { padding-top: 8px; }
+  .heading { display: block; margin-bottom: 28px; }
+  .googleRating { margin-top: 24px; padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .rail { gap: 16px; }
+  .card { flex-basis: 88%; padding: 28px 24px; border-radius: 24px; }
+  .card:last-child { margin-right: 12%; }
+  .person { align-items: start; gap: 12px; }
+}

@@ -1,11 +1,11 @@
 import Image from "next/image";
+import { TestimonialCarousel } from "@/components/testimonial-carousel";
 import { CardRail } from "@/components/card-rail";
 import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
 import {
   ArrowRight,
   ArrowUpRight,
-  CheckCheck,
   GraduationCap,
   Languages,
   Globe2,
@@ -194,63 +194,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="section wrap reviews" id="stories">
-          <div className="section-heading" data-reveal>
-            <div>
-              <span className="eyebrow">
-                03 / CLIENT FEEDBACK
-              </span>
-              <h2>
-                What Our Clients Say
-              </h2>
-            </div>
-            <div className="rating-note">
-              <span className="stars" aria-label="5 stars">
-                ★★★★★
-              </span>
-              <span>Client experiences with AET</span>
-            </div>
-          </div>
-          <CardRail className="review-grid" label="Client testimonials">
-            <article className="review-card" data-rail-card data-reveal>
-              <span className="quote-mark" aria-hidden="true">“</span>
-              <blockquote>
-                It is a good company that will give you a good service. I’ve
-                just used their credential evaluation service and I strongly
-                recommend it if you’re looking for professional evaluation
-                services. They replied almost immediately to all of my emails,
-                and their evaluation report looks professional and
-                comprehensive.
-              </blockquote>
-              <div className="review-person">
-                <span className="avatar">NT</span>
-                <div>
-                  <strong>Nicole Truong</strong>
-                  <span>Credential evaluation</span>
-                </div>
-                <CheckCheck size={20} />
-              </div>
-            </article>
-            <article className="review-card" data-rail-card data-reveal>
-              <span className="quote-mark" aria-hidden="true">“</span>
-              <blockquote>
-                American Education Translation Services did a great job
-                evaluating my foreign credentials for professional licensing.
-                The evaluator was very friendly, smart and professional. Very
-                fast turnaround time. Will definitely use again. Highly
-                recommendable!
-              </blockquote>
-              <div className="review-person">
-                <span className="avatar blue">NE</span>
-                <div>
-                  <strong>Niva E</strong>
-                  <span>Professional licensing</span>
-                </div>
-                <CheckCheck size={20} />
-              </div>
-            </article>
-          </CardRail>
-        </section>
         <section className="faq-section wrap" id="questions">
           <div data-reveal>
             <span className="eyebrow">QUESTIONS & ANSWERS</span>
@@ -294,6 +237,7 @@ export default function Home() {
             ↗
           </span>
         </section>
+        <TestimonialCarousel />
       </main>
       <footer className="footer">
         <div className="wrap">

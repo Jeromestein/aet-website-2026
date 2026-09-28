@@ -5,6 +5,45 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Google rating and equal-height testimonials — September 28, 2026
+
+- Shortened xiao h to the second original paragraph at the owner's request.
+  The other four reviews remain complete. Removed per-slide height changes:
+  all cards now stretch to the tallest natural height for the current viewport.
+  Avatars retain explicit 48 x 48 dimensions and contain their original images.
+- Added a restrained Google reviews summary with 5.0, five gold stars, and
+  “Read more reviews” linking to the owner's Google search in a new tab.
+  Checked the live Google business panel: 5.0 out of 5 on September 28, 2026.
+  The score is static; no live review count is displayed.
+- Codex in-app browser: desktop (1440px) and mobile (390px) inspected. All five
+  cards measure the same height, and the rail height remains unchanged after
+  keyboard-activated next/previous navigation. At 320px, all cards also remain
+  equal-height, all avatars remain 48 x 48, and there is no page overflow.
+  Verified the outbound href and new-tab target against the supplied destination.
+- `pnpm typecheck` and `git diff --check` passed. Existing preview server reused;
+  no production build or deployment. Screenshots:
+  `output/playwright/testimonials-google-desktop-2026-09-28.png` and
+  `output/playwright/testimonials-google-mobile-2026-09-28.png`.
+
+### Homepage testimonial carousel — September 28, 2026
+
+- Replaced the two-review section with all five legacy testimonials and original
+  avatars; retained both xiao h paragraphs and omitted undated relative timestamps.
+- Moved client feedback after the closing application panel, immediately before
+  the footer. Desktop shows two cards; mobile shows an 88%-width card and a next-card
+  cue. Previous/next buttons loop at both ends, with a visible range counter above
+  the cards. Height follows the fully visible reviews without truncating copy.
+- Codex in-app browser: visually inspected at 1440px, 390px, and 320px; checked
+  desktop and mobile navigation, end-to-start wrapping, native keyboard scrolling,
+  long/short review heights, and avatar loading. Width checks at 320, 390, 760,
+  850, and 1440px found no page overflow. Physical touch gestures were not tested.
+- Reduced-motion handling and the native no-JavaScript scrolling fallback were
+  inspected in code; these modes were not separately browser-emulated for this change.
+- `pnpm typecheck` and `git diff --check` passed using the existing port-3021 server.
+  No production build, server restart, commit, push, or deployment was performed.
+- Screenshots: `output/playwright/testimonials-desktop-2026-09-28.png` and
+  `output/playwright/testimonials-mobile-2026-09-28.png`.
+
 ### Institution spacing refinement — September 28, 2026
 
 - Reduced section padding, introduction spacing, logo slot dimensions, and row
