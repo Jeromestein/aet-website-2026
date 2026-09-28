@@ -5,6 +5,18 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Mobile Hero breathing room — September 28, 2026
+
+- Increased mobile Hero padding from 48px on both sides to 72px above and 88px
+  below the content, adding 64px of height without changing text or button sizes.
+  The photo remains the full-section background; desktop styles are unchanged.
+- Codex in-app browser: visually checked 390px and 320px phones, with no clipping
+  or horizontal overflow. The Hero measures about 536px and 564px respectively.
+  Rechecked desktop at 1440px: Hero remains 600px high with 64px vertical padding.
+- `git diff --check` passed. Reused the existing server. The preceding BBB move
+  is committed as `c88cb1b`. No build, push, or deployment.
+- Evidence: `output/playwright/hero-mobile-spacing-2026-09-28.png`.
+
 ### BBB service trust row — September 28, 2026
 
 - Moved the transparent BBB A+ artwork from below the Hero actions to a compact

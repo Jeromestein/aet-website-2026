@@ -151,6 +151,8 @@ clear of the portrait. The photo sits behind the Hero on every viewport, includi
 mobile; never place it as a separate block below the copy. Position the person
 toward the right, with a pale-blue gradient strongest beneath text and actions.
 Let content determine the height on mobile and when text is enlarged.
+On mobile, allow 72px above the Hero copy and 88px below the actions so the
+background portrait and content have breathing room without a fixed section height.
 
 ## 4. Homepage Composition
 

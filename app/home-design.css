@@ -152,7 +152,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .menu-toggle { min-width: 44px; min-height: 44px; }
   .language summary { min-width: 44px; min-height: 44px; gap: 4px; }
   .button, .light, .text-link, .hero-buttons .button { font-size: .875rem; }
-  .hero { min-height: 0; padding-block: 48px; gap: 0; }
+  .hero { min-height: 0; padding-block: 72px 88px; gap: 0; }
   .hero-copy { width: 100%; max-width: none; }
   .hero h1 { font-size: clamp(2.75rem, 8.4vw, 4rem); line-height: 1.08; letter-spacing: -.04em; margin-bottom: 24px; }
   .hero .hero-description { font-size: 1rem; margin-bottom: 28px; max-width: 480px; }
