@@ -55,6 +55,9 @@ attributions; shorten only when meaning and qualifications remain intact.
 Header/footer lockups use the refreshed emblem and outlined Poppins Semibold text,
 with a 520:120 ratio. They contain a raster emblem and vector lettering, not fully
 vector artwork. Transparent PNG exports are also available.
+Preserve the complete legacy wordmark, including its company suffix, on two lines:
+“American Education and” and “Translation Services,CORP (AET)”. Do not omit CORP
+or the parenthesized AET from the logo; use the same full wording in its image alt text.
 
 Browser icons use the owner-selected **full United States map, red A, and road**
 on transparent square canvases, without a white tile. The favicon contains

@@ -123,3 +123,12 @@ canvases replace `app/icon.png`, the 16/32/48px frames in `app/favicon.ico`, and
 `public/brand/aet-icon-{16,32,48,192,512}.png`. The separate Apple touch icon retains
 its white background. This supersedes the browser/manifest white-canvas export
 described above; header/footer lockups are unchanged.
+
+## Restored legacy logo wording — September 28, 2026
+
+Header/footer SVG wordmarks now reproduce the owner-provided legacy logo text:
+“American Education and” / “Translation Services,CORP (AET)”. The original
+embedded emblem, 520:120 canvas, transparent background, and light/dark colors
+are retained. Poppins Semibold glyphs are exported as vector outlines from the
+local licensed font; matching PNG exports remain 1560 x 360. No AI regeneration
+was used for this text correction. Image alternative text includes the full name.

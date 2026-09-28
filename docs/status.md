@@ -21,6 +21,19 @@ implementation and checks, not production deployment or accessibility certificat
 - Evidence: `output/playwright/services-retained-desktop-2026-09-28.png` and
   `output/playwright/services-retained-mobile-2026-09-28.png`.
 
+### Restored legacy logo wording — September 28, 2026
+
+- Restored the full two-line wording in the header/footer SVG and PNG lockups:
+  “American Education and” / “Translation Services,CORP (AET)”. Updated both
+  image alt attributes while preserving the emblem and transparent backgrounds.
+- Codex in-app browser: checked the header and footer at 1440px and 390px.
+  Both assets loaded, the complete wording fits, and the page has no horizontal
+  overflow at those widths.
+- `pnpm typecheck` and `git diff --check` passed. Existing port-3021 server reused;
+  no build, push, or deployment. Screenshots:
+  `output/playwright/logo-wording-desktop-2026-09-28.png` and
+  `output/playwright/logo-wording-mobile-2026-09-28.png`.
+
 ### Restored FCE introduction and benefits — September 28, 2026
 
 - Restored “What is Foreign Credential Evaluation?” and its complete paragraph,

@@ -100,7 +100,7 @@ export function Navigation() {
       <div className={styles.shell}>
         <a href="/" className={styles.brand} aria-label="AET home" onClick={() => closeMenu(false)}>
           <Image src="/brand/aet-logo-header.svg" width={520} height={120}
-            alt="American Education and Translation Services" loading="eager" />
+            alt="American Education and Translation Services,CORP (AET)" loading="eager" />
         </a>
         <nav aria-label="Main navigation" className={styles.desktop}>
           <ul className={styles.desktopList}>

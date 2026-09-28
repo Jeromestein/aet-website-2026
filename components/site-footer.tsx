@@ -33,7 +33,7 @@ export function SiteFooter() {
         <div className={styles.main}>
           <div className={styles.brand}>
             <a href="/" className={styles.logo} aria-label="AET home">
-              <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services" width={520} height={120} />
+              <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services,CORP (AET)" width={520} height={120} />
             </a>
             <nav className={styles.social} aria-label="AET social media and reviews">
               {social.map(([label, href]) => (
