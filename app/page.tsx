@@ -72,9 +72,6 @@ export default function Home() {
                 <Phone size={18} aria-hidden="true" /> Contact Us
               </a>
             </div>
-            <div className="hero-credentials">
-              <Image src="/images/bbb-hero-transparent.png" alt="BBB A+ Rating" width={2172} height={724} sizes="(max-width: 760px) 233px, 252px" />
-            </div>
           </div>
           <div className="hero-visual">
             <div className="hero-image">
@@ -173,6 +170,14 @@ export default function Home() {
                 </a>
               ))}
             </CardRail></div>
+          </div>
+          <div className="service-trust">
+            <div className="service-rating">
+              <Image src="/images/bbb-hero-transparent.png" alt="BBB A+ Rating" width={2172} height={724} sizes="146px" />
+            </div>
+            <a href={old + "/e-contact.php"} className="text-link">
+              Contact Us <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
           </div>
         </section>
         <ImpactStory />

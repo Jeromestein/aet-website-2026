@@ -5,6 +5,23 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### BBB service trust row — September 28, 2026
+
+- Moved the transparent BBB A+ artwork from below the Hero actions to a compact
+  row below the service cards, opposite Contact Us. Added a fine divider and
+  retained the existing contact destination. The image is 110px wide (about 38px
+  high); the link keeps a 44px minimum target.
+- Reduced the desktop Hero minimum height to 600px and mobile vertical padding
+  to 48px. Mobile retains the full-section photo background.
+- Codex in-app browser: inspected the service row at 1440px, 390px, and 320px,
+  with both items on one line and no page overflow. Checked the updated Hero at
+  1440px and 320px; confirmed no BBB artwork remains in the Hero, and checked
+  keyboard focus plus the Contact Us href without navigating off-site.
+- `pnpm typecheck` and `git diff --check` passed. Existing server reused; no build,
+  push, or deployment. Evidence under `output/playwright/`:
+  `bbb-services-desktop-2026-09-28.png`, `bbb-services-mobile-2026-09-28.png`, and
+  `hero-without-bbb-desktop-2026-09-28.png`.
+
 ### Homepage section order — September 28, 2026
 
 - Kept the Hero first, followed by FCE and other services, Why Choose Us,

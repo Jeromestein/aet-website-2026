@@ -19,8 +19,9 @@ Distinguish a preliminary assessment from a formal credential evaluation.
 **Hero description:** Professional translations and credential evaluations trusted
 by USCIS, colleges, and government agencies nationwide.
 
-**Hero actions:** Apply Now · Contact Us. Preserve these exact labels and show
-BBB A+ Rating artwork below the actions. Adjust line breaks without changing words.
+**Hero actions:** Apply Now · Contact Us. Preserve these exact labels.
+Place BBB A+ Rating artwork in the service-section trust row, not below the Hero
+actions. Adjust line breaks without changing words.
 
 **Institution heading:** Trusted by Leading Institutions
 
@@ -155,7 +156,7 @@ Let content determine the height on mobile and when text is enlarged.
 
 | Order | Section | Core requirement |
 | --- | --- | --- |
-| 1 | Hero | Fixed text, two actions, BBB artwork, professional photo on pale blue |
+| 1 | Hero | Fixed text, two actions, professional photo on pale blue |
 | 2 | Services | Foreign Credential Evaluation introduction, benefits, evaluation types, and other services immediately after Hero |
 | 3 | AET at a glance | Fraunces heading, five organic fact panels for experience, language coverage, ATA membership, BBB A+, and five-star Google reviews |
 | 4 | Institutions | Two logo rows after Why Choose Us, pale-blue background, supporting sentence and link |
@@ -165,8 +166,11 @@ Let content determine the height on mobile and when text is enlarged.
 | 8 | Client feedback | Five original testimonials and avatars in a manual carousel immediately after Questions and before the footer |
 | 9 | Footer | Practical navigation and legal links |
 
-Omit the standalone closing Start Application panel and the service-card footer
-strip containing “Translation and evaluation services.” and Contact Us.
+Omit the standalone closing Start Application panel. Finish the service cards with
+a compact trust row: transparent BBB A+ artwork on the left and Contact Us on the
+right, separated from the cards by a fine rule. Keep the row compact on mobile,
+wrapping only when needed. Do not restore the generic “Translation and evaluation
+services.” sentence or add a separate badge card.
 
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
 navigation, a separate language selector, and an orange Online Application button

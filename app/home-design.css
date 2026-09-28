@@ -14,7 +14,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
 .section-heading { align-items: start; margin-bottom: 56px; gap: 48px; }
 .section-heading > div { flex: 1.4; }
 .section-heading > p { flex: 1; max-width: 480px; font-size: clamp(1rem, 1.4vw, 1.18rem); padding-top: 36px; }
-.hero { min-height: 680px; padding-block: 72px 80px; }
+.hero { min-height: 600px; padding-block: 64px; }
 .hero-copy { width: 60%; max-width: 680px; }
 .hero h1 { font-size: clamp(3.8rem, 4.8vw, 4.5rem); line-height: 1.08; letter-spacing: -.04em; margin-bottom: 26px; overflow-wrap: anywhere; }
 .hero h1 > span { display: block; }
@@ -122,7 +122,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
   .nav-links, .nav-actions { font-size: .875rem; gap: 14px; }
   .nav-shell { gap: 16px; padding-inline: 24px; }
-  .hero { min-height: 680px; padding-block: 64px 72px; }
+  .hero { min-height: 600px; padding-block: 56px 64px; }
   .hero-copy { width: 66%; }
   .hero .hero-description { max-width: 430px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
@@ -152,7 +152,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .menu-toggle { min-width: 44px; min-height: 44px; }
   .language summary { min-width: 44px; min-height: 44px; gap: 4px; }
   .button, .light, .text-link, .hero-buttons .button { font-size: .875rem; }
-  .hero { min-height: 0; padding-block: 56px 64px; gap: 0; }
+  .hero { min-height: 0; padding-block: 48px; gap: 0; }
   .hero-copy { width: 100%; max-width: none; }
   .hero h1 { font-size: clamp(2.75rem, 8.4vw, 4rem); line-height: 1.08; letter-spacing: -.04em; margin-bottom: 24px; }
   .hero .hero-description { font-size: 1rem; margin-bottom: 28px; max-width: 480px; }
@@ -281,15 +281,17 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .hero-image > img { object-position: 0% top; }
 }
 
+.service-trust { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.service-trust .text-link { display: inline-flex; gap: 8px; font-size: .875rem; }
 /* Frame the transparent export at its alpha bounds; preserve the source pixels. */
-.hero-credentials {
+.service-rating {
   position: relative;
-  width: 190px;
+  width: 110px;
+  flex: 0 0 110px;
   aspect-ratio: 1641 / 565;
   overflow: hidden;
-  margin-top: 28px;
 }
-.hero-credentials img {
+.service-rating img {
   position: absolute;
   width: 132.3583%;
   max-width: none;
@@ -297,7 +299,4 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   left: -14.7471%;
   top: -16.1062%;
   mix-blend-mode: normal;
-}
-@media (max-width: 760px) {
-  .hero-credentials { width: 176px; margin-top: 24px; }
 }
