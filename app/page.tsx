@@ -89,8 +89,6 @@ export default function Home() {
           </div>
         </section>
         </div>
-        <InstitutionCarousel />
-        <ImpactStory />
         <section className="section wrap" id="services">
           <div className="section-heading" data-reveal>
             <div>
@@ -177,6 +175,8 @@ export default function Home() {
             </CardRail></div>
           </div>
         </section>
+        <ImpactStory />
+        <InstitutionCarousel />
         <ProcessStory />
         <section className="section wrap" id="pre-evaluation" aria-labelledby="pre-evaluation-title">
           <div className="preview-panel" data-reveal>

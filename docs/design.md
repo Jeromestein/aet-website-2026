@@ -156,9 +156,9 @@ Let content determine the height on mobile and when text is enlarged.
 | Order | Section | Core requirement |
 | --- | --- | --- |
 | 1 | Hero | Fixed text, two actions, BBB artwork, professional photo on pale blue |
-| 2 | Institutions | Two logo rows immediately after Hero; same background, supporting sentence and link |
+| 2 | Services | Foreign Credential Evaluation introduction, benefits, evaluation types, and other services immediately after Hero |
 | 3 | AET at a glance | Fraunces heading, five organic fact panels for experience, language coverage, ATA membership, BBB A+, and five-star Google reviews |
-| 4 | Services | Featured evaluation card plus supporting services |
+| 4 | Institutions | Two logo rows after Why Choose Us, pale-blue background, supporting sentence and link |
 | 5 | Process | Three numbered steps: choose an evaluation type, complete the application, submit documents to an office; prominent orange Start Application action below the introduction |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
 | 7 | Questions | Native expandable questions and contact action |

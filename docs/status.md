@@ -5,6 +5,20 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Homepage section order — September 28, 2026
+
+- Kept the Hero first, followed by FCE and other services, Why Choose Us,
+  Trusted by Leading Institutions, Simple 4-Step Process, Pre-Evaluation,
+  FAQs, and Google client reviews. Updated the design-guide order.
+- Codex in-app browser: confirmed the complete rendered section order at 1440px
+  and 390px. Visually checked the moved sections and their transitions on desktop
+  and mobile; both widths have no horizontal page overflow.
+- `pnpm typecheck` and `git diff --check` passed. Reused the existing server.
+  Earlier pre-evaluation and redundant-action changes were committed as `346ece6`
+  before this reorder. No push or deployment.
+- Evidence: `output/playwright/home-order-desktop-2026-09-28.png` and
+  `output/playwright/home-order-mobile-2026-09-28.png`.
+
 ### Removed redundant homepage actions — September 28, 2026
 
 - Removed the standalone closing Start Application panel and the entire strip
