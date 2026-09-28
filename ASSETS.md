@@ -53,3 +53,19 @@ Created September 23, 2026 from the owner-supplied `aet-app/public/web-app-manif
 Assets live in `public/brand/`. Next.js icon files are `app/favicon.ico`, `app/icon.png`, and `app/apple-icon.png`; `public/site.webmanifest` declares the 192px and 512px icons. Prompt specifications are retained in `public/brand/GENERATION.md`.
 
 Browser and application icon update (September 23, 2026): the owner selected the full-map artwork supplied as `codex-clipboard-6c35dfb9-f79d-4d2f-98e6-5e2140b2c6fd.png`. An unchanged copy is stored as `public/brand/aet-browser-icon-source.png`. All active favicon, Apple touch, and manifest icons are proportional exports of this artwork on a square white canvas. The generated compact monogram is retained only as an unused source asset. Header and footer artwork is unchanged.
+
+## Hero BBB artwork refinement — September 28, 2026
+
+`public/images/bbb-hero-transparent.png` is a transparent 2172 x 724 PNG edited
+from `public/images/bbb.jpg` with the built-in imagegen tool. The original remains
+unchanged and is still available elsewhere on the page. The Hero derivative removes
+the white tile and filled badge background, retaining the BBB torch/lettering and
+“A+ Rating” in a compact navy lockup. This is an AI-edited presentation derivative,
+not newly supplied official BBB artwork or an independent verification of the rating.
+CSS frames the transparent margins without changing the saved pixels.
+
+Prompt: Edit the existing BBB A+ Rating badge into a transparent horizontal trust
+mark for a pale-blue Hero. Preserve the BBB torch, lettering, SM and proportions;
+remove the surrounding border and white/navy backplates. Place the exact text
+“A+ Rating” in navy beside a thin separator. No additional words, stars, shields,
+certification claims, shadows, gradients, or mockup background.

@@ -129,6 +129,13 @@ than reducing the scale. On mobile, leave 20â€“28px before the paragraph and 28â
 before actions. Give large figures enough card width rather than shrinking them
 to preserve a multi-column layout.
 
+Use a compact Hero with three title lines on wide desktops and natural wrapping
+on smaller screens. Keep the desktop paragraph within about 510px so it stays
+clear of the portrait. The photo sits behind the Hero on every viewport, including
+mobile; never place it as a separate block below the copy. Position the person
+toward the right, with a pale-blue gradient strongest beneath text and actions.
+Let content determine the height on mobile and when text is enlarged.
+
 ## 4. Homepage Composition
 
 | Order | Section | Core requirement |

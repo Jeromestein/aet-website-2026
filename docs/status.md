@@ -5,6 +5,34 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Hero layout refinement — September 28, 2026
+
+- Set the wide-desktop title to three lines and reduced excess Hero height. Limited
+  paragraph width and moved the portrait toward the right with a lighter overlay.
+- Kept the photo behind the entire mobile Hero; removed the separate image block
+  below the copy. Applied responsive crops and a stronger gradient behind mobile text.
+- Aligned both actions at 54px on desktop and 50px on mobile, preserving their
+  labels, colors, icons, and destinations. Retained the transparent BBB artwork.
+- Codex in-app browser: visually checked the homepage Hero at 320, 390, 760, 850,
+  and 1440px; no page overflow, and the mobile image covers the Hero background.
+- `pnpm typecheck` and `git diff --check` passed. Used the existing port-3021 server;
+  no production build, push, or deployment was performed for this follow-up.
+- Screenshots: `output/playwright/hero-layout-desktop-2026-09-28.png` and
+  `output/playwright/hero-layout-mobile-2026-09-28.png`.
+
+### Hero BBB refinement — September 28, 2026
+
+- Replaced only the Hero's white-backed BBB badge with the transparent derivative
+  `public/images/bbb-hero-transparent.png`; original artwork remains unchanged.
+- Kept “BBB A+ Rating” alternative text and the badge below the Hero actions.
+  The artwork uses a compact navy layout with no card background or button styling.
+- Codex in-app browser: inspected the current desktop Hero and 390px/320px mobile
+  layouts; image loads, remains legible, and does not create page overflow.
+- `pnpm typecheck` and `git diff --check` passed. Existing button styles and design
+  rules were not changed. This follow-up has not been deployed.
+- Screenshots: `output/playwright/bbb-hero-desktop-2026-09-28.png` and
+  `output/playwright/bbb-hero-mobile-2026-09-28.png`.
+
 ### Implemented and locally checked
 
 - [x] Retained AET header/footer artwork, the full-map icon assets, shared palette,

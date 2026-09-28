@@ -74,7 +74,7 @@ export default function Home() {
               </a>
             </div>
             <div className="hero-credentials">
-              <Image src="/images/bbb.jpg" alt="BBB A+ Rating" width={1650} height={870} sizes="180px" />
+              <Image src="/images/bbb-hero-transparent.png" alt="BBB A+ Rating" width={2172} height={724} sizes="(max-width: 760px) 233px, 252px" />
             </div>
           </div>
           <div className="hero-visual">
@@ -83,7 +83,7 @@ export default function Home() {
                 src="/images/hero.webp"
                 alt="Professional seated at a desk with a laptop"
                 fill
-                sizes="(max-width: 760px) max(100vw, 640px), max(65vw, 1422px)"
+                sizes="(max-width: 760px) max(100vw, 1100px), max(60vw, 1210px)"
                 loading="eager"
               />
             </div>
