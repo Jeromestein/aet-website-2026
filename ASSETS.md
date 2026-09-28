@@ -109,3 +109,17 @@ brand outlines from the legacy site's `font-awesome-4.7.0/fonts/fontawesome-webf
 and licensed under SIL OFL 1.1: https://fontawesome.com/v4/license/. The outlines
 are rendered as monochrome SVGs beside the existing platform labels. Brand names
 and marks remain the property of their owners.
+
+## Transparent browser icons — September 28, 2026
+
+`public/brand/aet-browser-icon-transparent.png` is a background-removal derivative
+of the owner-selected `aet-browser-icon-source.png`, produced with built-in imagegen.
+Prompt: Remove only the white background, including enclosed white gaps; preserve
+the full blue United States silhouette, red A, navy/gold road, outlines, colors,
+and proportions. Use genuine transparent alpha, no shadow or new content.
+
+The original source is retained. Proportional exports with transparent square
+canvases replace `app/icon.png`, the 16/32/48px frames in `app/favicon.ico`, and
+`public/brand/aet-icon-{16,32,48,192,512}.png`. The separate Apple touch icon retains
+its white background. This supersedes the browser/manifest white-canvas export
+described above; header/footer lockups are unchanged.

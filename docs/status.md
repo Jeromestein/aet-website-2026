@@ -5,6 +5,20 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Transparent browser icons — September 28, 2026
+
+- Replaced browser PNG/ICO and manifest icon exports with transparent-background
+  versions of the selected full-map AET artwork. Retained the original source
+  and the separate opaque Apple touch icon.
+- Confirmed transparent corners in locally served PNGs and all 16/32/48px ICO
+  frames. The homepage exposes refreshed automatic icon URLs after reload.
+- Codex in-app browser: inspected the actual 32px PNG and 16px ICO on pale-blue,
+  light, and dark preview surfaces; both loaded without a white tile. This checks
+  asset rendering, not every external browser's existing favicon cache.
+- Evidence: `output/playwright/favicon-transparent-2026-09-28.png`. The temporary
+  preview page was removed after verification. `git diff --check` passed.
+- Reused the owner's server. No build, push, or deployment.
+
 ### Process application screenshots and CTA — September 28, 2026
 
 - Added a prominent orange Start Application button below the process introduction,

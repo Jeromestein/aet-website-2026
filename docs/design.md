@@ -53,9 +53,10 @@ Header/footer lockups use the refreshed emblem and outlined Poppins Semibold tex
 with a 520:120 ratio. They contain a raster emblem and vector lettering, not fully
 vector artwork. Transparent PNG exports are also available.
 
-Browser icons use the owner-selected **full United States map, red A, and road on
-white**, not the generated compact monogram. The favicon contains 16/32/48px frames;
-the Apple touch icon is 180px. Preserve proportions and use square white canvases.
+Browser icons use the owner-selected **full United States map, red A, and road**
+on transparent square canvases, without a white tile. The favicon contains
+16/32/48px frames. Preserve proportions and transparent margins. The separate
+180px Apple touch icon retains its opaque white canvas for home-screen use.
 
 Do not recolor, stretch, rotate, add shadows, or apply blend modes to AET logos.
 Keep clear space of at least one quarter of the emblem height. Header/footer artwork
