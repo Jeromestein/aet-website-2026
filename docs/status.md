@@ -129,7 +129,29 @@ implementation and checks, not production deployment or accessibility certificat
   preview page was removed after verification. `git diff --check` passed.
 - Reused the owner's server. No build, push, or deployment.
 
-### Process application screenshots and CTA — September 28, 2026
+### Four-step process correction — September 28, 2026
+
+- Corrected the distinction between evaluation purpose (USCIS, employment,
+  education) and report type. The homepage now has four steps: purpose, application
+  details, evaluation type in Services, and document upload on the status page.
+  Retained the orange Start Application CTA and expanded progress indicators to four.
+- Captured the actual Services screen after completing earlier wizard steps with
+  fictional demo data. No application was submitted. The capture includes the three
+  requested report types without applicant details.
+- Replaced the office-selection illustration with the upload controls cropped
+  from the owner's supplied screenshot. Application ID, URL, and uploaded-file
+  records are excluded. Automated approval blocked reading the individual status
+  record; the supplied screenshot is the source for this fourth-step image.
+- Codex in-app browser: verified four titles and indicators, desktop third/fourth
+  image switching at 1440px, loaded images and stacked third/fourth steps at 390px,
+  and no page overflow at 1440/390/320px. The 320px CTA is 68px high and both
+  process application links retain the requested destination.
+- `pnpm typecheck` and `git diff --check` passed. Existing local server reused;
+  no production build, commit, push, or deployment in this correction.
+- Evidence under `output/playwright/`: `process-four-step-types-desktop.png`,
+  `process-four-step-upload-desktop.png`, and `process-four-step-upload-mobile.png`.
+
+### Process application screenshots and CTA — September 28, 2026 (superseded above)
 
 - Added a prominent orange Start Application button below the process introduction,
   linking to the owner's credential-evaluation application URL. Mobile uses a
@@ -400,9 +422,9 @@ implementation and checks, not production deployment or accessibility certificat
       Supporting service names, testimonial text and attributions, existing facts,
       FAQ processing time, and existing destinations remain in place.
       Source: the legacy site's `home-content.html`, documented in ASSETS.md.
-- [x] Kept the homepage sections in the design-guide order. The three process
-      stages cover choosing an evaluation type, completing the application,
-      and submitting documents to an office, illustrated by live application screenshots.
+- [x] Kept the homepage sections in the design-guide order. The four process
+      stages cover selecting purpose, completing application details, choosing
+      evaluation type, and uploading documents on the status page, using real UI captures.
 - [x] Implemented native mobile rails for facts, supporting services, and testimonials
       at 760px and below. Each uses 88% cards, 16px gaps, proximity snapping, an exposed
       next-card edge, and progressive previous/next controls. All last cards are fully

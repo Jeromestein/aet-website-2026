@@ -159,7 +159,7 @@ Let content determine the height on mobile and when text is enlarged.
 | 2 | Services | Foreign Credential Evaluation introduction, benefits, evaluation types, and other services immediately after Hero |
 | 3 | AET at a glance | Fraunces heading, five organic fact panels for experience, language coverage, ATA membership, BBB A+, and five-star Google reviews |
 | 4 | Institutions | Two logo rows after Why Choose Us, pale-blue background, supporting sentence and link |
-| 5 | Process | Three numbered steps: choose an evaluation type, complete the application, submit documents to an office; prominent orange Start Application action below the introduction |
+| 5 | Process | Four numbered steps: select purpose, complete the application, choose evaluation type in Services, upload documents on the application status page; prominent orange Start Application action below the introduction |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
 | 7 | Questions | Native expandable questions and contact action |
 | 8 | Client feedback | Five original testimonials and avatars in a manual carousel immediately after Questions and before the footer |
@@ -207,8 +207,10 @@ avoid prominent unrelated school logos. Stock people are illustrative, not ident
 as AET staff or clients. Use natural color, subtle blue overlays, explicit image sizes,
 responsive sources, and meaningful alt text. Never stretch a thumbnail into a large panel.
 
-The process section uses actual screenshots of the online application: Service Type,
-Client Information, and Office selection. Keep screenshots proportional and fully
+The process section distinguishes purpose (USCIS, employment, education) from
+evaluation type (Document-by-Document, Course-by-Course, Expert Opinion Letter).
+Use actual screenshots of purpose selection, Client Information, Services, and the
+status-page document uploader. Keep screenshots proportional and fully
 visible on a white surface, without photographic overlays or cropped form controls.
 
 **Surfaces:** soft shadows, rounded cards, generous space; subtle circles and organic

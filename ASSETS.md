@@ -26,13 +26,22 @@ https://app.americantranslationservice.com/credential-evaluation-application.
 The PNGs under `public/images/application/` are cropped screenshots, with no
 recreated interface or altered form content:
 
-- `evaluation-type.png`: expanded Service Type menu and sample-report links.
+- `application-purpose.png`: expanded purpose menu (labeled Service Type in the
+  source app) and sample-report links. Renamed from `evaluation-type.png` to
+  distinguish purpose from report type.
 - `client-information.png`: application title, progress stages, and empty client form.
-- `office-selection.png`: expanded Office menu and request-detail guidance.
+- `service-selection.png`: live Services-step screenshot showing Document-by-Document,
+  Course-by-Course, and Expert Opinion Letter. Reached with fictional demo data;
+  no application was submitted. The screenshot contains no applicant details.
+- `document-upload.png`: cropped from the owner's supplied September 28 status-page
+  screenshot. Includes only the file chooser, drop area, upload guidance, and Upload
+  Files button; excludes the browser URL, application ID, and existing file list.
+- `office-selection.png`: retained unused; office selection is not document submission.
 
-No personal data was entered, no files were uploaded, and no application was submitted.
-Placeholder examples belong to the live form. Office options record the live menu
-at capture time; the image illustrates office selection, not document upload.
+No real personal data was entered, no files were uploaded, and no application was
+submitted. Placeholder examples belong to the live form. Automated approval blocked
+further reading of the individual status record, so the upload image uses the
+owner-supplied screenshot instead of a new capture of that record.
 
 ## Typography
 
