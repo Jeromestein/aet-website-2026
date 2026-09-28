@@ -5,11 +5,9 @@ import { CardRail } from "@/components/card-rail";
 import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
 import {
-  ArrowRight,
   ArrowUpRight,
   GraduationCap,
   Languages,
-  Globe2,
   FileCheck2,
   MessageCircle,
   Plus,
@@ -178,23 +176,16 @@ export default function Home() {
               ))}
             </CardRail></div>
           </div>
-          <div className="service-footnote">
-            <Globe2 size={17} />
-            <span>Translation and evaluation services.</span>
-            <a href={old + "/e-contact.php"}>
-              Contact Us <ArrowRight size={16} />
-            </a>
-          </div>
         </section>
         <ProcessStory />
-        <section className="section wrap">
+        <section className="section wrap" id="pre-evaluation" aria-labelledby="pre-evaluation-title">
           <div className="preview-panel" data-reveal>
             <div className="preview-photo">
               <Image
                 src="/images/graduates.jpg"
                 alt="Graduates celebrating their academic achievement"
                 fill
-                sizes="(max-width: 760px) max(100vw, 516px), max(50vw, 854px)"
+                sizes="(max-width: 760px) 100vw, 40vw"
               />
               <span className="image-note">
                 PRE-EVALUATION SERVICES
@@ -202,18 +193,29 @@ export default function Home() {
             </div>
             <div className="preview-copy">
               <span className="eyebrow">YOUR EDUCATIONAL QUALIFICATIONS</span>
-              <h2>
+              <h2 id="pre-evaluation-title">
                 Pre-Evaluation Services
               </h2>
+              <h3 className="preview-question">
+                Not sure what your foreign degree is equivalent to in the U.S.?
+              </h3>
               <p>
-                Not sure what your foreign degree is equivalent to in the U.S.? Our comprehensive pre-evaluation service provides instant insights about your educational qualifications, helping you understand how your international credentials translate in the American education system.
+                Our comprehensive pre-evaluation service provides instant insights about your educational qualifications, helping you understand how your international credentials translate in the American education system.
               </p>
-              <a href={pre} className="button light">
-                Start Your Pre-Evaluation <ArrowUpRight size={18} />
+              <div className="preview-provisions">
+                <h3>We provide:</h3>
+                <ul>
+                  <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Instant Assessment:</strong> Get immediate preliminary evaluation of your degree equivalency</span></li>
+                  <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Affordable Service:</strong> Affordable preliminary evaluation for the price of two burgers</span></li>
+                  <li><CircleCheck size={22} aria-hidden="true" /><span><strong>Professional Guidance:</strong> Expert advice on next steps for credential evaluation</span></li>
+                </ul>
+              </div>
+              <p>
+                Our pre-evaluation tool helps you understand your educational background before proceeding with formal credential evaluation, saving you time and providing valuable insights for your academic or professional journey in the United States.
+              </p>
+              <a href={pre} className="button preview-action">
+                Start Your Pre-Evaluation
               </a>
-              <span className="preview-note">
-                A preliminary assessment before formal credential evaluation.
-              </span>
             </div>
           </div>
         </section>
@@ -238,27 +240,6 @@ export default function Home() {
               </details>
             ))}
           </div>
-        </section>
-        <section className="closing wrap" data-reveal>
-          <div>
-            <span className="eyebrow">
-              GET STARTED
-            </span>
-            <h2>
-              Start Application
-            </h2>
-          </div>
-          <div>
-            <p>
-              Choose your evaluation type based on your purpose.
-            </p>
-            <a className="button primary" href={apply}>
-              <SquarePen size={19} /> Apply Now
-            </a>
-          </div>
-          <span className="closing-decoration" aria-hidden="true">
-            ↗
-          </span>
         </section>
         <TestimonialCarousel />
       </main>

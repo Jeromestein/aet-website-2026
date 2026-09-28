@@ -41,6 +41,14 @@ Retain original supporting headings such as Why Choose Us, Other Services, and
 What Our Clients Say where applicable. Preserve original descriptions and testimonial
 attributions; shorten only when meaning and qualifications remain intact.
 
+**Pre-evaluation:** preserve the complete legacy introduction, all three
+“We provide:” items (Instant Assessment, Affordable Service, Professional Guidance),
+and the closing explanation. Emphasize “Not sure what your foreign degree is
+equivalent to in the U.S.?” as a separate prominent question and “We provide:”
+as a bold subheading. Use pale blue for the question and an orange, text-only
+Start Your Pre-Evaluation button without an arrow. Keep the wording unchanged
+when adjusting the layout.
+
 ## 2. Logo and Color
 
 ### Logo
@@ -154,9 +162,11 @@ Let content determine the height on mobile and when text is enlarged.
 | 5 | Process | Three numbered steps: choose an evaluation type, complete the application, submit documents to an office; prominent orange Start Application action below the introduction |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
 | 7 | Questions | Native expandable questions and contact action |
-| 8 | Closing | Clear application next step |
-| 9 | Client feedback | Five original testimonials and avatars in a manual carousel immediately before the footer |
-| 10 | Footer | Practical navigation and legal links |
+| 8 | Client feedback | Five original testimonials and avatars in a manual carousel immediately after Questions and before the footer |
+| 9 | Footer | Practical navigation and legal links |
+
+Omit the standalone closing Start Application panel and the service-card footer
+strip containing “Translation and evaluation services.” and Contact Us.
 
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
 navigation, and a separate language selector. Keep the legacy labels and order:

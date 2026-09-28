@@ -5,6 +5,47 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Removed redundant homepage actions — September 28, 2026
+
+- Removed the standalone closing Start Application panel and the entire strip
+  below the service cards containing “Translation and evaluation services.” and
+  Contact Us. Removed the two icon imports made unused by the strip deletion.
+- FAQs now lead directly into client feedback; the service cards lead into the
+  application process. Updated the design guide's section order and exclusions.
+- Codex in-app browser: visually checked both transitions at 1440px and 390px,
+  confirmed both removed containers are absent, and found no horizontal overflow.
+  `pnpm typecheck` and `git diff --check` passed. Existing server reused;
+  no build, restart, commit, push, or deployment in this update.
+- Evidence under `output/playwright/`: `removed-closing-desktop-2026-09-28.png`,
+  `removed-contact-strip-desktop-2026-09-28.png`, and
+  `removed-closing-mobile-2026-09-28.png`.
+
+### Pre-evaluation emphasis and complete legacy copy — September 28, 2026
+
+- Follow-up styling: changed the question to pale blue and the CTA to the shared
+  orange action color, removed its arrow, and added a white keyboard-focus outline.
+  Verified the question and text-only button visually at 1440px and 390px in the
+  in-app browser; the mobile button fits without page overflow and retains the
+  degree-equivalency-tool URL. Copy is unchanged. Evidence:
+  `output/playwright/pre-evaluation-colors-desktop-2026-09-28.png` and
+  `output/playwright/pre-evaluation-colors-mobile-2026-09-28.png`.
+- Promoted the original degree-equivalency question to a prominent standalone
+  heading. Restored the bold “We provide:” heading, all three benefits, and the
+  complete closing paragraph in place of the shortened preliminary-assessment note.
+- Kept the dark-blue panel and graduation image, widened the desktop copy column,
+  and retained the existing Start Your Pre-Evaluation destination. Mobile stacks
+  the image and complete content in normal reading order.
+- Compared the section's title and full copy against legacy `home-content.html`:
+  exact match after whitespace normalization. Only typography and layout differ.
+- Codex in-app browser: visually checked desktop at 1440px and the mobile question
+  and benefit list at 390px. Width checks at 320, 390, 760, 850, and 1440px found
+  no horizontal page overflow; text and the button fit narrow/intermediate widths.
+- `pnpm typecheck` and `git diff --check` passed. Existing local server reused;
+  no build, restart, commit, push, or deployment in this update.
+- Evidence under `output/playwright/`: `pre-evaluation-desktop-2026-09-28.png`,
+  `pre-evaluation-mobile-question-2026-09-28.png`, and
+  `pre-evaluation-mobile-benefits-2026-09-28.png`.
+
 ### Reduced service scope — September 28, 2026
 
 - Removed Visa Services, Editing/Proofreading, and China Consular Authentication
