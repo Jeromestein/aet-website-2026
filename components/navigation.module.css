@@ -104,3 +104,18 @@
   .mobileMenu[open] .mobilePanel { animation: none; }
   .navLink::after, .dropdown summary svg:last-child, .mobileServices summary svg, .menuToggle span { transition: none; }
 }
+
+/* Keep language access visible beside the mobile menu. */
+.languageOptions a { justify-content: space-between; gap: 12px; }
+.mobileLanguages a { gap: 8px; }
+@media (max-width: 1200px) {
+  .language { display: block; margin-left: auto; padding-left: 0; border-left: 0; }
+  .languageOptions { top: calc(100% + 16px); }
+}
+@media (max-width: 600px) {
+  .shell { padding-inline: 16px; gap: 10px; }
+  .brand { flex: 1 1 220px; max-width: 220px; }
+  .language { margin-left: auto; }
+  .language > summary { gap: 4px; }
+  .menuToggle { width: 44px; height: 44px; }
+}

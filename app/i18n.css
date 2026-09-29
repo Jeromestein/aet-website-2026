@@ -1,0 +1,26 @@
+/* Chinese typography needs its own font fallback and comfortable line height. */
+html:lang(zh) body,
+html:lang(zh) h1,
+html:lang(zh) h2,
+html:lang(zh) h3 {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+html:lang(zh) h1,
+html:lang(zh) h2,
+html:lang(zh) h3 { letter-spacing: 0; line-height: 1.25; }
+html:lang(zh) .eyebrow,
+html:lang(zh) .small-label { letter-spacing: .04em; }
+
+/* Let longer translations wrap without clipping controls or expanding the page. */
+html:not([lang="en"]) h2,
+html:not([lang="en"]) h3 { overflow-wrap: anywhere; }
+html:not([lang="en"]) .button { white-space: normal; text-align: center; }
+html:not([lang="en"]) .button svg { flex-shrink: 0; }
+html:not([lang="en"]) .hero h1 { overflow-wrap: normal; }
+html:not([lang="en"]) .hero h1 > span { display: inline; }
+html:lang(zh) .hero h1 > span { display: block; }
+@media (max-width: 760px) {
+  html:lang(zh) .hero h1 { font-size: clamp(2.25rem, 8vw, 4rem); }
+  html:lang(es) .hero h1 { font-size: clamp(2.5rem, 8.4vw, 4rem); }
+  html:not([lang="en"]) .hero-buttons { flex-wrap: wrap; }
+}

@@ -5,6 +5,40 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Homepage internationalization — September 28, 2026
+
+- Added `next-intl` and a shared `app/[locale]` layout/page for English `/`,
+  Simplified Chinese `/zh`, and Spanish `/es`. Added request configuration,
+  locale navigation helpers, and locale routing through `proxy.ts`.
+- Localized 171 messages per language, covering the full homepage, navigation,
+  footer, accessible controls, image descriptions, and metadata. Preserved the
+  original English reviews and labeled Chinese/Spanish reviews as translations.
+  Existing legacy destinations, institution names, and application screenshots remain.
+- Added a top-right globe/current-language selector on desktop and phones, plus
+  synchronized choices inside the mobile menu. Switching preserves the current
+  pathname, query, and fragment; Home/logo links retain the active locale.
+- Added a one-year language preference cookie, browser-language matching, English
+  fallback for missing messages, and a translation validation command. Canonical
+  URLs remain pending the production-domain/migration decision.
+- Codex in-app browser: visually checked Chinese/Spanish desktop and phone states,
+  the English homepage, the Spanish mobile menu and expanded FAQ. Checked all
+  three languages at 320/390/760/850/1201/1280/1440px: no page or header horizontal
+  overflow. Verified Chinese to Spanish, Spanish to Chinese, and English selection,
+  refresh, saved Spanish preference on a root visit, query/fragment preservation,
+  and Escape closing the mobile menu with restored focus and background scrolling.
+  No warning/error messages were present in the final browser console check.
+- HTTP checks passed for all three homepages, saved preferences, browser-language
+  selection, explicit-locale precedence, invalid cookies, English-prefix redirect,
+  unsupported/missing routes returning 404, and an unlocalized icon request.
+- `pnpm check:i18n` (171 messages per locale, syntax, matching placeholders and
+  original reviews), `pnpm typecheck`, and `git diff --check` passed. Refreshed
+  generated route types with `pnpm exec next typegen` after moving the page/layout.
+- No existing port-3021 server was running. A temporary `pnpm dev` server was used;
+  sandbox file-watch limitations required running it outside the sandbox. The
+  verification server was stopped afterward. No production build or deployment.
+- Evidence under `output/playwright/`: `i18n-zh-desktop.png`,
+  `i18n-es-mobile-menu.png`, and `i18n-es-mobile-faq.png`.
+
 ### Mobile Hero breathing room — September 28, 2026
 
 - Increased mobile Hero padding from 48px on both sides to 72px above and 88px

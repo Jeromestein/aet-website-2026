@@ -1,10 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 /** Native scrolling remains available before hydration and without JavaScript. */
 export function CardRail({ children, className, label }: { children: ReactNode; className: string; label: string }) {
+  const t = useTranslations();
   const id = useId();
   const rail = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ index: 0, total: 0, start: true, end: false });
@@ -42,8 +45,8 @@ export function CardRail({ children, className, label }: { children: ReactNode; 
     <div ref={rail} id={id} className={`${className} card-rail`} role="region" aria-label={label} tabIndex={0}>{children}</div>
     {position.total > 1 && <div className="rail-controls">
       <span aria-hidden="true">{position.index + 1} / {position.total}</span>
-      <button type="button" aria-label={`Previous ${label.toLowerCase()} card`} aria-controls={id} disabled={position.start} onClick={() => move(-1)}><ArrowLeft size={18} /></button>
-      <button type="button" aria-label={`Next ${label.toLowerCase()} card`} aria-controls={id} disabled={position.end} onClick={() => move(1)}><ArrowRight size={18} /></button>
+      <button type="button" aria-label={t("controls.previous", { label })} aria-controls={id} disabled={position.start} onClick={() => move(-1)}><ArrowLeft size={18} /></button>
+      <button type="button" aria-label={t("controls.next", { label })} aria-controls={id} disabled={position.end} onClick={() => move(1)}><ArrowRight size={18} /></button>
     </div>}
   </div>;
 }

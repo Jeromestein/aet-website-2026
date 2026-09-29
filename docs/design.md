@@ -19,7 +19,7 @@ Distinguish a preliminary assessment from a formal credential evaluation.
 **Hero description:** Professional translations and credential evaluations trusted
 by USCIS, colleges, and government agencies nationwide.
 
-**Hero actions:** Apply Now · Contact Us. Preserve these exact labels.
+**Hero actions (English):** Apply Now · Contact Us. Preserve these exact English labels; localized pages use the corresponding translations.
 Place BBB A+ Rating artwork in the service-section trust row, not below the Hero
 actions. Adjust line breaks without changing words.
 
@@ -179,10 +179,14 @@ navigation, a separate language selector, and an orange Online Application butto
 at the far right linking to the existing credential-evaluation application.
 Keep the legacy labels and order:
 Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
-retained service links listed in README.md; languages are English, 中文, and Español. Home stays on the
-rebuilt homepage; other destinations retain the legacy paths.
+retained service links listed in README.md; languages are English, 简体中文, and Español.
+The selector displays EN, 中文, or ES with a globe icon and marks the selected language.
+Home and logo links stay on the active localized homepage; other destinations retain
+the legacy paths.
 
-At 1200px and below, show only the logo and one circular two-line menu button.
+At 1200px and below, show the logo, a compact language selector, and one circular
+two-line menu button. Allow the logo to shrink proportionally on narrow phones
+while retaining 44px control targets.
 Open a navy panel filling the viewport below the 76px header, with numbered
 navigation rows, an expandable Services list, an Online Application button below
 the navigation, and language choices at the bottom.
@@ -300,3 +304,21 @@ These are reusable acceptance criteria, not a completion log.
   fallbacks are checked; target WCAG 2.2 AA without claiming certification from this document.
 - Check 320/390/760/850/1440px and 200% zoom: no clipped content, unintended horizontal
   overflow, broken media, or inaccessible controls.
+
+## 7. Localized Homepage
+
+Use one shared page and component structure for English (`/`), Simplified Chinese
+(`/zh`), and Spanish (`/es`). Keep the English source copy and business claims;
+translate headings, body copy, actions, FAQs, reviews, metadata, and accessible labels.
+Keep institution names, full company wordmarks, and application screenshots intact.
+Mark translated testimonials as translations of their original English reviews.
+
+Use appropriate Chinese font fallbacks and natural line heights. Keep the Chinese
+Hero in two balanced lines; allow longer Spanish copy and buttons to wrap without
+truncation. The language selector remains accessible in the top right on phones,
+with the same choices also available inside the mobile navigation panel.
+
+An explicit language URL wins over saved preferences. Otherwise use the saved
+language, browser preference, then English. Preserve the current page, query, and
+fragment when switching. Missing translations fall back to English and are flagged
+by development checks. New localized pages reuse the same route and message structure.

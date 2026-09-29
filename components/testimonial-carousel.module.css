@@ -33,3 +33,5 @@
   .card:last-child { margin-right: 12%; }
   .person { align-items: start; gap: 12px; }
 }
+
+.translationNote { margin-top: 16px; font-size: .75rem; color: var(--muted); line-height: 1.5; }

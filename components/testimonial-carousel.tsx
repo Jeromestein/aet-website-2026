@@ -1,11 +1,15 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
+
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import reviews from "./testimonials.json";
 import styles from "./testimonial-carousel.module.css";
 
 export function TestimonialCarousel() {
+  const t = useTranslations();
+  const locale = useLocale();
   const rail = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ first: 0, last: 1 });
   const [ready, setReady] = useState(false);
@@ -43,20 +47,19 @@ export function TestimonialCarousel() {
   };
 
   return (
-    <section className={`${styles.section} section wrap`} id="stories" aria-labelledby="testimonials-title" aria-roledescription="carousel">
+    <section className={`${styles.section} section wrap`} id="stories" aria-labelledby="testimonials-title" aria-roledescription={t("controls.carousel")}>
       <div className={styles.heading}>
         <div>
-          <span className="eyebrow">03 / CLIENT FEEDBACK</span>
-          <h2 id="testimonials-title">What Our Clients Say</h2>
+          <span className="eyebrow">{t("home.testimonials.eyebrow")}</span>
+          <h2 id="testimonials-title">{t("home.testimonials.title")}</h2>
         </div>
         <div className={styles.googleRating}>
-          <span className={styles.googleLabel}>Google reviews</span>
-          <div className={styles.ratingScore} aria-label="Rated 5.0 out of 5 on Google">
+          <span className={styles.googleLabel}>{t("home.testimonials.google")}</span>
+          <div className={styles.ratingScore} aria-label={t("home.testimonials.rating")}>
             <strong aria-hidden="true">5.0</strong>
             <span className={styles.ratingStars} aria-hidden="true">★★★★★</span>
           </div>
-          <a href="https://www.google.com/search?q=american+education+and+translation+services+%28aet%29+florida" target="_blank" rel="noopener noreferrer" aria-label="Read more reviews on Google (opens in a new tab)">
-            Read more reviews <ArrowUpRight size={17} aria-hidden="true" />
+          <a href="https://www.google.com/search?q=american+education+and+translation+services+%28aet%29+florida" target="_blank" rel="noopener noreferrer" aria-label={t("home.testimonials.moreLabel")}>{t("home.testimonials.more")} <ArrowUpRight size={17} aria-hidden="true" />
           </a>
         </div>
       </div>
@@ -64,20 +67,21 @@ export function TestimonialCarousel() {
         <span aria-live="polite" aria-atomic="true">
           {position.first + 1}{position.last > position.first ? `–${position.last + 1}` : ""} / {reviews.length}
         </span>
-        <button type="button" aria-label="Previous client testimonial" aria-controls="testimonial-rail" onClick={() => move(-1)}><ArrowLeft size={20} aria-hidden="true" /></button>
-        <button type="button" aria-label="Next client testimonial" aria-controls="testimonial-rail" onClick={() => move(1)}><ArrowRight size={20} aria-hidden="true" /></button>
+        <button type="button" aria-label={t("home.testimonials.previous")} aria-controls="testimonial-rail" onClick={() => move(-1)}><ArrowLeft size={20} aria-hidden="true" /></button>
+        <button type="button" aria-label={t("home.testimonials.next")} aria-controls="testimonial-rail" onClick={() => move(1)}><ArrowRight size={20} aria-hidden="true" /></button>
       </div>}
-      <div ref={rail} className={styles.rail} id="testimonial-rail" role="region" aria-label="Client testimonials" tabIndex={0}>
+      <div ref={rail} className={styles.rail} id="testimonial-rail" role="region" aria-label={t("home.testimonials.label")} tabIndex={0}>
         {reviews.map((review, index) => (
-          <article className={styles.card} key={review.name} aria-label={`${index + 1} of ${reviews.length}: ${review.name}`}>
+          <article className={styles.card} key={review.name} aria-label={t("home.testimonials.position", { index: index + 1, total: reviews.length, name: review.name })}>
             <div className={styles.person}>
               <img src={review.image} width={48} height={48} alt="" loading="lazy" />
               <div>
                 <h3>{review.name}</h3>
-                <span className={styles.stars} role="img" aria-label="5 out of 5 stars">★★★★★</span>
+                <span className={styles.stars} role="img" aria-label={t("home.testimonials.stars")}>★★★★★</span>
               </div>
             </div>
-            <blockquote>{review.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</blockquote>
+            <blockquote><p>{t(`home.testimonials.reviews.${index}`)}</p></blockquote>
+            {locale !== "en" && <p className={styles.translationNote}>{t("home.testimonials.translated")}</p>}
           </article>
         ))}
       </div>

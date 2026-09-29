@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -80,19 +82,20 @@ const institutions = [
 const rows = [institutions.slice(0, 8), institutions.slice(8)];
 
 export function InstitutionCarousel() {
+  const t = useTranslations();
   const [ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
 
   return (
     <section id="institutions" className={styles.section} aria-labelledby="institutions-title" data-ready={ready}>
       <div className={`wrap ${styles.heading}`}>
-        <span className="eyebrow">RECOGNITION THAT GOES FURTHER</span>
-        <h2 id="institutions-title">Trusted by Leading Institutions</h2>
-        <p>Our credential evaluation services are recognized and accepted by educational institutions, government agencies, and professional organizations across the United States.</p>
+        <span className="eyebrow">{t("home.institutions.eyebrow")}</span>
+        <h2 id="institutions-title">{t("home.institutions.title")}</h2>
+        <p>{t("home.institutions.text")}</p>
       </div>
-      <div className={styles.carousel} role="group" aria-label="Institution logos, two rows" aria-roledescription="carousel">
+      <div className={styles.carousel} role="group" aria-label={t("home.institutions.logos")} aria-roledescription={t("controls.carousel")}>
         {rows.map((row, rowIndex) => (
-          <div className={styles.row} key={rowIndex} tabIndex={0} role="group" aria-label={`Institution logos, row ${rowIndex + 1}`}>
+          <div className={styles.row} key={rowIndex} tabIndex={0} role="group" aria-label={t("home.institutions.row", { number: rowIndex + 1 })}>
             <div className={styles.track}>
               {[false, true].map((duplicate) => (
                 <ul className={`${styles.group} ${duplicate ? styles.duplicate : ""}`} key={String(duplicate)} aria-hidden={duplicate || undefined}>
@@ -110,9 +113,8 @@ export function InstitutionCarousel() {
         ))}
       </div>
       <div className={`wrap ${styles.footer}`}>
-        <p>
-          Our evaluations are widely accepted by universities, employers, and government agencies nationwide.{" "}
-          <a className="text-link" href="https://www.americantranslationservice.com/e-credential-evaluation-partners.php">Explore all institutions <ArrowUpRight size={16} aria-hidden="true" /></a>
+        <p>{t("home.institutions.closing")}{" "}
+          <a className="text-link" href="https://www.americantranslationservice.com/e-credential-evaluation-partners.php">{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
         </p>
       </div>
     </section>

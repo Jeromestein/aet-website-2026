@@ -1,17 +1,22 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import Image from "next/image";
 import { CardRail } from "./card-rail";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight, FileCheck2, Globe2, GraduationCap, ShieldCheck, SquarePen, Star } from "lucide-react";
 
-const facts = [
-  { value: "15+", title: "Years of experience", text: "Thousands of certified evaluations submitted.", Icon: GraduationCap },
-  { value: "100+", title: "Language pairs", text: "English, Chinese, Spanish, French, German, Russian, Arabic, and more.", Icon: Globe2 },
-  { value: "2009", title: "An ATA member since", text: "Member of the American Translators Association.", Icon: FileCheck2 },
-  { value: "A+", title: "Better Business Bureau", text: "BBB’s highest rating. We’re committed to dependable service, clear communication, and customer care.", Icon: ShieldCheck },
-  { value: "5", title: "5-star Google reviews", text: "Clients praise our responsive communication, professional evaluations, and helpful service.", Icon: Star },
+function useFacts() {
+  const t = useTranslations();
+  return [
+  { value: "15+", title: t("home.facts.experience"), text: t("home.facts.experienceText"), Icon: GraduationCap },
+  { value: "100+", title: t("home.facts.languages"), text: t("home.facts.languagesText"), Icon: Globe2 },
+  { value: "2009", title: t("home.facts.ata"), text: t("home.facts.ataText"), Icon: FileCheck2 },
+  { value: "A+", title: t("home.facts.bbb"), text: t("home.facts.bbbText"), Icon: ShieldCheck },
+  { value: "5", title: t("home.facts.reviews"), text: t("home.facts.reviewsText"), Icon: Star },
 ];
+}
 
 function getImpactScrollRange(section: HTMLElement) {
   const scene = section.querySelector<HTMLElement>(".impact-scene")!;
@@ -24,6 +29,8 @@ function getImpactScrollRange(section: HTMLElement) {
 }
 
 export function ImpactStory() {
+  const t = useTranslations();
+  const facts = useFacts();
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
@@ -86,34 +93,41 @@ export function ImpactStory() {
         {Array.from({ length: 8 }, (_, i) => <span key={i} className={`impact-bubble bubble-${i + 1}`}><i /></span>)}
       </div>
       <div className="impact-intro">
-        <span className="eyebrow">AET AT A GLANCE</span>
-        <h2 id="impact-title">Why Choose Us</h2>
-        <p>Professional translation and credential evaluation services.</p>
+        <span className="eyebrow">{t("home.facts.eyebrow")}</span>
+        <h2 id="impact-title">{t("home.facts.title")}</h2>
+        <p>{t("home.facts.text")}</p>
       </div>
-      <CardRail className="impact-orbit" label="AET facts">
+      <CardRail className="impact-orbit" label={t("home.facts.label")}>
         {facts.map(({ value, title, text, Icon }, i) => <article data-rail-card key={value} className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`} aria-hidden={enhanced ? i !== active : undefined}>
           {value === "5" ? <div className="fact-review-stars" aria-hidden="true">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={24} fill="currentColor" strokeWidth={1.2} />)}</div> : <Icon className="fact-icon" size={54} strokeWidth={1.1} aria-hidden="true" />}
           <strong>{value}</strong><h3>{title}</h3><p>{text}</p>
         </article>)}
-        <div className="story-dots" aria-label="AET highlights">{facts.map((fact, i) => <button key={fact.value} type="button" aria-label={`Show ${fact.title}`} aria-pressed={active === i} onClick={() => select(i)}><span /></button>)}</div>
+        <div className="story-dots" aria-label={t("home.facts.highlights")}>{facts.map((fact, i) => <button key={fact.value} type="button" aria-label={t("home.facts.show", { title: fact.title })} aria-pressed={active === i} onClick={() => select(i)}><span /></button>)}</div>
       </CardRail>
     </div>
   </section>;
 }
 
-const steps = [
-  { label: "YOUR PURPOSE", title: "Tell us your purpose", text: "Select USCIS, employment, or education as the purpose of your evaluation.", image: "/images/application/application-purpose.png", alt: "AET application purpose options: USCIS, employment, and education", caption: "Select your evaluation purpose" },
-  { label: "YOUR APPLICATION", title: "Complete our application form", text: "Enter your client information, evaluee information, and education history in our online application.", image: "/images/application/client-information.png", alt: "AET online application showing the Client Information form and four application stages", caption: "Complete your application" },
-  { label: "YOUR EVALUATION", title: "Choose your evaluation type", text: "In the Services step, choose Document-by-Document, Course-by-Course, or an Expert Opinion Letter based on your requirements.", image: "/images/application/service-selection.png", alt: "AET Services step with Document-by-Document, Course-by-Course, and Expert Opinion Letter options", caption: "Choose your evaluation type" },
-  { label: "YOUR DOCUMENTS", title: "Upload your documents", text: "After submitting your application, open your application status page. Use Choose Files or drag and drop your documents, then select Upload Files.", image: "/images/application/document-upload.png", alt: "Application status page upload area with Choose Files, drag-and-drop instructions, and Upload Files button", caption: "Upload documents on your status page" },
+function useSteps() {
+  const t = useTranslations();
+  return [
+  { label: t("home.process.purposeLabel"), title: t("home.process.purposeTitle"), text: t("home.process.purposeText"), image: "/images/application/application-purpose.png", alt: t("home.process.purposeAlt"), caption: t("home.process.purposeCaption") },
+  { label: t("home.process.applicationLabel"), title: t("home.process.applicationTitle"), text: t("home.process.applicationText"), image: "/images/application/client-information.png", alt: t("home.process.applicationAlt"), caption: t("home.process.applicationCaption") },
+  { label: t("home.process.evaluationLabel"), title: t("home.process.evaluationTitle"), text: t("home.process.evaluationText"), image: "/images/application/service-selection.png", alt: t("home.process.evaluationAlt"), caption: t("home.process.evaluationTitle") },
+  { label: t("home.process.documentsLabel"), title: t("home.process.documentsTitle"), text: t("home.process.documentsText"), image: "/images/application/document-upload.png", alt: t("home.process.documentsAlt"), caption: t("home.process.documentsCaption") },
 ];
+}
 
 function StepVisual({ index }: { index: number }) {
+  const t = useTranslations();
+  const steps = useSteps();
   const step = steps[index];
-  return <><div className="journey-screen-label">AET ONLINE APPLICATION</div><div className="journey-screen"><Image src={step.image} alt={step.alt} fill sizes="(max-width: 850px) 90vw, 48vw" /></div></>;
+  return <><div className="journey-screen-label">{t("home.process.screen")}</div><div className="journey-screen"><Image src={step.image} alt={step.alt} fill sizes="(max-width: 850px) 90vw, 48vw" /></div></>;
 }
 
 export function ProcessStory() {
+  const t = useTranslations();
+  const steps = useSteps();
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
@@ -139,10 +153,10 @@ export function ProcessStory() {
     return () => { media.removeEventListener("change", configure); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
   }, []);
   return <section ref={root} className={`journey-story ${enhanced ? "is-enhanced" : ""}`} id="process" aria-labelledby="journey-title"><div className="wrap">
-    <div className="journey-heading"><span className="eyebrow">02 / A CLEAR PATH FORWARD</span><h2 id="journey-title">Simple 4-Step Process</h2><p>Tell us your purpose, complete your application, choose an evaluation type, and upload your documents.</p><a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application"><SquarePen size={24} aria-hidden="true" />Start Application<ArrowUpRight size={24} aria-hidden="true" /></a></div>
+    <div className="journey-heading"><span className="eyebrow">{t("home.process.eyebrow")}</span><h2 id="journey-title">{t("home.process.title")}</h2><p>{t("home.process.text")}</p><a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application"><SquarePen size={24} aria-hidden="true" />{t("home.process.action")}<ArrowUpRight size={24} aria-hidden="true" /></a></div>
     <div className="journey-layout"><div className="journey-media">
-      {steps.map((step, i) => <div key={step.label} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}><StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div></div>)}
-      <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.label} className={i <= active ? "is-active" : ""} />)}</div>
-    </div><div className="journey-stages">{steps.map((step, i) => <article key={step.label} className={`journey-stage ${i === active ? "is-active" : ""}`}><div className="journey-mobile-image"><StepVisual index={i} /></div><div className="journey-card"><span className="journey-number">0{i + 1}</span><div><span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>{i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">Start Application <ArrowUpRight size={18} /></a>}</div></div></article>)}</div></div>
+      {steps.map((step, i) => <div key={step.image} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}><StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div></div>)}
+      <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.image} className={i <= active ? "is-active" : ""} />)}</div>
+    </div><div className="journey-stages">{steps.map((step, i) => <article key={step.image} className={`journey-stage ${i === active ? "is-active" : ""}`}><div className="journey-mobile-image"><StepVisual index={i} /></div><div className="journey-card"><span className="journey-number">0{i + 1}</span><div><span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>{i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">{t("home.process.action")} <ArrowUpRight size={18} /></a>}</div></div></article>)}</div></div>
   </div></section>;
 }

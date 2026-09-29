@@ -16,6 +16,7 @@ Open http://localhost:3021. The development port is configured in `package.json`
 ## Validation and deployment
 
 ```sh
+pnpm check:i18n
 pnpm typecheck
 ```
 
@@ -88,3 +89,27 @@ Validate routes, metadata, and the intended deployment before launch. Do not sub
 - `public/images/`: locally copied assets; see ASSETS.md.
 
 Poppins, Fraunces, and Gaegu are hosted locally in `public/fonts/` and loaded through `app/fonts.css`. Font licenses and provenance are documented in ASSETS.md. Native details elements keep FAQs functional without JavaScript. Page content remains visible if JavaScript is disabled.
+
+## Internationalization
+
+Locale routing uses `next-intl`: `/` (English), `/zh` (Simplified Chinese), and
+`/es` (Spanish). An explicit locale URL takes precedence; otherwise the saved
+`AET_LOCALE` preference is used, followed by the browser language and English.
+The preference cookie lasts one year. `/en` updates the preference and redirects
+to `/`, so English remains selectable after visiting another locale.
+
+The header language selector is available on desktop and mobile. Switching keeps
+the current pathname, query parameters, and fragment. Home and logo links stay in
+the active locale. External legacy pages and the separate application portal keep
+their existing destinations and manage their own language settings.
+
+Edit corresponding keys in all three `messages/*.json` files. Missing messages
+fall back to English; development logs and `pnpm check:i18n` report omissions.
+The check also validates message syntax, interpolation arguments, and preservation
+of the original English testimonials. Translated reviews are labeled as translations;
+brand artwork, institution names, and existing application screenshots are retained.
+Localized titles, descriptions, HTML language attributes, and alternate-language
+response links are supplied. Canonical URLs await the production-domain decision.
+
+After moving routes, run `pnpm exec next typegen` if existing generated route types
+still reference the old paths, then run `pnpm typecheck`. This does not build the site.
