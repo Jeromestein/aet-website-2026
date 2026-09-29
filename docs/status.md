@@ -5,6 +5,41 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Shared Pricing page — September 29, 2026
+
+- Added `/pricing`, `/zh/pricing`, and `/es/pricing` with shared navigation,
+  footer, service-section index, quote links, and responsive semantic tables.
+  `/e-fee.php` redirects to `/pricing`; retained legacy section anchors work.
+- Centralized USD price types, units, turnaround, shipping/tracking and minimum
+  durations in `lib/pricing.ts`. Shared formatting and reusable `PricingTable`
+  and `PricingSection` components serve the new page. The two expert-opinion
+  displays share one rate array. Homepage pricing, standard processing and its
+  FAQ now interpolate the same Document-by-Document constants.
+- Used the owner's updated legacy fee page: certified translation starts at
+  $70/$80, Document-by-Document rush is $150/3 business days, and expert letters
+  are $620/21, $700/14, $800/8 business days. Preserved non-Chinese-document
+  pricing scope, final-quote qualification, office variation, cutoff, hourly
+  minimums, transportation supplements and shipping conditions.
+- China Visa is excluded. Proofreading/English writing are omitted under the
+  provisional narrowed scope communicated to the owner; the optional scope
+  question remains open. No application-form-only rates were added.
+- Compared all 38 displayed rows against the updated legacy HTML, including
+  amounts, applicable turnaround, price types and shipping tracking. Confirmed
+  the shared expert records and homepage standard values reference the catalog.
+- Codex in-app browser: inspected English and Chinese desktop layouts at 1280px,
+  Spanish desktop interpretation, English/Chinese mobile at 390px, and Spanish
+  shipping at 320px. No page overflow was found in the checked states. Verified
+  section navigation, Spanish-to-English page switching, the mobile Pricing
+  menu entry, and the homepage desktop pricing and expanded mobile timing FAQ.
+- `pnpm typecheck`, `pnpm check:i18n` (248 keys per locale), and `git diff --check`
+  passed. Legacy redirect returns 308 and preserves query parameters.
+- A temporary `pnpm dev` server on port 3021 was necessary because no server was
+  running. Sandbox file-watch restrictions required an approved run outside the
+  sandbox. The temporary server was stopped after verification. No production
+  build, commit, push or deployment was performed.
+- Evidence: `output/playwright/pricing-en-desktop.png`,
+  `pricing-zh-mobile.png`, and `pricing-es-mobile-shipping.png`.
+
 ### Homepage internationalization — September 28, 2026
 
 - Added `next-intl` and a shared `app/[locale]` layout/page for English `/`,

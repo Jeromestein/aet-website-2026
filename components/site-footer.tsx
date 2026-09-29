@@ -21,7 +21,7 @@ export function SiteFooter() {
     [t("navigation.interpretation"), "/e-interpretation.php"],
   ];
   const popular = [
-    [t("footer.fee"), "/e-fee.php"],
+    [t("pricing.title"), "/pricing"],
     [t("home.contact"), "/e-contact.php"],
     [t("footer.about"), "/e-aboutus.php"],
     [t("footer.career"), "/e-careers.php"],
@@ -58,7 +58,7 @@ export function SiteFooter() {
             </div>
             <div>
               <h2>{t("footer.popular")}</h2>
-              <ul>{popular.map(([label, path]) => <li key={path}><a href={legacy + path}>{label}</a></li>)}</ul>
+              <ul>{popular.map(([label, path]) => <li key={path}><a href={path === "/pricing" ? getPathname({ locale, href: "/pricing" }) : legacy + path}>{label}</a></li>)}</ul>
             </div>
             <div>
               <h2>{t("footer.office")}</h2>

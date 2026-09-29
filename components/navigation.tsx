@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Globe2, ChevronDown } from "lucide-react";
-import { getPathname } from "@/i18n/navigation";
+import { getPathname, usePathname } from "@/i18n/navigation";
 import { type Locale } from "@/i18n/routing";
 import { LanguageSwitcher, LanguageOptions } from "./language-switcher";
 import styles from "./navigation.module.css";
@@ -14,6 +14,7 @@ const application = "https://app.americantranslationservice.com/credential-evalu
 export function Navigation() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const pathname = usePathname();
   const home = getPathname({ locale, href: "/" });
   const links = [
     { label: t("navigation.home"), href: home },
@@ -25,6 +26,7 @@ export function Navigation() {
       { label: t("navigation.expert"), href: legacy + "/e-expert-opinion-letter.php" },
       { label: t("navigation.general"), href: legacy + "/e-translation.php" },
       { label: t("navigation.notarization"), href: legacy + "/e-nus.php" },
+      { label: t("pricing.title"), href: getPathname({ locale, href: "/pricing" }) },
     ] },
     { label: t("navigation.contact"), href: legacy + "/e-contact.php" },
     { label: t("navigation.payment"), href: legacy + "/e-pay.php" },
@@ -117,7 +119,7 @@ export function Navigation() {
                       {link.children.map((child) => <a key={child.label} href={child.href}>{child.label}</a>)}
                     </div>
                   </details>
-                ) : <a className={styles.navLink} href={link.href} aria-current={link.label === t("navigation.home") ? "page" : undefined}>{link.label}</a>}
+                ) : <a className={styles.navLink} href={link.href} aria-current={link.href === home && pathname === "/" ? "page" : undefined}>{link.label}</a>}
               </li>
             ))}
           </ul>
@@ -143,7 +145,7 @@ export function Navigation() {
                           {link.children.map((child) => <a key={child.label} href={child.href} onClick={() => closeMenu()}>{child.label}</a>)}
                         </div>
                       </details>
-                    ) : <a className={styles.mobileLink} href={link.href} aria-current={link.label === t("navigation.home") ? "page" : undefined} onClick={() => closeMenu()}><span className={styles.number} aria-hidden="true">0{index + 1}</span>{link.label}</a>}
+                    ) : <a className={styles.mobileLink} href={link.href} aria-current={link.href === home && pathname === "/" ? "page" : undefined} onClick={() => closeMenu()}><span className={styles.number} aria-hidden="true">0{index + 1}</span>{link.label}</a>}
                   </li>
                 ))}
               </ul>

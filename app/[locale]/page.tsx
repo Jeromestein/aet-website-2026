@@ -1,3 +1,5 @@
+import { documentEvaluationStandard } from "@/lib/pricing";
+import { formatMoney } from "@/lib/pricing-format";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -42,7 +44,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     ],
     [
       t("home.faq.q2"),
-      t("home.faq.a2"),
+      t("home.faq.a2", { days: documentEvaluationStandard.businessDays }),
     ],
     [
       t("home.faq.q3"),
@@ -110,8 +112,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="fce-benefits">
               <h3>{t("home.services.why")}</h3>
               <ul>
-                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.fast")}</strong> {t("home.services.fastText")}</span></li>
-                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.pricing")}</strong> {t("home.services.pricingText")}</span></li>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.fast")}</strong> {t("home.services.fastText", { days: documentEvaluationStandard.businessDays })}</span></li>
+                <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.pricing")}</strong> {t("home.services.pricingText", { amount: formatMoney(documentEvaluationStandard.price, locale) })}</span></li>
                 <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.response")}</strong> {t("home.services.responseText")}</span></li>
                 <li><CircleCheck size={22} aria-hidden="true" /><span><strong>{t("home.services.payment")}</strong> {t("home.services.paymentText")}</span></li>
               </ul>

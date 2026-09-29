@@ -99,9 +99,12 @@ one shared page and its i18n content, not three independently implemented pages.
   Choose a maintained backend or approved replacement and verify it in test mode;
   copying the visible form is insufficient. Preserve approved payment instructions
   and terms links without copying private payment configuration into frontend code.
-- [ ] **Service Fee** — `/e-fee.php` → Service Fee page. Reconcile amounts, rush
-  options, delivery costs, and matching service-page tables. The old page includes
-  China Visa content; exclude removed-service promotions from the rebuilt page.
+- [x] **Service Fee** — `/e-fee.php` → localized `/pricing` page, implemented
+  September 29, 2026 from the owner-updated legacy fee page. Fees, turnaround,
+  shipping and expert-opinion rates use shared records and reusable tables.
+  China Visa is excluded; proofreading/writing remain omitted pending scope
+  confirmation. Local verification is recorded in `status.md`; production
+  deployment and remaining service-page migrations are still open.
 - [ ] **About AET** — `/e-aboutus.php` → About AET page. Preserve supported company
   history, credentials, and brand information; reuse the new visual system.
 - [ ] **Career** — `/e-careers.php` → Career page. Confirm which roles remain open

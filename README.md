@@ -1,6 +1,6 @@
 # AET Website 2026
 
-A standalone Next.js App Router homepage for American Education and Translation Services. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
+A Next.js App Router website for American Education and Translation Services, with a homepage and shared Pricing page. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
 
 ## Local development
 
@@ -35,6 +35,10 @@ Application and pre-evaluation buttons connect to the existing
 app.americantranslationservice.com portal. Service details, contact, payment,
 blog, office, and policy destinations still point to the existing production
 website. Payment is not implemented in this project.
+
+Pricing is implemented at `/pricing`, `/zh/pricing`, and `/es/pricing`. The
+Services menu and footer use these localized routes. `/e-fee.php` redirects to
+`/pricing`, preserving the legacy section anchors for retained services.
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 
@@ -113,3 +117,28 @@ response links are supplied. Canonical URLs await the production-domain decision
 
 After moving routes, run `pnpm exec next typegen` if existing generated route types
 still reference the old paths, then run `pnpm typecheck`. This does not build the site.
+
+## Shared pricing
+
+`lib/pricing.ts` is the single source for USD fees, price types (fixed, starting,
+range, or quoted), units, turnaround, shipping/tracking, and minimum durations.
+The baseline is the owner's September 29, 2026 updated legacy `e-fee.php`, not
+the conflicting older service-page or application-form prices. Preserve its
+non-Chinese-document scope independently of the UI language.
+
+`components/pricing/pricing-table.tsx` renders any catalog rate collection;
+`components/pricing/pricing-section.tsx` renders a complete reusable service
+section with its qualifications. Future service pages should import these
+records/components rather than copying prices into page copy. Expert Opinion
+Letters and Professional Experience Evaluation share the same rate records.
+The homepage fee, standard turnaround, and FAQ interpolate the shared
+Document-by-Document values. `lib/pricing-format.ts` handles localized price and
+time display; `messages/*.json` contains wording, not fee or turnaround values.
+
+Example: `<PricingSection section="translation" />` or
+`<PricingTable rates={expertOpinion} caption={localizedTitle} showService={false} />`.
+
+China Visa is excluded. Proofreading and English writing are currently omitted
+in line with the narrowed new-site scope, pending the owner's scope response.
+No application-form-only add-ons have been imported. Existing old-site service
+pages and the separate application portal are outside this shared data module.
