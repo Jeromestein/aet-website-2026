@@ -76,3 +76,14 @@
   .cards:global(.card-rail), .benefits:global(.card-rail) { display: flex; gap: 16px; }
   .benefits:global(.card-rail) > :only-child { flex-basis: 100%; margin-right: 0; }
 }
+
+.certificateCopy { display: flow-root; margin-bottom: 28px; }
+.certificateCopy img { float: right; width: 32%; height: auto; margin: 0 0 20px 24px; border-radius: 12px; }
+.coverage img { display: block; width: 100%; max-width: 680px; height: auto; margin: 24px auto; }
+.faq { border-bottom: 1px solid var(--line); padding: 20px 0; scroll-margin-top: 110px; }
+.faq summary { cursor: pointer; font-size: 18px; line-height: 1.6; min-height: 44px; font-weight: 600; }
+.faq[open] summary { margin-bottom: 16px; }
+.faq a { overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .certificateCopy img { width: 40%; margin-left: 16px; }
+}

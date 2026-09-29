@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
+      { source: "/e-notarized.php", destination: "/certified-translation", permanent: true },
+      { source: "/e-notarized-zh.php", destination: "/zh/certified-translation", permanent: true },
+      { source: "/e-notarized-es.php", destination: "/es/certified-translation", permanent: true },
       { source: "/e-fee.php", destination: "/pricing", permanent: true },
       { source: "/e-evaluation.php", destination: "/evaluation", permanent: true },
       { source: "/e-evaluation-zh.php", destination: "/zh/evaluation", permanent: true },

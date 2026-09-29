@@ -5,6 +5,32 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Service template and Certified Translation — September 29, 2026
+
+- Added `docs/service-page-template.md` and linked it from repository guidance.
+  Extracted `ServicePage`, reviewed-copy rendering and interior CSS into
+  `components/service/`; Evaluation and Certified Translation now share the shell.
+- Added Certified Translation in English, Chinese and Spanish. Retained source
+  definitions, formats, uses, ATA information, coverage, languages, four FAQs and
+  office/email/payment application steps. Benefits and application use mobile
+  horizontal rails. Sample downloads are inside the first native FAQ disclosure.
+- Reused eight certified-translation and six shipping records. Rendered rate rows
+  match Pricing in all locales. Table qualifications remain outside the tables.
+  The source's commented online link is not exposed as a translation workflow.
+- Homepage, navigation and footer link to localized routes. All three legacy PHP
+  URLs return 308 and retain query parameters. Internal anchors are valid/unique.
+- Source-text comparison passed for all three locales' explanations, benefits,
+  application and FAQ. Five original image/PDF assets match bytes and return 200.
+- In-app browser: desktop title/sections/application; mobile rail navigation through
+  step 3 and disabled end control; shipping and sample FAQ expansion; Chinese and
+  Spanish 320px layouts; language switch retains route and #faq. Evaluation desktop
+  shell and mobile step navigation passed regression checks. Checked states have
+  no page overflow. Typecheck, locale validation and whitespace checks passed.
+- Evidence: `output/playwright/certified-translation-desktop.png`,
+  `certified-translation-mobile-application.png`, and
+  `certified-translation-mobile-faq.png`. Reused the running server; no manual
+  restart, production build, deployment, payment or application submission.
+
 ### Mobile horizontal card correction — September 29, 2026
 
 - Homepage and Evaluation online steps now use `CardRail`, including native

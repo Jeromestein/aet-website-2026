@@ -1,6 +1,6 @@
 # AET Website 2026
 
-A Next.js App Router website for American Education and Translation Services, with a homepage, Evaluation, and shared Pricing page. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
+A Next.js App Router website for American Education and Translation Services, with a homepage, Evaluation, Certified Translation, and shared Pricing page. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
 
 ## Local development
 
@@ -45,6 +45,13 @@ It preserves legacy prose and reuses Pricing's table component and shared rates.
 The homepage/header/footer use these routes, and the three legacy evaluation PHP
 URLs redirect to them. Original form and sample PDFs are served locally.
 See [content provenance](content/evaluation/README.md) for source details.
+
+Certified Translation is implemented at `/certified-translation`,
+`/zh/certified-translation`, and `/es/certified-translation`. It uses the shared
+service-page shell, Pricing records, mobile card rails, and the legacy three-step
+email workflow. The three legacy notarized PHP entry points redirect to it.
+See [service-page template](docs/service-page-template.md) before adding services
+and [translation provenance](content/certified-translation/README.md) for sources.
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 

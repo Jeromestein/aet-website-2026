@@ -79,6 +79,11 @@ one shared page and its i18n content, not three independently implemented pages.
   Preserve document types, languages, quote/application instructions, pricing,
   sample PDFs, delivery options, and FAQs. Review the old `/apply` portal link;
   do not assume a translation request uses the credential-evaluation form.
+  Local implementation: `/certified-translation` and its `/zh` and `/es` variants
+  now use the shared service shell, pricing, mobile rails, native FAQ/shipping
+  disclosures, and source samples. The old online link was commented out; active
+  application instructions are office/email/payment. See [status.md](status.md).
+  Final source-claim reconciliation and launch acceptance remain open.
 - [ ] **Technical Translation** — `/e-tech-translation.php` → Technical Translation
   page. Preserve the scientific, industrial, medical, business, legal, and
   education content and its contact action.

@@ -54,7 +54,7 @@ export function SiteFooter() {
               <h2>{t("footer.top")}</h2>
               <a className={styles.featured} href={getPathname({ locale, href: "/evaluation" })}>{t("home.services.title")}</a>
               <h2 className={styles.more}>{t("footer.more")}</h2>
-              <ul>{services.map(([label, path]) => <li key={path}><a href={legacy + path}>{label}</a></li>)}</ul>
+              <ul>{services.map(([label, path]) => <li key={path}><a href={path === "/e-notarized.php" ? getPathname({ locale, href: "/certified-translation" }) : legacy + path}>{label}</a></li>)}</ul>
             </div>
             <div>
               <h2>{t("footer.popular")}</h2>

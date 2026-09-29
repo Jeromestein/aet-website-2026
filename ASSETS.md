@@ -154,3 +154,12 @@ Logo readability follow-up: enlarged the outlined wordmark by 7.5%, moved its
 start from x=158 to x=132, and proportionally reduced the embedded emblem to
 120 x 88 within the unchanged 520 x 120 canvas. Full wording and colors remain
 unchanged; synchronized the transparent 1560 x 360 PNG exports.
+
+## Certified Translation additions — September 29, 2026
+
+Unchanged files copied from the local legacy site: `down/BachelorDegreeCertificate.pdf`,
+`down/MarriageCertificate.pdf`, `down/BirthCertificate.pdf`, and `images/USAMAP.png`,
+under the same `public/` paths. Legacy `images/ata.jpg` is saved as
+`public/images/certified-ata.jpg`; the existing homepage ATA asset is unchanged.
+All five served files match their source bytes. Source map and ATA links remain.
+See `content/certified-translation/README.md` for content provenance.

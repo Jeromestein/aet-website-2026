@@ -20,7 +20,7 @@ export function Navigation() {
     { label: t("navigation.home"), href: home },
     { label: t("navigation.evaluation"), href: getPathname({ locale, href: "/evaluation" }) },
     { label: t("navigation.services"), children: [
-      { label: t("navigation.certified"), href: legacy + "/e-notarized.php" },
+      { label: t("navigation.certified"), href: getPathname({ locale, href: "/certified-translation" }) },
       { label: t("navigation.technical"), href: legacy + "/e-tech-translation.php" },
       { label: t("navigation.interpretation"), href: legacy + "/e-interpretation.php" },
       { label: t("navigation.expert"), href: legacy + "/e-expert-opinion-letter.php" },

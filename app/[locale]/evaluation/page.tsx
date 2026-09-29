@@ -5,8 +5,7 @@ import { notFound } from 'next/navigation';
 import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, CreditCard, ShieldCheck } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
-import { Navigation } from '@/components/navigation';
-import { SiteFooter } from '@/components/site-footer';
+import { ServicePage, ServiceCopy as Copy } from '@/components/service/service-page';
 import { ProcessStory } from '@/components/scroll-stories';
 import { InstitutionCarousel } from '@/components/institution-carousel';
 import { CardRail } from '@/components/card-rail';
@@ -15,18 +14,13 @@ import { PricingTable } from '@/components/pricing/pricing-table';
 import { evaluationContent } from '@/lib/evaluation';
 import { evaluationGroups, preEvaluation, shipping, documentEvaluationStandard, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
 import { formatMoney, formatPrice } from '@/lib/pricing-format';
-import styles from '@/components/evaluation/evaluation.module.css';
+import styles from '@/components/service/service-page.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
 const contact = 'https://www.americantranslationservice.com/e-contact.php';
 const application = 'https://app.americantranslationservice.com/credential-evaluation-application';
 const icons = [GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2];
 const benefitIcons = [BriefcaseBusiness, CreditCard, Clock3, ShieldCheck];
-
-/** HTML is restricted, checked-in copy extracted from the legacy content files. */
-function Copy({ html, className = '' }: { html: string; className?: string }) {
-  return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: html }} />;
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -51,24 +45,8 @@ export default async function EvaluationPage({ params }: Props) {
   const copy = (html: string) => html.replace(/\{\{(\w+)\}\}/g, (_, key: string) => replacements[key] ?? '');
   const groups = [...evaluationGroups, { id: 'preEvaluation', rates: preEvaluation }];
 
-  return <>
-    <a className="skip-link" href="#main-content">{t('home.skip')}</a>
-    <Navigation />
-    <main id="main-content" className={styles.page}>
-      <header className={styles.hero}><div className="wrap"><div className={styles.heroInner}>
-        <nav className={styles.breadcrumb} aria-label={pricing('breadcrumb')}>
-          <a href={getPathname({ locale, href: '/' })}>{t('navigation.home')}</a><span aria-hidden="true">/</span><span aria-current="page">{t('navigation.evaluation')}</span>
-        </nav>
-        <span className="eyebrow">{c.eyebrow}</span>
-        <h1>{c.title}</h1>
-        <div className={styles.actions}><a className="button primary" href={application}>{t('home.hero.apply')}</a><a className="button" href={contact}>{t('home.contact')}</a></div>
-      </div></div></header>
-      <div className={`wrap ${styles.layout}`}>
-        <nav className={styles.index} aria-label={pricing('onPage')}>
-          <p>{pricing('onPage')}</p>
-          {c.nav.map((item, i) => <a key={item.id} href={`#${item.id}`}><span aria-hidden="true">0{i + 1}</span>{item.label}</a>)}
-        </nav>
-        <div className={styles.content}>
+  return <ServicePage locale={locale} title={c.title} label={t('navigation.evaluation')} eyebrow={c.eyebrow} nav={c.nav}
+    actions={[{ label: t('home.hero.apply'), href: application }, { label: t('home.contact'), href: contact }]}>
           <section id="define" aria-labelledby="define-title" className={styles.section}>
             <h2 id="define-title">{c.define.title}</h2><Copy html={c.define.html} />
           </section>
@@ -126,9 +104,5 @@ export default async function EvaluationPage({ params }: Props) {
             <h2 id="sample-title">{c.samples.title}</h2><Copy html={c.samples.html} className={styles.sampleLinks} />
           </section>
           <InstitutionCarousel id="partners" variant="embedded" title={c.partners.title} contactLabel={t('home.contact')} />
-        </div>
-      </div>
-    </main>
-    <SiteFooter />
-  </>;
+  </ServicePage>;
 }

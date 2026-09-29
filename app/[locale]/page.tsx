@@ -150,7 +150,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <CardRail className="service-list" label={t("home.services.otherLabel")}>
               {services.map((s) => (
                 <a
-                  href={old + s.href}
+                  href={s.href === "/e-notarized.php" ? getPathname({ locale, href: "/certified-translation" }) : old + s.href}
                   className="service-row"
                   key={s.number}
                   data-rail-card

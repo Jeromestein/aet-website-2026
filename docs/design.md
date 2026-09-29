@@ -7,7 +7,9 @@ These are target rules; implementation and verification progress are tracked sep
 
 AET should feel professional, clear, reliable, and approachable. Use generous
 space, readable service information, and obvious application/contact actions.
-The project rebuilds the homepage only; other services remain linked destinations.
+The homepage, Pricing, Evaluation and Certified Translation are implemented locally;
+other services remain linked destinations. Follow [service-page-template.md](service-page-template.md)
+when adding service pages.
 
 Preserve existing AET wording, named services, testimonials, and factual claims.
 Do not substitute aspirational slogans, invent metrics, or change fees, processing
