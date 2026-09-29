@@ -8,8 +8,8 @@
 .actions a { border-radius: 8px; min-height: 54px; padding: 14px 24px; box-shadow: none; }
 .actions a:first-child { background: var(--orange); color: var(--surface); }
 .actions a:first-child:hover { background: var(--orange-hover); }
-.actions a:last-child { border: 1px solid var(--action-blue); color: var(--action-blue); }
-.actions a:last-child:hover { background: var(--action-blue); color: var(--surface); }
+.actions a:not(:first-child) { border: 1px solid var(--action-blue); color: var(--action-blue); }
+.actions a:not(:first-child):hover { background: var(--action-blue); color: var(--surface); }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .layout { display: grid; grid-template-columns: 218px minmax(0, 1fr); gap: 64px; align-items: start; padding-top: 64px; padding-bottom: 88px; }
 .index { position: sticky; top: 110px; }
@@ -17,6 +17,7 @@
 .index a { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
 .index a:hover { color: var(--orange); }
 .index span { font-size: 11px; color: var(--accent); padding-top: 2px; }
+.index a.indexChild { padding-left: 24px; font-size: 13px; }
 .content { min-width: 0; }
 .section { margin-bottom: 64px; scroll-margin-top: 110px; }
 .section h2, .disclosure > summary { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
@@ -58,6 +59,7 @@
   .index p { width: 100%; margin-bottom: 8px; }
   .index a { border: 1px solid var(--line); border-radius: 28px; padding: 10px 14px; background: var(--surface); }
   .index span { display: none; }
+  .index a.indexChild { display: none; }
 }
 @media (max-width: 600px) {
   .hero { padding: 32px 0 40px; }

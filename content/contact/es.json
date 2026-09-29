@@ -1,0 +1,24 @@
+{
+  "source": "e-contact-content-es.html",
+  "title": "Contacte a American Education and Translation Services (AET)",
+  "eyebrow": "Solicitar Servicios",
+  "description": "Elija una oficina de AET para consultar sobre traducción, evaluación de credenciales, interpretación o notarización.",
+  "findOffice": "Elegir una Oficina",
+  "sections": { "how": "Cómo Contactarnos", "offices": "Nuestras Oficinas", "other": "Otros Contactos" },
+  "introHeading": "Por favor CONTACTE SOLO UNA OFICINA a continuación para evitar demoras. Tiene dos opciones:",
+  "options": [
+    { "title": "Email", "body": "Opción 1. Email: Envíe una copia escaneada de su documento a una de nuestras oficinas por email. Le responderemos con la cotización y el tiempo lo antes posible. Los documentos originales no son necesarios para traducción certificada y evaluación de credenciales extranjeras. No es necesaria una llamada telefónica." },
+    { "title": "Visita", "body": "Opción 2. Visite nuestra oficina con su documento. No necesita cita previa." }
+  ],
+  "priority": "PRIORIDAD PARA HABLA HISPANA",
+  "labels": { "phone": "Teléfono", "email": "Email", "address": "Dirección", "hours": "Horario de atención", "whatsapp": "WhatsApp", "wechat": "WeChat", "tollFreeChina": "Número gratuito desde China", "fax": "Fax", "qq": "QQ", "more": "Más formas de contacto", "directions": "Cómo llegar", "officeDetails": "Detalles de la oficina" },
+  "offices": {
+    "miami": { "name": "Oficina de Miami", "title": "Oficina de Miami - Sede Central", "hours": "Lun. – Vie. 9:00am - 5:00pm EST" },
+    "boston": { "name": "Oficina de Boston", "title": "Oficina de Boston - Sede Central en Norte de EE.UU.", "hours": "Lun. – Vie. 9:00am - 5:30pm EST; Sáb. 9:30am – 12:30pm EST", "phoneNotes": ["Servicio de Traducción Certificada y Notarizada", "Otros servicios"] },
+    "la": { "name": "Oficina de Los Angeles", "title": "Oficina de Los Angeles – Sede Central en California y costa oeste", "hours": "Lun. – Vie. 8:30am - 5:00pm PST" },
+    "sf": { "name": "Oficina de San Francisco", "title": "Oficina de San Francisco - Sucursal de California", "hours": "Lun. – Vie. 9:00am - 5:00pm PST" },
+    "nyc": { "name": "Oficina de Nueva York", "title": "Oficina de Nueva York", "hours": "Lun. – Vie. 9:00am - 5:30pm EST", "phoneNotes": ["Traducción Certificada, Evaluación de Credenciales Extranjeras e interpretación"] },
+    "bj": { "name": "Oficina de Beijing", "title": "Oficina de Beijing - Sede Central en China", "hours": "" }
+  },
+  "other": { "title": "Otros Contactos (Sin traducción certificada/evaluación de credenciales)", "nyc": "Contacto NYC", "taiyuan": "Contacto Taiyuan", "mobile": "Celular" }
+}

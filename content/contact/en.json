@@ -1,0 +1,23 @@
+{
+  "source": "e-contact-content.html",
+  "title": "Contact American Education and Translation Services (AET)",
+  "eyebrow": "Request Services",
+  "description": "Choose one AET office to request translation, credential evaluation, interpretation, or notary services.",
+  "findOffice": "Find an Office",
+  "sections": { "how": "How to Contact Us", "offices": "Our Offices", "other": "Other Contact" },
+  "introHeading": "Please CONTACT ONLY ONE OFFICE below to avoid delays. You have two options:",
+  "options": [
+    { "title": "Email", "body": "Opt 1. Email: Send a scanned copy of your document to one of our offices via email. We will reply with the quote and time ASAP. The original documents aren't needed for certified translation and foreign credential evaluation. Phone call is not necessary." },
+    { "title": "Visit", "body": "Opt 2. Visit our office with your document. You don't need an appointment." }
+  ],
+  "labels": { "phone": "Phone", "email": "Email", "address": "Address", "hours": "Business Hours", "whatsapp": "WhatsApp", "wechat": "WeChat", "tollFreeChina": "Toll Free Number from China", "fax": "Fax", "qq": "QQ", "more": "More ways to reach this office", "directions": "Directions", "officeDetails": "Office details" },
+  "offices": {
+    "miami": { "name": "Miami Office", "title": "Miami Office - HQ", "hours": "Mon. – Fri. 9:00am - 5:00pm EST" },
+    "boston": { "name": "Boston Office", "title": "Boston Office - HQ in North USA", "hours": "Mon. – Fri. 9:00am - 5:30pm EST; Sat. 9:30am – 12:30pm EST", "phoneNotes": ["Certified and Notarized Translation Service", "Other services"] },
+    "la": { "name": "Los Angeles Office", "title": "Los Angeles Office – HQ in California and west coast", "hours": "Mon. – Fri. 8:30am - 5:00pm PST" },
+    "sf": { "name": "San Francisco Office", "title": "San Francisco Office - California Branch", "hours": "Mon. – Fri. 9:00am - 5:00pm PST" },
+    "nyc": { "name": "New York Office", "title": "New York Office", "hours": "Mon. – Fri. 9:00am - 5:30pm EST", "phoneNotes": ["Certified Translation, Foreign Credential Evaluation and interpretation"] },
+    "bj": { "name": "Beijing Office", "title": "Beijing Office - HQ in China", "hours": "" }
+  },
+  "other": { "title": "Other Contact (No certified translation/credential evaluation)", "nyc": "NYC Contact", "taiyuan": "Taiyuan Contact", "mobile": "Cell" }
+}

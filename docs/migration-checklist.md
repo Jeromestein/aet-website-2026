@@ -121,6 +121,14 @@ one shared page and its i18n content, not three independently implemented pages.
   email, QR codes, maps, and contact actions against approved business information.
   Preserve or remap anchors including `#miami`, `#boston`, `#la`, `#sf`, `#nyc`,
   and `#bj` where retained pages link to them.
+  - Local implementation (September 29, 2026): English, Chinese and Spanish
+    Contact routes now contain all six office anchors, source contact options,
+    click-to-call/email links, directions links, and the Other Contact section.
+    The owner selected `17802 Sky Park Cir` for Los Angeles across locales.
+    Legacy Contact URLs redirect to the localized routes, and existing site
+    Contact links point to them. The source Contact pages have no QR code, form,
+    or embedded map to migrate. Business verification of office facts and
+    remaining office-detail pages is still required before launch.
 - [ ] **Payment** — `/e-pay.php` → Payment page with a functioning payment path.
   The local form posts to `pay/process.php`, which uses the old PHP payment flow.
   Choose a maintained backend or approved replacement and verify it in test mode;

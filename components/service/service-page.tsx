@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
+import { useLocale } from 'next-intl';
+import { localizeContactLinks } from '@/lib/contact';
 import { getPathname } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { Navigation } from '@/components/navigation';
@@ -8,12 +10,13 @@ import styles from './service-page.module.css';
 
 /** Only reviewed, checked-in legacy content may use this renderer. */
 export function ServiceCopy({ html, className = '' }: { html: string; className?: string }) {
-  return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: html }} />;
+  const locale = useLocale() as Locale;
+  return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: localizeContactLinks(html, locale) }} />;
 }
 
 export async function ServicePage({ locale, title, titleLang, label, eyebrow, nav, actions, children }: {
   locale: Locale; title: string; titleLang?: string; label: string; eyebrow?: string;
-  nav: { id: string; label: string }[]; actions: { label: string; href: string }[]; children: ReactNode;
+  nav: { id: string; label: string; child?: boolean }[]; actions: { label: string; href: string }[]; children: ReactNode;
 }) {
   const t = await getTranslations();
   return <>
@@ -31,7 +34,9 @@ export async function ServicePage({ locale, title, titleLang, label, eyebrow, na
       <div className={`wrap ${styles.layout}`}>
         <nav className={styles.index} aria-label={t('pricing.onPage')}>
           <p>{t('pricing.onPage')}</p>
-          {nav.map((item, i) => <a key={item.id} href={`#${item.id}`}><span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{item.label}</a>)}
+          {nav.map((item, i) => <a key={item.id} className={item.child ? styles.indexChild : undefined} href={`#${item.id}`}>
+            {!item.child && <span aria-hidden="true">{String(nav.slice(0, i + 1).filter(entry => !entry.child).length).padStart(2, '0')}</span>}{item.label}
+          </a>)}
         </nav>
         <div className={styles.content}>{children}</div>
       </div>

@@ -1,6 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n/routing";
+import { contactPath } from "@/lib/contact";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -15,6 +17,7 @@ export function InstitutionCarousel({ id = "institutions", title, institutions =
   const rows = [institutions.slice(0, midpoint), institutions.slice(midpoint)];
   const embedded = variant === "embedded";
   const t = useTranslations();
+  const locale = useLocale() as Locale;
   const [ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
 
@@ -45,7 +48,7 @@ export function InstitutionCarousel({ id = "institutions", title, institutions =
         ))}
       </div>
       <div className={`wrap ${styles.footer}`}>
-        {embedded ? <a className="text-link" href="https://www.americantranslationservice.com/e-contact.php">{contactLabel} <ArrowUpRight size={16} aria-hidden="true" /></a> : <p>{t("home.institutions.closing")}{" "}
+        {embedded ? <a className="text-link" href={contactPath(locale)}>{contactLabel} <ArrowUpRight size={16} aria-hidden="true" /></a> : <p>{t("home.institutions.closing")}{" "}
           <a className="text-link" href="https://www.americantranslationservice.com/e-credential-evaluation-partners.php">{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
         </p>}
       </div>

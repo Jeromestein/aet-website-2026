@@ -1,0 +1,23 @@
+{
+  "source": "e-contact-content-zh.html",
+  "title": "联系美国教育与翻译服务公司（AET）",
+  "eyebrow": "服务申请",
+  "description": "请选择一个 AET 办公室，咨询翻译、学历评估、口译或公证服务。",
+  "findOffice": "选择办公室",
+  "sections": { "how": "如何联系", "offices": "我们的办公室", "other": "其他联系方式" },
+  "introHeading": "请仅联系以下一个办公室以避免延误。 您有两个选择：",
+  "options": [
+    { "title": "电子邮件", "body": "选项1. 电子邮件：通过电子邮件将文档扫描件发送至我们其中一个办公室。我们将尽快回复报价和时间。认证翻译和外国学历评估不需要原件。不需要电话联系。" },
+    { "title": "到访", "body": "选项2. 携带您的文档前往我们的办公室。不需要预约。" }
+  ],
+  "labels": { "phone": "电话", "email": "电子邮件", "address": "地址", "hours": "营业时间", "whatsapp": "WhatsApp", "wechat": "微信", "tollFreeChina": "中国免费电话", "fax": "传真", "qq": "QQ", "more": "更多联系方式", "directions": "查看路线", "officeDetails": "办公室详情" },
+  "offices": {
+    "miami": { "name": "迈阿密办公室", "title": "迈阿密办公室 - 总部", "hours": "周一至周五上午9:00 - 下午5:00 EST" },
+    "boston": { "name": "波士顿办公室", "title": "波士顿办公室 - 美国北部总部", "hours": "周一至周五上午9:00 - 下午5:30 EST；周六上午9:30 – 下午12:30 EST", "phoneNotes": ["认证和公证翻译服务", "其他服务"] },
+    "la": { "name": "洛杉矶办公室", "title": "洛杉矶办公室 – 加州和西海岸总部", "hours": "周一至周五上午8:30 - 下午5:00 PST" },
+    "sf": { "name": "旧金山办公室", "title": "旧金山办公室 - 加州分部", "hours": "周一至周五上午9:00 - 下午5:00 PST" },
+    "nyc": { "name": "纽约办公室", "title": "纽约办公室", "hours": "周一至周五上午9:00 - 下午5:30 EST", "phoneNotes": ["认证翻译、外国学历评估和口译"] },
+    "bj": { "name": "北京办公室", "title": "北京办公室 - 中国总部", "hours": "" }
+  },
+  "other": { "title": "其他联系方式（不提供认证翻译/学历评估）", "nyc": "纽约联系方式", "taiyuan": "太原联系方式", "mobile": "手机" }
+}

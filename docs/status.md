@@ -5,6 +5,25 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Contact — September 29, 2026
+
+- Built localized English, Chinese and Spanish Contact pages with the legacy
+  email/visit instructions, six offices, phone/email actions, directions links,
+  secondary contact channels and Other Contact details. Los Angeles uses the
+  owner-selected `17802 Sky Park Cir` address in every locale.
+- Reused the service-page shell and mobile card rail. Remapped sitewide Contact
+  links and reviewed service-copy links to the localized page; legacy Contact
+  PHP URLs return 308. The footer's Los Angeles link points to the new card so
+  it does not lead to the conflicting address on the old office-detail page.
+- Moved the six office jump links into the left page index on desktop. At
+  1000px and below, the compact page index stays above the content and the
+  office jump links remain in a horizontal row above the office cards.
+- Local browser verified six office anchors, the LA address and contact actions,
+  mobile horizontal card navigation, `#sf` positioning and no 390px page
+  overflow. Typecheck, i18n and whitespace checks passed. No build or deploy.
+- Office contact information, hours and service availability still need owner
+  review before launch. Other legacy office-detail pages remain unmigrated.
+
 ### Remaining five service pages — September 29, 2026
 
 - Added Technical Translation, Interpretation, Expert Opinion Letters, General

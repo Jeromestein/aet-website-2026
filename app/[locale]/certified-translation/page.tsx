@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Users, Globe2, Clock3, MapPin, Mail, CreditCard } from 'lucide-react';
 import { routing } from '@/i18n/routing';
+import { contactPath } from '@/lib/contact';
 import { ServicePage, ServiceCopy as Copy } from '@/components/service/service-page';
 import { CardRail } from '@/components/card-rail';
 import { BenefitCard } from '@/components/benefit-card';
@@ -30,7 +31,7 @@ export default async function CertifiedTranslationPage({ params }: Props) {
   const t = await getTranslations();
   const c = certifiedTranslationContent[locale];
   return <ServicePage locale={locale} title={c.title} label={t('navigation.certified')} nav={c.nav}
-    actions={[{ label: t('home.contact'), href: 'https://www.americantranslationservice.com/e-contact.php' }, { label: c.nav.find(item => item.id === 'apply')!.label, href: '#apply' }]}>
+    actions={[{ label: t('home.contact'), href: contactPath(locale) }, { label: c.nav.find(item => item.id === 'apply')!.label, href: '#apply' }]}>
     {(['define', 'use'] as const).map(id => <section key={id} id={id} className={styles.section} aria-labelledby={`${id}-title`}>
       <h2 id={`${id}-title`}>{c[id].title}</h2><Copy html={c[id].html} />
     </section>)}

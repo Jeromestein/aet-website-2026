@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { Languages } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { contactPath } from '@/lib/contact';
 import { getOtherServiceContent, serviceSlugs, type ServiceSlug, type ServiceSection } from '@/lib/other-services';
 import { interpretation, expertOpinion, generalTranslation, shipping } from '@/lib/pricing';
 import { ServicePage, ServiceCopy } from '@/components/service/service-page';
@@ -15,7 +16,7 @@ import { BenefitCard } from '@/components/benefit-card';
 import styles from '@/components/service/service-page.module.css';
 
 type Props = { params: Promise<{ locale: string; service: string }> };
-const contact = 'https://www.americantranslationservice.com/e-contact.php';
+
 const serviceLabels = {
   'technical-translation': 'technical', interpretation: 'interpretation',
   'expert-opinion-letters': 'expert', 'general-translation': 'general', notarization: 'notarization',
@@ -89,7 +90,7 @@ export default async function OtherServicePage({ params }: Props) {
 
   return <ServicePage locale={locale} title={content.title} titleLang={hasLocaleContent ? undefined : 'en'} label={t(`navigation.${serviceLabels[service]}`)}
     nav={sections.map(({ id, title }) => ({ id, label: title }))}
-    actions={[action, { label: t('home.contact'), href: contact }]}>
+    actions={[action, { label: t('home.contact'), href: contactPath(locale) }]}>
     {!hasLocaleContent && <p className={styles.languageNotice} lang="es">El contenido de este servicio está disponible en inglés; la traducción al español aún no está disponible.</p>}
     <div lang={hasLocaleContent ? undefined : 'en'}>{sections.map(section => section.id === 'shipping-options' ? <details key={section.id} id={section.id} className={`${styles.section} ${styles.disclosure}`}>
       <summary>{section.title}</summary><SectionContent service={service} section={section} />

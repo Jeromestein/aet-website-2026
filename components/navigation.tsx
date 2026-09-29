@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Globe2, ChevronDown } from "lucide-react";
 import { getPathname, usePathname } from "@/i18n/navigation";
 import { type Locale } from "@/i18n/routing";
+import { contactPath } from '@/lib/contact';
 import { LanguageSwitcher, LanguageOptions } from "./language-switcher";
 import styles from "./navigation.module.css";
 
@@ -28,7 +29,7 @@ export function Navigation() {
       { label: t("navigation.notarization"), href: getPathname({ locale, href: "/notarization" }) },
       { label: t("pricing.title"), href: getPathname({ locale, href: "/pricing" }) },
     ] },
-    { label: t("navigation.contact"), href: legacy + "/e-contact.php" },
+    { label: t("navigation.contact"), href: contactPath(locale) },
     { label: t("navigation.payment"), href: legacy + "/e-pay.php" },
     { label: t("navigation.blog"), href: legacy + "/blog" },
   ];

@@ -5,6 +5,7 @@ import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
+import { contactPath } from "@/lib/contact";
 import Image from "next/image";
 import { TestimonialCarousel } from "@/components/testimonial-carousel";
 import { SiteFooter } from "@/components/site-footer";
@@ -23,7 +24,6 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
-const old = "https://www.americantranslationservice.com";
 const apply =
   "https://app.americantranslationservice.com/credential-evaluation-application";
 const pre =
@@ -80,7 +80,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="hero-buttons">
               <a className="button primary hero-apply" href={apply}>
                 <SquarePen size={19} aria-hidden="true" /> {t("home.hero.apply")} </a>
-              <a className="button hero-contact" href={old + "/e-contact.php"}>
+              <a className="button hero-contact" href={contactPath(locale)}>
                 <Phone size={18} aria-hidden="true" /> {t("home.contact")} </a>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="service-rating">
               <Image src="/images/bbb-hero-transparent.png" alt={t("home.services.bbb")} width={2172} height={724} sizes="146px" />
             </div>
-            <a href={old + "/e-contact.php"} className="text-link">{t("home.contact")} <ArrowUpRight size={18} aria-hidden="true" />
+            <a href={contactPath(locale)} className="text-link">{t("home.contact")} <ArrowUpRight size={18} aria-hidden="true" />
             </a>
           </div>
         </section>
@@ -213,7 +213,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div data-reveal>
             <span className="eyebrow">{t("home.faq.eyebrow")}</span>
             <h2>{t("home.faq.title")} </h2>
-            <a href={old + "/e-contact.php"} className="text-link">{t("home.contact")} <ArrowUpRight size={18} />
+            <a href={contactPath(locale)} className="text-link">{t("home.contact")} <ArrowUpRight size={18} />
             </a>
           </div>
           <div className="faq-list" data-reveal>

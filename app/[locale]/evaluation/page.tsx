@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, CreditCard, ShieldCheck } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { contactPath } from '@/lib/contact';
 import { ServicePage, ServiceCopy as Copy } from '@/components/service/service-page';
 import { ProcessStory } from '@/components/scroll-stories';
 import { InstitutionCarousel } from '@/components/institution-carousel';
@@ -17,7 +18,7 @@ import { formatMoney, formatPrice } from '@/lib/pricing-format';
 import styles from '@/components/service/service-page.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
-const contact = 'https://www.americantranslationservice.com/e-contact.php';
+
 const application = 'https://app.americantranslationservice.com/credential-evaluation-application';
 const icons = [GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2];
 const benefitIcons = [BriefcaseBusiness, CreditCard, Clock3, ShieldCheck];
@@ -46,7 +47,7 @@ export default async function EvaluationPage({ params }: Props) {
   const groups = [...evaluationGroups, { id: 'preEvaluation', rates: preEvaluation }];
 
   return <ServicePage locale={locale} title={c.title} label={t('navigation.evaluation')} eyebrow={c.eyebrow} nav={c.nav}
-    actions={[{ label: t('home.hero.apply'), href: application }, { label: t('home.contact'), href: contact }]}>
+    actions={[{ label: t('home.hero.apply'), href: application }, { label: t('home.contact'), href: contactPath(locale) }]}>
           <section id="define" aria-labelledby="define-title" className={styles.section}>
             <h2 id="define-title">{c.define.title}</h2><Copy html={c.define.html} />
           </section>
