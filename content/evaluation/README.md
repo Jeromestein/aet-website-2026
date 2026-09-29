@@ -33,5 +33,7 @@ in localized comparison text are not AET catalog rates.
 Relative links to unmigrated pages resolve to the legacy domain. The expert-letter
 link uses its current PHP entry point. Original AI-summary links remain supplied.
 The application form, two sample reports, and FCE client image were copied unchanged
-into `public/` at their existing paths. This import does not reconcile historical
+into `public/` at their existing paths. The client montage is retained only as a
+source asset; the owner marked it outdated and requested the homepage
+institution selection and shared carousel instead. This import does not reconcile historical
 claims or establish that external legacy pages will survive the domain migration.

@@ -49,3 +49,11 @@
 .section[data-ready="true"] .row:focus { overflow-x: auto; mask-image: none; }
 .section[data-ready="true"] .row:focus .track { animation: none; }
 .section[data-ready="true"] .row:focus .duplicate { display: none; }
+
+.embedded { border-radius: 24px; padding: 32px 0; margin-bottom: 64px; min-width: 0; }
+.embedded .heading, .embedded .footer { width: auto; margin-inline: 24px; }
+.embedded .heading h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; }
+@media (max-width: 600px) {
+  .embedded { padding: 28px 0; margin-bottom: 44px; }
+  .embedded .heading, .embedded .footer { margin-inline: 16px; }
+}

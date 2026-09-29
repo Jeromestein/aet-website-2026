@@ -7,6 +7,7 @@ import methodStyles from "./application-methods.module.css";
 
 import Image from "next/image";
 import { CardRail } from "./card-rail";
+import { BenefitCard } from "./benefit-card";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight, FileCheck2, Globe2, GraduationCap, ShieldCheck, SquarePen, Star } from "lucide-react";
 
@@ -101,10 +102,12 @@ export function ImpactStory() {
         <p>{t("home.facts.text")}</p>
       </div>
       <CardRail className="impact-orbit" label={t("home.facts.label")}>
-        {facts.map(({ value, title, text, Icon }, i) => <article data-rail-card key={value} className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`} aria-hidden={enhanced ? i !== active : undefined}>
-          {value === "5" ? <div className="fact-review-stars" aria-hidden="true">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={24} fill="currentColor" strokeWidth={1.2} />)}</div> : <Icon className="fact-icon" size={54} strokeWidth={1.1} aria-hidden="true" />}
-          <strong>{value}</strong><h3>{title}</h3><p>{text}</p>
-        </article>)}
+        {facts.map(({ value, title, text, Icon }, i) => <BenefitCard
+          data-rail-card key={value} variant="story" title={title} value={value}
+          className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`}
+          aria-hidden={enhanced ? i !== active : undefined}
+          visual={value === "5" ? <div className="fact-review-stars" aria-hidden="true">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={24} fill="currentColor" strokeWidth={1.2} />)}</div> : <Icon className="fact-icon" size={54} strokeWidth={1.1} aria-hidden="true" />}
+        ><p>{text}</p></BenefitCard>)}
         <div className="story-dots" aria-label={t("home.facts.highlights")}>{facts.map((fact, i) => <button key={fact.value} type="button" aria-label={t("home.facts.show", { title: fact.title })} aria-pressed={active === i} onClick={() => select(i)}><span /></button>)}</div>
       </CardRail>
     </div>
@@ -202,13 +205,13 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
             </div>)}
             <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.image} className={i <= active ? "is-active" : ""} />)}</div>
           </div>
-          <div className="journey-stages">{steps.map((step, i) => <article key={step.image} className={`journey-stage ${i === active ? "is-active" : ""}`}>
+          <CardRail className="journey-stages" label={t("home.process.title")}>{steps.map((step, i) => <article data-rail-card key={step.image} className={`journey-stage ${i === active ? "is-active" : ""}`}>
             <div className="journey-mobile-image"><StepVisual index={i} /></div>
             <div className="journey-card"><span className="journey-number">0{i + 1}</span><div>
               <span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>
               {i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">{t("home.process.action")} <ArrowUpRight size={18} aria-hidden="true" /></a>}
             </div></div>
-          </article>)}</div>
+          </article>)}</CardRail>
         </div>
         <p className={methodStyles.acceptance}>{email.acceptanceNote}</p>
       </div>

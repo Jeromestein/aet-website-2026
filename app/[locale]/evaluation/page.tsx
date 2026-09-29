@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import { Fragment } from 'react';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2 } from 'lucide-react';
+import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, CreditCard, ShieldCheck } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { Navigation } from '@/components/navigation';
 import { SiteFooter } from '@/components/site-footer';
 import { ProcessStory } from '@/components/scroll-stories';
+import { InstitutionCarousel } from '@/components/institution-carousel';
+import { CardRail } from '@/components/card-rail';
+import { BenefitCard } from '@/components/benefit-card';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { evaluationContent } from '@/lib/evaluation';
 import { evaluationGroups, preEvaluation, shipping, documentEvaluationStandard, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
@@ -20,6 +21,7 @@ type Props = { params: Promise<{ locale: string }> };
 const contact = 'https://www.americantranslationservice.com/e-contact.php';
 const application = 'https://app.americantranslationservice.com/credential-evaluation-application';
 const icons = [GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2];
+const benefitIcons = [BriefcaseBusiness, CreditCard, Clock3, ShieldCheck];
 
 /** HTML is restricted, checked-in copy extracted from the legacy content files. */
 function Copy({ html, className = '' }: { html: string; className?: string }) {
@@ -76,15 +78,28 @@ export default async function EvaluationPage({ params }: Props) {
           </div>
           <section id="service" aria-labelledby="service-title" className={styles.section}>
             <h2 id="service-title">{c.types.title}</h2>
-            <div className={styles.cards}>{c.types.items.map((item, i) => {
+            <CardRail className={styles.cards} label={c.types.title}>{c.types.items.map((item, i) => {
               const Icon = icons[i];
-              return <article className={styles.card} key={item.title}><Icon size={30} aria-hidden="true" /><h3>{item.title}</h3><Copy html={item.html} /></article>;
-            })}</div>
+              return <article data-rail-card className={styles.card} key={item.title}><Icon size={30} aria-hidden="true" /><h3>{item.title}</h3><Copy html={item.html} /></article>;
+            })}</CardRail>
           </section>
           <section id="aet" aria-labelledby="aet-title" className={styles.section}>
             <h2 id="aet-title">{c.why.title}</h2>
-            {c.why.columns.length === 1 ? <div className={styles.facts}><h3>{c.why.columns[0]}</h3><dl>{c.why.rows.map(row => <Fragment key={row.label}><dt>{row.label}</dt><dd><Copy html={copy(row.values[0])} /></dd></Fragment>)}</dl></div>
-              : <div className={styles.comparison} role="region" aria-label={c.why.title} tabIndex={0}><table><thead><tr><th scope="col"><span className={styles.srOnly}>{c.why.title}</span></th>{c.why.columns.map(column => <th key={column} scope="col">{column}</th>)}</tr></thead><tbody>{c.why.rows.map(row => <tr key={row.label}><th scope="row">{row.label}</th>{row.values.map((value, i) => <td key={i} colSpan={row.values.length === 1 ? c.why.columns.length : 1}><Copy html={copy(value)} /></td>)}</tr>)}</tbody></table></div>}
+            <CardRail className={styles.benefits} label={c.why.title}>
+              {c.why.rows.filter(row => c.why.columns.length === 1 || row.values.length === 1).map(row => {
+                const Icon = benefitIcons[c.why.rows.indexOf(row)];
+                return <BenefitCard data-rail-card key={row.label} title={row.label} visual={<Icon aria-hidden="true" />}>
+                  <Copy html={copy(row.values[0])} />
+                </BenefitCard>;
+              })}
+            </CardRail>
+            {c.why.columns.length > 1 && <div className={styles.comparison} role="region" aria-label={c.why.title} tabIndex={0}>
+              <table><thead><tr><th scope="col"><span className={styles.srOnly}>{c.why.title}</span></th>{c.why.columns.map(column => <th key={column} scope="col">{column}</th>)}</tr></thead>
+                <tbody>{c.why.rows.filter(row => row.values.length > 1).map(row => <tr key={row.label}>
+                  <th scope="row">{row.label}</th>{row.values.map((value, i) => <td key={i}><Copy html={copy(value)} /></td>)}
+                </tr>)}</tbody>
+              </table>
+            </div>}
           </section>
           <section id="price" aria-labelledby="price-title" className={styles.section}>
             <h2 id="price-title">{c.fees.title}</h2>
@@ -110,10 +125,7 @@ export default async function EvaluationPage({ params }: Props) {
           <section id="sample" aria-labelledby="sample-title" className={styles.section}>
             <h2 id="sample-title">{c.samples.title}</h2><Copy html={c.samples.html} className={styles.sampleLinks} />
           </section>
-          <section id="partners" aria-labelledby="partners-title" className={styles.section}>
-            <h2 id="partners-title">{c.partners.title}</h2>
-            <a href={contact}><Image src="/images/FCE-Clients.jpg" alt={c.partners.alt} width={948} height={810} sizes="(max-width: 1000px) 100vw, 850px" className={styles.partners} /></a>
-          </section>
+          <InstitutionCarousel id="partners" variant="embedded" title={c.partners.title} contactLabel={t('home.contact')} />
         </div>
       </div>
     </main>

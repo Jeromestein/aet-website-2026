@@ -5,93 +5,25 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { homeInstitutions, type Institution } from "@/lib/institutions";
 import styles from "./institution-carousel.module.css";
 
-const institutions = [
-  {
-    "src": "/images/institutions/SNU.png",
-    "name": "Southern New Hampshire University"
-  },
-  {
-    "src": "/images/institutions/OHSBE.png",
-    "name": "Ohio State Board of Education"
-  },
-  {
-    "src": "/images/institutions/NIH-logo.jpg.webp",
-    "name": "National Institutes of Health"
-  },
-  {
-    "src": "/images/institutions/uoalegal.jpeg",
-    "name": "UOA Legal Immigration Attorneys",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/California-state-board-of-PHARMACY.png",
-    "name": "California State Board of Pharmacy"
-  },
-  {
-    "src": "/images/institutions/Angelo-State-University.png",
-    "name": "Angelo State University",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/GCU.png",
-    "name": "Grand Canyon University"
-  },
-  {
-    "src": "/images/institutions/FLORIDA-LEGAL-GROUP.png",
-    "name": "Florida Legal Group",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/NYC-FIRE-DEPARTMENT.png",
-    "name": "NYC Fire Department",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/ISBE.png",
-    "name": "Illinois State Board of Education"
-  },
-  {
-    "src": "/images/institutions/USC.png",
-    "name": "Universidad del Sagrado Corazón (USC)",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/NMPED.png",
-    "name": "New Mexico Public Education Department"
-  },
-  {
-    "src": "/images/institutions/ALEX-LAW.png",
-    "name": "Alex Yoonki Park Law"
-  },
-  {
-    "src": "/images/institutions/COLLIER-SHERIFF.png",
-    "name": "Collier County Sheriff's Office",
-    "format": "emblem"
-  },
-  {
-    "src": "/images/institutions/Universal_Technical_Institute_Logo.jpg",
-    "name": "Universal Technical Institute"
-  },
-  {
-    "src": "/images/institutions/SCC-WCUI.png",
-    "name": "Smith Chason College - WCUI"
-  }
-];
-const rows = [institutions.slice(0, 8), institutions.slice(8)];
+type Props = { id?: string; title?: string; institutions?: Institution[]; variant?: "home" | "embedded"; contactLabel?: string };
 
-export function InstitutionCarousel() {
+export function InstitutionCarousel({ id = "institutions", title, institutions = homeInstitutions, variant = "home", contactLabel }: Props) {
+  const midpoint = Math.ceil(institutions.length / 2);
+  const rows = [institutions.slice(0, midpoint), institutions.slice(midpoint)];
+  const embedded = variant === "embedded";
   const t = useTranslations();
   const [ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
 
   return (
-    <section id="institutions" className={styles.section} aria-labelledby="institutions-title" data-ready={ready}>
+    <section id={id} className={`${styles.section} ${embedded ? styles.embedded : ""}`} aria-labelledby={`${id}-title`} data-ready={ready}>
       <div className={`wrap ${styles.heading}`}>
-        <span className="eyebrow">{t("home.institutions.eyebrow")}</span>
-        <h2 id="institutions-title">{t("home.institutions.title")}</h2>
-        <p>{t("home.institutions.text")}</p>
+        {!embedded && <span className="eyebrow">{t("home.institutions.eyebrow")}</span>}
+        <h2 id={`${id}-title`}>{title ?? t("home.institutions.title")}</h2>
+        {!embedded && <p>{t("home.institutions.text")}</p>}
       </div>
       <div className={styles.carousel} role="group" aria-label={t("home.institutions.logos")} aria-roledescription={t("controls.carousel")}>
         {rows.map((row, rowIndex) => (
@@ -100,7 +32,7 @@ export function InstitutionCarousel() {
               {[false, true].map((duplicate) => (
                 <ul className={`${styles.group} ${duplicate ? styles.duplicate : ""}`} key={String(duplicate)} aria-hidden={duplicate || undefined}>
                   {row.map((institution) => (
-                    <li className={styles.card} key={institution.src} title={institution.name}>
+                    <li className={styles.card} key={institution.name} title={institution.name}>
                       <div className={styles.logo} data-format={institution.format}>
                         <Image src={institution.src} alt={duplicate ? "" : institution.name} fill sizes={institution.format === "emblem" ? "(max-width: 600px) 64px, 80px" : "(max-width: 600px) 148px, 200px"} />
                       </div>
@@ -113,9 +45,9 @@ export function InstitutionCarousel() {
         ))}
       </div>
       <div className={`wrap ${styles.footer}`}>
-        <p>{t("home.institutions.closing")}{" "}
+        {embedded ? <a className="text-link" href="https://www.americantranslationservice.com/e-contact.php">{contactLabel} <ArrowUpRight size={16} aria-hidden="true" /></a> : <p>{t("home.institutions.closing")}{" "}
           <a className="text-link" href="https://www.americantranslationservice.com/e-credential-evaluation-partners.php">{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
-        </p>
+        </p>}
       </div>
     </section>
   );

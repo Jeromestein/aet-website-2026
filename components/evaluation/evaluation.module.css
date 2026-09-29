@@ -34,11 +34,6 @@
 .card > svg { color: var(--accent); margin-bottom: 22px; }
 .card h3 { font-size: 21px; font-weight: 500; line-height: 1.4; margin: 0 0 16px; }
 .card p { margin-bottom: 0; color: var(--muted); }
-.facts { background: var(--blue); padding: 28px 32px; border-radius: 24px; }
-.facts dl { margin: 0; }
-.facts dt { font-size: 14px; font-weight: 600; padding-top: 18px; }
-.facts dd { margin: 8px 0 0; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
-.facts dd:last-child { border: 0; }
 .comparison { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; }
 .comparison table { border-collapse: collapse; width: 100%; min-width: 550px; font-size: 14px; }
 .comparison th, .comparison td { padding: 18px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
@@ -49,7 +44,6 @@
 .disclosure { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; scroll-margin-top: 110px; }
 .disclosure > summary { cursor: pointer; font-size: 23px; margin: 0; padding: 6px 0; }
 .disclosure[open] > summary { margin-bottom: 28px; }
-.partners { width: 100%; height: auto; border-radius: 16px; background: white; }
 .sampleLinks p:first-child a { display: inline-flex; align-items: center; min-height: 54px; padding: 12px 18px; margin: 0 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 @media (max-width: 1000px) {
   .layout { grid-template-columns: 1fr; gap: 36px; }
@@ -64,9 +58,21 @@
   .breadcrumb { margin-bottom: 24px; font-size: 13px; }
   .layout { padding-top: 32px; padding-bottom: 40px; }
   .section { margin-bottom: 44px; }
-  .facts { padding: 24px 20px; }
   .cards { grid-template-columns: 1fr; }
   .card { padding: 24px; }
   .copy { font-size: 16px; line-height: 1.8; }
 }
 .applicationNotes { margin-top: 32px; padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }
+
+.benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-bottom: 24px; }
+.benefits > :only-child { grid-column: 1 / -1; }
+.benefits .copy { font-size: 16px; }
+.benefits .copy p:last-child { margin-bottom: 0; }
+@media (max-width: 600px) {
+  .benefits { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .cards:global(.card-rail), .benefits:global(.card-rail) { display: flex; gap: 16px; }
+  .benefits:global(.card-rail) > :only-child { flex-basis: 100%; margin-right: 0; }
+}

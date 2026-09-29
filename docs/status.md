@@ -5,6 +5,54 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Mobile horizontal card correction — September 29, 2026
+
+- Homepage and Evaluation online steps now use `CardRail`, including native
+  horizontal scrolling, snap points, a next-card cue, and previous/next controls
+  with a position counter at 760px and below. Evaluation report types and benefit
+  cards use the same rail; a single localized guarantee remains full width.
+- Reduced mobile process heading scale and introduction spacing. Desktop homepage
+  animation and Evaluation's two-column step grid remain intact. Updated the
+  design guide to explicitly supersede the old vertical-process exception.
+- In-app browser checked both pages at 390px, step navigation through card 4 and
+  disabled end control, Evaluation type/benefit next controls, 320px Chinese and
+  Spanish layouts, Email tab switching, and 1440px desktop layout. Checked phone
+  states have no page overflow. Typecheck, i18n, and whitespace checks passed.
+- Evidence: `output/playwright/evaluation-mobile-step-rail.png`,
+  `home-mobile-step-rail.png`, and `evaluation-mobile-benefit-rail.png`.
+  Reused the existing server; no build or deployment.
+
+### Shared institution carousel — September 29, 2026
+
+- Evaluation now uses the homepage's `InstitutionCarousel` and the same 16-logo
+  selection in `lib/institutions.ts`, as requested. The outdated FCE client montage
+  is no longer rendered. No legacy-only logos were added.
+- Added an embedded layout with the localized Credential Evaluation Partners
+  heading and contact link. Homepage heading, copy, institution link, and animation
+  remain unchanged. Both pages share motion, focus-pause, and responsive rules.
+- In-app browser verified Evaluation at 1440px and 390px, keyboard row scrolling,
+  no mobile overflow or failed loaded images, and homepage rendering with 16 logos.
+  Typecheck, locale checks, and whitespace checks passed. Screenshots:
+  `output/playwright/evaluation-partners-desktop.png` and
+  `output/playwright/evaluation-partners-mobile.png`.
+  Reused the existing server; no build, deployment, or restart.
+
+### Shared Why Choose AET cards — September 29, 2026
+
+- Extracted `BenefitCard` with shared surface styles and story/compact variants.
+  Homepage facts retain their figures, copy, animation, controls, and mobile rail.
+  English Evaluation shows four compact cards. Chinese and Spanish retain three
+  comparison rows and render the standalone AET guarantee as a shared card.
+  Source content and shared price/timing interpolation are unchanged.
+- In-app browser: Evaluation checked at 1440px and 390px, including all three
+  languages and keyboard scrolling of the comparison table. Homepage desktop
+  selection reached the ATA card; mobile next-card control moved to language
+  coverage. No page overflow in the checked mobile states.
+- Typecheck, 257-key locale validation, and whitespace checks passed. Evidence:
+  `output/playwright/evaluation-benefits-desktop.png` and
+  `output/playwright/evaluation-benefits-mobile.png`.
+  Reused port 3021; no build, deployment, or server restart.
+
 ### Shared Online / Email application methods — September 29, 2026
 
 - Added Online / Email tabs to the shared homepage and Evaluation `ProcessStory`.

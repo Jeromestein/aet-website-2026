@@ -319,3 +319,15 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   top: -16.1062%;
   mix-blend-mode: normal;
 }
+
+/* Shared mobile step rail on the homepage and service pages. */
+@media (max-width: 760px) {
+  .journey-story .journey-stages.card-rail { display: flex; gap: 16px; }
+  .journey-story .journey-stages.card-rail > .journey-stage { display: flex; flex-direction: column; margin-top: 0; align-items: stretch; }
+  .journey-story .journey-stages .journey-card { flex: 1; padding: 24px 20px; }
+  .journey-story .journey-heading { margin-bottom: 28px; }
+  .journey-story .journey-heading h2 { font-size: clamp(30px, 8vw, 40px); line-height: 1.15; }
+  .journey-story .journey-heading .journey-apply { margin-top: 20px; min-height: 54px; padding: 14px 18px; font-size: 16px; }
+  .journey-story .rail-controls > span { color: var(--surface); }
+  .journey-story .journey-mobile-image { flex-shrink: 0; }
+}

@@ -4,7 +4,7 @@
 .impact-intro p { color:var(--muted);max-width:390px;font-size:17px;line-height:1.9; }
 .story-hint { display:block;font-size:10px;letter-spacing:.6px;color:var(--muted);margin-top:38px; }
 .impact-orbit { position:relative; }
-.impact-fact { text-align:center;padding:45px 30px;margin:20px 0;background:linear-gradient(135deg,var(--surface),#e4eff9);border:1px solid var(--line);border-radius:44% 56% 43% 57% / 56% 45% 55% 44%;box-shadow:0 25px 70px #35597612; }
+.impact-fact { text-align:center;padding:45px 30px;margin:20px 0;border-radius:44% 56% 43% 57% / 56% 45% 55% 44%; }
 .fact-review-stars { display:flex;justify-content:center;gap:6px;color:#ba944d;margin:0 auto 20px; }
 .fact-icon { margin:0 auto 14px;color:#779fbf; }
 .impact-fact strong { display:block;font-size:clamp(65px,8vw,116px);font-weight:500;letter-spacing:-6px;line-height:1.1;color:var(--action-blue); }

@@ -217,6 +217,11 @@ avoid prominent unrelated school logos. Stock people are illustrative, not ident
 as AET staff or clients. Use natural color, subtle blue overlays, explicit image sizes,
 responsive sources, and meaningful alt text. Never stretch a thumbnail into a large panel.
 
+Homepage brand facts and Evaluation benefits share `BenefitCard` and its surface
+styles. Keep the homepage story animation and mobile rail; use compact static
+cards on Evaluation. Keep comparative facts in localized tables and standalone
+service promises in cards, preserving source text without duplicating it.
+
 Homepage and Evaluation share one application-method module with Online / Email
 tabs, defaulting to Online. Online shows the four-step application flow; Email
 shows the three legacy steps with the PDF form and office links. Support keyboard
@@ -235,8 +240,9 @@ shapes belong mainly to facts. Keep decorative artwork out of the reading path.
 
 **Mobile card rails with scroll snapping:** at 760px and below, convert groups
 of peer content cards into horizontally swipeable card rails instead of stacking
-all cards vertically. This applies to supporting services, testimonials, and
-at-a-glance facts, including desktop grids or expanded card arrangements.
+all cards vertically. This applies to supporting services, testimonials, at-a-glance facts, online
+application steps on both homepage and Evaluation, and Evaluation report-type
+and benefit cards, including desktop grids or expanded card arrangements.
 
 - Show one complete card with part of the next visible as a swipe cue. Use about
   85–90% of the rail width per card, a 16px gap, and enough end padding to reveal
@@ -249,10 +255,14 @@ at-a-glance facts, including desktop grids or expanded card arrangements.
 - Under reduced motion, retain manual scrolling and disable smooth transitions.
   Rails must work without JavaScript. Allow taller cards for long copy; never
   truncate text to force every card to the same height.
-- Keep process steps, FAQs, Hero copy, forms, and footer information in normal
-  vertical reading flow. The two-row institution carousel follows its own rules.
+- Keep FAQs, Hero copy, forms, document requirements, and footer information in
+  normal vertical reading flow. Online process cards use the shared horizontal
+  rail with numbered order and previous/next controls; this supersedes the prior
+  vertical-process exception. Email instructions remain a readable numbered list. The two-row institution carousel follows its own rules.
 
-- **Institution carousel:** 16 logos, two rows of eight, both moving left to right.
+- **Institution carousel:** Homepage and Evaluation use the same 16-logo selection
+  from `lib/institutions.ts`. Evaluation uses its own title and a compact embedded
+  layout; the outdated legacy montage is superseded. 16 logos, two rows of eight, both moving left to right.
   Use seamless linear cycles around 72/80 seconds. No white tiles, borders, shadows,
   or visible pause button. Pause on hover/focus; hide duplicate groups from assistive
   tools. At reduced motion, remove auto-movement and allow native horizontal scrolling.

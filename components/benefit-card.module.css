@@ -1,0 +1,8 @@
+.card { background: linear-gradient(135deg, var(--surface), #e4eff9); border: 1px solid var(--line); box-shadow: 0 25px 70px #35597612; min-width: 0; }
+.compact { border-radius: 28px; padding: 28px; overflow-wrap: anywhere; }
+.compact > svg { color: var(--accent); width: 32px; height: 32px; margin-bottom: 20px; }
+.compact > h3 { color: var(--ink); font-size: 20px; line-height: 1.4; margin: 0 0 16px; }
+.compact strong { color: inherit; }
+@media (max-width: 600px) {
+  .compact { padding: 24px; border-radius: 24px; }
+}
