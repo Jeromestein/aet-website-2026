@@ -25,7 +25,15 @@ Import this directory's repository into Vercel, choose the Next.js preset, and k
 
 ## Scope
 
-Only `/` is rebuilt. Application and pre-evaluation buttons connect to the existing app.americantranslationservice.com portal. Service details, contact, payment, blog, office, policy, and Chinese/Spanish links point to the existing production website. Payment is not implemented in this project.
+The homepage uses a shared `app/[locale]/page.tsx` template with Next.js i18n
+(`next-intl`) for English, Chinese, and Spanish. English uses `/`; Chinese and
+Spanish use `/zh` and `/es`. Migrate each additional page once through this same
+locale architecture; language variants do not require separate page implementations.
+
+Application and pre-evaluation buttons connect to the existing
+app.americantranslationservice.com portal. Service details, contact, payment,
+blog, office, and policy destinations still point to the existing production
+website. Payment is not implemented in this project.
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 
@@ -53,6 +61,7 @@ pages or change the separate application portal.
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
+- [Migration checklist](docs/migration-checklist.md): legacy page scope, priorities, language coverage, blog inventory, and launch dependencies.
 - [Agent guidance](AGENTS.md): reading order and project working rules.
 
 The design guide specifies intended behavior; check the status file before treating a requirement as implemented.
@@ -66,14 +75,16 @@ Validate routes, metadata, and the intended deployment before launch. Do not sub
 
 ## Editing
 
-- `app/page.tsx`: page content, service links, testimonials, and FAQs.
+- `app/[locale]/page.tsx`: shared homepage structure and service links.
+- `messages/en.json`, `messages/zh.json`, `messages/es.json`: localized interface and homepage content.
+- `i18n/routing.ts`: supported locales and locale URL behavior.
 - `app/globals.css`: base responsive styles and motion. Reduced-motion preferences are respected.
 - `app/reference-style.css`: shared AET surfaces, photo treatment, and logo presentation.
 - `app/home-design.css`: final design-guide typography, spacing, responsive rails, and native menu styling.
 - `components/card-rail.tsx`: progressive previous/next controls over native horizontal scrolling.
 - `components/scroll-stories.tsx`: fact selectors and process imagery, with unpinned reduced-motion and no-JavaScript fallbacks.
 - `components/navigation.tsx`: mobile navigation, language links, and progressive scroll reveals.
-- `app/layout.tsx`: page metadata.
+- `app/[locale]/layout.tsx`: localized layout and page metadata.
 - `public/images/`: locally copied assets; see ASSETS.md.
 
 Poppins, Fraunces, and Gaegu are hosted locally in `public/fonts/` and loaded through `app/fonts.css`. Font licenses and provenance are documented in ASSETS.md. Native details elements keep FAQs functional without JavaScript. Page content remains visible if JavaScript is disabled.
