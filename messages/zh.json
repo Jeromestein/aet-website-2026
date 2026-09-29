@@ -229,6 +229,7 @@
       "general": "翻译、校对及英文写作。",
       "shipping": "配送时间与服务处理时间分开计算。"
     },
+    "shippingGroups": { "domestic": "美国境内", "international": "国际" },
     "columns": {
       "service": "文件／服务",
       "price": "参考价格",

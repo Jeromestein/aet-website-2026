@@ -1,0 +1,26 @@
+{
+  "source": "e-nus-content.html",
+  "title": "Notarization Services at AET",
+  "sections": [
+    {
+      "id": "sign",
+      "title": "Notarization Services",
+      "html": "<p>\n<strong>New： Multiple language notarizations at Miami, San Francisco, Los\n          Angeles, Boston Office and New York Office: English, Chinese, French.\n          For other languages, we may require a translation to notarize.</strong>\n</p> <p>\n        Our notarization service (Miami office in Florida and Boston office in\n        Massachusetts) primarily includes the following:\n      </p> <h4>1) Signature Notarization</h4> <p>\n        A notarial act in which an individual, at a single time and place: a.\n        appears in person before the Notary Public and presents a document; b.\n        is identified by the Notary Public through satisfactory evidence of\n        identity; and c. signs the document in the presence of the Notary\n        Public.\n      </p> <p>\n        Materials required: 1) document to be notarized; 2) photo ID (e.g.\n        passport, driver's license)\n      </p> <p>\n        Rates charged: Notary public signature: $10/signature for documents in\n        English, $20/signature for Chinese, $25/signature for French. For other\n        languages, a translation may be required; Witness signature:\n        $5/signature.\n      </p>"
+    },
+    {
+      "id": "copy",
+      "title": "2) Copy Certification",
+      "html": "<p>\n        A notarial act in which a Notary Public: a. is presented with a\n        document; b. copies or supervises the copying of the document using a\n        photographic or electronic copying process; c. compares the document to\n        the copy; and d. determines that the copy is accurate and complete.\n      </p> <p>\n        Materials required: 1) document to be notarized; 2) photo ID (e.g.\n        passport, driver's license)\n      </p> <p>Rates charged: $25 per copy</p>"
+    },
+    {
+      "id": "mobile",
+      "title": "3) Mobile Notaries",
+      "html": "<p>\n        We offer mobile notary services in greater Boston area. Please call\n        Boston Office to schedule an appointment. All mobile notary services\n        require full payment in advance.\n      </p>"
+    },
+    {
+      "id": "apostille",
+      "title": "4) State secretary certification and Apostille",
+      "html": "<p>\n        Boston office provides services of Massachusetts State secretary\n        certification and Apostille.\n      </p> <p>\n        If you want to authenticate a US document to use in foreign countries,\n        you will need either Consulate Authentication or Apostille:\n      </p> <p>\n        Apostille: For all Hague Apostille Convention member counties (including\n        most western countries), an Apostille is all you will need. An Apostille\n        is a specialized certificate issued by the Secretary of State, which is\n        used to verify a document is legitimate and authentic. An apostille will\n        be accepted in one of the other countries who are members of the Hague\n        Apostille Convention.\n      </p> <p>State secretary certification: For non Hague Apostille Convention member countries, you will need State secretary certification first, then bring this certification to a foreign consulate for further authentication.</p>"
+    }
+  ]
+}

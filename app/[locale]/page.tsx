@@ -34,9 +34,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale);
   const t = await getTranslations();
   const services = [
-    { icon: Languages, number: "02", title: t("navigation.certified"), text: t("home.services.certifiedText"), href: "/e-notarized.php", tag: t("home.services.translationTag") },
-    { icon: MessageCircle, number: "03", title: t("navigation.interpretation"), text: t("home.services.interpretationText"), href: "/e-interpretation.php", tag: t("navigation.interpretation") },
-    { icon: FileCheck2, number: "04", title: t("navigation.technical"), text: t("home.services.technicalText"), href: "/e-tech-translation.php", tag: t("home.services.specializedTag") },
+    { icon: Languages, number: "02", title: t("navigation.certified"), text: t("home.services.certifiedText"), href: "/certified-translation", tag: t("home.services.translationTag") },
+    { icon: MessageCircle, number: "03", title: t("navigation.interpretation"), text: t("home.services.interpretationText"), href: "/interpretation", tag: t("navigation.interpretation") },
+    { icon: FileCheck2, number: "04", title: t("navigation.technical"), text: t("home.services.technicalText"), href: "/technical-translation", tag: t("home.services.specializedTag") },
   ];
   const faqs = [
     [
@@ -150,7 +150,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <CardRail className="service-list" label={t("home.services.otherLabel")}>
               {services.map((s) => (
                 <a
-                  href={s.href === "/e-notarized.php" ? getPathname({ locale, href: "/certified-translation" }) : old + s.href}
+                  href={getPathname({ locale, href: s.href })}
                   className="service-row"
                   key={s.number}
                   data-rail-card

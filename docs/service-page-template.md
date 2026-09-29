@@ -53,6 +53,9 @@ online application link is not an active workflow.
 Keep locale content in `content/<service>/{en,zh,es}.json` with a provenance README.
 Prefer optional components over a large configuration engine. Extract only when
 actual pages share behavior; keep business workflows service-specific.
+When a legacy locale does not exist, use a visibly labeled source-language
+fallback and exclude that route from indexing until translated; do not invent
+legacy-localized prose.
 
 ## Mobile requirements
 

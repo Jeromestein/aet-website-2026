@@ -1,0 +1,21 @@
+{
+  "source": "e-translation-content-zh.html",
+  "title": "AET一般翻译服务",
+  "sections": [
+    {
+      "id": "define",
+      "title": "简介",
+      "html": "<p>\n<strong>注意：</strong>如果您需要用于移民或其他目的的文凭/学位、专业资格/执照、出生证明、结婚证等认证翻译，请参考我们的\n        <a href=\"/certified-translation\">认证翻译</a>。如果不需要，请继续阅读。<br/><br/>我们认为翻译不仅仅是原语言中原有措辞的积累，而是一种再创造。翻译不仅仅是对原有措辞的解释，而是对目标语言母语者而言流畅优雅的表达。\n        <br/><br/>对于任何晦涩的文本和技术术语，我们坚持查阅最可靠的资源，并在专业领域咨询权威专家。对于我们完成的复杂翻译工作，我们遵循\"一名翻译员翻译，两名校对员审阅（通常一名技术专家和一名语言专家）\"的程序。\n        <br/><br/><strong>\"完整、流畅和优雅\"</strong>是我们所有翻译工作遵循的座右铭。\n      </p>"
+    },
+    {
+      "id": "langs",
+      "title": "我们服务的语言",
+      "html": "<p>\n<strong>欧洲语言：</strong><br/><br/>\n        英语、德语、法语、西班牙语、葡萄牙语、意大利语、瑞典语、挪威语、芬兰语、俄语、乌克兰语、保加利亚语、罗马尼亚语、荷兰语、丹麦语、希腊语、捷克语、克罗地亚语、波兰语、斯洛伐克语、塞尔维亚语、斯洛文尼亚语、亚美尼亚语...<br/><br/>\n<strong>亚洲语言：</strong><br/><br/>\n        中文、日语、韩语、泰语、越南语、高棉语、老挝语、尼泊尔语、他加禄语、马来语、印尼语、印地语、旁遮普语、古吉拉特语、孟加拉语、普什图语、孟加拉语、马拉地语、阿萨姆语、卡纳达语、奥里亚语、泰米尔语、达里语、泰卢固语...<br/><br/>\n<strong>非洲语言：</strong><br/><br/>\n        南非荷兰语、阿姆哈拉语、柏柏尔语、马拉加斯语、奥罗莫语、塞索托语、绍纳语、索马里语、斯瓦希里语、茨瓦纳语、科萨语、约鲁巴语...<br/><br/>\n<strong>中东语言：</strong><br/><br/>\n        阿拉伯语、波斯语、希伯来语、土耳其语、库尔德语、乌尔都语...<br/><br/>\n<strong>美洲语言：</strong><br/><br/>\n        海地克里奥尔语、巴西葡萄牙语...<br/><br/>\n        我们为全球超过100种语言提供翻译服务。以上仅是我们提供的部分语言的选集。\n      </p>"
+    },
+    {
+      "id": "price",
+      "title": "价格和申请",
+      "html": "<p>如果您需要翻译服务，请联系\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">迈阿密办公室</a>、\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">波士顿办公室</a>\n        或\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#la\" rel=\"noopener noreferrer\" target=\"_blank\">洛杉矶办公室</a>\n        获取更多信息。\n      </p>"
+    }
+  ]
+}

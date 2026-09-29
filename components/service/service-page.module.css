@@ -29,6 +29,13 @@
 .copy ol, .copy ul { padding-left: 24px; margin: 18px 0 24px; }
 .copy li { margin-bottom: 12px; padding-left: 5px; }
 .copy small { color: var(--muted); font-size: 14px; }
+.copy img { display: block; max-width: 100%; height: auto; margin: 24px auto; border-radius: 12px; }
+.illustrated { display: flow-root; }
+.illustrated img { float: right; width: min(34%, 260px); margin: 4px 0 20px 28px; }
+.fieldList ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 22px; }
+.fieldList li { break-inside: avoid; }
+.languageNotice { margin: 0 0 42px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; line-height: 1.6; }
+.pricingNote { margin: 22px 0; line-height: 1.7; color: var(--muted); }
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
 .card > svg { color: var(--accent); margin-bottom: 22px; }
@@ -61,6 +68,8 @@
   .cards { grid-template-columns: 1fr; }
   .card { padding: 24px; }
   .copy { font-size: 16px; line-height: 1.8; }
+  .illustrated img { width: 42%; margin-left: 16px; }
+  .fieldList ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; }
 }
 .applicationNotes { margin-top: 32px; padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }
 

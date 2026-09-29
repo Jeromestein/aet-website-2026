@@ -1,0 +1,37 @@
+{
+  "source": "e-interpretation-content-zh.html",
+  "title": "AET口译服务",
+  "sections": [
+    {
+      "id": "define",
+      "title": "多语言口译服务（中文、西班牙语等）",
+      "html": "<p>\n多语言口译服务目前仅在\n          <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">波士顿办公室</a>\n          和\n          <a href=\"https://www.americantranslationservice.com/e-contact.php#nyc\" rel=\"noopener noreferrer\" target=\"_blank\">纽约办公室</a>\n          提供。对于其他地区，仅提供中文口译服务。\n        \n</p> <p>\n        AET在美国的各大主要城市都有经验丰富的口译员合作关系。他们凭借专业的背景和职业素养，在多次场合提供了出色的同声传译和交替传译服务。我们通常根据客户的具体需求选择口译员，以最大程度地满足他们的要求。\n      </p>"
+    },
+    {
+      "id": "aet",
+      "title": "为什么选择AET？",
+      "html": "<p>我们所有的口译员都具备高超的口译和翻译技能。</p> <p>\n            我们在美国各大城市都有口译员，服务可以快速安排。\n          </p>"
+    },
+    {
+      "id": "price",
+      "title": "价格表",
+      "html": "<p>\n<strong>注意：</strong>以上价格适用于中文和英文之间的口译。我们还可以覆盖德语、俄语、格鲁吉亚语和乌克兰语。请联系\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">迈阿密办公室</a>\n        获取更多信息。\n      </p>",
+      "scenarios": [
+        "移民面试、法庭/法律事务、商务会议、教育、展会、科研活动等",
+        "企业会议、法律程序、商务谈判、会议、现场考察等",
+        "会议、研讨会、讲座、大型活动",
+        "线上会议、咨询、面试"
+      ]
+    },
+    {
+      "id": "area",
+      "title": "如何申请？",
+      "html": "<img alt=\"service area\" loading=\"lazy\" src=\"/services/interpretation/service_area.png\"/> <p>\n            1. 找出哪个办公室为您的所需城市提供服务。联系\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">波士顿办公室</a>\n            或\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#nyc\" rel=\"noopener noreferrer\" target=\"_blank\">纽约办公室</a>\n            处理蓝色标记的城市（波士顿、纽约、华盛顿特区、费城、巴尔的摩、西雅图、芝加哥等）；联系\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">迈阿密办公室</a>\n            处理黑色标记的城市（迈阿密、旧金山、洛杉矶、圣迭戈、达拉斯、奥斯汀、休斯顿等）。<br/><br/>2.\n            向办公室发送电子邮件，包括：您的联系信息；所需的服务、时间和地点；需要多少口译员以及需要什么经验水平。\n            <br/><br/>3. 申请流程：提交申请 → 获取报价 → 预付款 →\n            在约定的时间范围内根据所需的时间、地点、数量和口译员水平安排口译员 →\n            如果安排成功，将提供口译员信息；如果安排不成功，将全额退款。\n          </p>"
+    },
+    {
+      "id": "testimonials",
+      "title": "客户反馈",
+      "html": "<p>\n        \"你们绝对是最棒的。感谢你们在这么短的通知时间内让自己可用，我欣赏你们的职业精神和对项目的理解。你们一直是，并且将继续是一个宝贵的资产。\"\n        ——Pacific Group的Mike\n        <br/><br/>\n        \"非常感谢你们的努力和提供的帮助。你们非常负责任和友好。多亏了你们提供的高质量口译服务，我们实现了我们的商业目标。\"\n        ——Yu先生\n      </p> <br/> <br/> <p>以下显示了AET的一些客户</p> <img alt=\"client list\" loading=\"lazy\" src=\"/services/interpretation/client_list.png\"/>"
+    }
+  ]
+}

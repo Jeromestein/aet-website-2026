@@ -1,0 +1,37 @@
+{
+  "source": "e-interpretation-content.html",
+  "title": "Interpretation Services at AET",
+  "sections": [
+    {
+      "id": "define",
+      "title": "MULTI LANGUAGE INTERPRETATION (Chinese, Spanish, etc.)",
+      "html": "<p>\nMulti-language Interpretation services are only available in\n          <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">Boston Office</a>\n          and\n          <a href=\"https://www.americantranslationservice.com/e-contact.php#nyc\" rel=\"noopener noreferrer\" target=\"_blank\">New York Office</a>\n          now. For other areas, only Chinese interpretation is provided.\n        \n</p> <p>\n        AET has connections with experienced interpreters in most of major\n        cities in America. With their specialized background and\n        professionalism, they have delivered outstanding simultaneous and\n        consecutive interpretation services on numerous occasions. We usually\n        select interpreters in accordance with the clients' specific needs, so\n        that their requirements could be best satisfied.\n      </p>"
+    },
+    {
+      "id": "aet",
+      "title": "WHY CHOOSE AET?",
+      "html": "<p>\n            All of our interpreters have high skills in interpretation and\n            translation.\n          </p> <p>\n            We have interpreters in major USA cities. Services can be scheduled\n            real quick.\n          </p>"
+    },
+    {
+      "id": "price",
+      "title": "PRICE TABLE",
+      "html": "<p>\n<strong>NOTES: </strong>The above listed price is for interpretation\n        between Chinese and English. We may also cover German, Russian, Georgian\n        and Ukrainian. Please contact\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">Miami Office</a>\n        for more information.\n      </p>",
+      "scenarios": [
+        "Immigration interviews, court/legal matters, business meetings,\n              education, exhibitions, scientific events, etc.",
+        "Corporate meetings, legal proceedings, business negotiations,\n              conferences, site visits, etc.",
+        "Conferences, seminars, lectures, large-scale events",
+        "Online meetings, consultations, interviews"
+      ]
+    },
+    {
+      "id": "area",
+      "title": "HOW TO APPLY?",
+      "html": "<img alt=\"service area\" loading=\"lazy\" src=\"/services/interpretation/service_area.png\"/> <p>\n            1. Find out which office provides service for your requested city.\n            Contact\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">Boston Office</a>\n            or\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#nyc\" rel=\"noopener noreferrer\" target=\"_blank\">New York Office</a>\n            for cities marked in blue(Boston, New York, Washington DC,\n            Philadelphia, Baltimore, Seattle, Chicago, etc.)；Contact\n            <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">Miami Office</a>\n            for cities marked in black(Miami, San Francisco, Los Angeles, San\n            Diego, Dallas, Austin, Houston, etc.). <br/><br/>2. Email the\n            office and include: your contact info; requested service, time and\n            place; how many interpreters and what experienced level are needed.\n            <br/><br/>3. Application Process: File an application → Get a\n            quote → Prepay → Arrange interpreters within the agreed-upon\n            timeframe according to time, place, number and level of\n            interpreter(s) required → If the arrangement is successful,\n            translator information will be provided; if the arrangement is\n            unsuccessful, a full refund will be given.\n          </p>"
+    },
+    {
+      "id": "testimonials",
+      "title": "CLIENTS' FEEDBACK",
+      "html": "<p>\n        \"You are absolute best. Thank you for making yourself available on such\n        short notice and I appreciate your professionalism and understanding of\n        the program. You have been, and will continue to be, a valuable asset.\"\n        ——Mike from Pacific Group\n        <br/><br/>\n        \"Thank you very much for your efforts and help provided. You guys are\n        very responsible and friendly. Thanks to the great-quality\n        interpretation service you offered, we've achieved our business goals.\"\n        ——Mr Yu\n      </p> <br/> <br/> <p>Following shows some of AET's clients</p> <img alt=\"client list\" loading=\"lazy\" src=\"/services/interpretation/client_list.png\"/>"
+    }
+  ]
+}

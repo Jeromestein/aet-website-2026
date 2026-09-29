@@ -87,18 +87,33 @@ one shared page and its i18n content, not three independently implemented pages.
 - [ ] **Technical Translation** — `/e-tech-translation.php` → Technical Translation
   page. Preserve the scientific, industrial, medical, business, legal, and
   education content and its contact action.
+  Local implementation: `/technical-translation`, English and Chinese source
+  copy, image assets, quote email and localized navigation. Spanish has a
+  clearly labeled English fallback. See provenance README and [status.md](status.md).
 - [ ] **Interpretation** — `/e-interpretation.php` → Interpretation page.
   Preserve supported scenarios, languages, service coverage, and booking/contact
   instructions; carry regional content into relevant supporting pages.
+  Local implementation: `/interpretation`, source booking and coverage copy,
+  shared prices, peer-use cards and source images. Spanish has a labeled English
+  fallback. Regional supporting pages and claim review remain open.
 - [ ] **Expert Opinion Letters** — `/e-expert-opinion-letter.php` → Expert Opinion
   Letters page. Preserve purposes, fields, document requirements, fees/timing,
   FAQs, and related evaluation articles.
+  Local implementation: `/expert-opinion-letters` in all three source languages,
+  with shared price/shipping tables, local form PDF, article links and current
+  institution carousel. The legacy page has no FAQ block to migrate.
 - [ ] **General Translation** — `/e-translation.php` → General Translation page.
   Preserve language coverage and quote instructions; retain the distinction from
   Certified Translation.
+  Local implementation: `/general-translation`, English and Chinese source
+  explanations, shared Chinese/English rates and localized Certified link.
+  Spanish has a labeled English fallback.
 - [ ] **Notarization** — `/e-nus.php` → Notarization page. Preserve retained service
   content; resolve its link to the excluded China Consular Authentication service.
   Do not equate all notarization/apostille content with the excluded service.
+  Local implementation: `/notarization`, English and Chinese source sections and
+  fees; excluded-service referral removed. Spanish has a labeled English
+  fallback. Fee and legal/process review remain open.
 
 ### Contact, payment, and company information — 5 pages
 

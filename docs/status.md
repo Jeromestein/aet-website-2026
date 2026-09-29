@@ -5,6 +5,27 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Remaining five service pages — September 29, 2026
+
+- Added Technical Translation, Interpretation, Expert Opinion Letters, General
+  Translation, and Notarization with the shared service shell. English and Chinese
+  follow their legacy content files; Expert also uses its Spanish source. The
+  other Spanish routes visibly label their English fallback and are noindexed.
+- Connected navigation, homepage cards, footer and 11 existing legacy PHP paths
+  to localized routes. Current shared rates replace conflicting Interpretation,
+  Expert and General Translation source prices; Expert shipping also reuses the
+  shared catalog. Source-specific applications and the Expert PDF remain intact.
+- Expert partners use the homepage institution carousel. Its legacy Why Choose
+  infographic is omitted because of unverified absolute acceptance/review claims.
+  The excluded China authentication referral is removed from Notarization.
+- In-app browser: all five Chinese pages and Expert Spanish render at 320px
+  without page overflow, duplicate IDs or failed images. Spanish fallback notice
+  renders. Selected English legacy redirects return 308. Typecheck, locale checks
+  and whitespace checks passed. Reused the running server; no build or deployment.
+- Remaining before launch: source-claim/business review (especially coverage,
+  client logos, notary fees and legal/process copy), Spanish translations for four
+  pages if required, and broader contact/related-page migration.
+
 ### Service template and Certified Translation — September 29, 2026
 
 - Added `docs/service-page-template.md` and linked it from repository guidance.

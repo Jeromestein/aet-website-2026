@@ -229,6 +229,7 @@
       "general": "Traducción, corrección de textos y redacción en inglés.",
       "shipping": "El plazo de envío es independiente del tiempo de procesamiento del servicio."
     },
+    "shippingGroups": { "domestic": "Nacional", "international": "Internacional" },
     "columns": {
       "service": "Documento / Servicio",
       "price": "Precio estimado",

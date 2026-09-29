@@ -229,6 +229,7 @@
       "general": "Translation, proofreading, and English writing.",
       "shipping": "Delivery time is separate from service processing time."
     },
+    "shippingGroups": { "domestic": "Domestic", "international": "International" },
     "columns": {
       "service": "Document / Service",
       "price": "Estimated Price",

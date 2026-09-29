@@ -13,6 +13,17 @@ const nextConfig: NextConfig = {
       { source: "/e-evaluation.php", destination: "/evaluation", permanent: true },
       { source: "/e-evaluation-zh.php", destination: "/zh/evaluation", permanent: true },
       { source: "/e-evaluation-es.php", destination: "/es/evaluation", permanent: true },
+      ...[
+        ["e-tech-translation", "technical-translation"],
+        ["e-interpretation", "interpretation"],
+        ["e-expert-opinion-letter", "expert-opinion-letters"],
+        ["e-translation", "general-translation"],
+        ["e-nus", "notarization"],
+      ].flatMap(([source, destination]) => [
+        { source: `/${source}.php`, destination: `/${destination}`, permanent: true },
+        { source: `/${source}-zh.php`, destination: `/zh/${destination}`, permanent: true },
+        ...(source === 'e-expert-opinion-letter' ? [{ source: `/${source}-es.php`, destination: `/es/${destination}`, permanent: true }] : []),
+      ]),
     ];
   },
   turbopack: { root: process.cwd() },

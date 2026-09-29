@@ -11,8 +11,8 @@ export function ServiceCopy({ html, className = '' }: { html: string; className?
   return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-export async function ServicePage({ locale, title, label, eyebrow, nav, actions, children }: {
-  locale: Locale; title: string; label: string; eyebrow?: string;
+export async function ServicePage({ locale, title, titleLang, label, eyebrow, nav, actions, children }: {
+  locale: Locale; title: string; titleLang?: string; label: string; eyebrow?: string;
   nav: { id: string; label: string }[]; actions: { label: string; href: string }[]; children: ReactNode;
 }) {
   const t = await getTranslations();
@@ -25,7 +25,7 @@ export async function ServicePage({ locale, title, label, eyebrow, nav, actions,
           <a href={getPathname({ locale, href: '/' })}>{t('navigation.home')}</a><span aria-hidden="true">/</span><span aria-current="page">{label}</span>
         </nav>
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-        <h1>{title}</h1>
+        <h1 lang={titleLang}>{title}</h1>
         <div className={styles.actions}>{actions.map(action => <a key={action.href} className="button" href={action.href}>{action.label}</a>)}</div>
       </div></div></header>
       <div className={`wrap ${styles.layout}`}>
