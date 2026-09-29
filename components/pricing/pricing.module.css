@@ -7,16 +7,15 @@
 .heroBottom { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 32px; }
 .currency { font-size: 14px; font-weight: 600; }
 .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 56px; padding-top: 64px; padding-bottom: 88px; align-items: start; }
-.index { position: sticky; top: 112px; padding: 22px 0; border-top: 2px solid var(--ink); }
-.index p { margin: 0 0 16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.index { position: sticky; top: 112px; padding: 22px 0; }
+.index p { margin: 0 0 16px; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
 .index a { display: flex; align-items: baseline; gap: 12px; padding: 13px 4px; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
 .index a:hover { color: var(--orange); }
 .index span { color: var(--accent); font-size: 11px; }
 .section { scroll-margin-top: 24px; margin-bottom: 72px; min-width: 0; }
 .sectionHeading h2 { font-size: clamp(28px, 3vw, 40px); line-height: 1.2; letter-spacing: -.03em; margin: 0 0 16px; }
 .sectionHeading p { color: var(--muted); line-height: 1.8; margin: 0 0 24px; }
-.scope { padding-left: 18px; border-left: 3px solid var(--accent); line-height: 1.8; margin: 0 0 24px; font-size: 15px; }
-.scope a, .note a { text-decoration: underline; text-underline-offset: 3px; }
+.note a { text-decoration: underline; text-underline-offset: 3px; }
 .tableWrap { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: var(--surface); }
 .table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 1.65; text-align: left; }
 .table th, .table td { padding: 18px 20px; vertical-align: top; border-bottom: 1px solid var(--line); }

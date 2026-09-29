@@ -51,6 +51,16 @@ export const generalTranslation: readonly Rate[] = [
   { id: 'toEnglish', label: 'toEnglish', price: { kind: 'range', min: 0.1, max: 0.4, unit: 'chineseWord' } },
   { id: 'toChinese', label: 'toChinese', price: { kind: 'range', min: 0.12, max: 0.4, unit: 'englishWord' } },
 ];
+export const proofreading: readonly Rate[] = [
+  { id: 'technicalProofreading', label: 'technicalProofreading', price: { kind: 'range', min: 75, max: 100, unit: 'page' }, note: 'proofreading' },
+  { id: 'nonTechnicalProofreading', label: 'nonTechnicalProofreading', price: { kind: 'range', min: 35, max: 75, unit: 'page' }, note: 'proofreading' },
+];
+export const englishWriting: readonly Rate[] = [
+  { id: 'englishWriting', label: 'englishWriting', price: { kind: 'range', min: 0.5, max: 1.2, unit: 'word' }, note: 'writing' },
+];
+export const otherServices: readonly Rate[] = [
+  ...generalTranslation.map(rate => ({ ...rate, note: 'general' })), ...proofreading, ...englishWriting,
+];
 export const shipping: readonly Rate[] = [
   { id: 'domesticFirst', label: 'domesticFirst', price: fixed(10), turnaround: { kind: 'businessDayRange', min: 5, max: 7 }, tracking: false },
   { id: 'domesticPriority', label: 'domesticPriority', price: fixed(17), turnaround: { kind: 'businessDayRange', min: 2, max: 5 }, tracking: true },
@@ -59,7 +69,7 @@ export const shipping: readonly Rate[] = [
   { id: 'internationalExpress', label: 'internationalExpress', price: fixed(88), turnaround: { kind: 'businessDayRange', min: 3, max: 5 }, tracking: true },
   { id: 'internationalFedex', label: 'internationalFedex', price: fixed(93), turnaround: { kind: 'businessDayRange', min: 1, max: 3 }, tracking: true },
 ];
-export const pricingPolicy = { sameDayCutoff: '1:00pm EST', simultaneousMinimumHours: 3, telephoneMinimumHours: 0.5 } as const;
+export const pricingPolicy = { sameDayCutoff: '1:00pm EST', simultaneousMinimumHours: 3, telephoneMinimumHours: 0.5, proofreadingDiscountMinimumPages: 10 } as const;
 export const pricingSections = ['translation', 'evaluation', 'expert', 'interpretation', 'general', 'shipping'] as const;
 export type PricingSectionId = typeof pricingSections[number];
 

@@ -209,13 +209,12 @@
     "quote": "Request a Quote",
     "onPage": "On this page",
     "breadcrumb": "Breadcrumb",
-    "chinesePriceList": "View pricing for Chinese documents",
     "sections": {
       "translation": "Certified Translation",
       "evaluation": "Credential Evaluation",
       "expert": "Expert Opinion Letters",
       "interpretation": "Interpretation",
-      "general": "General Translation",
+      "general": "Other Services",
       "shipping": "Shipping Options"
     },
     "intro": {
@@ -223,7 +222,7 @@
       "evaluation": "Choose the report type and processing time that fit your requirements.",
       "expert": "Professional Experience Evaluation / Expert Opinion Letters.",
       "interpretation": "Rates for interpretation between Chinese and English.",
-      "general": "Translation priced by the source text.",
+      "general": "Translation, proofreading, and English writing.",
       "shipping": "Delivery time is separate from service processing time."
     },
     "columns": {
@@ -278,10 +277,12 @@
       "domesticExpress": "U.S. — USPS Express Mail",
       "internationalFirst": "International — USPS First-Class Mail",
       "internationalExpress": "International — USPS Express Mail",
-      "internationalFedex": "International — FedEx Priority Mail"
+      "internationalFedex": "International — FedEx Priority Mail",
+      "technicalProofreading": "Proofreading — Technical",
+      "nonTechnicalProofreading": "Proofreading — Non-technical",
+      "englishWriting": "Writing (in English)"
     },
     "notes": {
-      "translationScope": "These rates apply to documents in languages other than Chinese, regardless of the website language you select.",
       "translationQuote": "Prices are estimates. An exact quote is provided after reviewing the actual document. Contact our Miami or Boston office for details.",
       "cutoff": "For same-day evaluation, payment and documents must be submitted by {time}.",
       "onSite": "Plus transportation fees covering round-trip travel time, vehicle costs, and parking. Used for immigration interviews, courts/legal matters, exhibitions, business, education, science, and more.",
@@ -290,7 +291,9 @@
       "interpretation": "Other languages may include German, Russian, Georgian, and Ukrainian. Contact our Miami office to confirm availability.",
       "general": "Russian, Ukrainian, Belarusian, German, French, Spanish, Georgian, and other languages are also available. Contact us for a quote.",
       "shipping": "Shipping fees include postage and handling. For U.S. shipping with USPS tracking, a second translation copy is sent at no charge if the package is lost. For international shipping, shipping fees are charged again if the package is lost.",
-      "disclaimer": "All listed fees are for reference. AET may adjust prices, and prices may vary by office. Contact your office to confirm the final quote and processing time."
+      "disclaimer": "All listed fees are for reference. AET may adjust prices, and prices may vary by office. Contact your office to confirm the final quote and processing time.",
+      "proofreading": "Customers with orders of {proofreadingDiscountMinimumPages} pages or more can enjoy a discounted rate.",
+      "writing": "Clients should provide an outline and basic content."
     }
   }
 }

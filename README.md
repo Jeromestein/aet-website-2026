@@ -123,8 +123,8 @@ still reference the old paths, then run `pnpm typecheck`. This does not build th
 `lib/pricing.ts` is the single source for USD fees, price types (fixed, starting,
 range, or quoted), units, turnaround, shipping/tracking, and minimum durations.
 The baseline is the owner's September 29, 2026 updated legacy `e-fee.php`, not
-the conflicting older service-page or application-form prices. Preserve its
-non-Chinese-document scope independently of the UI language.
+the conflicting older service-page or application-form prices. The owner requested
+removal of the document-language notice and Chinese-price-list link from Pricing.
 
 `components/pricing/pricing-table.tsx` renders any catalog rate collection;
 `components/pricing/pricing-section.tsx` renders a complete reusable service
@@ -138,7 +138,8 @@ time display; `messages/*.json` contains wording, not fee or turnaround values.
 Example: `<PricingSection section="translation" />` or
 `<PricingTable rates={expertOpinion} caption={localizedTitle} showService={false} />`.
 
-China Visa is excluded. Proofreading and English writing are currently omitted
-in line with the narrowed new-site scope, pending the owner's scope response.
+China Visa is excluded. Other Services includes translation, proofreading, and
+English writing, as confirmed by the owner. Their rates and the proofreading
+discount threshold share the pricing catalog.
 No application-form-only add-ons have been imported. Existing old-site service
 pages and the separate application portal are outside this shared data module.

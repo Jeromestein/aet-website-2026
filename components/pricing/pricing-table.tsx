@@ -26,6 +26,7 @@ export function PricingTable({ rates, caption, showService = true, showTime = tr
         {showNotes && <td className={styles.rateNote} data-label={t('columns.notes')}>{rate.note && t(`notes.${rate.note}`, {
           simultaneousMinimumHours: pricingPolicy.simultaneousMinimumHours,
           telephoneMinimumHours: pricingPolicy.telephoneMinimumHours,
+          proofreadingDiscountMinimumPages: pricingPolicy.proofreadingDiscountMinimumPages,
         })}</td>}
         {showTracking && <td data-label={t('columns.tracking')}>{t(rate.tracking ? 'format.yes' : 'format.no')}</td>}
       </tr>)}</tbody>

@@ -5,6 +5,22 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Pricing follow-up — September 29, 2026
+
+- Restored technical proofreading ($75–100/page), non-technical proofreading
+  ($35–75/page), and English writing ($0.50–1.20/word) under Other Services.
+  Rates and the 10-page discount threshold use shared catalog constants;
+  all three locales include the discount and client-supplied outline notes.
+- Removed the sidebar top rule, increased its heading from 13px to 16px,
+  and removed the document-language notice and Chinese-price-list link as requested.
+- Local in-app browser: verified English desktop (1440px), Chinese mobile
+  Other Services (390px), and Spanish mobile navigation/content. Checked mobile
+  document widths without horizontal overflow. Typecheck, i18n validation
+  (251 keys per locale), and diff whitespace checks passed.
+- Used a temporary `pnpm dev` server at http://localhost:3021 for verification.
+  The temporary server was stopped after verification. No production build
+  or deployment was performed.
+
 ### Shared Pricing page — September 29, 2026
 
 - Added `/pricing`, `/zh/pricing`, and `/es/pricing` with shared navigation,
@@ -20,9 +36,9 @@ implementation and checks, not production deployment or accessibility certificat
   are $620/21, $700/14, $800/8 business days. Preserved non-Chinese-document
   pricing scope, final-quote qualification, office variation, cutoff, hourly
   minimums, transportation supplements and shipping conditions.
-- China Visa is excluded. Proofreading/English writing are omitted under the
-  provisional narrowed scope communicated to the owner; the optional scope
-  question remains open. No application-form-only rates were added.
+- China Visa is excluded. The owner subsequently confirmed proofreading and
+  English writing belong in Pricing; these are restored in the follow-up above.
+  No application-form-only rates were added.
 - Compared all 38 displayed rows against the updated legacy HTML, including
   amounts, applicable turnaround, price types and shipping tracking. Confirmed
   the shared expert records and homepage standard values reference the catalog.
