@@ -145,7 +145,11 @@
       "documentsTitle": "上传您的文件",
       "documentsText": "提交申请后，打开申请状态页面。点击 Choose Files（选择文件）或拖放文件，然后点击 Upload Files（上传文件）。",
       "documentsAlt": "申请状态页的文件上传区域，包含选择文件、拖放说明和上传文件按钮",
-      "documentsCaption": "在申请状态页上传文件"
+      "documentsCaption": "在申请状态页上传文件",
+      "methodsTitle": "学历评估申请步骤",
+      "methodsLabel": "申请方式",
+      "online": "在线申请",
+      "email": "邮件申请"
     },
     "testimonials": {
       "eyebrow": "03 / 客户反馈",
@@ -243,7 +247,8 @@
       "sameTranslation": "与认证翻译同步",
       "notApplicable": "不适用",
       "yes": "有",
-      "no": "无"
+      "no": "无",
+      "hourRange": "{min}–{max} 小时"
     },
     "units": {
       "copy": "{amount}/份",
@@ -280,7 +285,8 @@
       "internationalFedex": "国际 — FedEx Priority Mail",
       "technicalProofreading": "技术内容校对",
       "nonTechnicalProofreading": "非技术内容校对",
-      "englishWriting": "英文写作"
+      "englishWriting": "英文写作",
+      "preEvaluation": "预评估"
     },
     "notes": {
       "translationQuote": "以上为参考价格。我们会在查看实际文件后提供准确报价。详情请联系迈阿密或波士顿办公室。",

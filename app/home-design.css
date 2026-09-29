@@ -82,6 +82,25 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
 .journey-heading .journey-apply:focus-visible { outline:3px solid var(--surface);outline-offset:5px; }
 .journey-story:not(.is-enhanced) .journey-mobile-image { height:auto;aspect-ratio:725 / 690;background:var(--surface);max-height:640px; }
 .journey-mobile-image .journey-screen { inset:58px 12px 18px; }
+/* The same application module fits service-page content columns without pinning. */
+.journey-story[data-variant="embedded"] { padding: 32px; border-radius: 24px; scroll-margin-top: 110px; }
+.journey-story[data-variant="embedded"] > .wrap { width: 100%; max-width: none; padding: 0; margin: 0; }
+.journey-story[data-variant="embedded"] .journey-heading { margin-bottom: 32px; }
+.journey-story[data-variant="embedded"] .journey-heading h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.2; }
+.journey-story[data-variant="embedded"] .journey-heading .journey-apply { min-height: 54px; padding: 14px 18px; font-size: 16px; margin-top: 20px; }
+.journey-story[data-variant="embedded"] .journey-stages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.journey-story[data-variant="embedded"] .journey-stage { margin-top: 0; display: flex; flex-direction: column; min-width: 0; min-height: 0; align-items: stretch; }
+.journey-story[data-variant="embedded"] .journey-mobile-image { width: 100%; flex-shrink: 0; }
+.journey-story[data-variant="embedded"] .journey-card { flex: 1; display: block; padding: 24px; }
+.journey-story[data-variant="embedded"] .journey-number { margin-bottom: 16px; }
+.journey-story[data-variant="embedded"] .journey-card h3 { font-size: 22px; line-height: 1.3; }
+.journey-story[data-variant="embedded"] .journey-screen-label { padding-inline: 16px; }
+@media (max-width: 600px) {
+  .journey-story[data-variant="embedded"] { padding: 24px 16px; }
+  .journey-story[data-variant="embedded"] .journey-stages { grid-template-columns: 1fr; }
+  .journey-story[data-variant="embedded"] .journey-heading .journey-apply { gap: 8px; padding-inline: 12px; }
+  .journey-story[data-variant="embedded"] .journey-heading .journey-apply svg { width: 18px; flex-shrink: 0; }
+}
 .preview-panel { grid-template-columns: .8fr 1.2fr; }
 .preview-copy { padding: 48px; min-width: 0; }
 .preview-copy .eyebrow { font-size: .75rem; }

@@ -145,7 +145,11 @@
       "documentsTitle": "Upload your documents",
       "documentsText": "After submitting your application, open your application status page. Use Choose Files or drag and drop your documents, then select Upload Files.",
       "documentsAlt": "Application status page upload area with Choose Files, drag-and-drop instructions, and Upload Files button",
-      "documentsCaption": "Upload documents on your status page"
+      "documentsCaption": "Upload documents on your status page",
+      "methodsTitle": "Steps for Credential Evaluation",
+      "methodsLabel": "Application method",
+      "online": "Online",
+      "email": "Email"
     },
     "testimonials": {
       "eyebrow": "03 / CLIENT FEEDBACK",
@@ -243,7 +247,8 @@
       "sameTranslation": "Same as certified translation",
       "notApplicable": "N/A",
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "hourRange": "{min}–{max} hours"
     },
     "units": {
       "copy": "{amount}/copy",
@@ -280,7 +285,8 @@
       "internationalFedex": "International — FedEx Priority Mail",
       "technicalProofreading": "Proofreading — Technical",
       "nonTechnicalProofreading": "Proofreading — Non-technical",
-      "englishWriting": "Writing (in English)"
+      "englishWriting": "Writing (in English)",
+      "preEvaluation": "Pre-Evaluation"
     },
     "notes": {
       "translationQuote": "Prices are estimates. An exact quote is provided after reviewing the actual document. Contact our Miami or Boston office for details.",

@@ -217,7 +217,12 @@ avoid prominent unrelated school logos. Stock people are illustrative, not ident
 as AET staff or clients. Use natural color, subtle blue overlays, explicit image sizes,
 responsive sources, and meaningful alt text. Never stretch a thumbnail into a large panel.
 
-The process section distinguishes purpose (USCIS, employment, education) from
+Homepage and Evaluation share one application-method module with Online / Email
+tabs, defaulting to Online. Online shows the four-step application flow; Email
+shows the three legacy steps with the PDF form and office links. Support keyboard
+selection and show both methods when JavaScript is unavailable.
+
+The online process distinguishes purpose (USCIS, employment, education) from
 evaluation type (Document-by-Document, Course-by-Course, Expert Opinion Letter).
 Use actual screenshots of purpose selection, Client Information, Services, and the
 status-page document uploader. Keep screenshots proportional and fully

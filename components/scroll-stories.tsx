@@ -1,6 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/i18n/routing";
+import applicationMethods from "@/content/application-methods.json";
+import methodStyles from "./application-methods.module.css";
 
 import Image from "next/image";
 import { CardRail } from "./card-rail";
@@ -125,13 +128,21 @@ function StepVisual({ index }: { index: number }) {
   return <><div className="journey-screen-label">{t("home.process.screen")}</div><div className="journey-screen"><Image src={step.image} alt={step.alt} fill sizes="(max-width: 850px) 90vw, 48vw" /></div></>;
 }
 
-export function ProcessStory() {
+export function ProcessStory({ id = "process", variant = "home" }: { id?: string; variant?: "home" | "embedded" }) {
+  const titleId = id === "process" ? "journey-title" : `${id}-title`;
   const t = useTranslations();
+  const locale = useLocale() as Locale;
+  const email = applicationMethods[locale];
+  const [method, setMethod] = useState<"online" | "email">("online");
+  const [ready, setReady] = useState(false);
+  useEffect(() => { setReady(true); }, []);
+  const methodTabs = useRef<(HTMLButtonElement | null)[]>([]);
   const steps = useSteps();
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
   useEffect(() => {
+    if (variant === "embedded" || method !== "online") return;
     const media = window.matchMedia("(min-width: 851px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)");
     const cards = Array.from(root.current?.querySelectorAll<HTMLElement>(".journey-stage") ?? []);
     let frame = 0;
@@ -151,12 +162,63 @@ export function ProcessStory() {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     return () => { media.removeEventListener("change", configure); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
-  }, []);
-  return <section ref={root} className={`journey-story ${enhanced ? "is-enhanced" : ""}`} id="process" aria-labelledby="journey-title"><div className="wrap">
-    <div className="journey-heading"><span className="eyebrow">{t("home.process.eyebrow")}</span><h2 id="journey-title">{t("home.process.title")}</h2><p>{t("home.process.text")}</p><a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application"><SquarePen size={24} aria-hidden="true" />{t("home.process.action")}<ArrowUpRight size={24} aria-hidden="true" /></a></div>
-    <div className="journey-layout"><div className="journey-media">
-      {steps.map((step, i) => <div key={step.image} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}><StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div></div>)}
-      <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.image} className={i <= active ? "is-active" : ""} />)}</div>
-    </div><div className="journey-stages">{steps.map((step, i) => <article key={step.image} className={`journey-stage ${i === active ? "is-active" : ""}`}><div className="journey-mobile-image"><StepVisual index={i} /></div><div className="journey-card"><span className="journey-number">0{i + 1}</span><div><span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>{i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">{t("home.process.action")} <ArrowUpRight size={18} /></a>}</div></div></article>)}</div></div>
-  </div></section>;
+  }, [variant, method]);
+  return <section ref={root} className={`journey-story ${enhanced && method === "online" ? "is-enhanced" : ""}`} id={id} data-variant={variant} aria-labelledby={titleId}>
+    <div className="wrap">
+      <div className="journey-heading">
+        <span className="eyebrow">{t("home.process.eyebrow")}</span>
+        <h2 id={titleId}>{t("home.process.methodsTitle")}</h2>
+        {ready && <div role="tablist" aria-label={t("home.process.methodsLabel")} className={methodStyles.tabs}>
+          {(["online", "email"] as const).map((value, index) => <button
+            key={value} type="button" role="tab" id={`${id}-${value}-tab`}
+            aria-controls={`${id}-${value}-panel`} aria-selected={method === value}
+            tabIndex={method === value ? 0 : -1}
+            ref={node => { methodTabs.current[index] = node; }}
+            onClick={() => setMethod(value)}
+            onKeyDown={event => {
+              if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+              event.preventDefault();
+              const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : 1 - index;
+              setMethod(next === 0 ? "online" : "email");
+              methodTabs.current[next]?.focus();
+            }}
+          >{t(`home.process.${value}`)}</button>)}
+        </div>}
+      </div>
+      <div id={`${id}-online-panel`} role={ready ? "tabpanel" : undefined}
+        aria-labelledby={ready ? `${id}-online-tab` : undefined} tabIndex={ready ? 0 : undefined}
+        hidden={ready && method !== "online"} className={methodStyles.panel}>
+        <div className="journey-heading">
+          <h3 className={methodStyles.methodTitle}>{t("home.process.title")}</h3>
+          <p>{t("home.process.text")}</p>
+          <a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application">
+            <SquarePen size={24} aria-hidden="true" />{t("home.process.action")}<ArrowUpRight size={24} aria-hidden="true" />
+          </a>
+        </div>
+        <div className="journey-layout">
+          <div className="journey-media">
+            {steps.map((step, i) => <div key={step.image} className={`journey-photo ${i === active ? "is-active" : ""}`} aria-hidden={i !== active}>
+              <StepVisual index={i} /><div className="journey-caption"><span>0{i + 1}</span>{step.caption}</div>
+            </div>)}
+            <div className="journey-progress" aria-hidden="true">{steps.map((step, i) => <span key={step.image} className={i <= active ? "is-active" : ""} />)}</div>
+          </div>
+          <div className="journey-stages">{steps.map((step, i) => <article key={step.image} className={`journey-stage ${i === active ? "is-active" : ""}`}>
+            <div className="journey-mobile-image"><StepVisual index={i} /></div>
+            <div className="journey-card"><span className="journey-number">0{i + 1}</span><div>
+              <span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>
+              {i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">{t("home.process.action")} <ArrowUpRight size={18} aria-hidden="true" /></a>}
+            </div></div>
+          </article>)}</div>
+        </div>
+        <p className={methodStyles.acceptance}>{email.acceptanceNote}</p>
+      </div>
+      <div id={`${id}-email-panel`} role={ready ? "tabpanel" : undefined}
+        aria-labelledby={ready ? `${id}-email-tab` : undefined} tabIndex={ready ? 0 : undefined}
+        hidden={ready && method !== "email"} className={methodStyles.panel}>
+        <h3 className={methodStyles.methodTitle}>{email.title}</h3>
+        {/* Checked-in, sanitized legacy instructions; never runtime user HTML. */}
+        <div className={methodStyles.email} dangerouslySetInnerHTML={{ __html: email.html }} />
+      </div>
+    </div>
+  </section>;
 }

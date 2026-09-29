@@ -9,6 +9,7 @@ export type Price =
 export type Turnaround =
   | { kind: 'businessDays' | 'hours'; value: number }
   | { kind: 'businessDayRange'; min: number; max: number }
+  | { kind: 'hourRange'; min: number; max: number }
   | { kind: 'sameDay' | 'sameTranslation' | 'notApplicable' };
 export type Rate = { id: string; label: string; price: Price; turnaround?: Turnaround; note?: string; tracking?: boolean };
 const fixed = (amount: number): Price => ({ kind: 'fixed', amount });
@@ -24,6 +25,11 @@ export const certifiedTranslation: readonly Rate[] = [
   { id: 'other', label: 'other', price: { kind: 'quote' }, turnaround: { kind: 'notApplicable' } },
 ];
 export const documentEvaluationStandard = { price: 100, businessDays: 7 } as const;
+/** Evaluation-page rates from e-evaluation-content.html; shared by every locale. */
+export const evaluationExtraCopy: Price = { kind: 'range', min: 40, max: 60 };
+export const preEvaluation: readonly Rate[] = [
+  { id: 'preEvaluation', label: 'preEvaluation', price: { kind: 'range', min: 40, max: 60 }, turnaround: { kind: 'hourRange', min: 24, max: 48 } },
+];
 export const documentEvaluation: readonly Rate[] = [
   tier('standard', 'document', documentEvaluationStandard.price, days(documentEvaluationStandard.businessDays)),
   tier('rush', 'document', 150, days(3)),

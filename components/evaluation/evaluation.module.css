@@ -1,0 +1,72 @@
+.page { background: var(--paper); color: var(--ink); }
+.hero { background: var(--blue); padding: 56px 0 64px; border-bottom: 1px solid var(--line); }
+.heroInner { max-width: 1040px; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+.breadcrumb a { text-decoration: underline; text-underline-offset: 4px; }
+.hero h1 { font-size: clamp(38px, 5.4vw, 72px); line-height: 1.12; letter-spacing: -.04em; margin: 18px 0 28px; max-width: 1000px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions a { border-radius: 8px; min-height: 54px; padding: 14px 24px; box-shadow: none; }
+.actions a:first-child { background: var(--orange); color: var(--surface); }
+.actions a:first-child:hover { background: var(--orange-hover); }
+.actions a:last-child { border: 1px solid var(--action-blue); color: var(--action-blue); }
+.actions a:last-child:hover { background: var(--action-blue); color: var(--surface); }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.layout { display: grid; grid-template-columns: 218px minmax(0, 1fr); gap: 64px; align-items: start; padding-top: 64px; padding-bottom: 88px; }
+.index { position: sticky; top: 110px; }
+.index p { font-size: 16px; font-weight: 600; margin: 0 0 18px; }
+.index a { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
+.index a:hover { color: var(--orange); }
+.index span { font-size: 11px; color: var(--accent); padding-top: 2px; }
+.content { min-width: 0; }
+.section { margin-bottom: 64px; scroll-margin-top: 110px; }
+.section h2, .disclosure > summary { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
+.copy { font-size: 16px; line-height: 1.85; overflow-wrap: anywhere; }
+.copy p { margin: 0 0 20px; }
+.copy a { color: var(--action-blue); text-decoration: underline; text-underline-offset: 4px; }
+.copy a:hover { color: var(--orange); }
+.copy > a { display: inline-block; margin: 0 16px 8px 0; }
+.copy h3 { font-size: 21px; line-height: 1.6; font-weight: 500; margin: 30px 0 18px; }
+.copy ol, .copy ul { padding-left: 24px; margin: 18px 0 24px; }
+.copy li { margin-bottom: 12px; padding-left: 5px; }
+.copy small { color: var(--muted); font-size: 14px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
+.card > svg { color: var(--accent); margin-bottom: 22px; }
+.card h3 { font-size: 21px; font-weight: 500; line-height: 1.4; margin: 0 0 16px; }
+.card p { margin-bottom: 0; color: var(--muted); }
+.facts { background: var(--blue); padding: 28px 32px; border-radius: 24px; }
+.facts dl { margin: 0; }
+.facts dt { font-size: 14px; font-weight: 600; padding-top: 18px; }
+.facts dd { margin: 8px 0 0; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.facts dd:last-child { border: 0; }
+.comparison { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; }
+.comparison table { border-collapse: collapse; width: 100%; min-width: 550px; font-size: 14px; }
+.comparison th, .comparison td { padding: 18px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.comparison thead { background: var(--ink); color: white; }
+.rateGroup { margin: 28px 0; }
+.rateGroup h3 { margin: 0 0 14px; font-size: 19px; line-height: 1.5; font-weight: 500; }
+.rateGroup h3 a { color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+.disclosure { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; scroll-margin-top: 110px; }
+.disclosure > summary { cursor: pointer; font-size: 23px; margin: 0; padding: 6px 0; }
+.disclosure[open] > summary { margin-bottom: 28px; }
+.partners { width: 100%; height: auto; border-radius: 16px; background: white; }
+.sampleLinks p:first-child a { display: inline-flex; align-items: center; min-height: 54px; padding: 12px 18px; margin: 0 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; gap: 36px; }
+  .index { position: static; display: flex; flex-wrap: wrap; gap: 8px; }
+  .index p { width: 100%; margin-bottom: 8px; }
+  .index a { border: 1px solid var(--line); border-radius: 28px; padding: 10px 14px; background: var(--surface); }
+  .index span { display: none; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 32px 0 40px; }
+  .hero h1 { font-size: 38px; letter-spacing: -.035em; }
+  .breadcrumb { margin-bottom: 24px; font-size: 13px; }
+  .layout { padding-top: 32px; padding-bottom: 40px; }
+  .section { margin-bottom: 44px; }
+  .facts { padding: 24px 20px; }
+  .cards { grid-template-columns: 1fr; }
+  .card { padding: 24px; }
+  .copy { font-size: 16px; line-height: 1.8; }
+}
+.applicationNotes { margin-top: 32px; padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }

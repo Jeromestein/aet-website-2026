@@ -1,0 +1,24 @@
+.tabs { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 100%; gap: 6px; border: 1px solid #b9d1e45c; border-radius: 12px; padding: 6px; margin-top: 24px; background: #ffffff0d; }
+.tabs button { font: inherit; font-size: 16px; font-weight: 600; min-height: 48px; padding: 12px 28px; border: 0; border-radius: 7px; background: transparent; color: #e2edf5; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); }
+.tabs button:hover { background: #ffffff24; }
+.tabs button[aria-selected="true"]:hover { background: var(--blue); }
+.tabs button:focus-visible { outline: 3px solid #f5b39d; outline-offset: 3px; }
+.panel[hidden] { display: none; }
+.panel:focus-visible { outline: 2px solid #b9d1e4; outline-offset: 8px; }
+.panel h3.methodTitle { color: var(--surface); font-size: clamp(24px, 3vw, 36px); line-height: 1.3; margin: 0 0 18px; }
+.acceptance { margin-top: 24px; color: #e2edf5; font-size: 14px; line-height: 1.8; }
+.email { background: var(--surface); color: var(--ink); border-radius: 22px; padding: 32px; font-size: 17px; line-height: 1.9; overflow-wrap: anywhere; }
+.email ol { margin: 0; padding-left: 26px; }
+.email li { padding-left: 8px; margin-bottom: 24px; }
+.email li:last-child { margin-bottom: 0; }
+.email small { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--muted); }
+.email a { color: var(--action-blue); text-decoration: underline; text-underline-offset: 4px; }
+.email a:hover { color: var(--orange); }
+@media (max-width: 600px) {
+  .tabs { display: grid; width: 100%; }
+  .tabs button { padding: 12px 8px; font-size: 15px; overflow-wrap: anywhere; }
+  .email { padding: 24px 18px; font-size: 16px; }
+  .email ol { padding-left: 20px; }
+  .email li { padding-left: 4px; }
+}

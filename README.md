@@ -1,6 +1,6 @@
 # AET Website 2026
 
-A Next.js App Router website for American Education and Translation Services, with a homepage and shared Pricing page. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
+A Next.js App Router website for American Education and Translation Services, with a homepage, Evaluation, and shared Pricing page. Built with TypeScript, responsive CSS, and small client-side enhancements. Ready to import into Vercel as a Next.js project.
 
 ## Local development
 
@@ -32,13 +32,19 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Service details, contact, payment,
+app.americantranslationservice.com portal. Other service details, contact, payment,
 blog, office, and policy destinations still point to the existing production
 website. Payment is not implemented in this project.
 
 Pricing is implemented at `/pricing`, `/zh/pricing`, and `/es/pricing`. The
 Services menu and footer use these localized routes. `/e-fee.php` redirects to
 `/pricing`, preserving the legacy section anchors for retained services.
+
+Evaluation is implemented at `/evaluation`, `/zh/evaluation`, and `/es/evaluation`.
+It preserves legacy prose and reuses Pricing's table component and shared rates.
+The homepage/header/footer use these routes, and the three legacy evaluation PHP
+URLs redirect to them. Original form and sample PDFs are served locally.
+See [content provenance](content/evaluation/README.md) for source details.
 
 Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
 

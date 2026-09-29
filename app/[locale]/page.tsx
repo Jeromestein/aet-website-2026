@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { getPathname } from "@/i18n/navigation";
 import Image from "next/image";
 import { TestimonialCarousel } from "@/components/testimonial-carousel";
 import { SiteFooter } from "@/components/site-footer";
@@ -121,7 +122,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="services-grid">
             <a
-              href={old + "/e-evaluation.php"}
+              href={getPathname({ locale, href: "/evaluation" })}
               className="featured-service"
               data-reveal
             >

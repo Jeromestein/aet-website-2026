@@ -2,6 +2,14 @@
 
 Source: `/Users/plusone/Desktop/Code/server-54.213.58.23/americantranslationservice.com/` (existing AET website).
 
+Evaluation additions (September 29, 2026): `public/down/applicationform.pdf`,
+`public/evaluation_report.pdf`, `public/cbcevaluation_report.pdf`, and
+`public/images/FCE-Clients.jpg` are unchanged copies of the same legacy paths.
+The client image retains its 948 × 810 dimensions and artwork. Source checksums
+match all four files served locally. Institution references remain source claims,
+not new endorsements. Text provenance is in
+[content/evaluation/README.md](content/evaluation/README.md).
+
 | New asset                   | Original asset                 |
 | --------------------------- | ------------------------------ |
 | public/images/aet-logo.png  | images/e_logo.png              |

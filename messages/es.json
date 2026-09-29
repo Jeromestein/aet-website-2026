@@ -145,7 +145,11 @@
       "documentsTitle": "Suba sus documentos",
       "documentsText": "Después de enviar la solicitud, abra la página de estado. Utilice Choose Files (Elegir archivos) o arrastre sus documentos y seleccione Upload Files (Subir archivos).",
       "documentsAlt": "Área de carga de la página de estado, con selección de archivos, instrucciones para arrastrarlos y botón de carga",
-      "documentsCaption": "Suba documentos en la página de estado"
+      "documentsCaption": "Suba documentos en la página de estado",
+      "methodsTitle": "Pasos para la evaluación de credenciales",
+      "methodsLabel": "Método de solicitud",
+      "online": "En línea",
+      "email": "Por correo electrónico"
     },
     "testimonials": {
       "eyebrow": "03 / OPINIONES DE CLIENTES",
@@ -243,7 +247,8 @@
       "sameTranslation": "Igual que la traducción certificada",
       "notApplicable": "No aplica",
       "yes": "Sí",
-      "no": "No"
+      "no": "No",
+      "hourRange": "{min}–{max} horas"
     },
     "units": {
       "copy": "{amount}/copia",
@@ -280,7 +285,8 @@
       "internationalFedex": "Internacional — FedEx Priority Mail",
       "technicalProofreading": "Corrección de textos técnicos",
       "nonTechnicalProofreading": "Corrección de textos no técnicos",
-      "englishWriting": "Redacción en inglés"
+      "englishWriting": "Redacción en inglés",
+      "preEvaluation": "Preevaluación"
     },
     "notes": {
       "translationQuote": "Los precios son estimados. La cotización exacta se proporciona tras revisar el documento. Contacte a nuestras oficinas de Miami o Boston.",

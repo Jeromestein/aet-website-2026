@@ -18,6 +18,7 @@ export function formatTurnaround(time: Turnaround, t: Translate): string {
     case 'businessDays': return t('format.businessDays', { count: time.value });
     case 'hours': return t('format.hours', { count: time.value });
     case 'businessDayRange': return t('format.dayRange', { min: time.min, max: time.max });
+    case 'hourRange': return t('format.hourRange', { min: time.min, max: time.max });
     default: return t(`format.${time.kind}`);
   }
 }

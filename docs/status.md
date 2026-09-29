@@ -5,6 +5,75 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Shared Online / Email application methods — September 29, 2026
+
+- Added Online / Email tabs to the shared homepage and Evaluation `ProcessStory`.
+  Online is selected by default and retains the four-step flow. Email preserves
+  each locale's legacy three-step list, PDF application form, and five office links
+  in `content/application-methods.json`. Acceptance reminders live in the module;
+  document requirements and pre-evaluation notes remain on Evaluation.
+- Added keyboard tab selection and responsive layouts. Both methods remain
+  readable before hydration or with JavaScript disabled.
+- In-app browser checks passed on Evaluation and the homepage: method switching,
+  keyboard arrows/Home/End support, desktop and mobile layouts, and all three
+  locales at narrow widths. Source text comparison, SSR content, PDF download,
+  typecheck, i18n validation (257 keys per locale), and whitespace checks passed.
+- Reused the existing port-3021 server. Screenshots are under `output/playwright/`:
+  `evaluation-methods-email-desktop.png` and `evaluation-methods-email-mobile.png`.
+  No production build, deployment, or submission.
+
+### Shared four-step Evaluation process — September 29, 2026
+
+- Replaced the legacy three-step application list with the homepage's existing
+  `ProcessStory` component. Both pages now share the same four steps, localized
+  messages, real application screenshots, and Start Application links.
+- Added an embedded layout for the service-page column: two cards per row on
+  desktop and a vertical flow on phones, with no pinned animation. The homepage
+  keeps its original layout, heading ID, and desktop scroll behavior.
+- Retained the legacy acceptance reminder, document requirements, and
+  pre-evaluation explanation beneath the shared process. Removed obsolete
+  three-step content from all three locale files. Pricing remains unchanged.
+- Verified rendered process headings, descriptions, and all four cards match
+  the homepage for English, Chinese, and Spanish. In-app browser desktop/mobile
+  checks passed, including the section anchor and narrow localized layouts.
+  Typecheck, i18n validation, and whitespace checks passed.
+- Used the already-running port-3021 server; did not start, restart, or stop it.
+  Screenshots: `output/playwright/evaluation-four-steps-desktop.png` and
+  `evaluation-four-steps-mobile.png`. No build, deployment, or submission.
+
+### Evaluation page — September 29, 2026
+
+- Added `/evaluation`, `/zh/evaluation`, and `/es/evaluation` with the existing
+  header/footer, responsive section navigation, service cards, source application
+  steps, downloads, and a native shipping disclosure.
+- Preserved each locale's legacy prose. Normalized-whitespace comparisons of
+  introduction, steps, report types, related articles, and sample sections pass
+  against all three originals at initial import. The three-step instructions
+  were subsequently replaced by the shared four-step module described above.
+  Localized source differences are documented in `content/evaluation/README.md`;
+  historical claims and external workflows were not newly verified.
+- Reused `PricingTable` and existing evaluation/shipping records. All 15 shared
+  evaluation tiers match the rendered Pricing page in all locales. Added the
+  legacy pre-evaluation and extra-copy ranges to the shared catalog; Evaluation
+  renders 16 fee rows and 6 shipping rows. Pricing's existing rows are unchanged.
+  Standard price, processing days, and cutoff also reference shared records.
+- Homepage/header/footer Evaluation links now use locale routes. Three legacy
+  PHP URLs return 308 to the corresponding language paths and preserve queries.
+  Internal anchor targets are valid and unique. All three PDFs and the client
+  image return HTTP 200 with bytes matching the originals.
+- In-app browser: checked desktop/mobile introductions, price navigation,
+  responsive tables, shipping expansion, and Chinese-to-Spanish switching that
+  retains the Evaluation path/hash. All locales have no page-width overflow at
+  320, 390, 760, 850, and 1440px. Type and i18n checks passed (253 keys).
+- Screenshots under `output/playwright/`: `evaluation-en-desktop-pricing.png`,
+  `evaluation-en-mobile.png`, `evaluation-en-mobile-shipping.png`,
+  `evaluation-es-mobile.png`, and `evaluation-es-mobile-pricing.png`.
+- Used a temporary `pnpm dev` server at `http://localhost:3021`; sandbox watcher
+  restrictions required an approved run outside the sandbox. No production build,
+  push, deployment, or application/payment/contact submission. The temporary
+  server was stopped after verification. Pricing's desktop evaluation section
+  was also visually rechecked; no browser console warnings/errors were captured.
+
 ### Pricing follow-up — September 29, 2026
 
 - Restored technical proofreading ($75–100/page), non-technical proofreading

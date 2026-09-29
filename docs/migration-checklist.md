@@ -67,7 +67,14 @@ one shared page and its i18n content, not three independently implemented pages.
   Preserve the introduction, document-by-document and course-by-course options,
   requirements, fees, processing times, sample reports, delivery information,
   institution references, and application/pre-evaluation actions. Align its
-  application instructions with the new homepage's four steps.
+  online application instructions with the new homepage's four steps and retain
+  the source form-based instructions under Email.
+  Local implementation: `/evaluation`, `/zh/evaluation`, and `/es/evaluation`
+  now preserve legacy text and reuse the new Pricing module (September 29).
+  The application section reuses the homepage Online / Email module: four online
+  steps and three source form-based steps, with Online selected by default.
+  See [status.md](status.md) for checks;
+  final content reconciliation and launch acceptance remain open.
 - [ ] **Certified Translation** — `/e-notarized.php` → Certified Translation page.
   Preserve document types, languages, quote/application instructions, pricing,
   sample PDFs, delivery options, and FAQs. Review the old `/apply` portal link;
