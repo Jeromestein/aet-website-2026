@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
+      { source: "/blog/boston-foreign-credential-evaluation-services.php", destination: "/blog/boston-foreign-credential-evaluation-services", permanent: true },
+      { source: "/boston-foreign-credential-evaluation-services.html", destination: "/blog/boston-foreign-credential-evaluation-services", permanent: true },
       ...[
         ['e-privacy-policy', 'privacy'],
         ['e-terms-of-use', 'terms'],

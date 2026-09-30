@@ -45,6 +45,78 @@ implementation and checks, not production deployment or accessibility certificat
   Screenshots: `output/playwright/payment-open-button-desktop.jpg` and
   `output/playwright/payment-open-button-mobile.jpg`. No build or deployment.
 
+### Blog priority and first article pilot — September 30, 2026
+
+- Made credential evaluation the Blog headline, introduction, featured guide and
+  default list (10 articles). Other topics live in a secondary selector; all 60
+  entries remain accessible, with evaluation sorted first. Reset returns to
+  evaluation. This supersedes the initial all-topics default below.
+- Added `/blog/boston-foreign-credential-evaluation-services` and corresponding
+  localized routes. The featured and list cards link to this local article;
+  the other 59 bodies remain on legacy URLs. English prose was preserved in full
+  and verified against the source, with semantic sections and report-type lists.
+- Added desktop contents, native mobile contents, the two original images,
+  evaluation-service and Boston-contact actions. Corrected image descriptions:
+  the sources show a historical evaluation report and archived reviews, not
+  office photos. Historical details are labeled; reviews are collapsed by default.
+  No publication date or author was invented. Article bodies are English-only by
+  owner decision, without language-availability notices; Chinese/Spanish article
+  routes remain noindexed because they duplicate the English body.
+- Both legacy article paths return 308 to the new route with query preservation.
+  All six index/article locale routes and both images return 200; section IDs
+  are unique. Full source prose and image-byte comparisons passed. Rechecked
+  the pilot entry/include/root copy against exclusion terms; none matched.
+- The in-app browser's old error tab was blocked as a data URL; it was not used.
+  The valid HTTP preview tab subsequently timed out on selection/screenshot.
+  Used the prescribed Playwright CLI fallback: desktop index/article at 1440px,
+  mobile screenshots at 390px, and all six routes at 320px without page overflow.
+  Topic selection (42 translation / 60 all), empty search, reset to 10 evaluation,
+  local article navigation, mobile contents links and archived-image expansion
+  passed. Both article images loaded successfully.
+- Typecheck, i18n and whitespace checks passed. Screenshots:
+  `output/playwright/blog-evaluation-desktop.png`, `blog-evaluation-mobile.png`,
+  `blog-article-desktop.png` and `blog-article-mobile.png`.
+- Reused the existing server; redirect configuration reloaded automatically.
+  No build, production mutation or deployment. Owner feedback, content-claim
+  review remain open before extending this pilot or publishing.
+  The inventory's article completion checkbox intentionally remains unchecked.
+
+### Blog English-only content — September 30, 2026
+
+- Removed article translation-availability banners and the index language notice
+  from all locale variants. Blog bodies are English-only by owner decision; shared
+  navigation and index controls remain localized. Updated the migration checklist
+  and source/design notes so blog translations are no longer a pending task.
+- Verified the Chinese blog index and pilot article visually in the in-app browser:
+  both notices are absent, the article starts directly with its English prose,
+  and the index still defaults to 10 credential-evaluation articles.
+  Typecheck, i18n and whitespace checks passed. Screenshot:
+  `output/playwright/blog-english-only.jpg`.
+
+### Blog index — September 30, 2026
+
+- Built `/blog`, `/zh/blog`, and `/es/blog` with the shared header/footer,
+  localized interface, 60 English article titles, topic filters, title/city search,
+  result counts and an empty-state reset. All entries render on the server and
+  remain readable without JavaScript. Excluded and held articles are absent.
+- Header/footer Blog links now use the active locale. `/blog/` and
+  `/blog/index.php` return 308 redirects; the PHP alias preserves query parameters.
+- Verified all 60 legacy destinations with GET: 58 root HTML articles and two
+  PHP articles return 200 without falling back to the homepage. The other 58
+  PHP paths fall back to `/home.php`, so explicit working paths are stored in
+  the catalog. Article bodies remain on the old site and are not marked migrated.
+- In-app browser checks passed for English desktop (1440px), English mobile
+  (390px), and Chinese/Spanish narrow mobile (320px), with no page overflow.
+  Combined evaluation/Boston filtering returns two articles; unmatched search
+  returns zero and Clear filters restores 60; Chinese expert filtering returns
+  one. Header/footer Chinese Blog links resolve to `/zh/blog`.
+- Typecheck, existing locale validation and whitespace checks passed. Catalog
+  validation confirms exactly the inventory's 60 unique candidate slugs and
+  corresponding local source files. Screenshot: `output/playwright/blog-desktop.jpg`.
+  Reused the running server. No build, deployment or production mutation.
+- Before launch: complete article accuracy review and content migration
+  or provide a separate legacy host before switching the production domain.
+
 ### Payment page draft — September 29, 2026
 
 - Built English, Chinese and Spanish `/payment` pages with the shared service

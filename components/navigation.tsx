@@ -10,7 +10,6 @@ import { contactPath } from '@/lib/contact';
 import { LanguageSwitcher, LanguageOptions } from "./language-switcher";
 import styles from "./navigation.module.css";
 
-const legacy = "https://www.americantranslationservice.com";
 const application = "https://app.americantranslationservice.com/credential-evaluation-application";
 export function Navigation() {
   const t = useTranslations();
@@ -31,7 +30,7 @@ export function Navigation() {
     ] },
     { label: t("navigation.contact"), href: contactPath(locale) },
     { label: t("navigation.payment"), href: getPathname({ locale, href: "/payment" }) },
-    { label: t("navigation.blog"), href: legacy + "/blog" },
+    { label: t("navigation.blog"), href: getPathname({ locale, href: "/blog" }) },
   ];
 
   const header = useRef<HTMLElement>(null);

@@ -238,6 +238,22 @@ visible on a white surface, without photographic overlays or cropped form contro
 **Surfaces:** soft shadows, rounded cards, generous space; subtle circles and organic
 shapes belong mainly to facts. Keep decorative artwork out of the reading path.
 
+## Blog editorial priority
+
+Credential evaluation is the primary Blog topic. Use it in the page headline,
+introductory copy, featured guide and default article list. Translation,
+interpretation and expert opinion letters remain available through a quieter
+secondary topic selector. When all articles are shown, place evaluation first.
+Do not change the sitewide service scope to accomplish this Blog-specific hierarchy.
+
+Use a readable article column, semantic sections, desktop contents navigation and
+a native mobile contents disclosure. Preserve original article prose, authorship
+and dates where supplied. Blog article bodies are intentionally English-only; do
+not show language-availability notices or plan translations. Shared navigation and
+index controls remain localized. Source images must
+be described by their actual contents. Historical report/review images must not
+be presented as current contact details or current ratings.
+
 ## 5. Mobile and Motion
 
 **Mobile card rails with scroll snapping:** at 760px and below, convert groups

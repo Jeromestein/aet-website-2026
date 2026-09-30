@@ -15,6 +15,12 @@ include the blog index, not individual articles. There are also **109 blog artic
 PHP entry points** in the local copy. These are source counts, not verified live
 or already migrated pages.
 
+September 29 screening: **48 blog articles must not migrate** because they mention
+NACES or a current NACES member. **60 remain candidates**; the remaining **1 visa
+article** still needs its existing service-scope disposition. Seven additional
+standalone article/landing-page sources are also excluded. See the
+[screening report and source evidence](migration-blog-screening.md).
+
 Build each destination once using the project's Next.js i18n architecture:
 shared page templates under `app/[locale]/`, with `en`/`zh`/`es` localized content.
 Chinese and Spanish are language variants of those same pages, not separate page
@@ -169,9 +175,12 @@ links; it does not establish that other offices have closed.
   Chinese/Spanish and legacy PHP/English HTML routes redirect. Before launch,
   review payment, analytics and data-handling statements against actual operations;
   see [legal provenance and review items](../content/legal/README.md).
-- [ ] **Blog index** — `/blog`, `/blog/`, `/blog/index.php` → Blog index.
-  Provide working links to retained articles; normalize these three entry points
-  to one destination. Article migration is tracked separately below.
+- [x] **Blog index (local implementation)** — `/blog`, `/blog/`, `/blog/index.php`
+  normalize to `/blog`. English, Chinese and Spanish indexes list 60 candidate
+  articles with topic filters and search; header/footer links use the active locale.
+  All 60 legacy destinations were verified September 30: 58 root HTML paths and
+  two PHP paths. Article bodies remain on the old site; this does not complete
+  their migration or content approval. Production cutover remains pending.
 
 ## Shared i18n acceptance — part of each page migration
 
@@ -188,7 +197,9 @@ pages listed above; there is no separate Chinese or Spanish page-building phase.
 - [ ] Map old language URLs to the appropriate locale of the shared page,
   including `/home-zh.php` → `/zh` and `/home-es.php` → `/es`.
 - [ ] Supply reviewed translations or an explicit fallback for missing localized
-  content. A missing old PHP file does not require recreating a PHP page.
+  content. Blog article bodies are English-only by owner decision and need neither
+  translations nor language-availability notices. A missing old PHP file does not
+  require recreating a PHP page.
 - [ ] Verify language switching, translated content, metadata, `lang`, language
   alternates, fonts, and desktop/mobile presentation. Apply service exclusions
   consistently in all three locales.
@@ -223,20 +234,46 @@ checkout, not a live HTTP audit.
 
 ## P1 — Blog, search landing pages, and supporting content
 
-- [ ] Review and migrate the **109 article entry points** in the
-  [article checklist](migration-blog-inventory.md). Preserve useful evaluation,
-  translation, interpretation, country, state, and city content. Refresh dated
-  factual claims before publication and decide explicitly which pages to merge.
+### Credential evaluation priority and article pilot — September 30
+
+- [x] Keep blog article bodies English-only across locales. Remove article translation-availability banners and index language notices; no blog translation work is planned.
+
+- [x] Make credential evaluation the Blog headline, featured content and default list (10 articles); keep all 60 candidates accessible through a secondary control.
+- [x] Build a local article pilot (`/blog/boston-foreign-credential-evaluation-services`) with section navigation, report-type sections, original images and a connected index/featured card. All locales share the English article body without language-availability notices; 59 article bodies remain on the legacy site.
+- [x] Verify desktop/mobile reading, section links, images, localized navigation and old URL mappings. HTTP checks and Playwright fallback passed September 30; the in-app browser timed out on the valid preview tab.
+- [ ] Obtain owner feedback on the pilot before expanding article migration.
+
+- **DO NOT MIGRATE** any blog article mentioning NACES or a current NACES member,
+  including names, recognized abbreviations, former branding, links, metadata,
+  image references, source comments, and mentions in older copies. This also
+  applies to AET biography text mentioning experience at a NACES agency. Do not
+  merge excluded articles into retained content or remove a paragraph to bypass
+  the exclusion. This rule overrides earlier article-retention recommendations.
+- [ ] Review and migrate only the **60 remaining candidate articles** in the
+  [article checklist](migration-blog-inventory.md). The full inventory retains all
+  109 entries for traceability: 48 are explicitly blocked and 1 visa article is
+  held separately. No-match status is not publication approval; verify content,
+  assets, links, and final presentation, and rescan any revised source before import.
 - [ ] Reconcile root-level HTML articles with their corresponding `/blog/*.php`
   pages. **106 of the 109** have same-stem root HTML files locally; file-name
   matching is a duplication candidate, not proof of identical content. Select one
-  canonical destination per article and preserve inbound old URLs with redirects.
-- [ ] Review these additional English pages outside that 109-entry inventory:
-  `/best-credential-evaluation-services.html`,
-  `/san-francisco-foreign-language-interpreter-agency.html`,
-  `/expert-opinion-letter-h1b.html`, and
-  `/e-credential-evaluation-for-uscis.html`. Migrate distinct useful content or
-  merge into the closest evaluation/interpretation article with a specific redirect.
+  canonical destination for each retained article. A blocked root HTML copy also
+  blocks that article family; do not import it through an alternative filename.
+  Handle blocked URLs separately without recreating the excluded content.
+- [ ] Review `/san-francisco-foreign-language-interpreter-agency.html`, an
+  additional English landing page outside the 109-entry inventory. No match was
+  found in this scan; verify its content before migrating or merging it.
+- **DO NOT MIGRATE** these seven additional article/landing-page sources:
+  `/best-credential-evaluation-services.html`, `/expert-opinion-letter-h1b.html`,
+  `/e-credential-evaluation-for-uscis.html`,
+  `/c-california-barbercosmo-credential-evaluation-and-translations.html`,
+  `/c-eb-2-niw-credential-evaluation.html`,
+  `/c-how-to-avoid-delays-with-foreign-credential-evaluation.html`, and
+  `/c-i-140-education-evaluation.html`. Each has NACES/member evidence in the
+  [screening report](migration-blog-screening.md); these are outside the 109 count.
+- [ ] Record the intended old-URL handling for all excluded articles. Do not mark
+  them migrated, automatically redirect them to unrelated pages, or delete their
+  existing production sources as part of this content-selection task.
 - [ ] Preserve **Course by Course Evaluation** content from
   `/e-course-by-course-evaluation.html`: keep a detail page or merge the complete
   useful content into Evaluation and map the old URL. Document by Document can
@@ -247,11 +284,7 @@ checkout, not a live HTTP audit.
 - [ ] Review `/e_testimonials.html`; migrate any additional relevant testimonials
   or consolidate into the homepage/About page with an appropriate old-URL mapping.
 - [ ] Preserve the retained Chinese article/landing content:
-  `/c-eb-2-niw-credential-evaluation.html`,
-  `/c-how-to-avoid-delays-with-foreign-credential-evaluation.html`,
-  `/c-i-140-education-evaluation.html`,
   `/c-education-evaluation-for-h1b.html`,
-  `/c-california-barbercosmo-credential-evaluation-and-translations.html`,
   `/c-la-interpretation.html`, `/c-sandiego-interpretation.html`,
   `/c_medical.html`, and `/c_interpretation_case.html`.
   Remove excluded-service promotions from mixed-topic pages while preserving

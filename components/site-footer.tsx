@@ -71,7 +71,7 @@ export function SiteFooter() {
         <div className={styles.bottom}>
           <p>{t("footer.copyright")}</p>
           <nav aria-label={t("footer.legal")}>
-            <a href={legacy + "/blog"}>{t("navigation.blog")}</a>
+            <a href={getPathname({ locale, href: "/blog" })}>{t("navigation.blog")}</a>
             <a href="/terms">{t("footer.terms")}</a>
             <a href="/privacy">{t("footer.privacy")}</a>
           </nav>
