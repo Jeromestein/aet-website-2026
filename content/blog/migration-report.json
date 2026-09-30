@@ -1,0 +1,2196 @@
+{
+  "articles": [
+    {
+      "slug": "boston-international-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/boston-international-credential-evaluation-services-content.html",
+      "sourceSha256": "3062a0c618adf61d8d2b5a2143a8dcb6d60ea5a77540d0b058d1bc2a9af0c8d5",
+      "proseSha256": "57a1e73fea57c90e42886ae2813be4b1eeb8549fbd54c8ff60d10a3095ac4392",
+      "proseCharacters": 1997,
+      "images": 3,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "fastest-uscis-ready-credential-evaluation-services-2026",
+      "topic": "evaluation",
+      "source": "blog/fastest-uscis-ready-credential-evaluation-services-2026.html",
+      "sourceSha256": "1553c243a7797cb103c8b33722cc777e0700fbeaa9d1e9780924dfe0cd649259",
+      "proseSha256": "2e71da2bbb14fe332a01a40dfda587d781e0ade3f402a531a22e3b86c7d05130",
+      "proseCharacters": 8792,
+      "images": 0,
+      "tables": 1,
+      "headings": 9,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "los-angeles-foreign-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/los-angeles-foreign-credential-evaluation-services-content.html",
+      "sourceSha256": "008e7e7ad286e63c775dc9668e03faec5cdc99f9af9f3f59b861f798bfe7d627",
+      "proseSha256": "ec07a4f646f80475b04cb8cd0f6208ebe50a60c74070d750bacf7e16d38c2525",
+      "proseCharacters": 2368,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-international-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/los-angeles-international-credential-evaluation-services-content.html",
+      "sourceSha256": "d3a82fda19ef3242a138d3897dd06f084d31308f3a7611b5e70dd059a67acf4b",
+      "proseSha256": "80d420a0f4aa9cbb17c4d02532c70fba8bba962852f4542ea21d78bed64cca3e",
+      "proseCharacters": 4033,
+      "images": 5,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-international-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/miami-international-credential-evaluation-services-content.html",
+      "sourceSha256": "1d31b02feae21ceb664951e89d3616f40f259fdc7e488652fd6085001194400c",
+      "proseSha256": "b014537528edaaa3d9b8f7f39713acc013fc12877cdde3d82ae62dde746867a9",
+      "proseCharacters": 1919,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-foreign-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/new-york-foreign-credential-evaluation-services-content.html",
+      "sourceSha256": "a1aa7748905bcaf89c68f155af40f0eb6816ca6a290703bf7a287074beceb266",
+      "proseSha256": "b07b034cc8dc664faf26e8bb29868ff3105052ed1bfbd41f909688b2094037c9",
+      "proseCharacters": 1662,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-international-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/new-york-international-credential-evaluation-services-content.html",
+      "sourceSha256": "519b094f84ee638de2a7194829a4198c3489d4da4921cb0041c8729fcd9c9912",
+      "proseSha256": "6a45956a2fb552c0fd6b3513b6f3b819f77065514428c778949244a164db0974",
+      "proseCharacters": 2127,
+      "images": 3,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-foreign-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/san-francisco-foreign-credential-evaluation-services-content.html",
+      "sourceSha256": "8bee9eb2ff64ed754236b113ae439eaf0ac3fb2b3c7ec3462c815d407b3855e6",
+      "proseSha256": "1dcd19ad0b27739a282395e43e9be361fb235b34b5efa97405d43a3206490b60",
+      "proseCharacters": 2167,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-international-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/san-francisco-international-credential-evaluation-services-content.html",
+      "sourceSha256": "fbe96484a2d5f65573e29cf5d419d77098c982e7764360ae1010485f0f762bcf",
+      "proseSha256": "895d3419c0f0442d36d7544817707d2abdd6b5ec791a9cb740a366101f6bcc22",
+      "proseCharacters": 1856,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "california-barbercosmo-credential-evaluation-and-translations",
+      "topic": "evaluation",
+      "source": "blog/california-barbercosmo-credential-evaluation-and-translations-content.html",
+      "sourceSha256": "c545362afc9b78fb01c4d4f10c2a5ea0d7f85debd940a3450ef36b9e5a32312b",
+      "proseSha256": "ac3b59872b7309fcd46509634eff7bac7d31d6a353b0386bc461ff7e160db722",
+      "proseCharacters": 3551,
+      "images": 4,
+      "tables": 0,
+      "headings": 9,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe",
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "california-best-education-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/california-best-education-credential-evaluation-services-content.html",
+      "sourceSha256": "28d103118b890f529004aed3df6c20df2f16e827c3068079dd11ee0c162f19af",
+      "proseSha256": "2e2fc37c62634534aaad02d97d1be4140eea90e9bd4858e2417c77212cbdd3fe",
+      "proseCharacters": 6642,
+      "images": 7,
+      "tables": 5,
+      "headings": 9,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ]
+      ]
+    },
+    {
+      "slug": "credential-evaluation-for-education",
+      "topic": "evaluation",
+      "source": "blog/credential-evaluation-for-education-content.html",
+      "sourceSha256": "33199b586395833c0987c06d1ad86648cc1b955eebef1fa72629845a8967c44d",
+      "proseSha256": "ab4d2b106717af58758d7f57014dea8599bc7dc6be57dea887663fc12708c989",
+      "proseCharacters": 4655,
+      "images": 4,
+      "tables": 0,
+      "headings": 8,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "education-evaluation-h1b-for-india",
+      "topic": "evaluation",
+      "source": "blog/education-evaluation-h1b-for-india-content.html",
+      "sourceSha256": "674ba71c8e9b7e59f8c066d5eb7bc6ef605a89c3af51185b3b78973dde26e83f",
+      "proseSha256": "24a4cb4b07de75298321613585752468e10da3e54b175e1e27958b7e453ca285",
+      "proseCharacters": 5797,
+      "images": 3,
+      "tables": 0,
+      "headings": 11,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "foreign-credential-evaluation-in-usa-China",
+      "topic": "evaluation",
+      "source": "blog/foreign-credential-evaluation-in-usa-China-content.html",
+      "sourceSha256": "1418c5e13fbfb9d3b2463cfb7cc3b34e4f4552c7281e98d465c693e15442a83b",
+      "proseSha256": "04f8e54e97c870849b71db41e957f707190e452a75153fd5bda3c501e59bc33b",
+      "proseCharacters": 5907,
+      "images": 4,
+      "tables": 1,
+      "headings": 6,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "foreign-credential-evaluation-in-usa-csec",
+      "topic": "evaluation",
+      "source": "blog/foreign-credential-evaluation-in-usa-csec-content.html",
+      "sourceSha256": "8f21b3b8f09beda4b45446d51da064427ae8e64a13ac62584a686a67cf71a509",
+      "proseSha256": "5c5f9535a993f5de26fe295b462cc88c1d8172298a2540265ad6a202e73db799",
+      "proseCharacters": 5659,
+      "images": 4,
+      "tables": 0,
+      "headings": 7,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "foreign-credential-evaluation-in-usa-latin-america",
+      "topic": "evaluation",
+      "source": "blog/foreign-credential-evaluation-in-usa-latin-america-content.html",
+      "sourceSha256": "4d293e89d7eda8f78b640af750a6ff90e900925b3c63c86f0b15d32fe4f3179f",
+      "proseSha256": "e1a7cbf6241e3608f9ad53aecb29fa5f059fcf5e9e8718991d45bb94a6edbc39",
+      "proseCharacters": 5074,
+      "images": 3,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "georgia-best-education-credential-evaluation-agencies",
+      "topic": "evaluation",
+      "source": "blog/georgia-best-education-credential-evaluation-agencies-content.html",
+      "sourceSha256": "5033fa1e4e980d27b772968b872930eab39da464bed2cad5f06b472f5fd10756",
+      "proseSha256": "ab8619fd7370983594d5c2715cfeddbd368b8d2848bc0252c4b20bf0435678d9",
+      "proseCharacters": 3964,
+      "images": 4,
+      "tables": 2,
+      "headings": 5,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ]
+      ]
+    },
+    {
+      "slug": "illinois-credential-evaluation-and-translations",
+      "topic": "evaluation",
+      "source": "blog/illinois-credential-evaluation-and-translations-content.html",
+      "sourceSha256": "9829e1d770693b5374fc54a80de11123a35f94d8385c3e8da4ae24005816f394",
+      "proseSha256": "bc2822e76a74ad08487184b5bc953cf5d30bd93305968d222a9c5959a9f75044",
+      "proseCharacters": 3395,
+      "images": 4,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe"
+      ]
+    },
+    {
+      "slug": "los-angeles-best-education-credential-evaluation-agencies",
+      "topic": "evaluation",
+      "source": "blog/los-angeles-best-education-credential-evaluation-agencies-content.html",
+      "sourceSha256": "2b0f2799be773668f3c94a91a6b021ff9bee81673e8c308fe6f7b944b9bdd32e",
+      "proseSha256": "acb137d4493a19d7401c1c81efdd7f752315c0499519247c2bf4da8d5f7fbcc5",
+      "proseCharacters": 4843,
+      "images": 5,
+      "tables": 3,
+      "headings": 6,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-credential-evaluation-and-translations",
+      "topic": "evaluation",
+      "source": "blog/los-angeles-credential-evaluation-and-translations-content.html",
+      "sourceSha256": "7be92714e3ea6908960d26d4e8bb9b351ff3f66bfa52b0bf4099d434f0432172",
+      "proseSha256": "91d26fd9050e3c184174e245dfa8fba9faa4a07e47fd5581792ab3073ea0907f",
+      "proseCharacters": 4368,
+      "images": 4,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe",
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "miami-credential-evaluation-and-translations",
+      "topic": "evaluation",
+      "source": "blog/miami-credential-evaluation-and-translations-content.html",
+      "sourceSha256": "55b4b75249c5917191eddec7898cc4770ee98a9fee093e28f258f1e4cc869cb1",
+      "proseSha256": "a2e064830475c2ac5a99e255cc38b99ddd2c71e0af041879dcc4502f3cc1c0a0",
+      "proseCharacters": 4472,
+      "images": 4,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe",
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "miami-foreign-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "blog/miami-foreign-credential-evaluation-services-content.html",
+      "sourceSha256": "18766c5b2a0865cff3a6e2050f6bc7a9d091123bd22df38983f2cfb25773929b",
+      "proseSha256": "0065120ef0519af394aec053ce7ea41a72cff03d460f11b30c72dab4ba218e20",
+      "proseCharacters": 2657,
+      "images": 2,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "Pakistani-degree-equivalency-in-USA",
+      "topic": "evaluation",
+      "source": "blog/Pakistani-degree-equivalency-in-USA-content.html",
+      "sourceSha256": "edbde80fa7bf2890c1eec774795310f448dc8189fa499ec695bacc351885481e",
+      "proseSha256": "74256c6bf30577807c08685ab7c79a5a8730ac50af4b6f06c5c0551ae456d4f6",
+      "proseCharacters": 7184,
+      "images": 6,
+      "tables": 0,
+      "headings": 8,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "san-francisco-best-education-credential-evaluation-agencies",
+      "topic": "evaluation",
+      "source": "blog/san-francisco-best-education-credential-evaluation-agencies-content.html",
+      "sourceSha256": "6ff296a0ec78b4200490d5d02dcf7ef9d465adc7b984e6f8f171b82550f4e9dd",
+      "proseSha256": "d4a051f17e42382cb1de41bfcbc2435173f2e8c0d809ad4cad080a65951c806f",
+      "proseCharacters": 4729,
+      "images": 4,
+      "tables": 3,
+      "headings": 6,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-credential-evaluation-and-translations",
+      "topic": "evaluation",
+      "source": "blog/san-francisco-credential-evaluation-and-translations-content.html",
+      "sourceSha256": "f6d64ad9f9f99c8e8afb8e6586700147ab0cc06bdfdc2188432746a12f7fd6e6",
+      "proseSha256": "957a5ee862abaf655d56ff23b84d43e392fae55e4e82a7b26c8bf5d1c0b34d0d",
+      "proseCharacters": 4349,
+      "images": 4,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe",
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "best-credential-evaluation-services",
+      "topic": "evaluation",
+      "source": "best-credential-evaluation-services.html",
+      "sourceSha256": "4d9c570189497d20e8628459d2cb72dbf1dd6b982ade3e6697344c5a215511f6",
+      "proseSha256": "55c5ccfe104b6287f93cbb6998256022e6f64cca47ecc63b3de2cf90557b86b7",
+      "proseCharacters": 13057,
+      "images": 13,
+      "tables": 11,
+      "headings": 15,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ]
+      ]
+    },
+    {
+      "slug": "e-credential-evaluation-for-uscis",
+      "topic": "evaluation",
+      "source": "e-credential-evaluation-for-uscis.html",
+      "sourceSha256": "f7c1782539ff2692931c294674c2a680de31b8e532ef735cfe7640d65498e638",
+      "proseSha256": "92ac1a90c1ff4836cd759120e547ffe86332d93cff7804b1b2852020a6016442",
+      "proseCharacters": 4033,
+      "images": 3,
+      "tables": 0,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe",
+        [
+          "container-fluid",
+          "text-center"
+        ],
+        "script"
+      ]
+    },
+    {
+      "slug": "ata-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/ata-certified-translation-services-content.html",
+      "sourceSha256": "e5161af07d9998108ae4bd77f94d16449b5b754c5790b34b9fd391bb34b47f4e",
+      "proseSha256": "2b0f4a7389ea9f7a46a9fdaa6f4197ff1bd1cb0526a4033399fb42fb604981d9",
+      "proseCharacters": 1815,
+      "images": 2,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-affordable-cheap-translation-services",
+      "topic": "translation",
+      "source": "blog/boston-affordable-cheap-translation-services-content.html",
+      "sourceSha256": "1451caf412d17ab8c61e07a615f2f5a386130a9087f5c97ab843496157b80dc5",
+      "proseSha256": "3d086192098900b739bfa2287fce958ec012e28bfa176ae29c57a05b146c613e",
+      "proseCharacters": 1511,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-ata-certified-translation-and-interpretation",
+      "topic": "translation",
+      "source": "blog/boston-ata-certified-translation-and-interpretation-content.html",
+      "sourceSha256": "672d582c3823bde162458e72a6cb4b27bd6b1ab01ea2903395f8f718c0d1776a",
+      "proseSha256": "3607e61fdbb42999ea939bcad38745fa2f15ddfbbf4e62f25db1792573a156be",
+      "proseCharacters": 1533,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-best-certified-translation-services-companies",
+      "topic": "translation",
+      "source": "blog/boston-best-certified-translation-services-companies-content.html",
+      "sourceSha256": "c93e04ff0328b64dcc69a67766c58a45b7926c212d0167082db0a9af2fe62c77",
+      "proseSha256": "1a9f74ab7257d6c64148bf4c8f597542c318eeab6281a58655535f446d05a6f8",
+      "proseCharacters": 2074,
+      "images": 2,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-certified-and-notarized-translation-services",
+      "topic": "translation",
+      "source": "blog/boston-certified-and-notarized-translation-services-content.html",
+      "sourceSha256": "0a76ba84b925a65be26bb93207cd91018a277497d92b86b03ce2d4664c8a3d8c",
+      "proseSha256": "ef02a27940dd126907ed414cab08e8b7cfd88893c8116386674a1b70f77fa3cb",
+      "proseCharacters": 2031,
+      "images": 3,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-certified-chinese-translation-service",
+      "topic": "translation",
+      "source": "blog/boston-certified-chinese-translation-service-content.html",
+      "sourceSha256": "409a71ac04d9d36bf5993159e76590eaab5ee103b08b8f09a2a7b817a3cca96c",
+      "proseSha256": "faf26a1b648bf23c11ff483d23f0c58baef93ca492734fa7362a0fd54e5e056d",
+      "proseCharacters": 1762,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-certified-spanish-translation-services",
+      "topic": "translation",
+      "source": "blog/boston-certified-spanish-translation-services-content.html",
+      "sourceSha256": "a03ad6e37fb23b6d84260403fcd77f6c8d558e1cc9da90b75cf4f6298e2c8ad6",
+      "proseSha256": "0fcd96fb37c389ca6a6fbb8fb9677b56f24482142880515a5a32249d01cb14c0",
+      "proseCharacters": 1950,
+      "images": 3,
+      "tables": 0,
+      "headings": 0,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-foreign-language-interpreter-agency",
+      "topic": "interpretation",
+      "source": "blog/boston-foreign-language-interpreter-agency-content.html",
+      "sourceSha256": "a5b2f2740b11856b2e0d8dc7bd42eb988e953ad1f9ef0589aa4f7479de45aa10",
+      "proseSha256": "7b9bb1588354789e64345a9dab2beb8ca77fde2f40c9ee719f606c647e2dce22",
+      "proseCharacters": 2113,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-interpreting-agencies-companies",
+      "topic": "interpretation",
+      "source": "blog/boston-interpreting-agencies-companies-content.html",
+      "sourceSha256": "78b85a9737b67814786c168358dbaab52204cfbcc06254351632eb02ac87c6e5",
+      "proseSha256": "7cfc5d21b548dd8a4370331f9e44f4a96b57243bb4171e640e3a2735a8f52fea",
+      "proseCharacters": 1780,
+      "images": 2,
+      "tables": 0,
+      "headings": 0,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-professional-translation-services-agency",
+      "topic": "translation",
+      "source": "blog/boston-professional-translation-services-agency-content.html",
+      "sourceSha256": "97c2918f6c041e0395d442c6b303e6a2fb6603e46fe3da772d8399e7c0ddafda",
+      "proseSha256": "25f3d55e29c0962777af5dc6dac72c9ef489927e3076760bc64797dfe8ded736",
+      "proseCharacters": 1879,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-technical-translation-services-company",
+      "topic": "translation",
+      "source": "blog/boston-technical-translation-services-company-content.html",
+      "sourceSha256": "43659eb2b02837890ac61098788598bce649cb6216599c5c485f9f3a0f7153b9",
+      "proseSha256": "9f0a36197795bffed5bc0ad7b8c55c34b947f3bef879d8e5c1157735712352f2",
+      "proseCharacters": 1800,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-top-certified-translation-companies",
+      "topic": "translation",
+      "source": "blog/boston-top-certified-translation-companies-content.html",
+      "sourceSha256": "e5cdf26a2fbba121326373edc719adbca0748e134807ccc503ae9fc0161e45c1",
+      "proseSha256": "8495c58b0ef7cc86829436cf89805f6bd50a680843076f3b8667877ff09c4b79",
+      "proseCharacters": 3424,
+      "images": 4,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "boston-uscis-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/boston-uscis-certified-translation-services-content.html",
+      "sourceSha256": "ffab851f01ed7095d243434d931c8fc62f7ec4ff8861a26adfc60cf5edecff39",
+      "proseSha256": "d6a66abef6d97b4d9bc39fbdfac5a18c5bb2b9499f36d72f5c7715be264cd58e",
+      "proseCharacters": 1772,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "h1b-expert-opinion-letters",
+      "topic": "expert",
+      "source": "blog/h1b-expert-opinion-letters-content.html",
+      "sourceSha256": "af3066eceebaabfb19564e474de92c48f4894e54e81972649eac606f12341dd9",
+      "proseSha256": "bd6fef11c69ba174716ddbec10c7711c0c3e9d084ca2f6814e561dc3ebf7839f",
+      "proseCharacters": 5306,
+      "images": 4,
+      "tables": 2,
+      "headings": 10,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    },
+    {
+      "slug": "how-to-find-translation-services-online",
+      "topic": "translation",
+      "source": "blog/how-to-find-translation-services-online-content.html",
+      "sourceSha256": "99e3e80b01f90162045c3938149e407844de725ad86a0560a193031805205b77",
+      "proseSha256": "d20de004db4324c43b367618f4d6dff6caef1b41e5f1acaf8c2b2704f3e18d37",
+      "proseCharacters": 2974,
+      "images": 3,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ]
+      ]
+    },
+    {
+      "slug": "los-angeles-affordable-cheap-translation-services",
+      "topic": "translation",
+      "source": "blog/los-angeles-affordable-cheap-translation-services-content.html",
+      "sourceSha256": "1e7848941751ccc9a9c4f2dfa3ac38b1e31d5ffadcf85a0404f9c456f80faeb0",
+      "proseSha256": "a603d7e9ab1d4fa6396148d2a952aa5ab6e63153ba83cfca750e3f3eb5641ae7",
+      "proseCharacters": 1794,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-ata-certified-translation-and-interpretation",
+      "topic": "translation",
+      "source": "blog/los-angeles-ata-certified-translation-and-interpretation-content.html",
+      "sourceSha256": "6991b6e2d72d0d28015626d14f8c65ad30fdbecebc65cce99e00be01c7d2f3d5",
+      "proseSha256": "58f440193b637c2c736fa999f28af1b46fb0dc272491fe35626ccf8fa027766a",
+      "proseCharacters": 2311,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-best-certified-translation-services-companies",
+      "topic": "translation",
+      "source": "blog/los-angeles-best-certified-translation-services-companies-content.html",
+      "sourceSha256": "99793b9b8369bd90340d7918053b393060b5f0d1834914f3106ead847114f16b",
+      "proseSha256": "b574517c0dbc7b5278ccd156a6fe23415a6937d340b3b94298c78a067f679587",
+      "proseCharacters": 2034,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-certified-and-notorized-translation",
+      "topic": "translation",
+      "source": "blog/los-angeles-certified-and-notorized-translation-content.html",
+      "sourceSha256": "506fc572a3a223b11ef5cac5bded1101101c0f1ba48eb38dd7b1a20b26b5856e",
+      "proseSha256": "d0b01f593490b5ca83611d100ee852f16cc74b04f2952ad68c2304f1de6465d6",
+      "proseCharacters": 2598,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-certified-chinese-translation-service",
+      "topic": "translation",
+      "source": "blog/los-angeles-certified-chinese-translation-service-content.html",
+      "sourceSha256": "a4f0bc4659cb42174e29206bb903bbf536a482f1d0afec36f8e4679a6e442d01",
+      "proseSha256": "1d8b9ba0f56854b81b158983cada4931d826193f3348d214e02d3ed10b0c882d",
+      "proseCharacters": 1829,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-certified-spanish-translation-services",
+      "topic": "translation",
+      "source": "blog/los-angeles-certified-spanish-translation-services-content.html",
+      "sourceSha256": "a597d4193862921d6fcebf545db48bb03a03d43097001a722c3aa62a70178632",
+      "proseSha256": "5ccebccec8a1ab23aac93922376a442c26492a5acbea6ac081777c2948a71aa5",
+      "proseCharacters": 2009,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-foreign-language-interpreter-agency",
+      "topic": "interpretation",
+      "source": "blog/los-angeles-foreign-language-interpreter-agency-content.html",
+      "sourceSha256": "c8b526f87d58aac74026ed1539baec6524d754a7f42c5fe68e16e3e26a77e3fd",
+      "proseSha256": "9201b9c7dc6b57ba752c2b52869ce19bbfa78f71975dc14a9150e0866f732a8f",
+      "proseCharacters": 1712,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "los-angeles-uscis-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/los-angeles-uscis-certified-translation-services-content.html",
+      "sourceSha256": "24b93700552e531cec70bdede74e0c127157dbb8a5e6b1e8aa840c1132ef2356",
+      "proseSha256": "15448a12d2a0bacc2b47a50c288e2345eb8c755717e55caea2fcb7424cd24acd",
+      "proseCharacters": 2708,
+      "images": 1,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-affordable-cheap-translation-services",
+      "topic": "translation",
+      "source": "blog/miami-affordable-cheap-translation-services-content.html",
+      "sourceSha256": "ec341fdc14da4d3f87c1cb291087aa76f09fd78b81332872b063c746c9bdad01",
+      "proseSha256": "3030a1010b418c3b97dece47a344a4a3c3cd501054ce6401d206d7df26a8e64c",
+      "proseCharacters": 2459,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-ata-certified-translation-and-interpretation",
+      "topic": "translation",
+      "source": "blog/miami-ata-certified-translation-and-interpretation-content.html",
+      "sourceSha256": "df80709b8af2f3bb7b73d1410e136fbc6b63048d4af436c9e256a5045e134304",
+      "proseSha256": "2ee717afcb153af4d69a56e73feba9b87cf0933189012a78ad07bfba5a8edcd8",
+      "proseCharacters": 2477,
+      "images": 1,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-certified-and-notorized-translation",
+      "topic": "translation",
+      "source": "blog/miami-certified-and-notorized-translation-content.html",
+      "sourceSha256": "9bb2b0e39bb0772cd07f5c1c795a61896c0076c158416527ee5b19dc4d78354c",
+      "proseSha256": "1b75a16d195cb7d6d1009b567aeb4a2d012f77071713404b317e0393153c6bbe",
+      "proseCharacters": 2625,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-certified-chinese-translation-service",
+      "topic": "translation",
+      "source": "blog/miami-certified-chinese-translation-service-content.html",
+      "sourceSha256": "c24dcb545b011223937d014788526a86a36d9b017b078ffc65053ed5eaf4157b",
+      "proseSha256": "d7a712ae49ad1ae6452e4904ea61a1fe977fcc389efe7aec68bcd8cee31118a5",
+      "proseCharacters": 1686,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-certified-spanish-translation-services",
+      "topic": "translation",
+      "source": "blog/miami-certified-spanish-translation-services-content.html",
+      "sourceSha256": "39b9670c0275a63000fe8a41955380ecc81d014063ad78fb9a6392fa83496e7d",
+      "proseSha256": "a11a86dcfb1969af45b64cc285bbc5600614a6bdae90887a0ad2bbc883346dd7",
+      "proseCharacters": 2051,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-interpreting-agencies-companies",
+      "topic": "interpretation",
+      "source": "blog/miami-interpreting-agencies-companies-content.html",
+      "sourceSha256": "1715216a9d85dd30a605dc4c19a9ec261260a26ca43702afe34a054d8fc92778",
+      "proseSha256": "9a392535caa185c4f2a34d866603735bafe1b39e54f204f7d5f9683be2f45df7",
+      "proseCharacters": 1744,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-language-translation-services",
+      "topic": "translation",
+      "source": "blog/miami-language-translation-services-content.html",
+      "sourceSha256": "9f5c838c7d74cab074dec22a119b6a4e860a54e23a26a699afdb52f3302087a9",
+      "proseSha256": "2bc2661ce1e4ca37c08af95c6c968fa8ee4aef2ee4386ec5f8e8699356a86a4f",
+      "proseCharacters": 2612,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "miami-uscis-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/miami-uscis-certified-translation-services-content.html",
+      "sourceSha256": "5cdadf2224227eb11772f401e8e76804ae0e4ad62ea4cea9bf24b2c7d3adf35c",
+      "proseSha256": "3b522c363ae6b3c8605b73a0b3de0358c5ebfd2f8c06b0d016f6f29890cc80bf",
+      "proseCharacters": 2381,
+      "images": 1,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-affordable-cheap-translation-services",
+      "topic": "translation",
+      "source": "blog/new-york-affordable-cheap-translation-services-content.html",
+      "sourceSha256": "0e26e78d28748c9396a329b80538a59224202c4d19b59708fc19f0ca16984701",
+      "proseSha256": "77dad201d0c4a464aa6b756676dd310dbcfb298917a7e1d7ad84909e2748093e",
+      "proseCharacters": 1520,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-ata-certified-translation-and-interpretation",
+      "topic": "translation",
+      "source": "blog/new-york-ata-certified-translation-and-interpretation-content.html",
+      "sourceSha256": "946da1bde7c45f7b0bd223acfd75edc68b743d96ce8c05594852c270eefe7907",
+      "proseSha256": "96e1cd4c5fdd0e0cc52dbd7ebff63c0d047ca038c8be72e4db3202899f64d393",
+      "proseCharacters": 1758,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-best-certified-translation-services-companies",
+      "topic": "translation",
+      "source": "blog/new-york-best-certified-translation-services-companies-content.html",
+      "sourceSha256": "2f020a8a76107a9e1e864a7f11a879cfa24753abae9ac4618342a777d0cff32c",
+      "proseSha256": "aa405e08c584509d73439961fc3c01246281e8d252218fd1b143189087848d2f",
+      "proseCharacters": 1777,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-certified-and-notarized-translation-services",
+      "topic": "translation",
+      "source": "blog/new-york-certified-and-notarized-translation-services-content.html",
+      "sourceSha256": "cec6a1f9989ac4271d5835105fc72e9108f66f193dab7d3a9fc16f369b946622",
+      "proseSha256": "df23a8864a437be49471e2516017d92208febcf5277c4a746b8733b75eab085a",
+      "proseCharacters": 1941,
+      "images": 2,
+      "tables": 0,
+      "headings": 1,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-certified-chinese-translation-service",
+      "topic": "translation",
+      "source": "blog/new-york-certified-chinese-translation-service-content.html",
+      "sourceSha256": "1dcd4a341c9deaf5efe72f4fb52abc00f90dde49298726ab553f8411b0c48828",
+      "proseSha256": "43e355129c18dc8a2745cbc3a264d8fcced843e14a31820ab897c52a1272ddba",
+      "proseCharacters": 1691,
+      "images": 2,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-certified-spanish-translation-services",
+      "topic": "translation",
+      "source": "blog/new-york-certified-spanish-translation-services-content.html",
+      "sourceSha256": "c311731fbceb75d545f31e60f090b41078858eca80c0f8bc48dfe63cd979fb71",
+      "proseSha256": "d6a37a50324629cbe9aa1055019aafaa5f468150e518a0a0c07a4fcba43f3191",
+      "proseCharacters": 1981,
+      "images": 1,
+      "tables": 0,
+      "headings": 1,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-foreign-language-interpreter-agency",
+      "topic": "interpretation",
+      "source": "blog/new-york-foreign-language-interpreter-agency-content.html",
+      "sourceSha256": "cd10ffed37e6dc00dc7057d16a07fde40ffef15249ddd37c2874bc2cdaaacca9",
+      "proseSha256": "d8f2b674a57eba44501d9a03b5e0613e3d8feb9fbf88b2c583ff904e9a675299",
+      "proseCharacters": 1799,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-interpreting-agencies-companies",
+      "topic": "interpretation",
+      "source": "blog/new-york-interpreting-agencies-companies-content.html",
+      "sourceSha256": "d0c3b34acde31c68cc1ac85fd210a17bcd5c12d5d276803b1be2bbf1669fda1c",
+      "proseSha256": "0cd0a9dd2269727e5752eb72498018f18d6487ab46e3390e89eb4a050f8ee6af",
+      "proseCharacters": 1778,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-professional-translation-services-agency",
+      "topic": "translation",
+      "source": "blog/new-york-professional-translation-services-agency-content.html",
+      "sourceSha256": "f9e32d4b8109cd3e0866a34ab4843e56121f804d1ea34f2b511d008d8b8c8971",
+      "proseSha256": "236f6b81f1bac97baa697a9511aa4eb16fd01afbe8f2bc687be1632404f30f27",
+      "proseCharacters": 1892,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-technical-translation-services-company",
+      "topic": "translation",
+      "source": "blog/new-york-technical-translation-services-company-content.html",
+      "sourceSha256": "4305bab6d0a52b4d926007ccbb2ff73e56904c073021bddd7479cef287ae41e8",
+      "proseSha256": "65513989af841963574e7e853fd341b56bc5453e58499c5d139876130da6693f",
+      "proseCharacters": 1676,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "new-york-uscis-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/new-york-uscis-certified-translation-services-content.html",
+      "sourceSha256": "2bf49f7df2f6c25f67426158f518e1d69e9193eefd7c9a30fe13504099e8efc1",
+      "proseSha256": "015c82c4521567b407e9d40a29cd3c49b4da8330d1793c6493bfb7ae234bdecc",
+      "proseCharacters": 1608,
+      "images": 2,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-affordable-cheap-translation-services",
+      "topic": "translation",
+      "source": "blog/san-francisco-affordable-cheap-translation-services-content.html",
+      "sourceSha256": "752adfd70491573c8afb8afbc780a991e8ad5901fe2af255bf9cb7592f49e1dc",
+      "proseSha256": "f76a0f87143598fd02c206f4fd69ca1108334b85c8ce4de0a55916836bba874b",
+      "proseCharacters": 2291,
+      "images": 1,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-ata-certified-translation-and-interpretation",
+      "topic": "translation",
+      "source": "blog/san-francisco-ata-certified-translation-and-interpretation-content.html",
+      "sourceSha256": "8f8c4b1ceb83a29ad37c98af1265b02c16c4ff80a9abf92760205898f0479870",
+      "proseSha256": "8207a1d824b0d1bb68ffb53c60e9e1043a14649ad45a147edffdca683483b31d",
+      "proseCharacters": 1572,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-certified-chinese-translation-service",
+      "topic": "translation",
+      "source": "blog/san-francisco-certified-chinese-translation-service-content.html",
+      "sourceSha256": "9164d2cafe0f05cc96a286e618046320138156a5ba3fb0c8f5d7dfb1eadbabbb",
+      "proseSha256": "99ebc4f03d28a7a0c0146e757d3aa5711b66bc52a3cb70feddd96146bb445227",
+      "proseCharacters": 2686,
+      "images": 1,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-certified-spanish-translation-services",
+      "topic": "translation",
+      "source": "blog/san-francisco-certified-spanish-translation-services-content.html",
+      "sourceSha256": "2695bc3575e80cead5c1f363768b209226001a5589f5cdd659a5a455afd3ceb2",
+      "proseSha256": "30b8eb5aeeddf2d3bd961820b5cafeba7f86134c1424c2f60a36f0ae513279ba",
+      "proseCharacters": 2772,
+      "images": 2,
+      "tables": 0,
+      "headings": 4,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-interpreting-agencies-companies",
+      "topic": "interpretation",
+      "source": "blog/san-francisco-interpreting-agencies-companies-content.html",
+      "sourceSha256": "d0bc6b25f3ad157fb1bea6ebaffb71a9573c51de73e7e735f4c33bcf3fab7008",
+      "proseSha256": "2baf8e46f2d6a2c07d367b4a31352996de6560625e1d73acf8fb0bad56172bf9",
+      "proseCharacters": 1668,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-professional-translation-services-agency",
+      "topic": "translation",
+      "source": "blog/san-francisco-professional-translation-services-agency-content.html",
+      "sourceSha256": "d6477fe931a3d6ca79c5388db6ac04e8caf58fc336b026ad1de1f3052bc2530a",
+      "proseSha256": "bb085c3e3630f10a1edeb03c4acaa578d38fa3d4ab7ba36d83a3895e8670ab58",
+      "proseCharacters": 2010,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-francisco-uscis-certified-translation-services",
+      "topic": "translation",
+      "source": "blog/san-francisco-uscis-certified-translation-services-content.html",
+      "sourceSha256": "430bd8c1d5a1bfa75d767ce3c871501b991658cf8c4282b76bf6999ecbd5b375",
+      "proseSha256": "1eb4a5dca2caccfdc59979809c6f4eba1236674bc100613507d84116f3358bba",
+      "proseCharacters": 1642,
+      "images": 1,
+      "tables": 0,
+      "headings": 2,
+      "removedChrome": []
+    },
+    {
+      "slug": "san-fransico-certified-and-notorized-translation",
+      "topic": "translation",
+      "source": "blog/san-fransico-certified-and-notorized-translation-content.html",
+      "sourceSha256": "211abe1e4ee1e8323df96cdc5410db111b736030f1df0cfb9563ba8f8c9d8688",
+      "proseSha256": "2c827c551a01cd19a8a5365a3d5186ce56f2b72979a878be118d19ef80bd58d4",
+      "proseCharacters": 2148,
+      "images": 1,
+      "tables": 0,
+      "headings": 3,
+      "removedChrome": []
+    },
+    {
+      "slug": "e-aet-expert-opinion-letter",
+      "topic": "expert",
+      "source": "blog/e-aet-expert-opinion-letter-content.html",
+      "sourceSha256": "9af3014deb368b44641dcc26015a81b64511f525fb8a1181190a5a02c51c9d7d",
+      "proseSha256": "294248799c9c1b30f34045d342df6da1c6c69f2edc6db3b8fc5efc7919ffbf12",
+      "proseCharacters": 4049,
+      "images": 5,
+      "tables": 2,
+      "headings": 11,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "iframe"
+      ]
+    },
+    {
+      "slug": "eb-2-niw-expert-opinion-letters",
+      "topic": "expert",
+      "source": "blog/eb-2-niw-expert-opinion-letters-content.html",
+      "sourceSha256": "d66d7fd52ecf063fe935f43b772e6aa17cf41806d5789f5b355220fa8a3428a6",
+      "proseSha256": "9183e0f7bd55e24816201866e299e80e005b19f37163814ba1cf696da6f7ba56",
+      "proseCharacters": 5329,
+      "images": 4,
+      "tables": 2,
+      "headings": 11,
+      "removedChrome": [
+        [
+          "ai-share-buttons"
+        ],
+        "duplicate table of contents"
+      ]
+    }
+  ],
+  "assets": {
+    "/images/Boston4.jpg": {
+      "path": "/images/blog/legacy/boston4.jpg",
+      "sha256": "4f79e174927d57a8bd504fddc8ecec187036efa250233a4c0e4d69896e66bd8f",
+      "width": 740,
+      "height": 880
+    },
+    "/images/Boston5.jpg": {
+      "path": "/images/blog/legacy/boston5.jpg",
+      "sha256": "22888cab20ddc37ef20c9e7e675d82820b46258896089e1fd6b73d7aa3501ee7",
+      "width": 1430,
+      "height": 1073
+    },
+    "/images/Boston6.jpg": {
+      "path": "/images/blog/legacy/boston6.jpg",
+      "sha256": "edef09e01efcbca569c1d078c92d9672e1d2ea842483114da0a545eec01f94f3",
+      "width": 1430,
+      "height": 1073
+    },
+    "/images/AET Trans.jpg": {
+      "path": "/images/blog/legacy/aet-trans.jpg",
+      "sha256": "af9c17a6e172cd0c68102dec90fbf13fe9d9e732235ca56199fc84c2c0407979",
+      "width": 820,
+      "height": 312
+    },
+    "/images/invite.jpg": {
+      "path": "/images/blog/legacy/invite.jpg",
+      "sha256": "250e8b365b499bb24282b61fb3a0cb849b37e9cb15ac16e7fe6b2e3fdd5190f7",
+      "width": 1200,
+      "height": 270
+    },
+    "/images/lookingforjobs.jpg": {
+      "path": "/images/blog/legacy/lookingforjobs.jpg",
+      "sha256": "6cd5bf74e363ab67eb03a77de048c727f3b1f42a26a5c3de4f402414d1022be9",
+      "width": 1000,
+      "height": 664
+    },
+    "/images/passport.jpg": {
+      "path": "/images/blog/legacy/passport.jpg",
+      "sha256": "b3b2e0a4c3f0103ed2b68958b4af0006c6f0234b5bd9c7db8ea5e4382fd7aff7",
+      "width": 1000,
+      "height": 750
+    },
+    "/images/airplane.jpg": {
+      "path": "/images/blog/legacy/airplane.jpg",
+      "sha256": "3f5b93d97ad3afb105aefd879629fd3fee753c2e5c9f19b59f0f4214260e6ccf",
+      "width": 1000,
+      "height": 665
+    },
+    "/images/graduation.jpg": {
+      "path": "/images/blog/legacy/graduation.jpg",
+      "sha256": "fe83d156218c2e2c359f845e2375f0b6a43703c334392b7642c0faeaaf08458c",
+      "width": 1000,
+      "height": 666
+    },
+    "/images/testimonials.png": {
+      "path": "/images/blog/legacy/testimonials.png",
+      "sha256": "f673b6d83515f16f828a44388323db2f331d7cc61f81e4d8f602976d22c42918",
+      "width": 814,
+      "height": 454
+    },
+    "/images/Miami5.jpg": {
+      "path": "/images/blog/legacy/miami5.jpg",
+      "sha256": "1bca803c3b0f0b2c11587bf6241eddef2959dcb710a86a46c27c63661ffad51e",
+      "width": 1430,
+      "height": 805
+    },
+    "/images/nyc17.jpg": {
+      "path": "/images/blog/legacy/nyc17.jpg",
+      "sha256": "101a28003e71ee95e12e5b21ff90c586523159899919abdad2b6eb303472c1d2",
+      "width": 740,
+      "height": 880
+    },
+    "/images/nyc3.jpg": {
+      "path": "/images/blog/legacy/nyc3.jpg",
+      "sha256": "4f79e174927d57a8bd504fddc8ecec187036efa250233a4c0e4d69896e66bd8f",
+      "width": 740,
+      "height": 880
+    },
+    "/images/nyc4.jpg": {
+      "path": "/images/blog/legacy/nyc4.jpg",
+      "sha256": "3740977686cb252408f1c541d51830864999de7ec82d17da04d3e4632e797cf8",
+      "width": 1430,
+      "height": 805
+    },
+    "/images/nyc5.jpg": {
+      "path": "/images/blog/legacy/nyc5.jpg",
+      "sha256": "8ec2212df6fdc63455334ed266236fc950b3fe1b9ff872d15c4bafe00ba0ee18",
+      "width": 1430,
+      "height": 805
+    },
+    "/images/SF4.jpg": {
+      "path": "/images/blog/legacy/sf4.jpg",
+      "sha256": "5a7289d90f704516c7fb1a99f61869cdf6d204dc6b3f3ad3962710e44d1cd23c",
+      "width": 4032,
+      "height": 3023
+    },
+    "/images/SF1.jpg": {
+      "path": "/images/blog/legacy/sf1.jpg",
+      "sha256": "3c840512a591261e603b4d0a56b5dab31a3b6cbe455d4297ee55d622e1712df9",
+      "width": 4032,
+      "height": 3023
+    },
+    "/images/ca-BarberCosmo.jpg": {
+      "path": "/images/blog/legacy/ca-barbercosmo.jpg",
+      "sha256": "6e42f69db84e1af6cb76e14749a8e045a62a71eb372448215b13886ee3dde965",
+      "width": 820,
+      "height": 312
+    },
+    "/images/FCE-Clients.jpg": {
+      "path": "/images/blog/legacy/fce-clients.jpg",
+      "sha256": "326b9465cdcbd8065820eb55b1b1d072b344c29a662bfcc6f8aa139cf3a1edda",
+      "width": 948,
+      "height": 810
+    },
+    "/images/CA.jpg": {
+      "path": "/images/blog/legacy/ca.jpg",
+      "sha256": "16b60c504fd4302e40723fc0097abb9c3446891f80734a204803e25d842a0b4c",
+      "width": 3450,
+      "height": 2317
+    },
+    "/images/AET.png": {
+      "path": "/images/blog/legacy/aet.png",
+      "sha256": "351e507ddb472ebe6307fd9ad2a73e2a736dc816abb65c08e03739ee3d29787d",
+      "width": 1064,
+      "height": 758
+    },
+    "/images/IE.png": {
+      "path": "/images/blog/legacy/ie.png",
+      "sha256": "fde2282e2ab7abb1a51db24d1dedde889293f96cea982c56d51e9cd81eb775c0",
+      "width": 1232,
+      "height": 882
+    },
+    "/images/ACEI.png": {
+      "path": "/images/blog/legacy/acei.png",
+      "sha256": "8893bf0f1f5db67f09c1ec6f8cf600af13e3e710adcb8805c55822032110e222",
+      "width": 1599,
+      "height": 882
+    },
+    "/images/CALIFCE.png": {
+      "path": "/images/blog/legacy/califce.png",
+      "sha256": "c1caa4fd5406eca335a4d93a7054afecbe7fc02a10f7d573f6f8c2455df42db2",
+      "width": 1659,
+      "height": 882
+    },
+    "/images/FCE Education.jpg": {
+      "path": "/images/blog/legacy/fce-education.jpg",
+      "sha256": "05e9749a1847963a49831d2835e5dec30562a046dcd6f379de5fa438700cd494",
+      "width": 4032,
+      "height": 3024
+    },
+    "/images/h1b-education-evaluation-for-india.png": {
+      "path": "/images/blog/legacy/h1b-education-evaluation-for-india.png",
+      "sha256": "da8ecb63dcf546e1415425e3e7b4d2d17c62de9a8c43953f9b2b6edd2d382e65",
+      "width": 790,
+      "height": 786
+    },
+    "/images/Google Review.png": {
+      "path": "/images/blog/legacy/google-review.png",
+      "sha256": "b6741ef762ee323583a93cefbd2129ea5911b5330eb4d5e7095f0cd1e26757ee",
+      "width": 464,
+      "height": 374
+    },
+    "/images/h1b-data.png": {
+      "path": "/images/blog/legacy/h1b-data.png",
+      "sha256": "1ce1e798a5a1f0b636d7a7c8be86cd47fae7f8da8dadf1822d144d4f8cab17c7",
+      "width": 915,
+      "height": 342
+    },
+    "/images/chinesestudents.jpg": {
+      "path": "/images/blog/legacy/chinesestudents.jpg",
+      "sha256": "2ff66153af280bf399fc7b8f098e0ff8e3156817e9ed678c19d975874039d2f5",
+      "width": 1000,
+      "height": 606
+    },
+    "/images/chineseworkers.jpg": {
+      "path": "/images/blog/legacy/chineseworkers.jpg",
+      "sha256": "429da33fca164907e181b44f0ca32f0c91846780a8b519b7a2013aec78f9cdb8",
+      "width": 1000,
+      "height": 562
+    },
+    "/images/map-of-carribean.png": {
+      "path": "/images/blog/legacy/map-of-carribean.png",
+      "sha256": "fc7eaeee7e885d9cbd5af6e163e09ed44ff06d565fbdc7baf31729a6638b8540",
+      "width": 500,
+      "height": 500
+    },
+    "/images/CXC.png": {
+      "path": "/images/blog/legacy/cxc.png",
+      "sha256": "366a7db1f4f5506c8b48aa7865ff1ea85de2cbd45ac734b79074c5362e209d19",
+      "width": 1256,
+      "height": 693
+    },
+    "/images/csec-grading.png": {
+      "path": "/images/blog/legacy/csec-grading.png",
+      "sha256": "4edfd115fa8d8b790571e670fc9ecea7e83002e1f7b605e7276434e819f56346",
+      "width": 1065,
+      "height": 369
+    },
+    "/images/latin-america-map.jpg": {
+      "path": "/images/blog/legacy/latin-america-map.jpg",
+      "sha256": "7449ed849dc884a753ff171ed30baf6c5b5a82485ff520a671701797025db586",
+      "width": 1000,
+      "height": 666
+    },
+    "/images/latin-students.jpg": {
+      "path": "/images/blog/legacy/latin-students.jpg",
+      "sha256": "44ff0ad63a09118f1c538454a8a033b3374d6dcdd9920674e478161cba6b92dc",
+      "width": 1000,
+      "height": 666
+    },
+    "/images/GA-Immigrants.png": {
+      "path": "/images/blog/legacy/ga-immigrants.png",
+      "sha256": "67b888f2fe66ee49ca2004384c87d5c4b0b34b0194fa460645f0777dc85137e1",
+      "width": 500,
+      "height": 500
+    },
+    "/images/FCE，Inc..png": {
+      "path": "/images/blog/legacy/fce-inc..png",
+      "sha256": "bea8deaeec5789f01495f5f8beff1d3af402e1354d8fc7da401bcf891eb4461d",
+      "width": 1570,
+      "height": 825
+    },
+    "/images/AET-IL.jpg": {
+      "path": "/images/blog/legacy/aet-il.jpg",
+      "sha256": "bdcfbea4c3f934d555aa4cec9f1f2502eb5adeb95e25865ca348f932271ffcb1",
+      "width": 820,
+      "height": 312
+    },
+    "/images/LA-Immigrants.png": {
+      "path": "/images/blog/legacy/la-immigrants.png",
+      "sha256": "3d29b2e57676de88dbd44e7a773afc103fb95eee919e9a5ba928f844fb156743",
+      "width": 400,
+      "height": 400
+    },
+    "/images/AETLA.png": {
+      "path": "/images/blog/legacy/aetla.png",
+      "sha256": "e74e5a9a0d00db39140f1911ca2989d22f5a0b101b5bfe0c490b2c6d62ce5ead",
+      "width": 1624,
+      "height": 882
+    },
+    "/images/pakistan.jpg": {
+      "path": "/images/blog/legacy/pakistan.jpg",
+      "sha256": "b2c45227f44386982b26f7ef4ea5e11ff98f0515c52d5238cf31fb209979a8ec",
+      "width": 1000,
+      "height": 629
+    },
+    "/images/SF-Immigrants.png": {
+      "path": "/images/blog/legacy/sf-immigrants.png",
+      "sha256": "c48e8820a3e9813d0fe726fad442db6e1660fd6bb3fde1890dfd2de4d584c0c3",
+      "width": 400,
+      "height": 400
+    },
+    "/images/SF.png": {
+      "path": "/images/blog/legacy/sf.png",
+      "sha256": "a5f9870d3dd0d334af82fca9b1cce0e2bb6249dc56527c7e878cf17422a08a87",
+      "width": 1460,
+      "height": 882
+    },
+    "/images/question.jpg": {
+      "path": "/images/blog/legacy/question.jpg",
+      "sha256": "2db17774e9b3fc06bdc2dd613659d8c45ffc9f27ef6a9d4abd1a16e4258b0a3e",
+      "width": 1792,
+      "height": 1024
+    },
+    "/images/AAE.png": {
+      "path": "/images/blog/legacy/aae.png",
+      "sha256": "1582b62861924d2517a7d4ba01ade64e342be30f26824a82faaebc125a33147f",
+      "width": 1920,
+      "height": 919
+    },
+    "/images/ESI.png": {
+      "path": "/images/blog/legacy/esi.png",
+      "sha256": "6ec7781baac852c085dd9b176f13538b4bba71e65c36376dc8df4fc1ae351725",
+      "width": 1149,
+      "height": 540
+    },
+    "/images/FCEI.png": {
+      "path": "/images/blog/legacy/fcei.png",
+      "sha256": "6e88cd1da9b555290316c028d381390f55a943868c7a5c5ac6d487330f8f8cdc",
+      "width": 1572,
+      "height": 790
+    },
+    "/images/FCSA.png": {
+      "path": "/images/blog/legacy/fcsa.png",
+      "sha256": "38e9ed0ff86b5f82442de862e246e69d9fcebbadd35ccb1d5a18a8a7ec7d151a",
+      "width": 1566,
+      "height": 899
+    },
+    "/images/ICE.png": {
+      "path": "/images/blog/legacy/ice.png",
+      "sha256": "531fcfe4c47607a989beff274ae7f64d7c193d831636a1fbf06d530dbbc33c7d",
+      "width": 1264,
+      "height": 829
+    },
+    "/images/scholaro.png": {
+      "path": "/images/blog/legacy/scholaro.png",
+      "sha256": "71e0a0c43fbdd4dc78414bcabad0ce46111455c7a85cce334982bf84c6fa7991",
+      "width": 1282,
+      "height": 768
+    },
+    "/images/SDR.png": {
+      "path": "/images/blog/legacy/sdr.png",
+      "sha256": "828993d0fd72d3934af9e8a553715854a6b434e1d67a0cf8c8f85ef5a912bdb5",
+      "width": 1280,
+      "height": 703
+    },
+    "/images/UCREDO.png": {
+      "path": "/images/blog/legacy/ucredo.png",
+      "sha256": "4a72180ed9c360dd554e42161677c810b5dd9a09fccc69b1f35c342e5b69fe14",
+      "width": 1380,
+      "height": 823
+    },
+    "/images/FCE-H1B.jpg": {
+      "path": "/images/blog/legacy/fce-h1b.jpg",
+      "sha256": "afcceb207641d74de39224a9b8f2d7af8dbb3a18937a1972b59bd0798aad908a",
+      "width": 820,
+      "height": 312
+    },
+    "/images/ata.jpg": {
+      "path": "/images/blog/legacy/ata.jpg",
+      "sha256": "2362148ea0c90fc43a85ca6939007c2f748636332b233e8919525c5cdf620df9",
+      "width": 500,
+      "height": 382
+    },
+    "/images/Boston2.jpg": {
+      "path": "/images/blog/legacy/boston2.jpg",
+      "sha256": "3e5fe006c521393d1be630c2d98cdc00aabbb26eca98ed694696b6ed8675eb5b",
+      "width": 1519,
+      "height": 880
+    },
+    "/images/Boston1.jpg": {
+      "path": "/images/blog/legacy/boston1.jpg",
+      "sha256": "43b3c6279ca17bd3be108e62acdd4933bb502dd0c8fb5254dccc7a7a720f7fe0",
+      "width": 2592,
+      "height": 1944
+    },
+    "/images/Boston3.jpg": {
+      "path": "/images/blog/legacy/boston3.jpg",
+      "sha256": "c4270c82b4ff4f9884e1728bd3bc45452dd0e4a58da2e707c9270379271033a4",
+      "width": 1090,
+      "height": 818
+    },
+    "/images/Boston-1.jpg": {
+      "path": "/images/blog/legacy/boston-1.jpg",
+      "sha256": "6af88fe712e24b353dcccbbc69c1a45975e46f341ea1be3fe0ed0103f4d2e7b3",
+      "width": 987,
+      "height": 692
+    },
+    "/images/Boston8.jpg": {
+      "path": "/images/blog/legacy/boston8.jpg",
+      "sha256": "3e5fe006c521393d1be630c2d98cdc00aabbb26eca98ed694696b6ed8675eb5b",
+      "width": 1519,
+      "height": 880
+    },
+    "/images/Boston11.jpg": {
+      "path": "/images/blog/legacy/boston11.jpg",
+      "sha256": "6b9c34189d16c4b539111e74fe5862ebc7c290628d2e6d21ebf1fa02f8ab09b5",
+      "width": 606,
+      "height": 948
+    },
+    "/images/boston15.png": {
+      "path": "/images/blog/legacy/boston15.png",
+      "sha256": "ce5f319427a111055f409b32c86a65f6d307c5b9e4ae6cf3ee5cd829cb660d13",
+      "width": 468,
+      "height": 312
+    },
+    "/images/Boston9.jpg": {
+      "path": "/images/blog/legacy/boston9.jpg",
+      "sha256": "65553d5d06bfe709a0a150c7d97cd66028236e1cd514c90cd207fa7ed00ac90c",
+      "width": 1280,
+      "height": 960
+    },
+    "/images/Boston10.jpg": {
+      "path": "/images/blog/legacy/boston10.jpg",
+      "sha256": "90eb21738375352a491f90ad1246a29c05886ec308bd6a1af130409f6166fae7",
+      "width": 352,
+      "height": 352
+    },
+    "/images/Boston7.jpg": {
+      "path": "/images/blog/legacy/boston7.jpg",
+      "sha256": "fea4881d5c4ab8881499a72fcf900bf08d3053bba64ec446cacc2df924151ce8",
+      "width": 1279,
+      "height": 960
+    },
+    "/images/Boston14.jpg": {
+      "path": "/images/blog/legacy/boston14.jpg",
+      "sha256": "4b50acc61799f17bcc2d5da089b8938f94f485b020a82bdf2d46297bd59a1969",
+      "width": 1092,
+      "height": 728
+    },
+    "/images/h1b-eol-customers.jpg": {
+      "path": "/images/blog/legacy/h1b-eol-customers.jpg",
+      "sha256": "0da6288ac7173bf5c0c6117acd5d3eb6849e1c1438c7d1dd39bd1c21c06c5820",
+      "width": 1024,
+      "height": 1024
+    },
+    "/images/aet-values.jpg": {
+      "path": "/images/blog/legacy/aet-values.jpg",
+      "sha256": "07ca90f500cebf2299860b29556ee768c31d05cb32ea946b963f895f53b2d2d5",
+      "width": 1200,
+      "height": 270
+    },
+    "/images/EOL.jpg": {
+      "path": "/images/blog/legacy/eol.jpg",
+      "sha256": "291411f66c310798ee642a6fba10847ca0036e45dbb0b21bded936b56aa98832",
+      "width": 820,
+      "height": 312
+    },
+    "/images/translationonline.jpg": {
+      "path": "/images/blog/legacy/translationonline.jpg",
+      "sha256": "6d879dfe6969926e2f2d322e512d973b98a92ffa73e9be61577ba519e61f5384",
+      "width": 4705,
+      "height": 3137
+    },
+    "/images/chinese-language.jpg": {
+      "path": "/images/blog/legacy/chinese-language.jpg",
+      "sha256": "2463189feed45d5ace9ad2baa1f51eac79ee8f1080c5f0ff015c9686941b9300",
+      "width": 1000,
+      "height": 750
+    },
+    "/images/hola.jpg": {
+      "path": "/images/blog/legacy/hola.jpg",
+      "sha256": "8b08a358f3d6d0bc476e56b79ed61c83b074b105e4e507de46360e4240820a01",
+      "width": 1000,
+      "height": 750
+    },
+    "/images/LAWindowOffice2.jpg": {
+      "path": "/images/blog/legacy/lawindowoffice2.jpg",
+      "sha256": "da66544dad2e63d1f58a8a1b6a2b3067ad3a7c904aef456539078af79827ebf7",
+      "width": 1431,
+      "height": 1073
+    },
+    "/images/944.jpg": {
+      "path": "/images/blog/legacy/944.jpg",
+      "sha256": "d880dbb79009efe14933477b3eadd1fa0789fa2feab21fe1c3f81990f60450cc",
+      "width": 325,
+      "height": 182
+    },
+    "/images/Miami1.jpg": {
+      "path": "/images/blog/legacy/miami1.jpg",
+      "sha256": "4cf014051a18e959c0c65cdc262b504108903f687f5f842459b00430066c8f83",
+      "width": 928,
+      "height": 484
+    },
+    "/images/Miami6.jpg": {
+      "path": "/images/blog/legacy/miami6.jpg",
+      "sha256": "b690fc570fa9ba70c64046b33e417e0d21ab67b85dd70d96b704a90975c243a3",
+      "width": 1919,
+      "height": 1080
+    },
+    "/images/Miami-Immigrants.png": {
+      "path": "/images/blog/legacy/miami-immigrants.png",
+      "sha256": "ca88a0b2eb5a8dbe2ec68c537d396e60afe4f193df69405c3ef88667f59b417c",
+      "width": 500,
+      "height": 500
+    },
+    "/images/nyc2.jpg": {
+      "path": "/images/blog/legacy/nyc2.jpg",
+      "sha256": "1cb72313823f6092f7ae941b31b07029fa7f06559152d864e262efe48e83c90e",
+      "width": 1113,
+      "height": 1978
+    },
+    "/images/nyc16.jpg": {
+      "path": "/images/blog/legacy/nyc16.jpg",
+      "sha256": "f586e9d93975e7fb79a570bc9d8e3b0c959bbf39c52221b16f299c0d139ebe62",
+      "width": 772,
+      "height": 1208
+    },
+    "/images/nyc8.jpg": {
+      "path": "/images/blog/legacy/nyc8.jpg",
+      "sha256": "182882a8353cbb81f5c6c01ade30ed37a1e498f058bae9d72fd3d86fa8bbee9b",
+      "width": 1385,
+      "height": 971
+    },
+    "/images/nyc9.jpg": {
+      "path": "/images/blog/legacy/nyc9.jpg",
+      "sha256": "caf8540947d9693e8699a33b85287abceabba1cccc74fb631861a62fe37a7b8f",
+      "width": 1430,
+      "height": 805
+    },
+    "/images/nyc12.jpg": {
+      "path": "/images/blog/legacy/nyc12.jpg",
+      "sha256": "1e08b30e04b2a803aaf813beea57cdf222c777d8bcc4d3ca5f3420dadcba369a",
+      "width": 3263,
+      "height": 1836
+    },
+    "/images/nyc18.jpg": {
+      "path": "/images/blog/legacy/nyc18.jpg",
+      "sha256": "e6f484b0c3b3921bff8d9c9aaa722bb54ed7b63917eacd50d4f4cfb76a8d0908",
+      "width": 1430,
+      "height": 1073
+    },
+    "/images/nyc10.jpg": {
+      "path": "/images/blog/legacy/nyc10.jpg",
+      "sha256": "621cb1e2a8c786bd72c84cb2cd3900fa544ddf62abd63f12faeee01a67c236b0",
+      "width": 1430,
+      "height": 953
+    },
+    "/images/nyc11.jpg": {
+      "path": "/images/blog/legacy/nyc11.jpg",
+      "sha256": "ff795db36098f0006d0e9e39693b03ab9ea2fb0ffeda64b08ad9aa5942c10275",
+      "width": 1430,
+      "height": 953
+    },
+    "/images/nyc6.jpg": {
+      "path": "/images/blog/legacy/nyc6.jpg",
+      "sha256": "167361bee8bb912eaa706b187d18af0d9d982b49031a6b2e949dd5d4bdffa8c3",
+      "width": 1024,
+      "height": 682
+    },
+    "/images/nyc7.jpg": {
+      "path": "/images/blog/legacy/nyc7.jpg",
+      "sha256": "531c6018a802be9733fde9e42eeb963667de1c8a5dd44f87f788a20a998ca6f6",
+      "width": 1280,
+      "height": 960
+    },
+    "/images/nyc13.jpg": {
+      "path": "/images/blog/legacy/nyc13.jpg",
+      "sha256": "fa5ed60d1922584a21e824c2b9a9f4918f3ee26c876a86eb2f41a8c0c62a900a",
+      "width": 1000,
+      "height": 799
+    },
+    "/images/SF3.jpg": {
+      "path": "/images/blog/legacy/sf3.jpg",
+      "sha256": "8be33113055010bb2b863a9362e3c2aa591fe7b902b266dae3f8b3d62538f6a7",
+      "width": 1431,
+      "height": 1073
+    },
+    "/images/SF6.jpg": {
+      "path": "/images/blog/legacy/sf6.jpg",
+      "sha256": "69183f0c172e0896c48630071499034a1ecc59112e662cacbb662b78571b9a08",
+      "width": 995,
+      "height": 681
+    },
+    "/images/SF7.jpg": {
+      "path": "/images/blog/legacy/sf7.jpg",
+      "sha256": "9fc8aabb1ba41468f21c1692f18c3358ff7733817c4303dc1f19dc6b170c27b0",
+      "width": 1431,
+      "height": 1073
+    },
+    "/images/SF8.jpg": {
+      "path": "/images/blog/legacy/sf8.jpg",
+      "sha256": "fe1b6b37e012bde10e19407dd2c36a9937864f26fc65d5ddfd1c6fb910dec494",
+      "width": 3023,
+      "height": 4032
+    },
+    "/images/SFOffice.jpg": {
+      "path": "/images/blog/legacy/sfoffice.jpg",
+      "sha256": "fbdef09851ebb81e0b7c6d3b8a9920f3b7b5bbdc31a2309ded367a6a7e7aa17a",
+      "width": 1567,
+      "height": 900
+    },
+    "/images/eol-customers.jpg": {
+      "path": "/images/blog/legacy/eol-customers.jpg",
+      "sha256": "fa822c04e2fe551ac4563de983384db51d597f9227289cff4588d49ce1e4c84f",
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "unlinkedExcludedArticles": [
+    {
+      "article": "los-angeles-foreign-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "los-angeles-international-credential-evaluation-services",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "los-angeles-international-credential-evaluation-services",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "los-angeles-international-credential-evaluation-services",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "california-barbercosmo-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "credential-evaluation-for-education",
+      "href": "best-education-credential-evaluation-agencies.html"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "georgia-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "illinois-credential-evaluation-and-translations",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "illinois-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "illinois-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "illinois-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "los-angeles-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "miami-foreign-credential-evaluation-services",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "Pakistani-degree-equivalency-in-USA",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "Pakistani-degree-equivalency-in-USA",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "Pakistani-degree-equivalency-in-USA",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "Pakistani-degree-equivalency-in-USA",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "href": "/blog/education-evaluation-h1b.php"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "e-credential-evaluation-for-uscis",
+      "href": "link-in"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "h1b-expert-opinion-letters",
+      "href": "/blog/foreign-credential-evaluation-for-immigration.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/diploma-translation-and-evaluation.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/credential-evaluation-for-emloyment.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/education-credential-evaluation-purposes.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/how-to-get-an-international-evaluation.php"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "href": "https://americantranslationservice.com/blog/foreign-credential-evaluation-for-immigration.php"
+    }
+  ],
+  "titleDifferences": [
+    {
+      "slug": "boston-international-credential-evaluation-services",
+      "catalog": "International Credential Evaluation Services in Boston",
+      "body": "Boston International Credential Evaluation"
+    },
+    {
+      "slug": "new-york-foreign-credential-evaluation-services",
+      "catalog": "New York Foreign Credential Evaluation Services In New York NY",
+      "body": "New York Foreign Credential Evaluation"
+    },
+    {
+      "slug": "new-york-international-credential-evaluation-services",
+      "catalog": "New York International Credential Evaluation Services In New York NY",
+      "body": "New York International Credential Evaluation"
+    },
+    {
+      "slug": "san-francisco-international-credential-evaluation-services",
+      "catalog": "San Francisco International Credential Evaluation Services",
+      "body": "San Francisco International Credential Evaluation"
+    },
+    {
+      "slug": "california-barbercosmo-credential-evaluation-and-translations",
+      "catalog": "CA BarberCosmo Credential Evaluation & Translations - AET",
+      "body": "California Board of Barbering and Cosmetology Credential Evaluation & Certified Translations"
+    },
+    {
+      "slug": "credential-evaluation-for-education",
+      "catalog": "Credential Evaluation for Education: 3 Key Things to Know",
+      "body": "Foreign Credential Evaluation for Education: 3 Key Things to Know"
+    },
+    {
+      "slug": "education-evaluation-h1b-for-india",
+      "catalog": "Education Evaluation for H1B for India (2025)",
+      "body": "Education Evaluation for H1B for India (2026)"
+    },
+    {
+      "slug": "foreign-credential-evaluation-in-usa-csec",
+      "catalog": "CSEC Equivalent in USA [Ultimate Guide] - AET",
+      "body": "Credential Evaluation in USA: Caribbean Examinations Council (CXC)"
+    },
+    {
+      "slug": "illinois-credential-evaluation-and-translations",
+      "catalog": "Illinois Certified Translations & Credential Evaluation - AET",
+      "body": "Approved Credential Evaluation & Certified Translations That Help You Succeed in Illinois"
+    },
+    {
+      "slug": "los-angeles-credential-evaluation-and-translations",
+      "catalog": "Credential Evaluation & Certified Translations in Los Angeles - AET",
+      "body": "Los Angeles Credential Evaluation & Certified Translations that Help You Succeed in USA"
+    },
+    {
+      "slug": "miami-credential-evaluation-and-translations",
+      "catalog": "Credential Evaluation & Certified Translations in Miami - AET",
+      "body": "Miami Credential Evaluation & Certified Translations that Help You Succeed in USA"
+    },
+    {
+      "slug": "Pakistani-degree-equivalency-in-USA",
+      "catalog": "Pakistani Degree Equivalency in USA: Everything to Know (2025)",
+      "body": "Pakistani Degree Equivalency in USA: Everything to Know (2026)"
+    },
+    {
+      "slug": "san-francisco-credential-evaluation-and-translations",
+      "catalog": "Credential Evaluation & Certified Translations in San Francisco - AET",
+      "body": "San Francisco Credential Evaluation & Certified Translations that Help You Succeed in USA"
+    },
+    {
+      "slug": "best-credential-evaluation-services",
+      "catalog": "10 Best Credential Evaluation Services (2026) - AET",
+      "body": "10 Best Credential Evaluation Services (2026)"
+    },
+    {
+      "slug": "e-credential-evaluation-for-uscis",
+      "catalog": "Quick Credential Evaluation Service for H1B (2025) - AET",
+      "body": "Quick Credential Evaluation Service for H1B that Help You Succeed in USA"
+    },
+    {
+      "slug": "boston-affordable-cheap-translation-services",
+      "catalog": "Boston Affordable Cheap Translation Services In Boston MA",
+      "body": "Boston Affordable Cheap Translation"
+    },
+    {
+      "slug": "boston-ata-certified-translation-and-interpretation",
+      "catalog": "ATA Certified Translation And Interpretation in Boston",
+      "body": "Boston ATA Certified Translation"
+    },
+    {
+      "slug": "boston-best-certified-translation-services-companies",
+      "catalog": "Boston Best Certified Translation Services Companies In Boston MA",
+      "body": "Boston Best Certified Translation Services"
+    },
+    {
+      "slug": "boston-certified-and-notarized-translation-services",
+      "catalog": "Boston Certified And Notarized Translation Services In Boston MA",
+      "body": "Boston Certified And Notarized Translation"
+    },
+    {
+      "slug": "boston-certified-chinese-translation-service",
+      "catalog": "Boston Certified Chinese Translation Service In Boston MA",
+      "body": "Boston Certified Chinese Translation"
+    },
+    {
+      "slug": "boston-certified-spanish-translation-services",
+      "catalog": "Boston Certified Spanish Translation Services In Boston MA",
+      "body": "Boston Certified Spanish Translation"
+    },
+    {
+      "slug": "boston-foreign-language-interpreter-agency",
+      "catalog": "Boston Foreign Language Interpreter Agency In Boston MA",
+      "body": "Boston Foreign Language Interpreter"
+    },
+    {
+      "slug": "boston-interpreting-agencies-companies",
+      "catalog": "Boston Interpreting Agencies Companies In Boston MA",
+      "body": "Boston Interpreting Agencies"
+    },
+    {
+      "slug": "boston-professional-translation-services-agency",
+      "catalog": "Boston Professional Translation Services Agency In Boston MA",
+      "body": "Boston Professional Translation Services"
+    },
+    {
+      "slug": "boston-technical-translation-services-company",
+      "catalog": "Technical Translation Services Company in Boston",
+      "body": "Boston Technical Translation Services"
+    },
+    {
+      "slug": "boston-top-certified-translation-companies",
+      "catalog": "Top Certified Translation Interpreter Companies Services in Boston",
+      "body": "Boston Top Certified Translation Companies"
+    },
+    {
+      "slug": "boston-uscis-certified-translation-services",
+      "catalog": "Boston USCIS Certified Translation Services In Boston MA",
+      "body": "Boston USCIS Certified Translation"
+    },
+    {
+      "slug": "h1b-expert-opinion-letters",
+      "catalog": "A Guide for H1B Expert Opinion Letters (2025)",
+      "body": "A Guide for H1B Expert Opinion Letters (2026)"
+    },
+    {
+      "slug": "how-to-find-translation-services-online",
+      "catalog": "4 Ways to Find Translation Services Online",
+      "body": "4 Ways to Find Translation Services Online in Los Angeles"
+    },
+    {
+      "slug": "miami-ata-certified-translation-and-interpretation",
+      "catalog": "Cheap ATA-Certified Translation Services in Miami",
+      "body": "Cheap ATA-Certified Translation Services in Miami: 8 Types of Documents Covered"
+    },
+    {
+      "slug": "new-york-affordable-cheap-translation-services",
+      "catalog": "New York Affordable Cheap Translation Services In New York NY",
+      "body": "New York Affordable Cheap Translation"
+    },
+    {
+      "slug": "new-york-ata-certified-translation-and-interpretation",
+      "catalog": "ATA Certified Translation And Interpretation in New York",
+      "body": "New York ATA Certified Translation"
+    },
+    {
+      "slug": "new-york-best-certified-translation-services-companies",
+      "catalog": "New York Best Certified Translation Services Companies In New York NY",
+      "body": "New York Best Certified Translation Services"
+    },
+    {
+      "slug": "new-york-certified-and-notarized-translation-services",
+      "catalog": "New York Certified And Notarized Translation Services In New York NY",
+      "body": "New York Certified And Notarized Translation"
+    },
+    {
+      "slug": "new-york-certified-chinese-translation-service",
+      "catalog": "New York Certified Chinese Translation Service In New York NY",
+      "body": "New York Certified Chinese Translation"
+    },
+    {
+      "slug": "new-york-certified-spanish-translation-services",
+      "catalog": "New York Certified Spanish Translation Services In New York NY",
+      "body": "New York Certified Spanish Translation"
+    },
+    {
+      "slug": "new-york-foreign-language-interpreter-agency",
+      "catalog": "New York Foreign Language Interpreter Agency In New York NY",
+      "body": "New York Foreign Language Interpreter"
+    },
+    {
+      "slug": "new-york-interpreting-agencies-companies",
+      "catalog": "New York Interpreting Agencies Companies In New York NY",
+      "body": "New York Interpreting Agencies"
+    },
+    {
+      "slug": "new-york-professional-translation-services-agency",
+      "catalog": "New York Professional Translation Services Agency In New York NY",
+      "body": "New York Professional Translation Services"
+    },
+    {
+      "slug": "new-york-technical-translation-services-company",
+      "catalog": "Technical Translation Services Company In New York",
+      "body": "New York Technical Translation Services"
+    },
+    {
+      "slug": "new-york-uscis-certified-translation-services",
+      "catalog": "New York USCIS Certified Translation Services In New York NY",
+      "body": "New York USCIS Certified Translation"
+    },
+    {
+      "slug": "e-aet-expert-opinion-letter",
+      "catalog": "Expert Opinion Letters in 2025",
+      "body": "Expert Opinion Letters in 2025 for Eb1a · Eb2-NIW · H1B · TN-Visa"
+    }
+  ],
+  "missingAssets": [
+    {
+      "article": "california-best-education-credential-evaluation-services",
+      "source": "/images/A2Z.png",
+      "alt": "A2Z Evaluations",
+      "reason": "Absent from local source; old-site URL returned homepage HTML on 2026-09-30. Illustration omitted; organization prose and link retained."
+    },
+    {
+      "article": "san-francisco-best-education-credential-evaluation-agencies",
+      "source": "/images/A2Z.png",
+      "alt": "A2Z Evaluations",
+      "reason": "Absent from local source; old-site URL returned homepage HTML on 2026-09-30. Illustration omitted; organization prose and link retained."
+    }
+  ],
+  "repairedFragments": [
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "los-angeles-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "miami-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "san-francisco-credential-evaluation-and-translations",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "e-credential-evaluation-for-uscis",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "e-credential-evaluation-for-uscis",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "original": "#q1.html",
+      "target": "#q1"
+    },
+    {
+      "article": "e-aet-expert-opinion-letter",
+      "original": "#q1.html",
+      "target": "#q1"
+    }
+  ],
+  "repairedIds": [
+    {
+      "article": "e-credential-evaluation-for-uscis",
+      "original": "q2",
+      "target": "q2-2"
+    }
+  ]
+}

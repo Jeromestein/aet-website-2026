@@ -163,3 +163,20 @@ under the same `public/` paths. Legacy `images/ata.jpg` is saved as
 `public/images/certified-ata.jpg`; the existing homepage ATA asset is unchanged.
 All five served files match their source bytes. Source map and ATA links remain.
 See `content/certified-translation/README.md` for content provenance.
+
+## Restored blog batch — September 30, 2026
+
+The 18 restored articles add 26 unique legacy image files under
+`public/images/blog/legacy/`, copied byte-for-byte. Together with the prior batch,
+77 generated bodies use 83 unique source images (175 placements); the Boston
+pilot retains its separate assets. Source paths, dimensions and SHA-256 digests
+are recorded in `content/blog/migration-report.json`. Alt descriptions were checked
+against source-image contact sheets; dated promotional/site/review captures use
+historical disclosures. No new stock image or generated illustration was added.
+The missing A2Z image affects two source placements and is explicitly recorded;
+no substitute image or recreated branding is used.
+
+The subsequent two standalone English articles add ten more unique legacy images
+and 16 placements. Final generated collection: 79 bodies, 93 unique image files,
+191 placements, plus the separate pilot. Institution/agency website screenshots
+remain historical source captures; no new endorsement is asserted by migration.

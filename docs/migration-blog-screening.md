@@ -1,21 +1,93 @@
-# AET Blog Migration — NACES Exclusion Scan
+# AET Blog Migration — Source Screening and Biography Reassessment
 
-Scan date: September 29, 2026. Scope: local source files, not a live-site crawl.
+Original scan: September 29, 2026. Reassessment: September 30, 2026.
+Scope: local source files, not a live-site crawl or current membership verification.
 
-## Decision
+## Current decision — supersedes the original biography exclusion
 
-**Do not migrate any blog article that mentions NACES or a current NACES member.**
-This applies even to neutral mentions or an AET biography describing past work at a
-NACES agency. Keep the excluded source articles intact on the old site; this task
-only changes the migration plan. Do not salvage them into new articles or bypass
-the decision by importing a different copy. Old-URL handling is a separate task.
+The owner confirmed that the founder/director's past employment at a NACES agency
+is **not an exclusion reason**. This correction also applies to biography text in
+old copies/comments and the NACES link embedded in that biography.
 
-Of 109 blog articles: **48 excluded**, **60 remaining candidates**, and **1 visa
-article still held for the existing service-scope decision**. In addition, **7
-standalone article/landing-page sources** are excluded below. These seven are
-outside the 109 count. No former-member-only blog match was found.
+Of the **109 blog articles**, **78 are migrated locally (60 original + 18 restored)**, **30 have other historical findings requiring a
+separate content decision**, and **1 visa article remains held for service scope**.
+The 30 are not declared ineligible under AICE rules merely because they mention
+another agency. The original blanket name-matching policy was an editorial filter,
+not a requirement stated in the supplied AICE application.
 
-## Screening basis and method
+Of seven additional standalone sources, two English pages are now migrated locally,
+three Chinese variants have the biography exclusion lifted but remain source/URL
+references under the English-only policy, and two retain other findings for review.
+These seven are outside the 109-article count.
+
+## September 30 reassessment and evidence
+
+- Re-read all 48 previously excluded PHP entry points, their actual HTML includes,
+  existing same-stem root copies and shared header/footer, plus seven standalone
+  sources. Checked every occurrence/context of the original long-form names,
+  abbreviations and domains; did not rely only on the report's first match.
+- All remaining NACES matches in the 18 restored article families describe past
+  employment. Five currently have biography hits only in the old root copy:
+  `Pakistani-degree-equivalency-in-USA`, `credential-evaluation-for-education`,
+  `eb-2-niw-expert-opinion-letters`, `education-evaluation-h1b-for-india`,
+  and `illinois-credential-evaluation-and-translations`.
+- Georgia's `<!--AES-->` comment immediately precedes an FCE heading, FCE contact
+  details and FCE website. The earlier attribution to Academic Evaluation Services
+  was unsupported; neither the biography nor this comment blocks reinstatement.
+- Subsequent migration on September 30 imported all 18 restored blog bodies and
+  added 36 PHP/root-HTML redirects. The catalog now contains 78 local articles.
+  Biography prose is unchanged; reviewed source hashes allow these specific NACES
+  biography occurrences while unreviewed changes still stop the importer.
+- The subsequent standalone batch adds two English bodies and two root redirects,
+  outside the 109 count. Total catalog: 80; total legacy redirects: 157.
+  Source website files are unchanged; no production publication was performed.
+
+### Publication note from the supplied application
+
+[2026 AICE Endorsed Membership application](</Users/plusone/Desktop/MeiyuGroup/AICE/202609/2026 application for AICE Endorsed Membership.pdf>),
+revised May 8, 2026: pages 4–5 concern actual affiliations and disclosure; page 9
+concerns unsupported endorsement claims; page 13 prohibits referencing AICE in
+promotional materials, websites and reports while an application is under review.
+The application does not prohibit merely naming NACES agencies or stating past
+employment. This review does not establish current application status, affiliations,
+claim accuracy or compliance with separately referenced bylaws/standards.
+
+California, Los Angeles and Georgia agency-list articles contain AICE references;
+so does the standalone `best-credential-evaluation-services.html`. Their biography
+exclusions are lifted, but if the application is under review, those AICE references
+need a separate pre-publication decision. Existing fee/credential/acceptance-claim
+review still applies to every article.
+
+## Restored batch — 18 blog articles now migrated locally
+
+Full migration checkboxes and titles are in the [article inventory](migration-blog-inventory.md).
+The locations below are current local-source evidence, not evidence of current employment.
+
+| Article slug | Rechecked biography evidence |
+| --- | --- |
+| `Pakistani-degree-equivalency-in-USA` | [Pakistani-degree-equivalency-in-USA.html:305](../../server-54.213.58.23/americantranslationservice.com/Pakistani-degree-equivalency-in-USA.html) |
+| `california-barbercosmo-credential-evaluation-and-translations` | [blog/california-barbercosmo-credential-evaluation-and-translations-content.html:181](../../server-54.213.58.23/americantranslationservice.com/blog/california-barbercosmo-credential-evaluation-and-translations-content.html) |
+| `california-best-education-credential-evaluation-services` | [blog/california-best-education-credential-evaluation-services-content.html:78](../../server-54.213.58.23/americantranslationservice.com/blog/california-best-education-credential-evaluation-services-content.html) |
+| `credential-evaluation-for-education` | [credential-evaluation-for-education.html:275](../../server-54.213.58.23/americantranslationservice.com/credential-evaluation-for-education.html) |
+| `e-aet-expert-opinion-letter` | [blog/e-aet-expert-opinion-letter-content.html:169](../../server-54.213.58.23/americantranslationservice.com/blog/e-aet-expert-opinion-letter-content.html) |
+| `eb-2-niw-expert-opinion-letters` | [eb-2-niw-expert-opinion-letters.html:372](../../server-54.213.58.23/americantranslationservice.com/eb-2-niw-expert-opinion-letters.html) |
+| `education-evaluation-h1b-for-india` | [education-evaluation-h1b-for-india.html:361](../../server-54.213.58.23/americantranslationservice.com/education-evaluation-h1b-for-india.html) |
+| `foreign-credential-evaluation-in-usa-China` | [blog/foreign-credential-evaluation-in-usa-China-content.html:226](../../server-54.213.58.23/americantranslationservice.com/blog/foreign-credential-evaluation-in-usa-China-content.html) |
+| `foreign-credential-evaluation-in-usa-csec` | [blog/foreign-credential-evaluation-in-usa-csec-content.html:263](../../server-54.213.58.23/americantranslationservice.com/blog/foreign-credential-evaluation-in-usa-csec-content.html) |
+| `foreign-credential-evaluation-in-usa-latin-america` | [blog/foreign-credential-evaluation-in-usa-latin-america-content.html:233](../../server-54.213.58.23/americantranslationservice.com/blog/foreign-credential-evaluation-in-usa-latin-america-content.html) |
+| `georgia-best-education-credential-evaluation-agencies` | [blog/georgia-best-education-credential-evaluation-agencies-content.html:123](../../server-54.213.58.23/americantranslationservice.com/blog/georgia-best-education-credential-evaluation-agencies-content.html) |
+| `illinois-credential-evaluation-and-translations` | [illinois-credential-evaluation-and-translations.html:199](../../server-54.213.58.23/americantranslationservice.com/illinois-credential-evaluation-and-translations.html) |
+| `los-angeles-best-education-credential-evaluation-agencies` | [blog/los-angeles-best-education-credential-evaluation-agencies-content.html:71](../../server-54.213.58.23/americantranslationservice.com/blog/los-angeles-best-education-credential-evaluation-agencies-content.html) |
+| `los-angeles-credential-evaluation-and-translations` | [blog/los-angeles-credential-evaluation-and-translations-content.html:223](../../server-54.213.58.23/americantranslationservice.com/blog/los-angeles-credential-evaluation-and-translations-content.html) |
+| `miami-credential-evaluation-and-translations` | [blog/miami-credential-evaluation-and-translations-content.html:223](../../server-54.213.58.23/americantranslationservice.com/blog/miami-credential-evaluation-and-translations-content.html) |
+| `miami-foreign-credential-evaluation-services` | [blog/miami-foreign-credential-evaluation-services-content.html:29](../../server-54.213.58.23/americantranslationservice.com/blog/miami-foreign-credential-evaluation-services-content.html) |
+| `san-francisco-best-education-credential-evaluation-agencies` | [blog/san-francisco-best-education-credential-evaluation-agencies-content.html:68](../../server-54.213.58.23/americantranslationservice.com/blog/san-francisco-best-education-credential-evaluation-agencies-content.html) |
+| `san-francisco-credential-evaluation-and-translations` | [blog/san-francisco-credential-evaluation-and-translations-content.html:231](../../server-54.213.58.23/americantranslationservice.com/blog/san-francisco-credential-evaluation-and-translations-content.html) |
+
+## Historical scan method — September 29
+
+The following method and aliases record the original scan. Its blanket exclusion
+decision is superseded above; preserved evidence is not a current disqualification.
 
 - User-provided screenshot: the 17 listed member organizations, including the
   TEC/SpanTran name change and WES, ECE, IEE, and IERF abbreviations.
@@ -30,8 +102,8 @@ outside the 109 count. No former-member-only blog match was found.
 - Matched normalized, case-insensitive names; recognized abbreviations; member
   domains; SpanTran/TEC; JS&A; and the legacy spelling Worldwide Education Services.
   Inspected text, links, image names/alt text, metadata, and HTML comments.
-- Preserved comment-only and old-copy-only findings as exclusions to prevent
-  importing dormant/older content. Evidence labels distinguish these from visible text.
+- Recorded comment-only and old-copy-only findings separately from visible text.
+  Biography matches in those locations are now cleared as described above.
 - Reviewed abbreviation context: **GCE meaning General Certificate of Education is
   not a Global Credential Evaluators match**. Searched that company by full name
   and domain instead. No ambiguous GCE hit was used to exclude an article.
@@ -69,11 +141,11 @@ Former-member names were scanned separately using the official directory. Their
 presence alone was not treated as proof of current membership; every affected
 blog in this scan already has a NACES/current-member exclusion.
 
-## Excluded blog articles — 48
+## Previously excluded blog articles — 48, with revised dispositions
 
 ### GCSE-equivalent-in-the-USA
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -83,7 +155,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### Indian-degree-evaluation-in-USA
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -92,7 +164,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### Moroccan-high-school-diploma-equivalent-in-USA
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -101,7 +173,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### Pakistani-degree-equivalency-in-USA
 
-**DO NOT MIGRATE.** Match location: Root HTML copy only.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Root HTML copy only.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -109,7 +181,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### Philippine-high-school-diploma-equivalent-in-USA
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -118,7 +190,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -131,7 +203,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### best-places-to-get-your-foreign-degree-evaluated-for-us-employment
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -139,7 +211,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### california-barbercosmo-credential-evaluation-and-translations
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -147,7 +219,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### california-best-education-credential-evaluation-services
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -155,7 +227,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### cheap-credential-evaluation-services
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -166,7 +238,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### credential-evaluation-for-education
 
-**DO NOT MIGRATE.** Match location: Root HTML copy only.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Root HTML copy only.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -174,7 +246,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### credential-evaluation-for-emloyment
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -184,7 +256,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### dallas-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -193,7 +265,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### diploma-translation-and-evaluation
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -205,7 +277,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### e-aet-expert-opinion-letter
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -213,7 +285,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### eb-2-niw-credential-evaluation
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -224,7 +296,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### eb-2-niw-expert-opinion-letters
 
-**DO NOT MIGRATE.** Match location: Root HTML copy only.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Root HTML copy only.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -232,7 +304,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### education-credential-evaluation-purposes
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -243,7 +315,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### education-evaluation-h1b-for-india
 
-**DO NOT MIGRATE.** Match location: Root HTML copy only.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Root HTML copy only.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -251,7 +323,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### education-evaluation-h1b
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -262,7 +334,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### florida-credential-evaluation-services
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -273,7 +345,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-for-immigration
 
-**DO NOT MIGRATE.** Match location: Blog source comments; also inspect legacy copies.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Blog source comments; also inspect legacy copies.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -282,7 +354,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-in-usa-China
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -290,7 +362,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-in-usa-csec
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -298,7 +370,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-in-usa-gce
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -307,7 +379,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-in-usa-latin-america
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -315,7 +387,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-credential-evaluation-in-usa-waec
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -324,7 +396,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### foreign-high-school-diploma-evaluation-in-usa
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -334,16 +406,16 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### georgia-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
-| Academic Evaluation Services | [blog/georgia-best-education-credential-evaluation-agencies-content.html:32](../../server-54.213.58.23/americantranslationservice.com/blog/georgia-best-education-credential-evaluation-agencies-content.html) | HTML comment: `AES` |
+| Unverified AES comment; prior attribution withdrawn | [blog/georgia-best-education-credential-evaluation-agencies-content.html:32](../../server-54.213.58.23/americantranslationservice.com/blog/georgia-best-education-credential-evaluation-agencies-content.html) | HTML comment: `AES` |
 | NACES | [blog/georgia-best-education-credential-evaluation-agencies-content.html:123](../../server-54.213.58.23/americantranslationservice.com/blog/georgia-best-education-credential-evaluation-agencies-content.html) | text: `Founder worked at an NACES agency for 10+ years as senior associate director` |
 
 ### houston-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -352,7 +424,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### how-to-avoid-delays-with-foreign-credential-evaluation
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -361,7 +433,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### how-to-get-an-international-evaluation
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -372,7 +444,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### i-140-education-evaluation
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -383,7 +455,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### illinois-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -394,15 +466,17 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### illinois-credential-evaluation-and-translations
 
-**DO NOT MIGRATE.** Match location: Root HTML copy only.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Root HTML copy only.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
 | NACES | [illinois-credential-evaluation-and-translations.html:199](../../server-54.213.58.23/americantranslationservice.com/illinois-credential-evaluation-and-translations.html) | text: `s an immigrant and also the Director of Evaluation, worked for a prominent NACES agency for 10+ years as a senior associate director.` |
 
+Current recheck: the biography match is in the root HTML copy at line 199; the included body no longer contains the previously recorded match.
+
 ### international-transcript-evaluation
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -412,7 +486,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### los-angeles-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -420,7 +494,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### los-angeles-credential-evaluation-and-translations
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -428,7 +502,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### miami-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -438,7 +512,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### miami-credential-evaluation-and-translations
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -446,7 +520,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### miami-foreign-credential-evaluation-services
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -454,7 +528,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### san-francisco-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -462,7 +536,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### san-francisco-credential-evaluation-and-translations
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**MIGRATED LOCALLY — biography exclusion withdrawn; original wording retained.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -470,7 +544,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### texas-best-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -480,7 +554,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### transcript-evaluation-service
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -491,7 +565,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### washington-state-education-credential-evaluation-agencies
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -501,7 +575,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### where-to-evaluate-international-degree-in-usa
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -510,7 +584,7 @@ blog in this scan already has a NACES/current-member exclusion.
 
 ### where-to-get-evaluation-for-uscis
 
-**DO NOT MIGRATE.** Match location: Article content/metadata/assets.
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.** Match location: Article content/metadata/assets.
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -519,14 +593,14 @@ blog in this scan already has a NACES/current-member exclusion.
 | The Evaluation Company / SpanTran | [blog/where-to-get-evaluation-for-uscis-content.html:208](../../server-54.213.58.23/americantranslationservice.com/blog/where-to-get-evaluation-for-uscis-content.html) | href: `https://spantran.com/web/` |
 | Transcript Research | [blog/where-to-get-evaluation-for-uscis-content.html:201](../../server-54.213.58.23/americantranslationservice.com/blog/where-to-get-evaluation-for-uscis-content.html) | href: `https://transcriptresearch.com/` |
 
-## Additional excluded article/landing-page sources — 7
+## Additional article/landing-page sources — 7, with revised dispositions
 
 These sources were listed separately in the main checklist. They must not be
 migrated or merged into retained content.
 
 ### best-credential-evaluation-services.html
 
-**DO NOT MIGRATE.**
+**MIGRATED LOCALLY — standalone English source, outside the 109-blog count.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -534,7 +608,7 @@ migrated or merged into retained content.
 
 ### c-california-barbercosmo-credential-evaluation-and-translations.html
 
-**DO NOT MIGRATE.**
+**BIOGRAPHY EXCLUSION WITHDRAWN — Chinese source/URL reference only; English-only article policy retained.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -542,7 +616,7 @@ migrated or merged into retained content.
 
 ### c-eb-2-niw-credential-evaluation.html
 
-**DO NOT MIGRATE.**
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -552,7 +626,7 @@ migrated or merged into retained content.
 
 ### c-how-to-avoid-delays-with-foreign-credential-evaluation.html
 
-**DO NOT MIGRATE.**
+**BIOGRAPHY EXCLUSION WITHDRAWN — Chinese source/URL reference only; English-only article policy retained.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -560,7 +634,7 @@ migrated or merged into retained content.
 
 ### c-i-140-education-evaluation.html
 
-**DO NOT MIGRATE.**
+**BIOGRAPHY EXCLUSION WITHDRAWN — Chinese source/URL reference only; English-only article policy retained.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -568,7 +642,7 @@ migrated or merged into retained content.
 
 ### e-credential-evaluation-for-uscis.html
 
-**DO NOT MIGRATE.**
+**MIGRATED LOCALLY — standalone English source, outside the 109-blog count.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -576,7 +650,7 @@ migrated or merged into retained content.
 
 ### expert-opinion-letter-h1b.html
 
-**DO NOT MIGRATE.**
+**REVIEW REQUIRED — additional historical findings beyond the cleared biography; not an established AICE prohibition.**
 
 | Matched organization | Source block | Evidence |
 | --- | --- | --- |
@@ -608,11 +682,14 @@ the P0 service/office migration scope.
 - `es-evaluation.html`: Educational Credential Evaluators; NACES; World Education Services.
 - `home-content-es.html`: NACES.
 
-## Verification
+## Verification — September 30 reassessment
 
-- All 109 original article entries are retained exactly once in the inventory.
-- The 48 blocked articles have no migration checkbox; the 60 candidates and one
-  visa-scope item remain unchecked. No migration has been marked complete.
-- The seven additional exclusions are removed from the main checklist's retained
-  article/landing-page lists and explicitly recorded as excluded.
-- Original website files, frontend behavior, and production settings were not changed.
+- All 109 article entries remain exactly once: 78 completed locally, 30 requiring
+  a separate decision, and one visa-scope item unchecked.
+- The 18 restored families have no remaining original-rule match beyond the
+  founder/director biography; Georgia's unsupported AES attribution is withdrawn.
+- Seven standalone dispositions are tracked separately: two migrated English
+  articles, three Chinese source/URL references, and two with other findings.
+- The subsequent 18-article migration is recorded in the inventory and status log.
+  All 78 candidate bodies are local; publication acceptance remains separate.
+- Source website files and production settings remain unchanged.

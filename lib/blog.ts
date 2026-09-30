@@ -1,4 +1,6 @@
 import inventory from '@/content/blog/articles.json';
+import titles from '@/content/blog/titles.json';
+import dates from '@/content/blog/dates.json';
 import type { Locale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 
@@ -6,11 +8,12 @@ export const topics = ['translation', 'evaluation', 'interpretation', 'expert'] 
 export type BlogTopic = typeof topics[number];
 export type BlogArticle = { slug: string; title: string; topic: BlogTopic; city: string | null; path: string };
 export const pilotSlug = 'boston-foreign-credential-evaluation-services';
-export const articles = [...inventory as BlogArticle[]].sort((a, b) =>
-  Number(b.slug === pilotSlug) - Number(a.slug === pilotSlug) || Number(b.topic === 'evaluation') - Number(a.topic === 'evaluation'));
-export const articleUrl = (article: BlogArticle, locale: Locale) => article.slug === pilotSlug
-  ? getPathname({ locale, href: `/blog/${pilotSlug}` })
-  : `https://www.americantranslationservice.com${article.path}`;
+export const articles = (inventory as BlogArticle[]).map(article => ({
+  ...article, title: titles[article.slug as keyof typeof titles] ?? article.title,
+  publishedAt: dates[article.slug as keyof typeof dates] ?? null,
+})).sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
+export const articleUrl = (article: BlogArticle, locale: Locale) =>
+  getPathname({ locale, href: `/blog/${article.slug}` });
 
 export const blogCopy = {
   en: {

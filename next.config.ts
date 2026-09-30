@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import blogRedirects from "./content/blog/redirects.json";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
@@ -6,8 +7,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
-      { source: "/blog/boston-foreign-credential-evaluation-services.php", destination: "/blog/boston-foreign-credential-evaluation-services", permanent: true },
-      { source: "/boston-foreign-credential-evaluation-services.html", destination: "/blog/boston-foreign-credential-evaluation-services", permanent: true },
+      ...blogRedirects,
       ...[
         ['e-privacy-policy', 'privacy'],
         ['e-terms-of-use', 'terms'],

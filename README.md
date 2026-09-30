@@ -35,22 +35,24 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Blog article bodies and office-detail
+app.americantranslationservice.com portal. Unmigrated office-detail
 destinations still depend on the existing production website. The
 localized Contact page is implemented. A localized Payment page is available
 at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
 footer link to the localized page, and `/e-pay.php` redirects there. Merchant
 accounts and payment reconciliation still need live review before launch.
 
-The Blog index is available at `/blog`, `/zh/blog`, and `/es/blog`, with 60
-screened candidate titles and search. Credential evaluation is the primary topic:
-its 10 articles appear by default, with other topics in a secondary selector.
-The header/footer link to the localized index. The first local article pilot is
-`/blog/boston-foreign-credential-evaluation-services`; the other 59 article bodies
-remain on verified legacy URLs. Article bodies are English-only across all locales, without language-availability
-notices; shared navigation and index controls remain localized. See
-[blog source notes](content/blog/README.md). `/blog/` and `/blog/index.php`
-redirect to `/blog`. Listing a candidate does not complete its content migration.
+The Blog index is available at `/blog`, `/zh/blog`, and `/es/blog`, with 80
+retained articles and search. Credential evaluation is the primary topic:
+its 28 articles appear by default, with other topics in a secondary selector.
+All 80 English article bodies are local at `/blog/[slug]`; 157 legacy PHP/HTML
+article URLs redirect to them. Article bodies remain English-only across locales,
+without language-availability notices. Shared navigation and index controls stay
+localized. Cards and page titles use each source body's heading; the original
+metadata titles remain in the source catalog for provenance. `/blog/` and
+`/blog/index.php` redirect to `/blog`. Local migration is complete; publication
+review of dated claims and production cutover remain open. See
+[blog source and verification notes](content/blog/README.md).
 
 Pricing is implemented at `/pricing`, `/zh/pricing`, and `/es/pricing`. The
 Services menu and footer use these localized routes. `/e-fee.php` redirects to

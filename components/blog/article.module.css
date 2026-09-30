@@ -50,3 +50,33 @@
   .sample { padding: 12px; }
   .closing { padding: 24px; }
 }
+
+/* Sanitized legacy prose uses the same reading column as the original pilot. */
+.imported { overflow-wrap: anywhere; }
+.imported h2 { font-size: clamp(1.6rem, 2.5vw, 2.15rem); line-height: 1.3; letter-spacing: -.025em; margin: 48px 0 24px; font-weight: 600; }
+.imported h3 { font-size: 1.3rem; line-height: 1.4; margin: 32px 0 16px; }
+.imported h4 { font-size: 1.125rem; line-height: 1.5; margin: 24px 0 12px; }
+.imported [id] { scroll-margin-top: 116px; }
+.imported p, .imported li { color: var(--ink); }
+.imported ul, .imported ol { padding-left: 26px; margin: 0 0 28px; }
+.imported li { font-size: 1.0625rem; line-height: 1.9; margin-bottom: 12px; }
+.imported a { color: var(--action-blue); text-decoration: underline; text-underline-offset: 3px; }
+.imported a:hover { color: var(--ink); }
+.imported h2 a, .imported h3 a { color: inherit; }
+.imported img { display: block; max-width: 100%; width: auto; height: auto; max-height: 620px; object-fit: contain; margin: 0 auto; }
+.imported :global(.source-figure) { margin: 28px 0; }
+.imported figcaption { color: var(--muted); font-size: .8125rem; line-height: 1.7; margin-top: 16px; }
+.imported :global(.source-archive) { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 24px 0; padding: 8px 0; }
+.imported summary { min-height: 44px; padding: 12px 0; cursor: pointer; font-size: .875rem; font-weight: 500; }
+.imported :global(.table-scroll) { max-width: 100%; overflow-x: auto; margin: 28px 0; border: 1px solid var(--line); border-radius: 12px; }
+.imported table { width: 100%; min-width: 600px; overflow-wrap: normal; border-collapse: collapse; font-size: .9375rem; line-height: 1.65; background: var(--surface); }
+.imported table:has(tr > :nth-child(5)) { min-width: 960px; }
+.imported th, .imported td { padding: 16px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+.imported th { background: var(--blue); font-weight: 600; }
+.imported td p, .imported td li { font-size: inherit; }
+.sidebar nav { max-height: calc(100dvh - 230px); overflow-y: auto; }
+@media (max-width: 760px) {
+  .imported h2 { margin-top: 36px; }
+  .imported li { font-size: 1rem; }
+  .imported th, .imported td { padding: 12px; }
+}

@@ -5,6 +5,102 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Newest-first blog ordering — September 30, 2026
+
+- Replaced pilot/topic pinning within article lists with descending original
+  publication dates. The credential-evaluation default and featured guide remain.
+- Generated lightweight date metadata for all 80 articles: 46 source dates and
+  34 null dates. Undated articles follow dated articles; ties retain inventory order.
+  Dates come only from leading source dates/bylines, including legacy spacing.
+- Passed source reproducibility and TypeScript checks. In-app browser verified
+  `/zh/blog` default evaluation order, all-topic order, expert filtering and search;
+  mobile 390px evaluation list has the same order and no horizontal overflow.
+  Saved desktop/mobile `blog-newest-first-*.jpg` in `output/playwright/`.
+  Viewport reset; no build, commit, push or deployment.
+
+### Two restored standalone English articles — September 30, 2026
+
+- Completed the two remaining restored English standalone sources after the 18-blog
+  batch: `best-credential-evaluation-services` and `e-credential-evaluation-for-uscis`.
+  Both appear in the blog, with English bodies across locales and root-URL redirects.
+- Final catalog: **80 local articles** (78 of the original 109 blogs + 2 standalone).
+  Topics: 28 evaluation, 42 translation, 7 interpretation, 3 expert opinion.
+  Source body headings are retained: the USA list is now titled 10 Best Credential
+  Evaluation Services (2026) in the supplied local source, not the older 15-item title.
+- Added explicit standalone source handling and reviewed source hashes. Preserved
+  16 additional image placements and 11 tables. Numeric source anchors are retained;
+  one duplicate q2 anchor becomes q2-2. Removed the old duplicated footer/map iframe
+  from the H1B page, retaining article prose and written contact information.
+- Final generated collection: 79 bodies plus the separate pilot; 191 image placements,
+  93 unique image files and 32 tables. The two missing A2Z placements remain recorded.
+- Final verification passed: 240 locale routes, 95 image URLs, invalid-slug 404s,
+  reproducible source/prose checks, TypeScript and i18n. All 157 redirects passed
+  308/query checks on temporary port 3022; that server is stopped. Port 3021 still
+  requires a restart for new redirect configuration (article routes already work).
+- In-app browser verified USA article at desktop width, H1B guide at 390px (one
+  footer, no duplicate IDs, no page overflow), default evaluation (28), all topics
+  (80), and USA-title search (one result). Saved `blog-restored-usa-desktop.jpg` and
+  `blog-restored-uscis-mobile.jpg` under `output/playwright/`. Viewport reset.
+- No build, commit, push or deployment. Thirty other blog findings and one visa
+  topic remain unresolved; publication acceptance is separate from local migration.
+
+### Restored 18 blog articles — September 30, 2026
+
+- Migrated all 18 restored candidates (16 evaluation + 2 expert opinion), bringing
+  the local total to 78: 26 evaluation, 42 translation, 7 interpretation, 3 expert.
+  The 30 other findings, one visa topic and two standalone English candidates
+  remain separate. No Chinese article-body variants were added.
+- Retained all source prose, author/date text, biography mentions and NACES links.
+  `biography-review.json` records reviewed source hashes; the importer permits
+  those specific biography matches and stops on changed/unreviewed sources.
+- The new batch retains 75 image placements and 18 substantive tables. Across
+  77 imported bodies plus the separate pilot, generated bodies contain 175 image
+  placements from 83 unique files and 21 substantive tables. New asset descriptions
+  were checked visually against source contact sheets; dated captures use disclosures.
+- Missing source `/images/A2Z.png` affects California and San Francisco agency lists.
+  Local source is absent; the old-site URL returns homepage HTML, not an image.
+  Omitted only those two broken placements, retained all organization prose/links,
+  and recorded the issue in `migration-report.json` and the checklist.
+- Repaired eight `#q1.html` links to existing `#q1` targets. Fixed legacy relative
+  service/contact/application-PDF URLs and the malformed `link to https://` citation.
+  Verified all ten local destinations linked by the new batch, including fragments.
+  Decorative dash separators are omitted; article prose remains unchanged.
+- Verification passed: importer reproducibility/prose checks, 234 locale/article
+  routes (H1, English body parity, noindex, IDs/anchors), 85 image paths, invalid
+  slugs, TypeScript, i18n and whitespace. Full route/image checks use port 3021.
+- All 155 legacy redirects (36 new) passed 308/query-preservation checks using a
+  temporary port-3022 server because the existing preview retained startup config.
+  Started `pnpm exec next dev --webpack --port 3022` in an isolated temporary
+  checkout after symlink/Turbopack and sandbox watcher failures; it is now stopped.
+  Port 3021 was not restarted and still needs to reload the new redirect config.
+- In-app browser passed Georgia desktop/390px, China guide at 320px, mobile expert
+  contents expansion, table keyboard scrolling without page overflow, Georgia
+  search (one result), all topics (78), expert (3) and default evaluation (26).
+  Screenshots: `output/playwright/blog-restored-georgia-desktop.jpg` and
+  `blog-restored-georgia-mobile.jpg`. Viewport override reset; Georgia preview retained.
+- No production build, commit, push or deployment. AICE-reference publication
+  review and dated-claim review remain tracked separately.
+
+### Blog biography exclusion reassessment — September 30, 2026
+
+- Owner correction: past employment at a NACES agency does not exclude an article.
+  Rechecked all 48 previously excluded article families (entry/include/root/shared
+  sources) and seven standalone sources. Restored 18 blog candidates, leaving 30
+  with other historical findings for a separate decision and one visa topic held.
+- Inventory at reassessment (before the subsequent migration above):
+  60 migrated locally + 18 awaiting migration + 30 pending review
+  + 1 visa held = 109. Two English standalone candidates are also restored; three
+  Chinese variants have biography exclusions lifted but are source/URL references,
+  and two standalone sources retain other findings. Standalone counts are separate.
+- Corrected Georgia's unsupported AES-comment attribution; its section describes FCE.
+  Five restored blog families currently have biography hits only in the older root copy.
+- Updated screening evidence, inventory and main checklist. AICE references in the
+  restored California/Los Angeles/Georgia lists and standalone USA list are tracked
+  separately against application page 13 if the application is under review.
+- Documentation/source review only: no article import, frontend change, membership
+  status verification, browser check, commit or deployment. The importer/catalog
+  at that point implemented the original 60-article scope; the migration above expands it.
+
 ### Payment source-copy restoration — September 30, 2026
 
 - Restored the legacy card restrictions and introduction, Miami/Boston public
@@ -27,6 +123,45 @@ implementation and checks, not production deployment or accessibility certificat
   All three locales have six Zelle steps, nine processing rows, six shipping
   methods and both amount statements. Typecheck, i18n and whitespace checks
   passed. Reused the existing server; no build, payment submission or deployment.
+
+### Remaining 59 blog articles — September 30, 2026
+
+- Completed local migration of the other 59 retained English articles: 9
+  evaluation, 42 translation, 7 interpretation and 1 expert opinion. Together
+  with the original Boston pilot, all 60 bodies now open locally; 0 remain to
+  import in the original scope. The later biography reassessment above restores
+  18 of the original 48 exclusions; the other 30 require review and visa stays held.
+- Added a shared article renderer, semantic contents navigation, responsive
+  tables, preserved dates and images, localized internal links, and body-heading
+  display titles. The legacy H1B title mismatch is resolved in favor of its body
+  heading (2026); source metadata remains recorded. No author/date was invented.
+- Preserved normalized prose for every imported body, plus 100 image placements
+  from 57 source files and three substantive tables. Assets were copied
+  byte-for-byte and visually classified; historical figures use disclosures.
+  Fixed legacy image-only paragraph handling and nested image-link/disclosure
+  markup after comparing image counts and inspecting the rendered articles.
+- Removed duplicate legacy contents/share controls and inline behavior/styling.
+  Thirteen links to excluded articles become plain text, without importing any
+  excluded content. The offline importer rechecks all retained PHP/includes/root
+  copies against the documented exclusion aliases and records source hashes.
+- All 60 index links now use local article routes. Added 119 PHP/root-HTML permanent
+  redirects. HTTP verification passed for 180 article/locale routes (body parity,
+  H1, noindex and fragments), 59 image paths, 119 redirects with query preservation,
+  and unknown/excluded/held article 404s. Source integrity, safe HTML, image/table
+  counts and contents targets passed. Typecheck and i18n checks passed.
+- In-app browser verified evaluation, translation, interpretation and expert
+  articles on desktop and 390px mobile: default 10 evaluation entries, all 60
+  local links, search, mobile contents, image disclosure and table scrolling.
+  Wide comparison tables were adjusted after mobile inspection to prevent
+  words being squeezed into narrow columns; the page itself does not overflow.
+  Screenshots include `output/playwright/blog-migration-evaluation-desktop.jpg`,
+  `blog-migration-table-mobile.jpg` and `blog-migration-interpretation-mobile.jpg`.
+- Updated the main checklist and all 60 inventory entries to distinguish local
+  migration completion from publication acceptance. Source-claim accuracy review
+  and production cutover remain open; no publishing or deployment was performed.
+- The previous port-3021 server was stopped. Started `pnpm dev` for verification;
+  sandbox file-watcher errors required restarting that process outside the sandbox.
+  The replacement preview server remains running at `http://localhost:3021`.
 
 ### Privacy and Terms — September 30, 2026
 

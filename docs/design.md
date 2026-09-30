@@ -243,7 +243,8 @@ shapes belong mainly to facts. Keep decorative artwork out of the reading path.
 Credential evaluation is the primary Blog topic. Use it in the page headline,
 introductory copy, featured guide and default article list. Translation,
 interpretation and expert opinion letters remain available through a quieter
-secondary topic selector. When all articles are shown, place evaluation first.
+secondary topic selector. Sort article lists by original publication date, newest
+first, including all-topic and filtered results. Place undated articles last.
 Do not change the sitewide service scope to accomplish this Blog-specific hierarchy.
 
 Use a readable article column, semantic sections, desktop contents navigation and
