@@ -2,24 +2,175 @@
   "title": "Pago",
   "eyebrow": "Pague los servicios de AET",
   "description": "Complete el formulario de su servicio y continúe a PayPal para pagar.",
-  "sections": { "card": "Pago con tarjeta", "alternatives": "Otros métodos de pago", "security": "Pago y procesamiento", "shipping": "Opciones de envío" },
+  "sections": {
+    "card": "Pago con tarjeta",
+    "alternatives": "Depósito/Cheque/Transferencia por Zelle",
+    "security": "Seguridad y procesamiento de pagos",
+    "shipping": "Opciones de envío"
+  },
   "form": {
     "intro": "Ingrese el importe cotizado por su oficina de AET. Al enviar el formulario, PayPal se abrirá en una pestaña nueva para completar el pago.",
-    "name": "Su nombre", "email": "Su correo electrónico", "phone": "Su número de teléfono",
-    "address": "Dirección postal (primera línea)", "address2": "Dirección postal (segunda línea, opcional)",
-    "city": "Ciudad", "state": "Estado", "zip": "Código postal", "addressGroup": "Dirección postal (opcional)", "service": "Servicio solicitado",
-    "serviceOther": "Si elige otro servicio, especifíquelo", "office": "Oficina que recibirá el pago",
-    "amount": "Importe en USD", "amountHelp": "Use el importe exacto en USD de su cotización o factura.",
+    "name": "Su nombre",
+    "email": "Su correo electrónico",
+    "phone": "Su número de teléfono",
+    "address": "Dirección postal (primera línea)",
+    "address2": "Dirección postal (segunda línea, opcional)",
+    "city": "Ciudad",
+    "state": "Estado",
+    "zip": "Código postal",
+    "addressGroup": "Dirección postal (opcional)",
+    "service": "Servicio solicitado",
+    "serviceOther": "Si elige otro servicio, especifíquelo",
+    "office": "Oficina que recibirá el pago",
+    "amount": "Importe en USD",
+    "amountHelp": "Use el importe exacto en USD de su cotización o factura.",
     "terms": "He leído y acepto los Términos del servicio y el Aviso de privacidad.",
-    "termsLink": "Términos del servicio", "privacyLink": "Aviso de privacidad", "submit": "Iniciar pago en línea",
+    "termsLink": "Términos del servicio",
+    "privacyLink": "Aviso de privacidad",
+    "submit": "Iniciar pago en línea",
     "newTab": "PayPal se abrirá en una pestaña nueva"
   },
-  "services": { "certified": "Traducción certificada", "evaluation": "Evaluación de credenciales extranjeras", "interpretation": "Interpretación", "other": "Otros servicios" },
-  "offices": { "miami": "Sede de Miami", "boston": "Oficina de Boston", "california": "Oficina de California", "nyc": "Oficina de Nueva York" },
-  "alternatives": {
-    "intro": "La página de pagos anterior también ofrece depósito, cheque y transferencia por Zelle. Antes de enviar dinero, confirme las instrucciones vigentes con la oficina encargada de su servicio.",
-    "contact": "Contactar una oficina", "zelle": "Transferencia por Zelle", "bank": "Depósito o transferencia bancaria", "check": "Cheque"
+  "services": {
+    "certified": "Traducción certificada",
+    "evaluation": "Evaluación de credenciales extranjeras",
+    "interpretation": "Interpretación",
+    "other": "Otros servicios"
   },
-  "security": { "paragraph": "Este formulario recopila datos del servicio y de contacto. Los datos de pago se ingresan después, en PayPal." },
-  "shipping": { "intro": "Si su servicio incluye entrega física, consulte las tarifas de envío actuales compartidas a continuación. Confirme la opción con su oficina antes de agregar el envío al pago.", "domestic": "Nacional", "international": "Internacional" }
+  "offices": {
+    "miami": "Sede de Miami",
+    "boston": "Oficina de Boston",
+    "california": "Oficina de California",
+    "nyc": "Oficina de Nueva York"
+  },
+  "alternatives": {
+    "miami": "Oficina de Miami:",
+    "boston": "Oficina de Boston:",
+    "deposit": "Depósito:",
+    "check": "Cheque:",
+    "instructions": "Instrucciones de transferencia por Zelle:",
+    "stepsTitle": "Pasos para pagar con Zelle",
+    "steps": [
+      "Inicie sesión en su cuenta bancaria participante en Zelle desde una computadora o aplicación móvil.",
+      "Seleccione “Transfer Zelle” → “Manage Recipients” → “Add New Recipient” → “Business”.",
+      "Complete la información del destinatario:",
+      "Después de agregar al destinatario, vuelva al menú principal y seleccione “Send” → “American Education and Translation Services”.",
+      "Ingrese el importe de la transferencia → seleccione “Continue”.",
+      "Seleccione “Confirm” para completar el pago."
+    ],
+    "bankTitle": "Nuestra información bancaria",
+    "selectOffice": "Seleccione una oficina:",
+    "offices": {
+      "miami": "Miami",
+      "california": "California",
+      "boston": "Boston",
+      "nyc": "Nueva York"
+    },
+    "fields": {
+      "Bank Name": "Nombre del banco",
+      "Account Name": "Nombre de la cuenta",
+      "Account No.": "Número de cuenta",
+      "Routing No.": "Número de ruta",
+      "Swift Code": "Código SWIFT",
+      "Recipient Address": "Dirección del destinatario",
+      "Bank Address": "Dirección del banco",
+      "Bank Phone No.": "Teléfono del banco",
+      "Payable to": "Cheque a nombre de"
+    },
+    "businessName": "Nombre de la empresa:",
+    "zelleEmail": "Correo de Zelle:",
+    "noteLabel": "Nota:",
+    "note": "Para consultar la lista de bancos participantes en Zelle, visite:",
+    "navLabel": "Zelle/Transferencia bancaria"
+  },
+  "security": {
+    "columns": [
+      "Método de pago",
+      "Tiempo de procesamiento",
+      "Medidas de seguridad"
+    ],
+    "methods": [
+      {
+        "method": "Pago en línea con tarjeta",
+        "details": [
+          [
+            "Procesamiento instantáneo",
+            "Cifrado SSL, cumplimiento de PCI DSS"
+          ],
+          [
+            "Confirmación inmediata",
+            "Pasarela de pago segura"
+          ]
+        ]
+      },
+      {
+        "method": "Transferencia/Depósito bancario",
+        "details": [
+          [
+            "1–3 días hábiles",
+            "Transferencia directa entre bancos"
+          ],
+          [
+            "El tiempo de procesamiento bancario varía",
+            "Protocolos bancarios seguros"
+          ],
+          [
+            "Se requiere verificación manual",
+            "Verificación del estado de cuenta bancario"
+          ]
+        ]
+      },
+      {
+        "method": "Transferencia por Zelle",
+        "details": [
+          [
+            "Procesamiento en tiempo real",
+            "Transferencia digital protegida por el banco"
+          ],
+          [
+            "Notificación instantánea",
+            "Transferencia por correo electrónico cifrada"
+          ]
+        ]
+      },
+      {
+        "method": "Pago con cheque",
+        "details": [
+          [
+            "5–10 días hábiles",
+            "Seguridad bancaria tradicional"
+          ],
+          [
+            "Incluye el tiempo de entrega postal",
+            "Proceso de compensación bancaria"
+          ]
+        ]
+      }
+    ],
+    "noteLabel": "NOTA:",
+    "note": "Todos los pagos se procesan de forma segura. Para importes superiores a $500, recomendamos utilizar transferencia bancaria o Zelle para un procesamiento más rápido. Contáctenos si tiene preguntas sobre el pago."
+  },
+  "shipping": {
+    "domestic": "Nacional",
+    "international": "Internacional",
+    "toggle": "Haga clic para ver las opciones de envío",
+    "noteLabel": "NOTA:",
+    "note": "Para envíos nacionales, si la opción elegida incluye un número de seguimiento de USPS, AET enviará una segunda copia del documento traducido SIN cargo si el paquete se pierde. Para envíos internacionales, AET cobrará nuevamente los gastos de envío si el paquete se pierde. Gracias por su comprensión.",
+    "columns": [
+      "Tiempo de envío",
+      "Gastos de envío",
+      "Número de seguimiento"
+    ],
+    "methods": {
+      "domesticFirst": "USPS First-Class Mail",
+      "domesticPriority": "USPS Priority Mail",
+      "domesticExpress": "USPS Express Mail",
+      "internationalFirst": "USPS First-Class Mail",
+      "internationalExpress": "USPS Express Mail",
+      "internationalFedex": "FedEx Priority Mail"
+    }
+  },
+  "card": {
+    "restriction": "Aceptamos ÚNICAMENTE Visa y MasterCard. Para importes superiores a $250, utilice Zelle o Venmo.",
+    "description": "Pagos en línea seguros y convenientes para los servicios de AET. Invierta en educación y traducción con opciones de pago confiables. ¡Comience hoy su pago seguro!"
+  }
 }

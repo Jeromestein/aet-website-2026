@@ -1,0 +1,94 @@
+{
+  "miami": [
+    {
+      "label": "Bank Name",
+      "value": "Citi Bank"
+    },
+    {
+      "label": "Account Name",
+      "value": "American Education and Translation Services"
+    },
+    {
+      "label": "Account No.",
+      "value": "*****5142"
+    },
+    {
+      "label": "Routing No.",
+      "value": "322271724"
+    },
+    {
+      "label": "Swift Code",
+      "value": "CITIUS33"
+    },
+    {
+      "label": "Recipient Address",
+      "value": "15321 S Dixie Hwy, Ste 302 Miami, FL 33157"
+    }
+  ],
+  "boston": [
+    {
+      "label": "Bank Name",
+      "value": "Bank of America"
+    },
+    {
+      "label": "Account Name",
+      "value": "American Education and Translation Services"
+    },
+    {
+      "label": "Account No.",
+      "value": "********4088"
+    },
+    {
+      "label": "Routing No.",
+      "value": "011000138"
+    },
+    {
+      "label": "Swift Code",
+      "value": "BOFAUS3N"
+    },
+    {
+      "label": "Bank Address",
+      "value": "151 Centre St, Malden, MA 02148"
+    },
+    {
+      "label": "Bank Phone No.",
+      "value": "781 324 7833"
+    },
+    {
+      "label": "Recipient Address",
+      "value": "6 Pleasant St, Suite #418, Malden, MA 02148"
+    }
+  ],
+  "check": [
+    {
+      "label": "Payable to",
+      "value": "AET"
+    },
+    {
+      "label": "Recipient Address",
+      "value": "6 Pleasant St, Suite #418, Malden, MA 02148"
+    }
+  ],
+  "zelle": {
+    "initialBank": "Chase",
+    "businessName": "American Education and Translation Services",
+    "offices": {
+      "miami": {
+        "bank": "Bank of America",
+        "email": "info@aet21.com"
+      },
+      "california": {
+        "bank": "Bank of America",
+        "email": "info@aet21.com"
+      },
+      "boston": {
+        "bank": "Bank of America",
+        "email": "boston@aet21.com"
+      },
+      "nyc": {
+        "bank": "Bank of America",
+        "email": "boston@aet21.com"
+      }
+    }
+  }
+}

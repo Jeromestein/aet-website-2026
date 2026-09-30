@@ -2,24 +2,175 @@
   "title": "付款",
   "eyebrow": "支付 AET 服务费用",
   "description": "填写服务及付款信息，然后前往 PayPal 完成支付。",
-  "sections": { "card": "银行卡付款", "alternatives": "其他付款方式", "security": "付款与处理", "shipping": "邮寄选项" },
+  "sections": {
+    "card": "银行卡付款",
+    "alternatives": "存款／支票／Zelle 转账",
+    "security": "付款安全与处理",
+    "shipping": "邮寄选项"
+  },
   "form": {
     "intro": "请输入 AET 办公室报价中的金额。提交表格后，PayPal 将在新标签页打开以完成付款。",
-    "name": "姓名", "email": "电子邮箱", "phone": "电话号码",
-    "address": "邮寄地址（第一行）", "address2": "邮寄地址（第二行，可选）",
-    "city": "城市", "state": "州／省", "zip": "邮编", "addressGroup": "邮寄地址（可选）", "service": "申请的服务",
-    "serviceOther": "如选择其他服务，请说明", "office": "收款办公室",
-    "amount": "付款金额（美元）", "amountHelp": "请填写报价单或账单上的准确美元金额。",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "phone": "电话号码",
+    "address": "邮寄地址（第一行）",
+    "address2": "邮寄地址（第二行，可选）",
+    "city": "城市",
+    "state": "州／省",
+    "zip": "邮编",
+    "addressGroup": "邮寄地址（可选）",
+    "service": "申请的服务",
+    "serviceOther": "如选择其他服务，请说明",
+    "office": "收款办公室",
+    "amount": "付款金额（美元）",
+    "amountHelp": "请填写报价单或账单上的准确美元金额。",
     "terms": "我已阅读并同意服务条款及隐私声明。",
-    "termsLink": "服务条款", "privacyLink": "隐私声明", "submit": "开始在线付款",
+    "termsLink": "服务条款",
+    "privacyLink": "隐私声明",
+    "submit": "开始在线付款",
     "newTab": "PayPal 将在新标签页打开"
   },
-  "services": { "certified": "认证翻译", "evaluation": "国外学历评估", "interpretation": "口译", "other": "其他服务" },
-  "offices": { "miami": "迈阿密总部", "boston": "波士顿办公室", "california": "加州办公室", "nyc": "纽约办公室" },
-  "alternatives": {
-    "intro": "旧付款页也提供存款、支票和 Zelle 转账。汇款前请联系负责您服务的办公室，确认最新收款信息。",
-    "contact": "联系办公室", "zelle": "Zelle 转账", "bank": "银行存款或转账", "check": "支票"
+  "services": {
+    "certified": "认证翻译",
+    "evaluation": "国外学历评估",
+    "interpretation": "口译",
+    "other": "其他服务"
   },
-  "security": { "paragraph": "此表格只收集服务及联系信息。付款信息会在前往 PayPal 后输入。" },
-  "shipping": { "intro": "如果服务需要邮寄纸质材料，下方采用官网现行的统一邮寄价格。将邮费计入付款金额前，请先与办公室确认邮寄方式。", "domestic": "美国境内", "international": "国际邮寄" }
+  "offices": {
+    "miami": "迈阿密总部",
+    "boston": "波士顿办公室",
+    "california": "加州办公室",
+    "nyc": "纽约办公室"
+  },
+  "alternatives": {
+    "miami": "迈阿密办公室：",
+    "boston": "波士顿办公室：",
+    "deposit": "存款：",
+    "check": "支票：",
+    "instructions": "Zelle 转账说明：",
+    "stepsTitle": "Zelle 付款步骤",
+    "steps": [
+      "通过电脑或手机应用登录支持 Zelle 的银行账户。",
+      "选择“Transfer Zelle” → “Manage Recipients” → “Add New Recipient” → “Business”。",
+      "填写收款人信息：",
+      "成功添加收款人后，返回主菜单，选择“Send” → “American Education and Translation Services”。",
+      "输入转账金额 → 选择“Continue”。",
+      "选择“Confirm”完成付款。"
+    ],
+    "bankTitle": "我们的银行信息",
+    "selectOffice": "选择办公室：",
+    "offices": {
+      "miami": "迈阿密",
+      "california": "加州",
+      "boston": "波士顿",
+      "nyc": "纽约"
+    },
+    "fields": {
+      "Bank Name": "银行名称",
+      "Account Name": "账户名称",
+      "Account No.": "账号",
+      "Routing No.": "银行路由号码",
+      "Swift Code": "SWIFT 代码",
+      "Recipient Address": "收款人地址",
+      "Bank Address": "银行地址",
+      "Bank Phone No.": "银行电话",
+      "Payable to": "支票抬头"
+    },
+    "businessName": "公司名称：",
+    "zelleEmail": "Zelle 邮箱：",
+    "noteLabel": "注意：",
+    "note": "支持 Zelle 的银行列表请见：",
+    "navLabel": "Zelle／银行转账"
+  },
+  "security": {
+    "columns": [
+      "付款方式",
+      "处理时间",
+      "安全措施"
+    ],
+    "methods": [
+      {
+        "method": "在线银行卡付款",
+        "details": [
+          [
+            "即时处理",
+            "SSL 加密，符合 PCI DSS 标准"
+          ],
+          [
+            "即时确认",
+            "安全支付网关"
+          ]
+        ]
+      },
+      {
+        "method": "银行转账／存款",
+        "details": [
+          [
+            "1–3 个工作日",
+            "银行之间直接转账"
+          ],
+          [
+            "银行处理时间有所不同",
+            "安全银行协议"
+          ],
+          [
+            "需要人工核实",
+            "银行对账单核实"
+          ]
+        ]
+      },
+      {
+        "method": "Zelle 转账",
+        "details": [
+          [
+            "实时处理",
+            "银行保障的数字转账"
+          ],
+          [
+            "即时通知",
+            "加密邮箱转账"
+          ]
+        ]
+      },
+      {
+        "method": "支票付款",
+        "details": [
+          [
+            "5–10 个工作日",
+            "传统银行安全保障"
+          ],
+          [
+            "包含邮寄时间",
+            "银行清算流程"
+          ]
+        ]
+      }
+    ],
+    "noteLabel": "注意：",
+    "note": "所有付款均经过安全处理。对于超过 $500 的大额付款，我们建议使用银行转账或 Zelle，以便更快处理。如有任何付款问题，请联系我们。"
+  },
+  "shipping": {
+    "domestic": "美国境内",
+    "international": "国际邮寄",
+    "toggle": "点击查看邮寄选项",
+    "noteLabel": "注意：",
+    "note": "美国境内邮寄：如果您选择的邮寄方式提供 USPS 追踪号码，包裹丢失时，AET 将免费补寄一份翻译文件。国际邮寄：如果包裹丢失，AET 将再次收取邮费。感谢您的理解。",
+    "columns": [
+      "邮寄时间",
+      "邮费",
+      "追踪号码"
+    ],
+    "methods": {
+      "domesticFirst": "USPS First-Class Mail",
+      "domesticPriority": "USPS Priority Mail",
+      "domesticExpress": "USPS Express Mail",
+      "internationalFirst": "USPS First-Class Mail",
+      "internationalExpress": "USPS Express Mail",
+      "internationalFedex": "FedEx Priority Mail"
+    }
+  },
+  "card": {
+    "restriction": "我们仅接受 Visa 和 MasterCard。超过 $250 请使用 Zelle 或 Venmo。",
+    "description": "安全便捷地在线支付 AET 服务费用。通过值得信赖的付款方式，投资教育与翻译服务，助力您的发展。立即开始安全付款！"
+  }
 }

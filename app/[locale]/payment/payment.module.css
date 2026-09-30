@@ -29,18 +29,58 @@
 .submitRow { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 27px; }
 .submitRow button { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 8px; min-height: 54px; padding: 12px 22px; cursor: pointer; font: inherit; font-weight: 600; }
 .submitRow small { color: var(--muted); }
-.methodCards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.methodCard { min-width: 0; padding: 23px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
-.methodCard svg { color: var(--accent); }
-.methodCard h3 { font-size: 17px; line-height: 1.4; margin: 18px 0 0; }
-.contactLink { display: inline-flex; align-items: center; gap: 5px; margin-top: 22px; color: var(--action-blue); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .shippingGroup { margin-top: 27px; }
 .shippingGroup h3 { font-size: 20px; margin: 0 0 14px; }
 @media (max-width: 760px) {
   .section { margin-bottom: 48px; }
   .form { padding: 20px; }
   .fieldsThree, .fieldsTwo { grid-template-columns: 1fr; gap: 16px; }
-  .methodCards:global(.card-rail) { display: flex; gap: 16px; }
-  .methodCard { padding: 20px; }
   .submitRow button { width: 100%; justify-content: center; }
+}
+
+.cardRestriction { padding: 17px 20px; border-left: 3px solid var(--orange); background: var(--blue); line-height: 1.65; font-weight: 600; margin: 0 0 20px; }
+.instructionCard { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); padding: 28px; margin: 22px 0; }
+.instructionCard h3, .subheading { font-size: 22px; line-height: 1.4; margin: 0 0 20px; }
+.subheading { margin-top: 36px; }
+.instructionCard h4 { font-size: 17px; margin: 24px 0 12px; }
+.bankDetails { margin: 0; font-size: 15px; line-height: 1.75; }
+.bankDetails > div { display: grid; grid-template-columns: minmax(120px, .8fr) minmax(0, 2fr); gap: 8px 20px; padding: 7px 0; }
+.bankDetails dt { font-weight: 600; }
+.bankDetails dd { margin: 0; overflow-wrap: anywhere; }
+.bankDetails a, .note a { color: var(--action-blue); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.steps { padding-left: 24px; margin: 0; line-height: 1.8; }
+.steps li + li { margin-top: 12px; }
+.officeLabel { font-weight: 600; font-size: 15px; margin: 0 0 12px; }
+.officeButtons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.officeButtons button { min-height: 44px; padding: 9px 16px; border: 1px solid var(--action-blue); border-radius: 8px; font: inherit; color: var(--action-blue); background: var(--paper); cursor: pointer; }
+.officeButtons button[aria-pressed="true"] { color: white; background: var(--action-blue); }
+.officeButtons button:focus-visible, .shippingDetails summary:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 3px; }
+.note { font-size: 15px; line-height: 1.8; margin: 24px 0 0; }
+.processingTable { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 14px; line-height: 1.65; }
+.processingTable th, .processingTable td { border: 1px solid var(--line); padding: 14px 16px; text-align: left; vertical-align: top; }
+.processingTable thead th { background: var(--blue); }
+.processingTable tbody th { width: 27%; }
+.shippingDetails { border-top: 1px solid var(--line); padding-top: 20px; }
+.shippingDetails summary { cursor: pointer; font-size: 18px; color: var(--action-blue); font-weight: 600; line-height: 1.6; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 760px) {
+  .instructionCard { padding: 20px; }
+  .bankDetails > div { grid-template-columns: 1fr; gap: 0; padding: 9px 0; }
+  .processingTable, .processingTable tbody, .processingTable tr, .processingTable td, .processingTable tbody th { display: block; width: auto; }
+  .processingTable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .processingTable { background: transparent; }
+  .processingTable tbody { margin-bottom: 18px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .processingTable td, .processingTable tbody th { border: 0; padding: 10px 18px; }
+  .processingTable tbody th { background: var(--blue); font-size: 16px; padding: 14px 18px; }
+  .processingTable tr + tr { border-top: 1px solid var(--line); }
+  .processingTable td::before { content: attr(data-label); display: block; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+}
+.shippingTableWrap { overflow-x: auto; }
+.shippingTable { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 1.65; background: var(--surface); }
+.shippingTable th, .shippingTable td { padding: 14px; border: 1px solid var(--line); text-align: left; }
+.shippingTable thead th { background: var(--blue); }
+.shippingTable tbody th { font-weight: 500; }
+@media (max-width: 760px) {
+  .shippingTable { font-size: 12px; }
+  .shippingTable th, .shippingTable td { padding: 10px 7px; }
 }

@@ -5,6 +5,29 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Payment source-copy restoration — September 30, 2026
+
+- Restored the legacy card restrictions and introduction, Miami/Boston public
+  deposit details, Boston check instructions, six Zelle steps, all four office
+  selections and the participating-bank link. Public masked account values,
+  routing/SWIFT details and addresses are copied exactly from the source.
+- Restored all nine processing/security rows, the $500 note, all six shipping
+  methods with source headings and the domestic/international lost-package
+  policies. Preserved both original $250/$500 statements and the original Zelle
+  initial Chase display versus Bank of America after office selection.
+- English copy follows `e-pay-content.html`, checked against the live old page.
+  Chinese and Spanish include the same full content. The existing disabled
+  legacy captcha remains omitted; no backend/payment-handoff changes were made.
+- In-app browser verified English desktop, all four Zelle office selections,
+  Chinese mobile at 390px, Spanish mobile at 320px and shipping expansion.
+  Neither mobile width had page overflow. Screenshots are under
+  `output/playwright/payment-content-restored-*.jpg`.
+- Normalized source-to-rendered comparison covers 147 of 148 legacy text
+  segments; only the intentionally omitted Verify Code control label differs.
+  All three locales have six Zelle steps, nine processing rows, six shipping
+  methods and both amount statements. Typecheck, i18n and whitespace checks
+  passed. Reused the existing server; no build, payment submission or deployment.
+
 ### Privacy and Terms — September 30, 2026
 
 - Added `/privacy` and `/terms` with a shared restrained reading layout,

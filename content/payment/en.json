@@ -2,24 +2,175 @@
   "title": "Payment",
   "eyebrow": "Pay for AET Services",
   "description": "Complete the form for your quoted service and continue to PayPal to pay.",
-  "sections": { "card": "Card Payment", "alternatives": "Other Payment Methods", "security": "Payment & Processing", "shipping": "Shipping Options" },
+  "sections": {
+    "card": "Card Payment",
+    "alternatives": "Deposit/Check/Zelle Transfer",
+    "security": "Payment Security & Processing",
+    "shipping": "Shipping Options"
+  },
   "form": {
     "intro": "Enter the amount quoted by your AET office. After you submit, PayPal opens in a new tab to complete the payment.",
-    "name": "Your Name", "email": "Your Email", "phone": "Your Phone Number",
-    "address": "Mailing Address (First line)", "address2": "Mailing Address (Second line, optional)",
-    "city": "City", "state": "State", "zip": "Zip Code", "addressGroup": "Mailing address (optional)", "service": "Requested Service",
-    "serviceOther": "Please specify if you choose other", "office": "Pay to which office",
-    "amount": "Amount in $", "amountHelp": "Use the exact USD amount on your quote or invoice.",
-    "terms": "I have read and agree to the Service Terms and Privacy Notice.",
-    "termsLink": "Service Terms", "privacyLink": "Privacy Notice", "submit": "Start Online Payment",
+    "name": "Your Name",
+    "email": "Your Email",
+    "phone": "Your Phone Number",
+    "address": "Mailing Address (First line)",
+    "address2": "Mailing Address (Second line Optional)",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip Code",
+    "addressGroup": "Mailing address (optional)",
+    "service": "Requested Service",
+    "serviceOther": "Please specify if you choose other",
+    "office": "Pay to which office",
+    "amount": "Amount in $",
+    "amountHelp": "Use the exact USD amount on your quote or invoice.",
+    "terms": "I've read and I agree with your terms and conditions.",
+    "termsLink": "Service Terms",
+    "privacyLink": "Privacy Notice",
+    "submit": "Start Online Payment",
     "newTab": "PayPal opens in a new tab"
   },
-  "services": { "certified": "Certified Translation", "evaluation": "Foreign Credential Evaluation", "interpretation": "Interpretation", "other": "Other Services" },
-  "offices": { "miami": "Miami Headquarters", "boston": "Boston Office", "california": "California Office", "nyc": "New York Office" },
-  "alternatives": {
-    "intro": "The legacy payment page also offers deposit, check, and Zelle transfer. Contact the office handling your service to confirm current instructions before sending money.",
-    "contact": "Contact an Office", "zelle": "Zelle transfer", "bank": "Bank deposit or transfer", "check": "Check"
+  "services": {
+    "certified": "Certified Translation",
+    "evaluation": "Foreign Credential Evaluation",
+    "interpretation": "Interpretation",
+    "other": "Other Services"
   },
-  "security": { "paragraph": "This form collects service and contact details. Payment details are entered after you continue to PayPal." },
-  "shipping": { "intro": "If your service includes physical delivery, use the current shared shipping rates below. Confirm the option with your office before adding any shipping charge to your payment.", "domestic": "Domestic", "international": "International" }
+  "offices": {
+    "miami": "Miami Headquarters",
+    "boston": "Boston Office",
+    "california": "California Office",
+    "nyc": "New York Office"
+  },
+  "alternatives": {
+    "miami": "Miami Office:",
+    "boston": "Boston Office:",
+    "deposit": "Deposit:",
+    "check": "Check:",
+    "instructions": "Zelle Transfer Instructions:",
+    "stepsTitle": "Zelle Payment Steps",
+    "steps": [
+      "Login to your bank account that participates in Zelle (via computer or mobile app).",
+      "Select \"Transfer Zelle\" → Select \"Manage Recipients\" → \"Add New Recipient\" → \"Business\".",
+      "Fill in the recipient information:",
+      "After successfully adding the recipient, return to the main menu and select \"Send\" → select \"American Education and Translation Services\".",
+      "Enter the transfer amount → select \"Continue\".",
+      "Select \"Confirm\" to complete the payment."
+    ],
+    "bankTitle": "Our Bank Information",
+    "selectOffice": "Select Office:",
+    "offices": {
+      "miami": "Miami",
+      "california": "California",
+      "boston": "Boston",
+      "nyc": "New York"
+    },
+    "fields": {
+      "Bank Name": "Bank Name",
+      "Account Name": "Account Name",
+      "Account No.": "Account No.",
+      "Routing No.": "Routing No.",
+      "Swift Code": "Swift Code",
+      "Recipient Address": "Recipient Address",
+      "Bank Address": "Bank Address",
+      "Bank Phone No.": "Bank Phone No.",
+      "Payable to": "Payable to"
+    },
+    "businessName": "Business Name:",
+    "zelleEmail": "Zelle Email:",
+    "noteLabel": "Note:",
+    "note": "For a list of Zelle participating banks, visit:",
+    "navLabel": "Zelle/Bank Transfer"
+  },
+  "security": {
+    "columns": [
+      "Payment Method",
+      "Processing Time",
+      "Security Features"
+    ],
+    "methods": [
+      {
+        "method": "Online Card Payment",
+        "details": [
+          [
+            "Instant processing",
+            "SSL encryption, PCI DSS compliant"
+          ],
+          [
+            "Immediate confirmation",
+            "Secure payment gateway"
+          ]
+        ]
+      },
+      {
+        "method": "Bank Transfer/Deposit",
+        "details": [
+          [
+            "1-3 business days",
+            "Direct bank-to-bank transfer"
+          ],
+          [
+            "Bank processing time varies",
+            "Secure banking protocols"
+          ],
+          [
+            "Manual verification required",
+            "Bank statement verification"
+          ]
+        ]
+      },
+      {
+        "method": "Zelle Transfer",
+        "details": [
+          [
+            "Real-time processing",
+            "Bank-secured digital transfer"
+          ],
+          [
+            "Instant notification",
+            "Encrypted email transfer"
+          ]
+        ]
+      },
+      {
+        "method": "Check Payment",
+        "details": [
+          [
+            "5-10 business days",
+            "Traditional banking security"
+          ],
+          [
+            "Mail delivery time included",
+            "Bank clearing process"
+          ]
+        ]
+      }
+    ],
+    "noteLabel": "NOTE:",
+    "note": "All payments are processed securely. For large amounts over $500, we recommend using bank transfer or Zelle for faster processing. Contact us for any payment questions."
+  },
+  "shipping": {
+    "domestic": "Domestic",
+    "international": "International",
+    "toggle": "Click to See Shipping Options",
+    "noteLabel": "NOTE:",
+    "note": "For Domestic shipping, if your chosen shipping option has tracking number provided by USPS, AET will send a second copy of the translation document with NO charges if the package was lost. For International shipping, AET will charge shipping fee again if the package was lost. Thanks for your understanding.",
+    "columns": [
+      "Shipping time",
+      "Shipping fee",
+      "Tracking No."
+    ],
+    "methods": {
+      "domesticFirst": "USPS First-Class Mail",
+      "domesticPriority": "USPS Priority Mail",
+      "domesticExpress": "USPS Express Mail",
+      "internationalFirst": "USPS First-Class Mail",
+      "internationalExpress": "USPS Express Mail",
+      "internationalFedex": "FedEx Priority Mail"
+    }
+  },
+  "card": {
+    "restriction": "We accept Visa and MasterCard ONLY. Zelle or Venmo if over $250.",
+    "description": "Secure and convenient online payments for AET services. Invest in education and translation with trusted payment options. Start your secure payment today!"
+  }
 }
