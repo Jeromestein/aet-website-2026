@@ -136,10 +136,22 @@ one shared page and its i18n content, not three independently implemented pages.
     or embedded map to migrate. Business verification of office facts and
     remaining office-detail pages is still required before launch.
 - [ ] **Payment** — `/e-pay.php` → Payment page with a functioning payment path.
-  The local form posts to `pay/process.php`, which uses the old PHP payment flow.
-  Choose a maintained backend or approved replacement and verify it in test mode;
-  copying the visible form is insufficient. Preserve approved payment instructions
-  and terms links without copying private payment configuration into frontend code.
+  The old form posted to `pay/process.php`; the new server route reproduces its
+  PayPal form handoff. Verify it in test mode and confirm all four merchant
+  recipients before launch. Preserve approved payment instructions and terms
+  links without copying merchant configuration into frontend code.
+  - Local `/payment` page drafted September 29, 2026 with the legacy four office
+    choices. The PHP form handoff is ported to a local server route using PayPal
+    Payments Standard and server-only office configuration; no REST API is needed.
+    Header and footer links now target the localized route, and `/e-pay.php`
+    redirects there. Merchant routing and payment reconciliation still need
+    testing before production launch.
+  - September 30 verification: all 12 office/locale combinations, Other Services
+    and six invalid submissions passed local checks. The PayPal Purchase details
+    landing step was verified on desktop and mobile using synthetic $1 input.
+    No payment was completed. Guest checkout, return/cancel behavior, merchant
+    recipients and payment reconciliation still require end-to-end acceptance;
+    keep this item open. See [verification evidence](status.md).
 - [x] **Service Fee** — `/e-fee.php` → localized `/pricing` page, implemented
   September 29, 2026 from the owner-updated legacy fee page. Fees, turnaround,
   shipping and expert-opinion rates use shared records and reusable tables.
@@ -179,8 +191,12 @@ links; it does not establish that other offices have closed.
   normalize to `/blog`. English, Chinese and Spanish indexes list 60 candidate
   articles with topic filters and search; header/footer links use the active locale.
   All 60 legacy destinations were verified September 30: 58 root HTML paths and
-  two PHP paths. Article bodies remain on the old site; this does not complete
-  their migration or content approval. Production cutover remains pending.
+  two PHP paths. The Boston credential-evaluation pilot now opens locally;
+  the other 59 article bodies remain on the old site. The default list shows
+  10 credential-evaluation articles, with other topics in a secondary selector.
+  Article bodies are English-only; surrounding index controls remain localized.
+  Listing an article does not complete content approval. Production cutover
+  remains pending.
 
 ## Shared i18n acceptance — part of each page migration
 
@@ -236,12 +252,26 @@ checkout, not a live HTTP audit.
 
 ### Credential evaluation priority and article pilot — September 30
 
-- [x] Keep blog article bodies English-only across locales. Remove article translation-availability banners and index language notices; no blog translation work is planned.
-
-- [x] Make credential evaluation the Blog headline, featured content and default list (10 articles); keep all 60 candidates accessible through a secondary control.
-- [x] Build a local article pilot (`/blog/boston-foreign-credential-evaluation-services`) with section navigation, report-type sections, original images and a connected index/featured card. All locales share the English article body without language-availability notices; 59 article bodies remain on the legacy site.
-- [x] Verify desktop/mobile reading, section links, images, localized navigation and old URL mappings. HTTP checks and Playwright fallback passed September 30; the in-app browser timed out on the valid preview tab.
-- [ ] Obtain owner feedback on the pilot before expanding article migration.
+- [x] Keep blog article bodies English-only across locales. Remove article
+  translation-availability banners and index language notices; no blog
+  translation work is planned.
+- [x] Make credential evaluation the Blog headline, featured content and default
+  list (10 articles); keep all 60 candidates accessible through a secondary control.
+- [x] Build a local article pilot at
+  `/blog/boston-foreign-credential-evaluation-services` with section navigation,
+  report-type sections, original images and a connected index/featured card.
+  All locales share the English article body without language-availability notices;
+  59 article bodies remain on the legacy site.
+- [x] Verify desktop/mobile reading, section links, images, localized navigation
+  and old URL mappings. HTTP and Playwright fallback checks passed September 30.
+  After removing the language notices, the in-app browser also verified the
+  Chinese index and pilot article successfully. Typecheck and i18n checks passed;
+  see [verification evidence](status.md).
+- [x] Incorporate owner feedback to keep English article content and remove
+  translation-availability notices. Implementation committed as `60c415b`.
+- [ ] Obtain final owner acceptance of the pilot's layout and content claims
+  before expanding article migration. A local preview and commit do not establish
+  publication approval.
 
 - **DO NOT MIGRATE** any blog article mentioning NACES or a current NACES member,
   including names, recognized abbreviations, former branding, links, metadata,
