@@ -1,7 +1,8 @@
 # AET 2026 Website Migration Checklist
 
-Inventory date: September 28, 2026. Source: the local legacy website and the
-current 2026 design, navigation, footer, and homepage code.
+Initial inventory: September 28, 2026. Status reconciled September 30, 2026
+against the current working tree, Git history and recorded local verification.
+Source: the local legacy website and the 2026 design, navigation and page code.
 
 ## Scope and current status
 
@@ -9,11 +10,23 @@ The destination is `aet-website-2026`; the content source is
 `server-54.213.58.23/americantranslationservice.com`. Other company websites
 (Meiyu Group, Jiahua, immigration, and cryonics) are outside this AET migration.
 
-The new project currently rebuilds homepage content; its service and supporting
-links still lead to **20 distinct pages/sections** on the legacy domain. The 20
-include the blog index, not individual articles. There are also **109 blog article
-PHP entry points** in the local copy. These are source counts, not verified live
-or already migrated pages.
+The original homepage inventory identified **20 distinct destination pages/sections**,
+including the blog index but not individual articles. **19 now have local
+implementations** in the working tree; the full **Institutions** destination
+still links to the legacy site. Implementation presence is not final acceptance:
+the service, Contact and Payment items below retain their outstanding checks.
+The four office pages are committed as `20ef0ab`, with local verification
+recorded in `status.md`. The source inventory also contains **109 blog article
+PHP entry points**; these are not 109 completed migrations.
+
+| Current milestone | Status |
+| --- | --- |
+| About AET | Local migration and browser checks complete; committed as `b39184c` |
+| Career | Local migration and browser checks complete; committed as `20e8222` |
+| Four footer office pages | Local implementation and recorded checks complete; committed as `20ef0ab` |
+| Blog | 80 local articles; migration/order changes committed as `63293b4` |
+| Full Institutions page | Still to implement; existing logo carousel does not replace it |
+| Production release | Pending business/content review, payment acceptance and deployment |
 
 September 30 biography reassessment: of 109 blog articles, **78 are local (60 original + 18 restored)**, **30 have other historical findings
 requiring a separate decision**, and **1 visa article remains held**. Founder/director
@@ -29,13 +42,15 @@ rebuilds or additional migration counts. Legacy translated files are content
 references and old URLs to map, not additional implementation tasks.
 
 The shared homepage is at `app/[locale]/page.tsx`; message files and locale routing
-are configured for `/`, `/zh`, and `/es`. This confirms the source structure, not
-browser acceptance. The service links still use English legacy destinations in
-all locales and need locale-aware destinations as the shared pages are migrated.
+are configured for `/`, `/zh`, and `/es`. Header services and footer company/office
+links now use local locale-aware routes. Legal documents intentionally use their
+English-only routes. The Institutions list remains an external legacy destination.
+Per-page browser evidence is recorded in [status.md](status.md).
 
-An unchecked item means work remains. Mark a page complete only after its content,
-assets, links, required functionality, and desktop/mobile presentation are verified.
-Existing homepage implementation is not evidence of a completed site migration.
+An unchecked item means work remains, even when the route already exists. Checked
+page items record local migration and the documented checks; they do not establish
+current business claims, external transaction completion or production deployment.
+Keep outstanding page-specific checks and the launch checklist below open.
 
 P0 below is the first implementation batch because these destinations are already
 exposed by the new homepage. P1 content may follow during development, but every
@@ -134,8 +149,10 @@ one shared page and its i18n content, not three independently implemented pages.
     The owner selected `17802 Sky Park Cir` for Los Angeles across locales.
     Legacy Contact URLs redirect to the localized routes, and existing site
     Contact links point to them. The source Contact pages have no QR code, form,
-    or embedded map to migrate. Business verification of office facts and
-    remaining office-detail pages is still required before launch.
+    or embedded map to migrate. The four footer office-detail pages are now local
+    and reuse the shared office catalog and contact component. Business verification
+    of office facts remains required before launch; San Francisco and New York
+    detail-page disposition remains separate below.
 - [ ] **Payment** — `/e-pay.php` → Payment page with a functioning payment path.
   The old form posted to `pay/process.php`; the new server route reproduces its
   PayPal form handoff. Verify it in test mode and confirm all four merchant
@@ -165,6 +182,9 @@ one shared page and its i18n content, not three independently implemented pages.
   system. Footer entry, five legacy redirects and original section anchors are
   retained. See `content/about/README.md` and local checks in `status.md`;
   production deployment and business-claim recertification remain separate.
+  Committed as `b39184c` (`feat(about): Add localized About AET page`). Checked
+  all three locale routes, five redirects with query preservation, 12 image files,
+  desktop/mobile layouts, card controls, photo access and language switching.
 - [x] **Career** — `/e-careers.php` → `/career` (also `/zh/career` and `/es/career`),
   implemented locally September 30, 2026. All 16 roles and the entire English body
   are preserved verbatim across locales, per owner instruction. Native job
@@ -175,14 +195,19 @@ one shared page and its i18n content, not three independently implemented pages.
 
 ### Offices shown in the new footer — 4 pages
 
-- [ ] **Miami** — `/e-office-miami.php` → Miami office page.
-- [ ] **Boston** — `/e-office-boston.php` → Boston office page.
-- [ ] **Los Angeles** — `/e-office-los-angeles.php` → Los Angeles office page.
-- [ ] **Beijing** — `/e-office-beijing.php` → Beijing office page.
+- [x] **Miami** — `/e-office-miami.php` → `/offices/miami`.
+- [x] **Boston** — `/e-office-boston.php` → `/offices/boston`.
+- [x] **Los Angeles** — `/e-office-los-angeles.php` → `/offices/los-angeles`.
+- [x] **Beijing** — `/e-office-beijing.php` → `/offices/beijing`.
 
-For each office: verify address, hours, contact details, directions, images,
-service availability, and links from Contact. The design specifies four footer
-links; it does not establish that other offices have closed.
+Local implementation is committed as `20ef0ab`. Each page has
+English, Chinese and Spanish variants, shared office details, address-based map
+links, and localized Contact/footer links. `status.md` records 12 locale route
+checks, 12 PHP redirects, unknown-office 404s, desktop/mobile inspection and
+contact-data propagation checks. PHP/HTML redirect rules are present; the recorded
+HTTP redirect checks cover PHP routes. Current business details and any retained
+historical claims still require publication review. Four footer links do not
+establish that other offices have closed.
 
 ### Trust, legal, and publishing — 4 pages/sections
 
@@ -257,6 +282,9 @@ The old Chinese footer links to missing local files `e-terms-of-use-zh.php` and
 `e-nus-es.php`, and `e-aboutus-es.php`. Resolve their URLs through the shared page's
 locale routing and content policy. Missing-file observations refer to the local
 checkout, not a live HTTP audit.
+About now supplies a new Spanish translation and maps `/e-aboutus-es.php` to
+`/es/about`; it also maps `/e_aboutus.html` and `/c_aboutus.html` to their matching
+locales. These completed aliases do not close the remaining sitewide redirect audit.
 
 ## P1 — Blog, search landing pages, and supporting content
 
@@ -468,11 +496,11 @@ retirement response; do not redirect every removed URL to the homepage.
   [redirect rules](../../server-54.213.58.23/americantranslationservice.com/.htaccess),
   and [sitemap](../../server-54.213.58.23/americantranslationservice.com/sitemap.xml)
 
-All 20 legacy destinations still linked by the new homepage and the 2 legacy
-language homepages have corresponding local files/directories. All 109 blog
-article PHP files have their referenced local includes. These checks establish
-source availability, not live route behavior. This documentation task changed no
-website UI, server, payment configuration, or deployment; concurrent localization
-edits belong to separate work and were not modified here.
-The local preview on port 3021 was unavailable; no server was started because
-this task changes documentation only. No production build was run.
+The September 28 source inventory found local source files/directories for all
+20 original destinations and the two language homepages, plus referenced includes
+for all 109 blog PHP entries. Those historical counts establish source availability,
+not current live behavior. The September 30 reconciliation uses current route/link
+code, Git commits and the existing verification records in `status.md`; browser and
+HTTP tests were not rerun for this documentation-only update. Office and contact
+implementation belongs to the separate `20ef0ab` commit and was not altered. No server, payment
+configuration or deployment was changed, and no production build was run.
