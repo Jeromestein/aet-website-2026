@@ -26,7 +26,7 @@ export function SiteFooter() {
     [t("navigation.payment"), "/payment"],
     [t("home.contact"), "/contact"],
     [t("footer.about"), "/e-aboutus.php"],
-    [t("footer.career"), "/e-careers.php"],
+    [t("footer.career"), "/career"],
   ];
   const offices = [
     [t("footer.miami"), "miami"],

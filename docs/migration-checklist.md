@@ -161,8 +161,13 @@ one shared page and its i18n content, not three independently implemented pages.
   deployment and remaining service-page migrations are still open.
 - [ ] **About AET** — `/e-aboutus.php` → About AET page. Preserve supported company
   history, credentials, and brand information; reuse the new visual system.
-- [ ] **Career** — `/e-careers.php` → Career page. Confirm which roles remain open
-  and verify the existing application destination before publishing listings.
+- [x] **Career** — `/e-careers.php` → `/career` (also `/zh/career` and `/es/career`),
+  implemented locally September 30, 2026. All 16 roles and the entire English body
+  are preserved verbatim across locales, per owner instruction. Native job
+  disclosures, section navigation, mobile benefit cards and local footer links
+  are implemented. See [source notes](../content/career/README.md) and local checks
+  in `status.md`. Current vacancy status and application submission remain
+  publication checks; this does not record a production release.
 
 ### Offices shown in the new footer — 4 pages
 

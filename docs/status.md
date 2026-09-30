@@ -5,6 +5,28 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Career page — September 30, 2026
+
+- Added `/career`, `/zh/career` and `/es/career` using the shared site shell and
+  the complete English legacy Career source. All 10 full-time and 6 part-time
+  roles, benefits, application instructions and closing copy remain unchanged.
+- Source and rendered-body comparisons passed on all three routes: 27,358
+  normalized characters, including all collapsed descriptions. Original address
+  capitalization is preserved independently of shared dynamic contact formatting.
+- Footer Career links now stay local. `/e-careers.php?from=legacy` returns 308 to
+  `/career?from=legacy`. The original Google Forms URL remains unchanged.
+- In-app browser passed desktop and 390px job expand/collapse, keyboard access to
+  the application link, section jumps and mobile benefit-card navigation. At
+  320px and 390px there was no page-level horizontal overflow. Final desktop
+  and mobile screenshots are `output/playwright/career-desktop.jpg` and
+  `output/playwright/career-mobile.jpg`; the viewport override was reset.
+- The existing preview stopped during configuration reload, with file-watcher
+  errors recorded. Verification used a temporary polling/webpack server on 3021;
+  that temporary server was stopped after verification.
+- TypeScript and i18n checks passed after refreshing generated Next route types.
+  No production build, commit, push or deployment. Current vacancies and external
+  application submission were not verified.
+
 ### Newest-first blog ordering — September 30, 2026
 
 - Replaced pilot/topic pinning within article lists with descending original

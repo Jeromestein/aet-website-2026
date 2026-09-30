@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
         { source: `/zh/${destination}`, destination: `/${destination}`, permanent: true },
       ]),
       { source: "/e-contact.php", destination: "/contact", permanent: true },
+      { source: "/e-careers.php", destination: "/career", permanent: true },
       { source: "/e-contact-zh.php", destination: "/zh/contact", permanent: true },
       { source: "/e-contact-es.php", destination: "/es/contact", permanent: true },
       { source: "/e-pay.php", destination: "/payment", permanent: true },
