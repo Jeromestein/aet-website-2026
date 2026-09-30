@@ -1,0 +1,232 @@
+{
+  "title": "AET Credential Evaluation Partners & Related Institutions",
+  "intro": "AET credential evaluation reports have been widely used by clients for\n      applications to U.S. educational institutions, related programs,\n      licensing boards, government employment, and military recruiting review.\n      This page summarizes partner institutions and related organizations based\n      on AET's current reference list.",
+  "sections": [
+    {
+      "id": "featured",
+      "title": "Featured Universities",
+      "description": "The institutions below are highlighted in AET's credential evaluation\n      partner reference. Admissions dates and program requirements vary by\n      campus, school, major, and application cycle; applicants should always\n      confirm current requirements with the official institution.",
+      "entries": [
+        {
+          "id": "featured-1",
+          "name": "New York University (NYU) / 纽约大学",
+          "description": "A private research university based in New York City, with\n          degree-granting campuses in New York, Abu Dhabi, and Shanghai.",
+          "note": "Common first-year deadlines include ED I on November 1, ED II on\n          January 1, and Regular Decision on January 5. Portfolio-based programs\n          may have earlier requirements.",
+          "logo": "/images/institutions/directory/NYU.webp"
+        },
+        {
+          "id": "featured-2",
+          "name": "Columbia University / 哥伦比亚大学",
+          "description": "An Ivy League private research university in New York City, offering\n          undergraduate, graduate, and professional programs.",
+          "note": "Common first-year deadlines include Early Decision on November 1 and\n          Regular Decision on January 1. Transfer, graduate, and professional\n          schools set separate deadlines.",
+          "logo": "/images/institutions/directory/CU.png"
+        }
+      ]
+    },
+    {
+      "id": "partner-institutions",
+      "title": "Partner Institutions",
+      "description": "These entries include schools, legal service providers, government\n      agencies, and community-related organizations referenced in AET's partner\n      institution list. For admissions, exams, hiring, or case timelines,\n      applicants should follow the official calendar or agency instructions.",
+      "entries": [
+        {
+          "id": "partner-institutions-1",
+          "name": "Southern New Hampshire University",
+          "description": "A private nonprofit university offering online and campus-based degree programs.",
+          "note": "Admissions are rolling or term-based; deadlines follow the official school calendar.",
+          "logo": "/images/institutions/directory/SNHU.png"
+        },
+        {
+          "id": "partner-institutions-2",
+          "name": "Smith Chason College",
+          "description": "A career-focused college offering health care and professional training programs.",
+          "note": "Career programs usually begin by program term; applicants should follow the program calendar.",
+          "logo": "/images/institutions/directory/WCUI.png"
+        },
+        {
+          "id": "partner-institutions-3",
+          "name": "West Coast University (WCU)",
+          "description": "A health care-focused institution known for nursing and health sciences programs.",
+          "note": "Health care programs may have different entry cycles by campus and major.",
+          "initials": "WCU"
+        },
+        {
+          "id": "partner-institutions-4",
+          "name": "Rosel School of Cosmetology",
+          "description": "A cosmetology school providing beauty, cosmetology, and related career training.",
+          "note": "Licensing exams are usually requested after graduation or required hours are completed.",
+          "initials": "ROSEL"
+        },
+        {
+          "id": "partner-institutions-5",
+          "name": "Hair Professionals Career College",
+          "description": "A beauty career college offering hair design, cosmetology, and related training.",
+          "note": "Licensing exams generally follow state application rules and are often appointment-based.",
+          "logo": "/images/institutions/directory/HPCC.png"
+        },
+        {
+          "id": "partner-institutions-6",
+          "name": "National Institutes of Health (NIH)",
+          "description": "A U.S. biomedical research agency supporting and conducting health-related research.",
+          "note": "Federal positions are commonly posted through USAJOBS; research roles may have separate deadlines.",
+          "logo": "/images/institutions/directory/NIH.png"
+        },
+        {
+          "id": "partner-institutions-7",
+          "name": "Cameo College of Essential Beauty",
+          "description": "A beauty school focused on cosmetology, esthetics, and personal care career training.",
+          "note": "Related licensing exams are usually requested after required training hours are completed.",
+          "logo": "/images/institutions/directory/CAMEO.png"
+        },
+        {
+          "id": "partner-institutions-8",
+          "name": "Universal Technical Institute (UTI)",
+          "description": "A technical training institution offering automotive, transportation, and skilled-trades programs.",
+          "note": "Program schedules, certificates, and employer recruiting dates vary by program or employer.",
+          "logo": "/images/institutions/directory/UTI.png"
+        },
+        {
+          "id": "partner-institutions-9",
+          "name": "Eastern Wyoming College",
+          "description": "A community college offering associate degrees, transfer programs, and career/technical education.",
+          "note": "Community college admissions usually follow Fall, Spring, and Summer term calendars.",
+          "logo": "/images/institutions/directory/EWC.png"
+        },
+        {
+          "id": "partner-institutions-10",
+          "name": "VisaTopia",
+          "description": "A visa and immigration service organization assisting clients with visa-related matters.",
+          "note": "This is not an exam or hiring organization; service timing follows the organization's schedule.",
+          "initials": "VT"
+        },
+        {
+          "id": "partner-institutions-11",
+          "name": "Alex Yoonki Park Law",
+          "description": "A law office providing legal services, document support, and client representation.",
+          "note": "Case timelines depend on legal procedures and attorney scheduling.",
+          "logo": "/images/institutions/directory/ALEX-LAW.png"
+        },
+        {
+          "id": "partner-institutions-12",
+          "name": "Law Offices of MaryLu Cianciolo",
+          "description": "A law office providing legal services and related documentation support.",
+          "note": "Case timelines depend on legal procedures and attorney scheduling.",
+          "initials": "MLC"
+        },
+        {
+          "id": "partner-institutions-13",
+          "name": "UOA Legal",
+          "description": "An immigration legal service provider focused on immigration-related matters.",
+          "note": "Immigration case timing follows official processing progress and attorney scheduling.",
+          "logo": "/images/institutions/directory/UOA-LAW.png"
+        },
+        {
+          "id": "partner-institutions-14",
+          "name": "South University",
+          "description": "A university offering undergraduate, graduate, and professional programs.",
+          "note": "Admissions vary by campus, program, and term.",
+          "logo": "/images/institutions/directory/SU.png"
+        },
+        {
+          "id": "partner-institutions-15",
+          "name": "The Ocean Corporation",
+          "description": "A technical career training provider in marine, diving, and related industrial fields.",
+          "note": "Course schedules and industry certification timing follow the school or certifying organization.",
+          "logo": "/images/institutions/directory/OCEAN-CORP.png"
+        },
+        {
+          "id": "partner-institutions-16",
+          "name": "Miami Shores",
+          "description": "A partner organization associated with education or community-related services.",
+          "note": "This is not a unified exam or hiring program; timing follows the organization's arrangements.",
+          "logo": "/images/institutions/directory/MIAMI-SHORES.png"
+        },
+        {
+          "id": "partner-institutions-17",
+          "name": "Illinois State Board of Education",
+          "description": "The state education agency overseeing and supporting public education in Illinois.",
+          "note": "Education job postings and licensing requirements vary by position and district.",
+          "logo": "/images/institutions/directory/ISBE.png"
+        },
+        {
+          "id": "partner-institutions-18",
+          "name": "New Mexico Public Education Department",
+          "description": "The state education department overseeing and supporting public education in New Mexico.",
+          "note": "Education job postings and licensing requirements vary by position and district.",
+          "logo": "/images/institutions/directory/NMPED.png"
+        }
+      ]
+    },
+    {
+      "id": "state-universities",
+      "title": "State University Campuses",
+      "description": "Over the years, AET credential evaluation reports have been widely used by\n      clients for applications to a broad range of U.S. educational\n      institutions and related programs, including selected colleges and\n      universities, the majority of state university systems, and community\n      colleges.",
+      "entries": [
+        {
+          "id": "state-universities-1",
+          "name": "California State University, Bakersfield",
+          "description": "Public CSU university serving the southern San Joaquin Valley. Location: Bakersfield, CA.",
+          "note": "For CSU Fall 2027, applications can be started on August 1, 2026 and submitted beginning October 1, 2026. Priority filing commonly runs through November 30, 2026. Spring 2027 priority filing is July 1 to August 31, 2026, subject to campus and major requirements.",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-2",
+          "name": "California State University Channel Islands",
+          "description": "CSU university near the Southern California coast, known for interdisciplinary learning. Location: Camarillo, CA.",
+          "note": "For CSU Fall 2027, applications can be started on August 1, 2026 and submitted beginning October 1, 2026. Priority filing commonly runs through November 30, 2026. Spring 2027 priority filing is July 1 to August 31, 2026, subject to campus and major requirements.",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-3",
+          "name": "California State University, Chico",
+          "description": "One of the older CSU universities in Northern California. Location: Chico, CA.",
+          "note": "For CSU Fall 2027, applications can be started on August 1, 2026 and submitted beginning October 1, 2026. Priority filing commonly runs through November 30, 2026. Spring 2027 priority filing is July 1 to August 31, 2026, subject to campus and major requirements.",
+          "initials": "CSU"
+        }
+      ]
+    },
+    {
+      "id": "licensing-government",
+      "title": "Licensing Exams, Government Jobs & Military Recruiting",
+      "description": "Credential evaluation may also support review for licensing exams,\n      government employment, and military recruiting pathways. Exam availability\n      and recruitment requirements are controlled by the relevant agency or\n      official testing provider.",
+      "entries": [
+        {
+          "id": "licensing-government-1",
+          "name": "Contractors State License Board (CSLB)",
+          "description": "California's licensing board for contractors, overseeing license applications, exams, regulation, and consumer protection.",
+          "note": "CSLB exams are managed by PSI computer-based testing centers and are generally appointment-based, with no fixed annual exam date.",
+          "initials": "CSLB"
+        },
+        {
+          "id": "licensing-government-2",
+          "name": "California Board of Barbering & Cosmetology",
+          "description": "California's licensing board for barbering, cosmetology, and related beauty professions.",
+          "note": "Since January 1, 2022, most license types no longer require a practical exam; approved applicants usually schedule the written exam through PSI.",
+          "logo": "/images/institutions/directory/ca-BarberCosmo.jpg"
+        },
+        {
+          "id": "licensing-government-3",
+          "name": "Nevada State Board of Cosmetology",
+          "description": "Nevada's cosmetology licensing board for hair, nail, skin care, and related professions.",
+          "note": "Theory, practical, and state law exams vary by program requirements and are generally appointment-based through the board or Pearson VUE.",
+          "initials": "NV Board"
+        },
+        {
+          "id": "licensing-government-4",
+          "name": "California State Government Jobs",
+          "description": "California's state employment portal for civil service exams, job postings, seasonal jobs, and recruitment notices.",
+          "note": "Recruitment is posted throughout the year; some positions are continuous filing, and seasonal roles often appear in spring and summer.",
+          "initials": "CA Jobs"
+        },
+        {
+          "id": "licensing-government-5",
+          "name": "U.S. Military / Army Recruiting",
+          "description": "U.S. military recruiting pathways where credential evaluation may assist education equivalency or enlistment qualification review.",
+          "note": "Recruitment commonly runs year-round. ASVAB, medical examination, and MEPS steps are scheduled by appointment; basic requirements include age, physical qualifications, citizenship or green card status, high school or equivalent education, and enlistment test scores.",
+          "initials": "U.S. Army"
+        }
+      ]
+    }
+  ],
+  "closing": "Need a credential evaluation for school admission, licensing, employment,\n      immigration, or military qualification review? AET can help you choose the\n      appropriate report type before you submit.",
+  "applyUrl": "https://app.americantranslationservice.com/credential-evaluation-application"
+}

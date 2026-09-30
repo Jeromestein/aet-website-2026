@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...blogRedirects,
+      { source: "/e-credential-evaluation-partners.php", destination: "/institutions", permanent: true },
       ...[
         ["e-aboutus.php", "/about"],
         ["e-aboutus-zh.php", "/zh/about"],

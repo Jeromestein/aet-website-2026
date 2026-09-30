@@ -257,6 +257,14 @@ be presented as current contact details or current ratings.
 
 ## 5. Mobile and Motion
 
+**Institution directory:** preserve the four source categories and section anchors.
+Use a searchable, filterable catalog with contained logos, institution names,
+descriptions and native disclosures for complete application/timing notes. Display
+directory results in a normal vertical list on phones so search results can be
+scanned together; this catalog is an exception to the supporting-card rails below.
+Keep the full catalog and section links available without JavaScript. Do not infer
+endorsement or guaranteed acceptance from inclusion in the list.
+
 **Mobile card rails with scroll snapping:** at 760px and below, convert groups
 of peer content cards into horizontally swipeable card rails instead of stacking
 all cards vertically. This applies to supporting services, testimonials, at-a-glance facts, online

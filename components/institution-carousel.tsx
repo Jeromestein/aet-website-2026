@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import { contactPath } from "@/lib/contact";
+import { getPathname } from "@/i18n/navigation";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -49,7 +50,7 @@ export function InstitutionCarousel({ id = "institutions", title, institutions =
       </div>
       <div className={`wrap ${styles.footer}`}>
         {embedded ? <a className="text-link" href={contactPath(locale)}>{contactLabel} <ArrowUpRight size={16} aria-hidden="true" /></a> : <p>{t("home.institutions.closing")}{" "}
-          <a className="text-link" href="https://www.americantranslationservice.com/e-credential-evaluation-partners.php">{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
+          <a className="text-link" href={getPathname({ locale, href: '/institutions' })}>{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
         </p>}
       </div>
     </section>

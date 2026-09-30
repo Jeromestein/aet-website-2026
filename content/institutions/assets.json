@@ -1,0 +1,87 @@
+[
+  {
+    "source": "/images/trusted_by_institutions/NYU.webp",
+    "local": "/images/institutions/directory/NYU.webp",
+    "sha256": "5c6b3a9a74c44bd87f2fefe9885e076b3fe2ffc1e0732ad75a2da1dc7eefdf08"
+  },
+  {
+    "source": "/images/trusted_by_institutions/CU.png",
+    "local": "/images/institutions/directory/CU.png",
+    "sha256": "41189645f7dcd7bb65303b722b09d6ceb2d61c1c8f8ec20aca5cea882fe9787a"
+  },
+  {
+    "source": "/images/partner-logo/SNHU.png",
+    "local": "/images/institutions/directory/SNHU.png",
+    "sha256": "01e67d3646cb320383697f6bc8638105bf9ab62fc3e0c25ff2c20ec39f00ec85"
+  },
+  {
+    "source": "/images/partner-logo/WCUI.png",
+    "local": "/images/institutions/directory/WCUI.png",
+    "sha256": "5108845ef4ad6bbbcb8d4f64f3dfbadc2973acc28ae9e86f39ec20f6b5407fb3"
+  },
+  {
+    "source": "/images/partner-logo/HPCC.png",
+    "local": "/images/institutions/directory/HPCC.png",
+    "sha256": "3658a54a6bee88161c81afb71b3c6a87959800f3d48571a05bf9665cf4f04045"
+  },
+  {
+    "source": "/images/partner-logo/NIH.png",
+    "local": "/images/institutions/directory/NIH.png",
+    "sha256": "e697756a6cfeac5883a950d5915b6ed8f71adac2b43b76badce9ad59b81d7f18"
+  },
+  {
+    "source": "/images/partner-logo/CAMEO.png",
+    "local": "/images/institutions/directory/CAMEO.png",
+    "sha256": "fd05f4bc859132d8ea56d75acd761e549a0f821e22c16f9ada4c36cbf5703b76"
+  },
+  {
+    "source": "/images/partner-logo/UTI.png",
+    "local": "/images/institutions/directory/UTI.png",
+    "sha256": "96c85e49b0560ccd758ca2f61a73d54323194e985f63ffe3b6efc0505c20ab37"
+  },
+  {
+    "source": "/images/partner-logo/EWC.png",
+    "local": "/images/institutions/directory/EWC.png",
+    "sha256": "961d43f5baabfd9d03717cf84a92ff731469494e0354d29a023358ea77817730"
+  },
+  {
+    "source": "/images/partner-logo/ALEX-LAW.png",
+    "local": "/images/institutions/directory/ALEX-LAW.png",
+    "sha256": "a8e52fb038e44d2dc32054a65219b62080846b6b45e62ce373f866d0e2d0707f"
+  },
+  {
+    "source": "/images/partner-logo/UOA-LAW.png",
+    "local": "/images/institutions/directory/UOA-LAW.png",
+    "sha256": "9c786d02baf4c90693ee324ca2f4f5402dde2374ffd38a07680410ee9466dd96"
+  },
+  {
+    "source": "/images/partner-logo/SU.png",
+    "local": "/images/institutions/directory/SU.png",
+    "sha256": "0a4e4599492553440ba84fa9b789041406804c5ea5cc888abacf4a494e67ced5"
+  },
+  {
+    "source": "/images/partner-logo/OCEAN-CORP.png",
+    "local": "/images/institutions/directory/OCEAN-CORP.png",
+    "sha256": "4947aad2e5d2590111cc0bc5a2f877da3150cca9027e76f345d3265dc5504b9a"
+  },
+  {
+    "source": "/images/partner-logo/MIAMI-SHORES.png",
+    "local": "/images/institutions/directory/MIAMI-SHORES.png",
+    "sha256": "0b7ceb0680ad3ed8007e6c45f5d7df11915378db32f107ed9129a94a09a2f632"
+  },
+  {
+    "source": "/images/trusted_by_institutions/ISBE.png",
+    "local": "/images/institutions/directory/ISBE.png",
+    "sha256": "8d81e0cbc852cd0ddd2d38d51e51832b10839d44eef5c8642811ba665791f28d"
+  },
+  {
+    "source": "/images/trusted_by_institutions/NMPED.png",
+    "local": "/images/institutions/directory/NMPED.png",
+    "sha256": "cb6a6f87c3a0123a4cb93052340c5ac11057d9a814c82ff259739733add97953"
+  },
+  {
+    "source": "/images/ca-BarberCosmo.jpg",
+    "local": "/images/institutions/directory/ca-BarberCosmo.jpg",
+    "sha256": "6e42f69db84e1af6cb76e14749a8e045a62a71eb372448215b13886ee3dde965"
+  }
+]

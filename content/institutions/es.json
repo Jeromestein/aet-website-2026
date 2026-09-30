@@ -1,0 +1,232 @@
+{
+  "title": "Instituciones asociadas y organizaciones relacionadas con AET",
+  "intro": "Los clientes han utilizado ampliamente los informes de evaluación de credenciales de AET para solicitudes a instituciones educativas y programas de Estados Unidos, juntas de licencias, empleo público y revisión de requisitos de reclutamiento militar. Esta página reúne instituciones asociadas y organizaciones relacionadas según la lista de referencia actual de AET.",
+  "sections": [
+    {
+      "id": "featured",
+      "title": "Universidades destacadas",
+      "description": "Estas instituciones figuran en la referencia de socios de evaluación de credenciales de AET. Las fechas de admisión y los requisitos varían según el campus, la facultad, la especialidad y el ciclo de solicitud; confirme siempre los requisitos vigentes con la institución oficial.",
+      "entries": [
+        {
+          "id": "featured-1",
+          "name": "New York University (NYU) / 纽约大学",
+          "description": "Universidad privada de investigación en Nueva York, con campus que otorgan títulos en Nueva York, Abu Dabi y Shanghái.",
+          "note": "Los plazos habituales de primer año incluyen ED I el 1 de noviembre, ED II el 1 de enero y admisión regular el 5 de enero. Los programas con portafolio pueden tener requisitos anteriores.",
+          "logo": "/images/institutions/directory/NYU.webp"
+        },
+        {
+          "id": "featured-2",
+          "name": "Columbia University / 哥伦比亚大学",
+          "description": "Universidad privada de investigación de la Ivy League en Nueva York, con programas de grado, posgrado y profesionales.",
+          "note": "Los plazos habituales de primer año incluyen decisión anticipada el 1 de noviembre y admisión regular el 1 de enero. Traslados, posgrados y facultades profesionales tienen plazos propios.",
+          "logo": "/images/institutions/directory/CU.png"
+        }
+      ]
+    },
+    {
+      "id": "partner-institutions",
+      "title": "Instituciones asociadas",
+      "description": "Estas entradas incluyen centros educativos, proveedores de servicios jurídicos, organismos públicos y organizaciones comunitarias de la lista de instituciones asociadas de AET. Para admisiones, exámenes, contratación o plazos de casos, siga el calendario oficial o las instrucciones del organismo.",
+      "entries": [
+        {
+          "id": "partner-institutions-1",
+          "name": "Southern New Hampshire University",
+          "description": "Universidad privada sin fines de lucro con programas de titulación en línea y presenciales.",
+          "note": "La admisión es continua o por período; los plazos siguen el calendario oficial.",
+          "logo": "/images/institutions/directory/SNHU.png"
+        },
+        {
+          "id": "partner-institutions-2",
+          "name": "Smith Chason College",
+          "description": "Centro orientado a carreras profesionales con programas de salud y formación profesional.",
+          "note": "Los programas suelen comenzar por período; consulte el calendario del programa.",
+          "logo": "/images/institutions/directory/WCUI.png"
+        },
+        {
+          "id": "partner-institutions-3",
+          "name": "West Coast University (WCU)",
+          "description": "Institución centrada en salud, conocida por sus programas de enfermería y ciencias de la salud.",
+          "note": "Los ciclos de ingreso pueden variar según el campus y la especialidad.",
+          "initials": "WCU"
+        },
+        {
+          "id": "partner-institutions-4",
+          "name": "Rosel School of Cosmetology",
+          "description": "Escuela de cosmetología con formación en belleza y carreras relacionadas.",
+          "note": "Los exámenes de licencia suelen solicitarse tras graduarse o completar las horas requeridas.",
+          "initials": "ROSEL"
+        },
+        {
+          "id": "partner-institutions-5",
+          "name": "Hair Professionals Career College",
+          "description": "Centro de formación profesional en peluquería, cosmetología y áreas relacionadas.",
+          "note": "Los exámenes siguen las normas estatales de solicitud y suelen realizarse con cita.",
+          "logo": "/images/institutions/directory/HPCC.png"
+        },
+        {
+          "id": "partner-institutions-6",
+          "name": "National Institutes of Health (NIH)",
+          "description": "Organismo estadounidense de investigación biomédica que apoya y realiza investigación en salud.",
+          "note": "Los puestos federales suelen publicarse en USAJOBS; los puestos de investigación pueden tener otros plazos.",
+          "logo": "/images/institutions/directory/NIH.png"
+        },
+        {
+          "id": "partner-institutions-7",
+          "name": "Cameo College of Essential Beauty",
+          "description": "Escuela especializada en cosmetología, estética y formación en cuidado personal.",
+          "note": "Los exámenes de licencia suelen solicitarse tras completar las horas de formación requeridas.",
+          "logo": "/images/institutions/directory/CAMEO.png"
+        },
+        {
+          "id": "partner-institutions-8",
+          "name": "Universal Technical Institute (UTI)",
+          "description": "Institución de formación técnica en automoción, transporte y oficios especializados.",
+          "note": "Los calendarios, certificados y fechas de contratación varían según el programa o empleador.",
+          "logo": "/images/institutions/directory/UTI.png"
+        },
+        {
+          "id": "partner-institutions-9",
+          "name": "Eastern Wyoming College",
+          "description": "Centro comunitario con títulos de asociado, programas de transferencia y educación técnica y profesional.",
+          "note": "La admisión suele seguir los calendarios de otoño, primavera y verano.",
+          "logo": "/images/institutions/directory/EWC.png"
+        },
+        {
+          "id": "partner-institutions-10",
+          "name": "VisaTopia",
+          "description": "Organización de servicios de visados e inmigración que ayuda con asuntos relacionados con visados.",
+          "note": "No es un organismo de exámenes ni de contratación; los plazos siguen su propio calendario.",
+          "initials": "VT"
+        },
+        {
+          "id": "partner-institutions-11",
+          "name": "Alex Yoonki Park Law",
+          "description": "Despacho de abogados que ofrece servicios jurídicos, apoyo documental y representación.",
+          "note": "Los plazos dependen de los procedimientos legales y de la agenda del abogado.",
+          "logo": "/images/institutions/directory/ALEX-LAW.png"
+        },
+        {
+          "id": "partner-institutions-12",
+          "name": "Law Offices of MaryLu Cianciolo",
+          "description": "Despacho de abogados que ofrece servicios jurídicos y apoyo documental relacionado.",
+          "note": "Los plazos dependen de los procedimientos legales y de la agenda del abogado.",
+          "initials": "MLC"
+        },
+        {
+          "id": "partner-institutions-13",
+          "name": "UOA Legal",
+          "description": "Proveedor de servicios jurídicos especializado en inmigración.",
+          "note": "Los plazos dependen de la tramitación oficial y de la agenda del abogado.",
+          "logo": "/images/institutions/directory/UOA-LAW.png"
+        },
+        {
+          "id": "partner-institutions-14",
+          "name": "South University",
+          "description": "Universidad con programas de grado, posgrado y formación profesional.",
+          "note": "La admisión varía según el campus, el programa y el período.",
+          "logo": "/images/institutions/directory/SU.png"
+        },
+        {
+          "id": "partner-institutions-15",
+          "name": "The Ocean Corporation",
+          "description": "Centro de formación técnica en áreas marítimas, buceo e industrias relacionadas.",
+          "note": "Los calendarios y la certificación siguen las disposiciones de la escuela o entidad certificadora.",
+          "logo": "/images/institutions/directory/OCEAN-CORP.png"
+        },
+        {
+          "id": "partner-institutions-16",
+          "name": "Miami Shores",
+          "description": "Organización asociada vinculada con servicios educativos o comunitarios.",
+          "note": "No es un programa unificado de exámenes o contratación; los plazos dependen de la organización.",
+          "logo": "/images/institutions/directory/MIAMI-SHORES.png"
+        },
+        {
+          "id": "partner-institutions-17",
+          "name": "Illinois State Board of Education",
+          "description": "Organismo estatal que supervisa y apoya la educación pública en Illinois.",
+          "note": "Las ofertas de empleo y los requisitos de licencia varían según el puesto y el distrito.",
+          "logo": "/images/institutions/directory/ISBE.png"
+        },
+        {
+          "id": "partner-institutions-18",
+          "name": "New Mexico Public Education Department",
+          "description": "Departamento estatal que supervisa y apoya la educación pública en Nuevo México.",
+          "note": "Las ofertas de empleo y los requisitos de licencia varían según el puesto y el distrito.",
+          "logo": "/images/institutions/directory/NMPED.png"
+        }
+      ]
+    },
+    {
+      "id": "state-universities",
+      "title": "Campus universitarios estatales",
+      "description": "A lo largo de los años, los clientes han utilizado ampliamente los informes de evaluación de AET para solicitar acceso a numerosas instituciones educativas y programas de Estados Unidos, incluidas determinadas universidades, la mayoría de los sistemas universitarios estatales y centros comunitarios.",
+      "entries": [
+        {
+          "id": "state-universities-1",
+          "name": "California State University, Bakersfield",
+          "description": "Universidad pública del sistema CSU que atiende el sur del valle de San Joaquín. Ubicación: Bakersfield, California.",
+          "note": "Para otoño de 2027 en CSU, las solicitudes pueden iniciarse el 1 de agosto de 2026 y enviarse desde el 1 de octubre de 2026. El período prioritario suele finalizar el 30 de noviembre de 2026. Para primavera de 2027, va del 1 de julio al 31 de agosto de 2026, sujeto al campus y la especialidad.",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-2",
+          "name": "California State University Channel Islands",
+          "description": "Universidad CSU cerca de la costa del sur de California, conocida por su aprendizaje interdisciplinario. Ubicación: Camarillo, California.",
+          "note": "Para otoño de 2027 en CSU, las solicitudes pueden iniciarse el 1 de agosto de 2026 y enviarse desde el 1 de octubre de 2026. El período prioritario suele finalizar el 30 de noviembre de 2026. Para primavera de 2027, va del 1 de julio al 31 de agosto de 2026, sujeto al campus y la especialidad.",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-3",
+          "name": "California State University, Chico",
+          "description": "Una de las universidades CSU más antiguas del norte de California. Ubicación: Chico, California.",
+          "note": "Para otoño de 2027 en CSU, las solicitudes pueden iniciarse el 1 de agosto de 2026 y enviarse desde el 1 de octubre de 2026. El período prioritario suele finalizar el 30 de noviembre de 2026. Para primavera de 2027, va del 1 de julio al 31 de agosto de 2026, sujeto al campus y la especialidad.",
+          "initials": "CSU"
+        }
+      ]
+    },
+    {
+      "id": "licensing-government",
+      "title": "Licencias, empleo público y reclutamiento militar",
+      "description": "La evaluación de credenciales también puede apoyar la revisión para exámenes de licencia, empleo público y reclutamiento militar. La disponibilidad de exámenes y los requisitos dependen del organismo o proveedor oficial correspondiente.",
+      "entries": [
+        {
+          "id": "licensing-government-1",
+          "name": "Contractors State License Board (CSLB)",
+          "description": "Junta de licencias de contratistas de California, responsable de solicitudes, exámenes, regulación y protección del consumidor.",
+          "note": "Los exámenes CSLB se gestionan en centros informatizados de PSI y suelen ser con cita, sin fecha anual fija.",
+          "initials": "CSLB"
+        },
+        {
+          "id": "licensing-government-2",
+          "name": "California Board of Barbering & Cosmetology",
+          "description": "Junta de California para licencias de barbería, cosmetología y profesiones de belleza relacionadas.",
+          "note": "Desde el 1 de enero de 2022, la mayoría de las licencias ya no exige examen práctico; los solicitantes aprobados suelen programar el examen escrito con PSI.",
+          "logo": "/images/institutions/directory/ca-BarberCosmo.jpg"
+        },
+        {
+          "id": "licensing-government-3",
+          "name": "Nevada State Board of Cosmetology",
+          "description": "Junta de licencias de Nevada para cabello, uñas, cuidado de la piel y profesiones relacionadas.",
+          "note": "Los exámenes teóricos, prácticos y de legislación estatal varían según el programa y suelen concertarse con la junta o Pearson VUE.",
+          "initials": "NV Board"
+        },
+        {
+          "id": "licensing-government-4",
+          "name": "California State Government Jobs",
+          "description": "Portal de empleo estatal de California con exámenes de función pública, ofertas, trabajos de temporada y avisos de contratación.",
+          "note": "Se publican ofertas todo el año; algunos puestos aceptan solicitudes continuamente y los de temporada suelen aparecer en primavera y verano.",
+          "initials": "CA Jobs"
+        },
+        {
+          "id": "licensing-government-5",
+          "name": "U.S. Military / Army Recruiting",
+          "description": "Vías de reclutamiento militar de Estados Unidos donde la evaluación puede ayudar a revisar la equivalencia educativa o los requisitos de alistamiento.",
+          "note": "El reclutamiento suele ser continuo. ASVAB, el examen médico y los trámites MEPS se programan con cita; los requisitos básicos incluyen edad, condición física, ciudadanía o residencia permanente, educación secundaria o equivalente y puntuaciones de las pruebas de ingreso.",
+          "initials": "U.S. Army"
+        }
+      ]
+    }
+  ],
+  "closing": "¿Necesita una evaluación de credenciales para admisión, licencias, empleo, inmigración o revisión de requisitos militares? AET puede ayudarle a elegir el tipo de informe adecuado antes de presentar su solicitud.",
+  "applyUrl": "https://app.americantranslationservice.com/credential-evaluation-application"
+}

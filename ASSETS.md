@@ -1,5 +1,11 @@
 # Asset and content provenance
 
+Institution directory additions (September 30, 2026): 17 unchanged legacy logos
+are stored in `public/images/institutions/directory/`. Source paths and SHA-256
+digests are listed in `content/institutions/assets.json`. The source's WCUI image
+is correctly paired with Smith Chason College; West Coast University uses a text
+placeholder. See [directory provenance](content/institutions/README.md).
+
 About additions (September 30, 2026): `public/images/about/` contains 11 unchanged
 legacy archival photographs and the original client-logo collection. Photo origins,
 excluded out-of-scope imagery and historical-use context are documented in

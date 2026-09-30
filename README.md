@@ -29,6 +29,12 @@ Deployment is intentionally left to the owner.
 
 ## Scope
 
+The complete institution directory is available at `/institutions`,
+`/zh/institutions` and `/es/institutions`. It preserves 28 legacy entries across
+four categories, with localized search, filters and complete application notes.
+The homepage carousel links locally and the legacy partners PHP URL redirects.
+See [institution content provenance](content/institutions/README.md).
+
 About AET is implemented at `/about`, `/zh/about`, and `/es/about`, with a shared
 history timeline, service highlights, archival photo gallery and client collection.
 The footer uses the localized route and five legacy About entry points redirect

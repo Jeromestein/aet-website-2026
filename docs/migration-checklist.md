@@ -11,9 +11,9 @@ The destination is `aet-website-2026`; the content source is
 (Meiyu Group, Jiahua, immigration, and cryonics) are outside this AET migration.
 
 The original homepage inventory identified **20 distinct destination pages/sections**,
-including the blog index but not individual articles. **19 now have local
-implementations** in the working tree; the full **Institutions** destination
-still links to the legacy site. Implementation presence is not final acceptance:
+including the blog index but not individual articles. **All 20 now have local
+implementations** in the working tree, including the complete **Institutions**
+directory. Implementation presence is not final acceptance:
 the service, Contact and Payment items below retain their outstanding checks.
 The four office pages are committed as `20ef0ab`, with local verification
 recorded in `status.md`. The source inventory also contains **109 blog article
@@ -25,7 +25,7 @@ PHP entry points**; these are not 109 completed migrations.
 | Career | Local migration and browser checks complete; committed as `20e8222` |
 | Four footer office pages | Local implementation and recorded checks complete; committed as `20ef0ab` |
 | Blog | 80 local articles; migration/order changes committed as `63293b4` |
-| Full Institutions page | Still to implement; existing logo carousel does not replace it |
+| Full Institutions page | Local migration complete: 28 entries, three locales, search and category filters; browser checks recorded in status.md |
 | Production release | Pending business/content review, payment acceptance and deployment |
 
 September 30 biography reassessment: of 109 blog articles, **78 are local (60 original + 18 restored)**, **30 have other historical findings
@@ -44,7 +44,7 @@ references and old URLs to map, not additional implementation tasks.
 The shared homepage is at `app/[locale]/page.tsx`; message files and locale routing
 are configured for `/`, `/zh`, and `/es`. Header services and footer company/office
 links now use local locale-aware routes. Legal documents intentionally use their
-English-only routes. The Institutions list remains an external legacy destination.
+English-only routes. The homepage Institutions link uses the localized `/institutions` page.
 Per-page browser evidence is recorded in [status.md](status.md).
 
 An unchecked item means work remains, even when the route already exists. Checked
@@ -211,10 +211,14 @@ establish that other offices have closed.
 
 ### Trust, legal, and publishing — 4 pages/sections
 
-- [ ] **Institutions** — `/e-credential-evaluation-partners.php` → Institutions page.
-  Required by the homepage's “Explore all institutions” link. Preserve the full
-  relevant list, supporting information, logos, and section anchors; keep factual
-  acceptance/relationship wording within its source qualifications.
+- [x] **Institutions** — `/e-credential-evaluation-partners.php` → `/institutions`.
+  All 28 source entries, supporting information, 17 logos and four section anchors
+  are retained in a shared English/Chinese/Spanish directory. The homepage link
+  stays local and the PHP URL redirects permanently. Search, category filters,
+  complete timing disclosures and responsive layouts were verified locally.
+  The WCUI source image is paired with Smith Chason College rather than WCU,
+  matching its artwork. Acceptance, relationship and dated admissions claims
+  still require publication review; see `content/institutions/README.md`.
 - [x] **Terms of Use** — `/e-terms-of-use.php` → `/terms` (local implementation).
 - [x] **Privacy Policy** — `/e-privacy-policy.php` → `/privacy` (local implementation).
   Full English source text and section anchors are retained. Per owner direction,

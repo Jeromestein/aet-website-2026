@@ -1,0 +1,232 @@
+{
+  "title": "AET 学历评估合作机构及相关组织",
+  "intro": "客户已广泛使用 AET 学历评估报告，申请美国院校及相关项目、职业许可、政府职位，以及接受征兵资格审核。本页根据 AET 现有参考名单，汇总合作机构及相关组织。",
+  "sections": [
+    {
+      "id": "featured",
+      "title": "精选大学",
+      "description": "以下院校收录于 AET 学历评估合作机构参考名单。招生日期和项目要求因校区、学院、专业及申请周期而异，请务必向院校官方确认最新要求。",
+      "entries": [
+        {
+          "id": "featured-1",
+          "name": "New York University (NYU) / 纽约大学",
+          "description": "位于纽约市的私立研究型大学，在纽约、阿布扎比和上海设有授予学位的校区。",
+          "note": "常见本科新生申请截止日期包括：ED I 为 11 月 1 日，ED II 为 1 月 1 日，常规申请为 1 月 5 日。需要作品集的项目可能有更早的要求。",
+          "logo": "/images/institutions/directory/NYU.webp"
+        },
+        {
+          "id": "featured-2",
+          "name": "Columbia University / 哥伦比亚大学",
+          "description": "位于纽约市的常春藤盟校、私立研究型大学，提供本科、研究生及专业学位课程。",
+          "note": "常见本科新生申请截止日期包括：提前决定申请为 11 月 1 日，常规申请为 1 月 1 日。转学、研究生及专业学院另设截止日期。",
+          "logo": "/images/institutions/directory/CU.png"
+        }
+      ]
+    },
+    {
+      "id": "partner-institutions",
+      "title": "合作机构",
+      "description": "本分类包括 AET 合作机构名单中的学校、法律服务机构、政府部门及社区相关组织。招生、考试、招聘或案件办理时间，请以官方日程或机构指引为准。",
+      "entries": [
+        {
+          "id": "partner-institutions-1",
+          "name": "Southern New Hampshire University",
+          "description": "提供在线及校园学位课程的私立非营利大学。",
+          "note": "招生采取滚动录取或按学期申请；截止日期以学校官方日历为准。",
+          "logo": "/images/institutions/directory/SNHU.png"
+        },
+        {
+          "id": "partner-institutions-2",
+          "name": "Smith Chason College",
+          "description": "以职业发展为导向，提供医疗保健及专业培训课程的学院。",
+          "note": "职业课程通常按项目学期开课；请以具体项目日历为准。",
+          "logo": "/images/institutions/directory/WCUI.png"
+        },
+        {
+          "id": "partner-institutions-3",
+          "name": "West Coast University (WCU)",
+          "description": "专注医疗保健领域，以护理及健康科学课程著称的院校。",
+          "note": "医疗保健课程的入学周期可能因校区及专业而异。",
+          "initials": "WCU"
+        },
+        {
+          "id": "partner-institutions-4",
+          "name": "Rosel School of Cosmetology",
+          "description": "提供美容、美发及相关职业培训的美容学校。",
+          "note": "通常在毕业或完成规定培训学时后申请执照考试。",
+          "initials": "ROSEL"
+        },
+        {
+          "id": "partner-institutions-5",
+          "name": "Hair Professionals Career College",
+          "description": "提供发型设计、美容及相关培训的职业学院。",
+          "note": "执照考试一般遵循州申请规定，通常采用预约制。",
+          "logo": "/images/institutions/directory/HPCC.png"
+        },
+        {
+          "id": "partner-institutions-6",
+          "name": "National Institutes of Health (NIH)",
+          "description": "支持并开展健康相关研究的美国生物医学研究机构。",
+          "note": "联邦职位通常通过 USAJOBS 发布；研究岗位可能另有截止日期。",
+          "logo": "/images/institutions/directory/NIH.png"
+        },
+        {
+          "id": "partner-institutions-7",
+          "name": "Cameo College of Essential Beauty",
+          "description": "专注美容、皮肤护理及个人护理职业培训的学校。",
+          "note": "通常在完成规定培训学时后申请相关执照考试。",
+          "logo": "/images/institutions/directory/CAMEO.png"
+        },
+        {
+          "id": "partner-institutions-8",
+          "name": "Universal Technical Institute (UTI)",
+          "description": "提供汽车、交通运输及技术工种课程的技术培训院校。",
+          "note": "课程安排、证书要求及雇主招聘日期因项目或雇主而异。",
+          "logo": "/images/institutions/directory/UTI.png"
+        },
+        {
+          "id": "partner-institutions-9",
+          "name": "Eastern Wyoming College",
+          "description": "提供副学士学位、转学项目及职业技术教育的社区学院。",
+          "note": "社区学院招生通常按秋季、春季及夏季学期日历进行。",
+          "logo": "/images/institutions/directory/EWC.png"
+        },
+        {
+          "id": "partner-institutions-10",
+          "name": "VisaTopia",
+          "description": "协助客户处理签证相关事务的签证及移民服务组织。",
+          "note": "该机构不是考试或招聘组织；服务时间以机构安排为准。",
+          "initials": "VT"
+        },
+        {
+          "id": "partner-institutions-11",
+          "name": "Alex Yoonki Park Law",
+          "description": "提供法律服务、文件支持及客户代理服务的律师事务所。",
+          "note": "案件时间取决于法律程序及律师安排。",
+          "logo": "/images/institutions/directory/ALEX-LAW.png"
+        },
+        {
+          "id": "partner-institutions-12",
+          "name": "Law Offices of MaryLu Cianciolo",
+          "description": "提供法律服务及相关文件支持的律师事务所。",
+          "note": "案件时间取决于法律程序及律师安排。",
+          "initials": "MLC"
+        },
+        {
+          "id": "partner-institutions-13",
+          "name": "UOA Legal",
+          "description": "专注移民相关事务的移民法律服务机构。",
+          "note": "移民案件时间取决于官方处理进度及律师安排。",
+          "logo": "/images/institutions/directory/UOA-LAW.png"
+        },
+        {
+          "id": "partner-institutions-14",
+          "name": "South University",
+          "description": "提供本科、研究生及专业课程的大学。",
+          "note": "招生要求因校区、项目及学期而异。",
+          "logo": "/images/institutions/directory/SU.png"
+        },
+        {
+          "id": "partner-institutions-15",
+          "name": "The Ocean Corporation",
+          "description": "提供海洋、潜水及相关工业领域技术职业培训的机构。",
+          "note": "课程及行业认证时间以学校或认证机构安排为准。",
+          "logo": "/images/institutions/directory/OCEAN-CORP.png"
+        },
+        {
+          "id": "partner-institutions-16",
+          "name": "Miami Shores",
+          "description": "与教育或社区相关服务有关的合作组织。",
+          "note": "该组织不属于统一考试或招聘项目；时间以机构安排为准。",
+          "logo": "/images/institutions/directory/MIAMI-SHORES.png"
+        },
+        {
+          "id": "partner-institutions-17",
+          "name": "Illinois State Board of Education",
+          "description": "监督并支持伊利诺伊州公共教育的州教育机构。",
+          "note": "教育职位发布及执照要求因岗位和学区而异。",
+          "logo": "/images/institutions/directory/ISBE.png"
+        },
+        {
+          "id": "partner-institutions-18",
+          "name": "New Mexico Public Education Department",
+          "description": "监督并支持新墨西哥州公共教育的州教育部门。",
+          "note": "教育职位发布及执照要求因岗位和学区而异。",
+          "logo": "/images/institutions/directory/NMPED.png"
+        }
+      ]
+    },
+    {
+      "id": "state-universities",
+      "title": "州立大学校区",
+      "description": "多年来，客户已广泛使用 AET 学历评估报告，申请美国各类院校及相关项目，包括部分学院和大学、大多数州立大学系统及社区学院。",
+      "entries": [
+        {
+          "id": "state-universities-1",
+          "name": "California State University, Bakersfield",
+          "description": "服务于圣华金谷南部的加州州立大学公立校区，位于加利福尼亚州贝克斯菲尔德。",
+          "note": "CSU 2027 年秋季申请可于 2026 年 8 月 1 日开始填写，10 月 1 日起提交，优先申请通常截至 2026 年 11 月 30 日。2027 年春季优先申请期为 2026 年 7 月 1 日至 8 月 31 日，具体以校区及专业要求为准。",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-2",
+          "name": "California State University Channel Islands",
+          "description": "位于南加州海岸附近、以跨学科学习著称的 CSU 校区，位于加利福尼亚州卡马里奥。",
+          "note": "CSU 2027 年秋季申请可于 2026 年 8 月 1 日开始填写，10 月 1 日起提交，优先申请通常截至 2026 年 11 月 30 日。2027 年春季优先申请期为 2026 年 7 月 1 日至 8 月 31 日，具体以校区及专业要求为准。",
+          "initials": "CSU"
+        },
+        {
+          "id": "state-universities-3",
+          "name": "California State University, Chico",
+          "description": "北加州历史较悠久的 CSU 校区之一，位于加利福尼亚州奇科。",
+          "note": "CSU 2027 年秋季申请可于 2026 年 8 月 1 日开始填写，10 月 1 日起提交，优先申请通常截至 2026 年 11 月 30 日。2027 年春季优先申请期为 2026 年 7 月 1 日至 8 月 31 日，具体以校区及专业要求为准。",
+          "initials": "CSU"
+        }
+      ]
+    },
+    {
+      "id": "licensing-government",
+      "title": "执照考试、政府职位与征兵",
+      "description": "学历评估也可用于执照考试、政府就业及征兵途径的资格审核。考试安排和招募要求由相关机构或官方考试服务方决定。",
+      "entries": [
+        {
+          "id": "licensing-government-1",
+          "name": "Contractors State License Board (CSLB)",
+          "description": "加州承包商执照管理机构，负责执照申请、考试、监管及消费者保护。",
+          "note": "CSLB 考试由 PSI 计算机考试中心管理，通常采用预约制，没有固定的年度考试日期。",
+          "initials": "CSLB"
+        },
+        {
+          "id": "licensing-government-2",
+          "name": "California Board of Barbering & Cosmetology",
+          "description": "负责理发、美容及相关美容职业执照的加州管理机构。",
+          "note": "自 2022 年 1 月 1 日起，大多数执照类型不再要求实操考试；获批申请人通常通过 PSI 预约笔试。",
+          "logo": "/images/institutions/directory/ca-BarberCosmo.jpg"
+        },
+        {
+          "id": "licensing-government-3",
+          "name": "Nevada State Board of Cosmetology",
+          "description": "负责美发、美甲、皮肤护理及相关职业执照的内华达州管理机构。",
+          "note": "理论、实操及州法律考试因项目要求而异，通常通过该委员会或 Pearson VUE 预约。",
+          "initials": "NV Board"
+        },
+        {
+          "id": "licensing-government-4",
+          "name": "California State Government Jobs",
+          "description": "加州政府就业门户，提供公务员考试、职位、季节性工作及招聘公告。",
+          "note": "招聘全年发布；部分岗位持续接受申请，季节性岗位通常于春夏发布。",
+          "initials": "CA Jobs"
+        },
+        {
+          "id": "licensing-government-5",
+          "name": "U.S. Military / Army Recruiting",
+          "description": "学历评估可协助审核教育等同性或入伍资格的美国军队招募途径。",
+          "note": "招募通常全年进行。ASVAB、体检及 MEPS 流程通过预约安排；基本要求包括年龄、身体条件、公民或绿卡身份、高中或同等学历，以及入伍测试成绩。",
+          "initials": "U.S. Army"
+        }
+      ]
+    }
+  ],
+  "closing": "您是否需要用于入学、职业许可、就业、移民或军队资格审核的学历评估？AET 可在您提交申请前，协助您选择合适的报告类型。",
+  "applyUrl": "https://app.americantranslationservice.com/credential-evaluation-application"
+}

@@ -2,6 +2,41 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Complete institution directory — September 30, 2026
+
+- Added `/institutions`, `/zh/institutions` and `/es/institutions` through one
+  shared template. All 28 entries, four original categories/anchors, descriptions
+  and complete timing notes are preserved; Chinese and Spanish prose is localized.
+  Added search, category filters, result counts, a reset/empty state and native
+  note disclosures. The homepage carousel now links to the active locale.
+- Preserved 17 original image files byte-for-byte. Corrected the source's WCUI
+  artwork pairing to Smith Chason College; WCU uses a text placeholder. Source
+  descriptions, dates and relationship claims remain subject to publication
+  review in `content/institutions/README.md`.
+- Passed TypeScript, existing i18n checks, whitespace checks and an additional
+  directory-content audit: English source equality for every entry/section;
+  matching three-locale IDs, names and record counts; 28 server-rendered entries
+  per route; complete notes; four anchors; unique IDs; all 17 logo responses and
+  source checksums. The legacy PHP URL returns 308 and retains its query string;
+  the browser confirmed the licensing/government fragment reaches the new page.
+- Codex in-app browser passed English desktop search (including whitespace and
+  multiword queries), empty/reset states, category filtering and note expansion;
+  Chinese mobile keyword search and keyboard expansion; Spanish narrow-screen
+  filters; homepage-to-directory navigation and Chinese-to-Spanish switching.
+  Inspected 1440, 850, 760, 390 and 320px states without horizontal page overflow.
+  Final page logs contained no errors or warnings. Screenshots:
+  `output/playwright/institutions-desktop.jpg` and `institutions-mobile.jpg`.
+- The owner's 3021 server initially returned 500. Early verification used a
+  temporary copy on 3034 with polling/webpack. The owner server subsequently
+  recovered, and final desktop/mobile, logo, link, locale and redirect checks
+  ran against the actual project on 3021. The temporary 3034 server was stopped;
+  the owner's server was not manually restarted. Viewport override was reset.
+- No production build, commit, push or deployment. No-JavaScript HTML includes
+  all entries and native disclosures; a separate JavaScript-disabled browser
+  run was not completed because the supplemental Playwright CLI could not write
+  its session cache within the sandbox. Native 200% zoom and a full accessibility
+  audit were not performed.
+
 ### About AET migration — September 30, 2026
 
 - Added `/about`, `/zh/about`, and `/es/about` through one shared localized page.
