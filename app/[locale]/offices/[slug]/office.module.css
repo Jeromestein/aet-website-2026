@@ -1,0 +1,18 @@
+.section { margin-bottom: 64px; scroll-margin-top: 110px; }
+.section h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
+.section p, .section li { line-height: 1.8; color: var(--muted); }
+.section .lead { color: var(--ink); font-size: 20px; }
+.section ul { padding-left: 24px; margin: 0 0 28px; }
+.section li + li { margin-top: 12px; }
+.section .note { margin: 28px 0 20px; color: var(--ink); font-weight: 500; }
+.methods { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.methods h3 { font-size: 20px; margin: 0 0 10px; }
+.methods p { margin: 0; font-size: 15px; }
+.guarantee { padding: 32px; background: var(--blue); border-radius: 24px; }
+.otherOffices { display: flex; flex-wrap: wrap; gap: 12px 24px; border-top: 1px solid var(--line); padding: 22px 0; }
+.otherOffices a { color: var(--action-blue); display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  .section { margin-bottom: 48px; }
+  .methods { grid-template-columns: 1fr; }
+  .guarantee { padding: 24px; }
+}

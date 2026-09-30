@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { useLocale } from 'next-intl';
-import { localizeContactLinks } from '@/lib/contact';
+import { renderContactReferences } from '@/lib/contact-html';
 import { getPathname } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { Navigation } from '@/components/navigation';
@@ -11,7 +11,7 @@ import styles from './service-page.module.css';
 /** Only reviewed, checked-in legacy content may use this renderer. */
 export function ServiceCopy({ html, className = '' }: { html: string; className?: string }) {
   const locale = useLocale() as Locale;
-  return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: localizeContactLinks(html, locale) }} />;
+  return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: renderContactReferences(html, locale) }} />;
 }
 
 export async function ServicePage({ locale, title, titleLang, label, eyebrow, nav, actions, children }: {

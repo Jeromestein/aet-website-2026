@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
-import { localizeContactLinks } from "@/lib/contact";
+import { renderContactReferences } from "@/lib/contact-html";
 import applicationMethods from "@/content/application-methods.json";
 import methodStyles from "./application-methods.module.css";
 
@@ -221,7 +221,7 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
         hidden={ready && method !== "email"} className={methodStyles.panel}>
         <h3 className={methodStyles.methodTitle}>{email.title}</h3>
         {/* Checked-in, sanitized legacy instructions; never runtime user HTML. */}
-        <div className={methodStyles.email} dangerouslySetInnerHTML={{ __html: localizeContactLinks(email.html, locale) }} />
+        <div className={methodStyles.email} dangerouslySetInnerHTML={{ __html: renderContactReferences(email.html, locale) }} />
       </div>
     </div>
   </section>;

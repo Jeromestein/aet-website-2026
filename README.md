@@ -40,9 +40,9 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Unmigrated office-detail
-destinations still depend on the existing production website. The
-localized Contact page is implemented. A localized Payment page is available
+app.americantranslationservice.com portal. Miami, Boston, Los Angeles and Beijing
+office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
+English, Chinese and Spanish variants. The localized Contact page is implemented. A localized Payment page is available
 at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
 footer link to the localized page, and `/e-pay.php` redirects there. Merchant
 accounts and payment reconciliation still need live review before launch.
@@ -189,3 +189,23 @@ English writing, as confirmed by the owner. Their rates and the proofreading
 discount threshold share the pricing catalog.
 No application-form-only add-ons have been imported. Existing old-site service
 pages and the separate application portal are outside this shared data module.
+
+## Shared office information
+
+Edit `lib/contact.ts` to update public office addresses, phone numbers, email
+addresses, messaging channels, or business hours. The four office detail pages,
+six-office Contact directory, map directions and payment recipient mailing
+addresses read this catalog. `components/offices/office-card.tsx` is the shared
+contact module; office detail pages use its expanded layout. Office names and
+field labels live in `content/contact/{en,zh,es}.json`, and the shared office-page
+copy lives in `lib/office-content.ts`.
+
+Imported article/service HTML passes through `lib/contact-html.ts` so reviewed
+contact literals resolve against the same catalog. `content/contact/legacy-references.json`
+is an immutable spelling map for imported source text, not a place to edit current
+business details. Historical images are unchanged. New imports with additional
+contact spellings must extend this map. Payment identities (Zelle/PayPal/bank
+accounts) stay separately configured and must not follow general contact email edits.
+
+Footer office links and Contact's Office details links use the localized office
+routes. Legacy `e-office-{slug}[{-zh,-es}].php` and `.html` URLs redirect there.

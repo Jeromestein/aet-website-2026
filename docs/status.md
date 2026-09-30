@@ -30,6 +30,35 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Shared office pages and contact catalog — September 30, 2026
+
+- Added local Miami, Boston, Los Angeles and Beijing detail pages in English,
+  Chinese and Spanish. Footer and Contact detail links use these routes;
+  legacy office PHP/HTML URLs redirect to them. Invalid slugs return 404.
+- Extracted `OfficeCard` for Contact and office details. Public phone/email/address,
+  messaging channels and structured business hours live in `lib/contact.ts`.
+  Maps derive from that address; Beijing's phone link uses +86. Payment recipient
+  mailing addresses reference the catalog, while payment account identities stay
+  separate. Imported service/article contact literals use immutable source aliases
+  resolved against the catalog; historical image files remain unchanged.
+- Passed TypeScript, all three locale message checks, 12 office route checks,
+  12 PHP redirects and unknown-office 404. An in-memory catalog mutation verified
+  propagation to article text, phone/email links, hours, map queries and payment
+  addresses without changing actual business data.
+- In-app browser inspected all four English desktop pages (1440px), representative
+  Chinese/Spanish office pages at 390px, footer navigation, locale switching,
+  Contact detail links and contact cards, the Los Angeles article contact section,
+  and Payment recipient addresses. Mobile pages had no document overflow.
+  Screenshots: `output/playwright/office-*-desktop.jpg`, `office-*-mobile.jpg`,
+  and `office-blog-contact-regression.jpg`.
+- The original 3021 server returned empty responses after file-watcher errors.
+  Verification used a temporary source copy with polling/webpack on 3022, then
+  stopped that temporary server. The owner's 3021 server later recovered; its
+  actual Chinese Miami page was also opened in-app successfully. A rapid
+  pre-hydration language-menu interaction emitted a shared-navigation hydration
+  warning; subsequent page navigation and office content rendered correctly.
+  No build, commit, push, deployment, message or payment submission was performed.
+
 ### Career page — September 30, 2026
 
 - Added `/career`, `/zh/career` and `/es/career` using the shared site shell and
@@ -367,7 +396,7 @@ implementation and checks, not production deployment or accessibility certificat
   mobile horizontal card navigation, `#sf` positioning and no 390px page
   overflow. Typecheck, i18n and whitespace checks passed. No build or deploy.
 - Office contact information, hours and service availability still need owner
-  review before launch. Other legacy office-detail pages remain unmigrated.
+  review before launch. The four footer office-detail pages were subsequently migrated; see the September 30 office entry.
 
 ### Remaining five service pages — September 29, 2026
 

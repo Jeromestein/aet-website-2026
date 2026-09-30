@@ -2,7 +2,12 @@ import type { Locale } from '@/i18n/routing';
 import en from '@/content/payment/en.json';
 import zh from '@/content/payment/zh.json';
 import es from '@/content/payment/es.json';
-export { default as paymentBankDetails } from '@/content/payment/bank-details.json';
+import bankDetails from '@/content/payment/bank-details.json';
+import { getOffice, type OfficeId } from '@/lib/contact';
+const mailingRows = (rows: { label: string; value?: string; officeAddress?: string }[]) => rows.map(row => ({
+  label: row.label, value: row.officeAddress ? getOffice(row.officeAddress as OfficeId).address : row.value ?? '',
+}));
+export const paymentBankDetails = { ...bankDetails, miami: mailingRows(bankDetails.miami), boston: mailingRows(bankDetails.boston), check: mailingRows(bankDetails.check) };
 
 export const paymentOffices = ['miami', 'boston', 'california', 'nyc'] as const;
 export const paymentServices = ['certified', 'evaluation', 'interpretation', 'other'] as const;

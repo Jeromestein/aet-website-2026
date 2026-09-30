@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { ServicePage } from '@/components/service/service-page';
 import { CardRail } from '@/components/card-rail';
-import { offices, type Office } from '@/lib/contact';
-import { contactContent, type ContactContent } from '@/lib/contact-content';
+import { offices, getOffice, otherContacts, phoneHref } from '@/lib/contact';
+import { contactContent } from '@/lib/contact-content';
+import { OfficeCard } from '@/components/offices/office-card';
 import styles from './contact.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -17,31 +18,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = contactContent[locale];
   return { title, description, openGraph: { title, description } };
-}
-
-function phoneHref(phone: string) {
-  return `tel:${phone.replace(/[^+\d]/g, '')}`;
-}
-
-function OfficeCard({ office, content, locale }: { office: Office; content: ContactContent; locale: string }) {
-  const copy = content.offices[office.id];
-  const address = locale === 'zh' ? office.addressZh ?? office.address : locale === 'es' ? office.addressEs ?? office.address : office.address;
-  return <article data-rail-card id={office.id} className={styles.office} aria-labelledby={`${office.id}-title`}>
-    <div className={styles.officeHead}><MapPin size={23} aria-hidden="true" /><h3 id={`${office.id}-title`}>{copy.title}</h3></div>
-    <dl className={styles.facts}>
-      <div><dt>{content.labels.phone}</dt><dd>{office.phones.map((phone, i) => <span key={phone}><a href={phoneHref(phone)}>{phone}</a>{copy.phoneNotes?.[i] && <small>{copy.phoneNotes[i]}</small>}</span>)}</dd></div>
-      <div><dt>{content.labels.email}</dt><dd>{office.emails.map(email => <a key={email} href={`mailto:${email}`}>{email}</a>)}</dd></div>
-      <div><dt>{content.labels.address}</dt><dd><address>{address}</address><a className={styles.directions} href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office.address)}`} target="_blank" rel="noopener noreferrer">{content.labels.directions}<ArrowUpRight size={15} aria-hidden="true" /></a></dd></div>
-      {copy.hours && <div><dt>{content.labels.hours}</dt><dd>{copy.hours}</dd></div>}
-    </dl>
-    {(office.whatsapp || office.wechat || office.tollFreeChina || office.fax || office.qq) && <details className={styles.more}><summary>{content.labels.more}</summary><dl>
-      {office.whatsapp && <div><dt>{content.labels.whatsapp}</dt><dd>{office.whatsapp}</dd></div>}
-      {office.wechat && <div><dt>{content.labels.wechat}</dt><dd>{office.wechat}</dd></div>}
-      {office.tollFreeChina && <div><dt>{content.labels.tollFreeChina}</dt><dd>{office.tollFreeChina}</dd></div>}
-      {office.fax && <div><dt>{content.labels.fax}</dt><dd>{office.fax}</dd></div>}
-      {office.qq && <div><dt>{content.labels.qq}</dt><dd>{office.qq}</dd></div>}
-    </dl></details>}
-  </article>;
 }
 
 export default async function ContactPage({ params }: Props) {
@@ -64,7 +40,7 @@ export default async function ContactPage({ params }: Props) {
         {i === 0 ? <Mail size={26} aria-hidden="true" /> : <MapPin size={26} aria-hidden="true" />}
         <h3>{option.title}</h3><p>{option.body}</p>
       </article>)}</CardRail>
-      {c.priority && <p className={styles.priority}><Phone size={19} aria-hidden="true" />{c.priority}: <a href="tel:+17866106133">+1 786-610-6133</a></p>}
+      {c.priority && <p className={styles.priority}><Phone size={19} aria-hidden="true" />{c.priority}: <a href={phoneHref(otherContacts.spanish.phone)}>{otherContacts.spanish.phone}</a></p>}
     </section>
     <section id="offices" className={styles.section} aria-labelledby="contact-offices-title">
       <h2 id="contact-offices-title">{c.sections.offices}</h2>
@@ -76,8 +52,8 @@ export default async function ContactPage({ params }: Props) {
     <section id="other" className={styles.section} aria-labelledby="contact-other-title">
       <h2 id="contact-other-title">{c.other.title}</h2>
       <div className={styles.otherGrid}>
-        <article id="other-contact"><h3>{c.other.nyc}</h3><p><a href="tel:+17185216708">+1 718-521-6708</a><br /><a href="mailto:nyc@aet21.com">nyc@aet21.com</a></p></article>
-        <article><h3>{c.other.taiyuan}</h3><p><a href="tel:+863512815866">0351 2815866</a><br />{c.other.mobile}: <a href="tel:+8618734590999">18734590999</a><br /><a href="mailto:shanxi@aet21.com">shanxi@aet21.com</a></p></article>
+        <article id="other-contact"><h3>{c.other.nyc}</h3><p><a href={phoneHref(getOffice('nyc').phones[0])}>{getOffice('nyc').phones[0]}</a><br /><a href={`mailto:${getOffice('nyc').emails[0]}`}>{getOffice('nyc').emails[0]}</a></p></article>
+        <article><h3>{c.other.taiyuan}</h3><p><a href={phoneHref(otherContacts.taiyuan.phone)}>{otherContacts.taiyuan.phone}</a><br />{c.other.mobile}: <a href={phoneHref(otherContacts.taiyuan.mobile)}>{otherContacts.taiyuan.mobile}</a><br /><a href={`mailto:${otherContacts.taiyuan.email}`}>{otherContacts.taiyuan.email}</a></p></article>
       </div>
     </section>
   </ServicePage>;

@@ -1,3 +1,4 @@
+import { renderContactReferences } from '@/lib/contact-html';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -46,7 +47,7 @@ export default async function BlogArticlePage({ params }: Props) {
   const index = <ol>{post.toc.map(section => <li key={section.id}><a href={`#${section.id}`} lang="en">{section.title}</a></li>)}</ol>;
   // All content is an offline, allowlisted import. Only known local link paths
   // are localized; external citations, images and source fragments stay intact.
-  const body = post.html.replace(/href="(\/(?!\/)[^"#?]*)([^\"]*)"/g, (match, path: string, suffix: string) => {
+  const body = renderContactReferences(post.html, locale, 'en').replace(/href="(\/(?!\/)[^"#?]*)([^\"]*)"/g, (match, path: string, suffix: string) => {
     if (!['/', '/contact', '/evaluation', '/certified-translation', '/expert-opinion-letters', '/general-translation'].includes(path) && !path.startsWith('/blog/')) return match;
     return `href="${getPathname({ locale, href: path })}${suffix}"`;
   });

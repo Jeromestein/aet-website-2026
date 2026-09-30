@@ -16,3 +16,21 @@
   the source's separate NYC and Taiyuan Other Contact information.
 - Office availability, hours, walk-in policy, and other legacy business facts
   have not been independently confirmed. Review them before production launch.
+
+## Office page migration — September 30, 2026
+
+- Four office pages use the shared catalog and `OfficeCard`; hours now live as
+  structured values in `lib/contact.ts`, formatted per locale. Missing Beijing
+  hours remain omitted. Beijing's telephone link includes China's country code.
+- Page introduction, company history, services and guarantees are adapted from
+  the local `e-office-{miami,boston,los-angeles,beijing}-content.html` files.
+  The retained service scope excludes visa and consular authentication services.
+  Beijing retains its coordination/document-support scope. Time-relative legacy
+  experience copy is represented by the original founding/history dates.
+- Directions are generated from the current catalog address, rather than copying
+  legacy map embeds. Legacy office photos/promotional graphics were not migrated;
+  the new pages prioritize contact information and service instructions.
+- `legacy-references.json` records immutable source spellings for current contact
+  text in imported articles/services. The HTML renderer resolves them against the
+  catalog and escapes the result; article prose and historical image assets stay
+  in their original checked-in sources. This does not change payment identities.

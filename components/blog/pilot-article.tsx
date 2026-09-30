@@ -1,3 +1,4 @@
+import { getOffice, officePath } from '@/lib/contact';
 import Image from 'next/image';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -62,7 +63,7 @@ export async function PilotArticlePage({ params }: Props) {
                 <Image src="/images/blog/boston-reviews-archive.jpg" alt="Historical Boston Google review screenshot from the original article" width={606} height={948} sizes="(max-width: 760px) 85vw, 480px" />
               </details>
             </section>
-            <div className={styles.closing}><p lang="en">{article.closing}</p><a className="button" href={getPathname({ locale, href: '/contact' }) + '#boston'}>{c.contact}<ArrowRight size={17} aria-hidden="true" /></a></div>
+            <div className={styles.closing}><p lang="en">{article.closing}</p><a className="button" href={officePath(locale, getOffice('boston'))}>{c.contact}<ArrowRight size={17} aria-hidden="true" /></a></div>
           </article>
         </div>
       </div>

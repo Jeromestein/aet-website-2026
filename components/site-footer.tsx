@@ -2,7 +2,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import Image from "next/image";
-import { contactPath } from "@/lib/contact";
+import { contactPath, featuredOffices, officePath } from "@/lib/contact";
 import { SocialIcon } from "./social-icon";
 import styles from "./site-footer.module.css";
 
@@ -27,12 +27,6 @@ export function SiteFooter() {
     [t("home.contact"), "/contact"],
     [t("footer.about"), "/about"],
     [t("footer.career"), "/career"],
-  ];
-  const offices = [
-    [t("footer.miami"), "miami"],
-    [t("footer.boston"), "boston"],
-    [t("footer.losAngeles"), "los-angeles"],
-    [t("footer.beijing"), "beijing"],
   ];
 
   return (
@@ -64,7 +58,7 @@ export function SiteFooter() {
             </div>
             <div>
               <h2>{t("footer.office")}</h2>
-              <ul>{offices.map(([label, slug]) => <li key={slug}><a href={slug === 'los-angeles' ? contactPath(locale, 'la') : `${legacy}/e-office-${slug}.php`}>{label}</a></li>)}</ul>
+              <ul>{featuredOffices.map(office => <li key={office.id}><a href={officePath(locale, office)}>{t(`footer.${office.footerKey}`)}</a></li>)}</ul>
             </div>
           </nav>
         </div>

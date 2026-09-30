@@ -22,7 +22,7 @@
     },
     {
       "label": "Recipient Address",
-      "value": "15321 S Dixie Hwy, Ste 302 Miami, FL 33157"
+      "officeAddress": "miami"
     }
   ],
   "boston": [
@@ -56,7 +56,7 @@
     },
     {
       "label": "Recipient Address",
-      "value": "6 Pleasant St, Suite #418, Malden, MA 02148"
+      "officeAddress": "boston"
     }
   ],
   "check": [
@@ -66,7 +66,7 @@
     },
     {
       "label": "Recipient Address",
-      "value": "6 Pleasant St, Suite #418, Malden, MA 02148"
+      "officeAddress": "boston"
     }
   ],
   "zelle": {

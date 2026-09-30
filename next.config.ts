@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         ["e_aboutus.html", "/about"],
         ["c_aboutus.html", "/zh/about"],
       ].map(([source, destination]) => ({ source: `/${source}`, destination, permanent: true })),
+      ...['miami', 'boston', 'los-angeles', 'beijing'].flatMap(slug =>
+        ['php', 'html'].flatMap(extension => ['', '-zh', '-es'].map(suffix => ({
+          source: `/e-office-${slug}${suffix}.${extension}`,
+          destination: `${suffix ? '/' + suffix.slice(1) : ''}/offices/${slug}`,
+          permanent: true,
+        })))),
       ...[
         ['e-privacy-policy', 'privacy'],
         ['e-terms-of-use', 'terms'],

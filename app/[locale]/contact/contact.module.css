@@ -2,8 +2,8 @@
 .section h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
 .intro { font-size: 18px; line-height: 1.6; max-width: 760px; margin: 0 0 26px; }
 .methods, .offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.method, .office, .otherGrid article { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 26px; min-width: 0; }
-.method svg, .officeHead svg { color: var(--accent); flex: none; }
+.method, .otherGrid article { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 26px; min-width: 0; }
+.method svg { color: var(--accent); flex: none; }
 .method h3 { font-size: 23px; margin: 18px 0 12px; }
 .method p { margin: 0; line-height: 1.75; color: var(--muted); }
 .priority { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; background: var(--blue); border-radius: 12px; padding: 17px 20px; line-height: 1.5; margin: 24px 0 0; }
@@ -11,21 +11,6 @@
 .officeLinks { display: none; }
 .officeLinks a { display: inline-flex; align-items: center; min-height: 38px; padding: 7px 13px; border: 1px solid var(--line); border-radius: 25px; background: var(--surface); font-size: 13px; white-space: nowrap; }
 .officeLinks a:hover, .officeLinks a:focus-visible { border-color: var(--action-blue); color: var(--action-blue); }
-.office { scroll-margin-top: 110px; }
-.officeHead { display: flex; align-items: flex-start; gap: 10px; min-height: 66px; }
-.officeHead h3 { font-size: 21px; line-height: 1.35; margin: 0; }
-.facts { margin: 0; }
-.facts > div { padding: 14px 0; border-top: 1px solid var(--line); }
-.facts dt, .more dt { color: var(--muted); font-size: 13px; font-weight: 600; margin-bottom: 5px; }
-.facts dd, .more dd { margin: 0; line-height: 1.55; overflow-wrap: anywhere; }
-.facts dd > a, .facts dd > span { display: block; }
-.facts dd a, .more a, .otherGrid a { color: var(--action-blue); text-decoration: underline; text-underline-offset: 3px; }
-.facts small { display: block; color: var(--muted); font-size: 12px; margin: 2px 0 6px; }
-.facts address { font-style: normal; }
-.directions { display: inline-flex !important; align-items: center; gap: 4px; margin-top: 8px; }
-.more { border-top: 1px solid var(--line); padding-top: 14px; }
-.more summary { cursor: pointer; font-size: 14px; font-weight: 600; }
-.more dl { margin: 12px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .otherGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .otherGrid article { scroll-margin-top: 110px; }
 .otherGrid h3 { font-size: 20px; margin: 0 0 12px; }
@@ -36,8 +21,9 @@
 @media (max-width: 760px) {
   .section { margin-bottom: 48px; }
   .methods:global(.card-rail), .offices:global(.card-rail) { display: flex; gap: 16px; }
-  .method, .office { padding: 22px; }
-  .officeHead { min-height: 0; margin-bottom: 14px; }
+  .method { padding: 22px; }
   .otherGrid { grid-template-columns: 1fr; gap: 14px; }
   .otherGrid article { padding: 20px; }
 }
+
+.otherGrid a { color: var(--action-blue); text-decoration: underline; }
