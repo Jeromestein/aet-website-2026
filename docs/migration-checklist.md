@@ -159,8 +159,12 @@ one shared page and its i18n content, not three independently implemented pages.
   China Visa is excluded; proofreading and English writing are included in
   Other Services with shared pricing and localized notes. Local verification is recorded in `status.md`; production
   deployment and remaining service-page migrations are still open.
-- [ ] **About AET** — `/e-aboutus.php` → About AET page. Preserve supported company
-  history, credentials, and brand information; reuse the new visual system.
+- [x] **About AET** — `/e-aboutus.php` → localized `/about`, `/zh/about`, and
+  `/es/about`, implemented September 30, 2026. Preserves the legacy history,
+  in-scope highlights, archival photos and client collection in the shared visual
+  system. Footer entry, five legacy redirects and original section anchors are
+  retained. See `content/about/README.md` and local checks in `status.md`;
+  production deployment and business-claim recertification remain separate.
 - [x] **Career** — `/e-careers.php` → `/career` (also `/zh/career` and `/es/career`),
   implemented locally September 30, 2026. All 16 roles and the entire English body
   are preserved verbatim across locales, per owner instruction. Native job

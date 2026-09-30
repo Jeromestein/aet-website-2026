@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
     return [
       ...blogRedirects,
       ...[
+        ["e-aboutus.php", "/about"],
+        ["e-aboutus-zh.php", "/zh/about"],
+        ["e-aboutus-es.php", "/es/about"],
+        ["e_aboutus.html", "/about"],
+        ["c_aboutus.html", "/zh/about"],
+      ].map(([source, destination]) => ({ source: `/${source}`, destination, permanent: true })),
+      ...[
         ['e-privacy-policy', 'privacy'],
         ['e-terms-of-use', 'terms'],
       ].flatMap(([source, destination]) => [

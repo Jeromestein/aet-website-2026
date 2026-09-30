@@ -1,0 +1,132 @@
+{
+  "title": "Acerca de AET",
+  "eyebrow": "American Education and Translation Services",
+  "description": "Conozca la historia, los premios, las afiliaciones y los servicios de AET. Fundada en Miami en 2009, AET ofrece traducción y evaluación de credenciales internacionales.",
+  "intro": "Fundada en 2009 por el Sr. Jeremy Yan, experto en traducción y evaluación de credenciales internacionales. Su experiencia profesional se remonta a 1997.",
+  "sections": {
+    "history": "Historia, premios y afiliaciones de AET",
+    "highlights": "Aspectos destacados de AET",
+    "photos": "Fotos de AET",
+    "clients": "Clientes de AET",
+    "testimonials": "Testimonios",
+    "careers": "Oportunidades laborales"
+  },
+  "timeline": [
+    {
+      "year": "2009",
+      "body": "Fundación en Miami, Florida. Incorporación a la Asociación Estadounidense de Traductores (ATA).",
+      "href": "https://www.atanet.org/",
+      "linkLabel": "American Translators Association (ATA)"
+    },
+    {
+      "year": "2010",
+      "body": "Apertura de la oficina de Boston."
+    },
+    {
+      "year": "2014",
+      "body": "Apertura de la oficina de Pekín."
+    },
+    {
+      "year": "2015",
+      "body": "Afiliación a la Asociación Nacional de Asesoramiento para la Admisión Universitaria.",
+      "href": "https://www.nacacnet.org/",
+      "linkLabel": "National Association for College Admission Counseling"
+    },
+    {
+      "year": "2016",
+      "body": "Premio «¡A la gente le encanta American Education & Translation Services en Yelp!»."
+    },
+    {
+      "year": "2017",
+      "body": "Apertura de las oficinas de San Francisco y Los Ángeles."
+    },
+    {
+      "year": "2020",
+      "body": "Apertura de la oficina de Nueva York."
+    },
+    {
+      "year": "2023",
+      "body": "Nuestro propietario, Jeremy Yan, se hizo miembro de la Asociación de Educadores Internacionales (NAFSA).",
+      "href": "https://www.nafsa.org/",
+      "linkLabel": "Association of International Educators (NAFSA)"
+    },
+    {
+      "year": "2023",
+      "body": "Aprobación como proveedor de evaluación de credenciales por la Junta de Educación del Estado de Illinois.",
+      "href": "https://www.isbe.net/documents/foreign-cred-eval-svcs.pdf",
+      "linkLabel": "Illinois State Board of Education"
+    },
+    {
+      "year": "2024",
+      "body": "Aprobación como agencia de evaluación de credenciales por el Departamento de Educación Pública de Nuevo México.",
+      "href": "https://webnew.ped.state.nm.us/bureaus/licensure/foreign-credentialing-agencies/",
+      "linkLabel": "New Mexico Public Education Department"
+    },
+    {
+      "year": "2025",
+      "body": "Aprobación como agencia de evaluación de credenciales por la Junta de Educación del Estado de Ohio.",
+      "href": "https://sboe.ohio.gov/educator-licensure/information-and-resources/approved-international-credential-evaluation-services",
+      "linkLabel": "Ohio State Board of Education"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Reconocimiento",
+      "body": "Premio «¡A la gente le encanta American Education & Translation Services, LLC en Yelp!» en 2016."
+    },
+    {
+      "title": "Experiencia",
+      "body": "Fundada en 2009 por el Sr. Jeremy Yan, experto en traducción y evaluación de credenciales internacionales. Su experiencia profesional se remonta a 1997."
+    },
+    {
+      "title": "Afiliación a ATA",
+      "body": "Miembro corporativo de la Asociación Estadounidense de Traductores (ATA) desde 2009."
+    },
+    {
+      "title": "Más de 100 idiomas",
+      "body": "Servicios de traducción entre el inglés y más de 100 idiomas: chino, español, francés, alemán, ruso, árabe, italiano, portugués, japonés, entre otros."
+    },
+    {
+      "title": "Traducciones certificadas",
+      "body": "Más de 10.000 traducciones certificadas para USCIS, ECFMG, sistemas escolares y tribunales de Estados Unidos, entre otros."
+    },
+    {
+      "title": "En línea y en persona",
+      "body": "Servicio en línea y atención presencial en nuestras oficinas de Miami, Boston, San Francisco, Los Ángeles y Pekín, China."
+    },
+    {
+      "title": "Atención personal",
+      "body": "Servicios fiables a precios razonables. Puede contactar fácilmente por teléfono y correo electrónico con nuestras oficinas y representantes experimentados."
+    },
+    {
+      "title": "Servicios urgentes",
+      "body": "Servicios urgentes disponibles para determinados idiomas."
+    },
+    {
+      "title": "Interpretación de chino",
+      "body": "Servicios sólidos de interpretación de chino a nivel local."
+    },
+    {
+      "title": "Nuestro equipo",
+      "body": "Personal interno bilingüe altamente cualificado y traductores experimentados en todo el mundo."
+    }
+  ],
+  "photoNote": "Fotos del archivo de AET. Consulte Contacto para conocer las ubicaciones actuales y la información sobre visitas.",
+  "clientsAlt": "Colección de logotipos de clientes de AET del sitio web original de la empresa",
+  "viewPhoto": "Ver foto: {name}",
+  "testimonialsLink": "Ver testimonios de clientes",
+  "careersLink": "Ver oportunidades laborales",
+  "photos": [
+    "Oficina de Miami",
+    "Oficina de Boston",
+    "Oficina de Irvine",
+    "Oficina de San Francisco",
+    "Oficina de Nueva York",
+    "Interpretación para negocios internacionales en Alaska",
+    "Interpretación para Bain Capital en Boston",
+    "Interpretación para un ex subsecretario de Estado de EE. UU. en la Universidad de Harvard",
+    "Premio de Yelp — 2016",
+    "Notarización",
+    "Notario de Massachusetts"
+  ]
+}

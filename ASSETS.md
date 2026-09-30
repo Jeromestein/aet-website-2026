@@ -1,5 +1,10 @@
 # Asset and content provenance
 
+About additions (September 30, 2026): `public/images/about/` contains 11 unchanged
+legacy archival photographs and the original client-logo collection. Photo origins,
+excluded out-of-scope imagery and historical-use context are documented in
+[About provenance](content/about/README.md). No stock or generated photos were added.
+
 Source: `/Users/plusone/Desktop/Code/server-54.213.58.23/americantranslationservice.com/` (existing AET website).
 
 Evaluation additions (September 29, 2026): `public/down/applicationform.pdf`,

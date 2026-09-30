@@ -2,6 +2,31 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### About AET migration — September 30, 2026
+
+- Added `/about`, `/zh/about`, and `/es/about` through one shared localized page.
+  Retained 11 dated history entries, 10 in-scope highlights, 11 archival photos,
+  the original client collection and testimonial/career destinations. Added
+  source notes in `content/about/README.md`; no new business claims were invented.
+- Reused the shared header/footer and service-page shell, with a desktop timeline
+  and card grids, native mobile rails, original photo links and legacy section IDs.
+  Footer About links stay localized. Five legacy About URLs redirect permanently.
+- Passed TypeScript, i18n and whitespace checks. HTTP checks passed for all three
+  languages, one H1 per page, unique IDs, anchor targets, footer/career links and
+  all 12 image files. Five 308 redirects preserved query parameters.
+- Codex in-app browser checked 1440px desktop, 850/760px tablet, 390px Chinese and
+  320px Spanish layouts without page overflow. Checked photo/section navigation,
+  mobile highlight/photo controls, keyboard access to the last photo (11/11),
+  Spanish-to-English switching and footer About navigation. Screenshots are
+  `output/playwright/about-*.jpg`. Native 200% zoom and a full accessibility audit
+  were not performed.
+- The initial port-3021 preview encountered watcher errors and stopped; a
+  separate server also became unavailable during checks. Remaining verification
+  used an isolated temporary copy on port 3033 with
+  `WATCHPACK_POLLING=true pnpm exec next dev --webpack --port 3033`.
+  That temporary server was stopped after verification. Other concurrent edits
+  were preserved. No production build, commit, push or deployment was performed.
+
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 

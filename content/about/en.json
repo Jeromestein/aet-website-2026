@@ -1,0 +1,132 @@
+{
+  "title": "About AET",
+  "eyebrow": "American Education and Translation Services",
+  "description": "Explore AET’s history, awards, memberships and services. Founded in Miami in 2009, AET provides translation and international credential evaluation services.",
+  "intro": "Founded in 2009 by translation and international credential evaluation expert Mr. Jeremy Yan. His professional experience dates back to 1997.",
+  "sections": {
+    "history": "AET History, Awards and Membership",
+    "highlights": "AET Highlights",
+    "photos": "AET Photos",
+    "clients": "AET Clients",
+    "testimonials": "Testimonials",
+    "careers": "Careers"
+  },
+  "timeline": [
+    {
+      "year": "2009",
+      "body": "Founded in Miami, FL. Became an American Translators Association (ATA) member.",
+      "href": "https://www.atanet.org/",
+      "linkLabel": "American Translators Association (ATA)"
+    },
+    {
+      "year": "2010",
+      "body": "Boston office opened."
+    },
+    {
+      "year": "2014",
+      "body": "Beijing office opened."
+    },
+    {
+      "year": "2015",
+      "body": "Member of National Association for College Admission Counseling.",
+      "href": "https://www.nacacnet.org/",
+      "linkLabel": "National Association for College Admission Counseling"
+    },
+    {
+      "year": "2016",
+      "body": "“People love American Education & Translation Services on Yelp!” award."
+    },
+    {
+      "year": "2017",
+      "body": "San Francisco Office opened. Los Angeles Office opened."
+    },
+    {
+      "year": "2020",
+      "body": "New York Office opened."
+    },
+    {
+      "year": "2023",
+      "body": "Our owner, Jeremy Yan, became a member of Association of International Educators (NAFSA).",
+      "href": "https://www.nafsa.org/",
+      "linkLabel": "Association of International Educators (NAFSA)"
+    },
+    {
+      "year": "2023",
+      "body": "Approved Credential Evaluation Source by Illinois State Board of Education.",
+      "href": "https://www.isbe.net/documents/foreign-cred-eval-svcs.pdf",
+      "linkLabel": "Illinois State Board of Education"
+    },
+    {
+      "year": "2024",
+      "body": "Approved Credential Evaluation agency by New Mexico Public Education Department.",
+      "href": "https://webnew.ped.state.nm.us/bureaus/licensure/foreign-credentialing-agencies/",
+      "linkLabel": "New Mexico Public Education Department"
+    },
+    {
+      "year": "2025",
+      "body": "Approved Credential Evaluation agency by Ohio State Board of Education.",
+      "href": "https://sboe.ohio.gov/educator-licensure/information-and-resources/approved-international-credential-evaluation-services",
+      "linkLabel": "Ohio State Board of Education"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Recognition",
+      "body": "“People love American Education & Translation Services, LLC on Yelp!” award in 2016."
+    },
+    {
+      "title": "Experience",
+      "body": "Founded in 2009 by translation and international credential evaluation expert Mr. Jeremy Yan. His professional experience dates back to 1997."
+    },
+    {
+      "title": "ATA membership",
+      "body": "Corporate Member of American Translators Association (ATA) since 2009."
+    },
+    {
+      "title": "100+ languages",
+      "body": "Translation services between English and more than 100 languages: Chinese, Spanish, French, German, Russian, Arabic, Italian, Portuguese, Japanese, etc."
+    },
+    {
+      "title": "Certified translations",
+      "body": "Served over 10,000 CERTIFIED TRANSLATIONS to USCIS, ECFMG, US school systems, US courts, etc."
+    },
+    {
+      "title": "Online and in person",
+      "body": "Convenient online service & walk in to our multiple offices in Miami, Boston, San Francisco, and Los Angeles, and Beijing, China."
+    },
+    {
+      "title": "Personal support",
+      "body": "Reliable and reasonable service fees. Very easy to call and email to our offices and experienced reps."
+    },
+    {
+      "title": "Rush services",
+      "body": "Rush services available for selected languages."
+    },
+    {
+      "title": "Chinese interpretation",
+      "body": "Powerful and localized Chinese interpretation services."
+    },
+    {
+      "title": "Our team",
+      "body": "Highly qualified and bilingual in house employees. Experienced translators across the world."
+    }
+  ],
+  "photoNote": "From the AET photo archive. For current office locations and visiting information, see Contact Us.",
+  "clientsAlt": "AET client-logo collection from the original company website",
+  "viewPhoto": "View photo: {name}",
+  "testimonialsLink": "View customer testimonials",
+  "careersLink": "View career opportunities",
+  "photos": [
+    "Miami Office",
+    "Boston Office",
+    "Irvine Office",
+    "San Francisco Office",
+    "New York Office",
+    "Interpretation for International Business in Alaska",
+    "Interpretation for Bain Capital in Boston",
+    "Interpretation for Former US Deputy Secretary of State at Harvard University",
+    "Yelp Award — 2016",
+    "Notarization",
+    "Massachusetts Notary"
+  ]
+}

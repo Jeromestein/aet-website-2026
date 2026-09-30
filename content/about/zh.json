@@ -1,0 +1,132 @@
+{
+  "title": "关于 AET",
+  "eyebrow": "美国教育和翻译服务公司",
+  "description": "了解 AET 的发展历史、奖项、会员资格和服务。AET 于 2009 年在迈阿密成立，提供翻译和国际学历评估服务。",
+  "intro": "AET 由翻译和国际学历评估专家 Jeremy Yan 先生于 2009 年创立，他的专业经验可追溯至 1997 年。",
+  "sections": {
+    "history": "AET 历史、奖项与会员资格",
+    "highlights": "AET 亮点",
+    "photos": "AET 照片",
+    "clients": "AET 客户",
+    "testimonials": "客户评价",
+    "careers": "职业机会"
+  },
+  "timeline": [
+    {
+      "year": "2009",
+      "body": "在佛罗里达州迈阿密成立，并成为美国翻译协会（ATA）会员。",
+      "href": "https://www.atanet.org/",
+      "linkLabel": "American Translators Association (ATA)"
+    },
+    {
+      "year": "2010",
+      "body": "波士顿办公室开业。"
+    },
+    {
+      "year": "2014",
+      "body": "北京办公室开业。"
+    },
+    {
+      "year": "2015",
+      "body": "加入全国大学招生咨询协会。",
+      "href": "https://www.nacacnet.org/",
+      "linkLabel": "National Association for College Admission Counseling"
+    },
+    {
+      "year": "2016",
+      "body": "获得“人们喜爱 Yelp 上的美国教育和翻译服务！”奖项。"
+    },
+    {
+      "year": "2017",
+      "body": "旧金山办公室和洛杉矶办公室开业。"
+    },
+    {
+      "year": "2020",
+      "body": "纽约办公室开业。"
+    },
+    {
+      "year": "2023",
+      "body": "公司所有者 Jeremy Yan 成为国际教育工作者协会（NAFSA）会员。",
+      "href": "https://www.nafsa.org/",
+      "linkLabel": "Association of International Educators (NAFSA)"
+    },
+    {
+      "year": "2023",
+      "body": "获伊利诺伊州教育委员会批准，成为学历评估服务机构。",
+      "href": "https://www.isbe.net/documents/foreign-cred-eval-svcs.pdf",
+      "linkLabel": "Illinois State Board of Education"
+    },
+    {
+      "year": "2024",
+      "body": "获新墨西哥州公共教育部批准，成为学历评估服务机构。",
+      "href": "https://webnew.ped.state.nm.us/bureaus/licensure/foreign-credentialing-agencies/",
+      "linkLabel": "New Mexico Public Education Department"
+    },
+    {
+      "year": "2025",
+      "body": "获俄亥俄州教育委员会批准，成为学历评估服务机构。",
+      "href": "https://sboe.ohio.gov/educator-licensure/information-and-resources/approved-international-credential-evaluation-services",
+      "linkLabel": "Ohio State Board of Education"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "奖项认可",
+      "body": "2016 年获得“人们喜爱 Yelp 上的美国教育和翻译服务有限责任公司！”奖项。"
+    },
+    {
+      "title": "专业经验",
+      "body": "由翻译和国际学历评估专家 Jeremy Yan 先生于 2009 年创立。他的专业经验可追溯至 1997 年。"
+    },
+    {
+      "title": "ATA 企业会员",
+      "body": "自 2009 年起成为美国翻译协会（ATA）的企业会员。"
+    },
+    {
+      "title": "100 多种语言",
+      "body": "提供英语与其他 100 多种语言之间的翻译服务，包括中文、西班牙语、法语、德语、俄语、阿拉伯语、意大利语、葡萄牙语、日语等。"
+    },
+    {
+      "title": "认证翻译",
+      "body": "为 USCIS、ECFMG、美国学校系统、美国法院等机构提供超过 10,000 份认证翻译服务。"
+    },
+    {
+      "title": "线上与到访服务",
+      "body": "提供便捷的在线服务，也可前往迈阿密、波士顿、旧金山、洛杉矶和中国北京的多个办公室。"
+    },
+    {
+      "title": "便捷沟通",
+      "body": "服务可靠、收费合理，可方便地通过电话和电子邮件联系我们的办公室和经验丰富的工作人员。"
+    },
+    {
+      "title": "加急服务",
+      "body": "为部分语言提供加急服务。"
+    },
+    {
+      "title": "中文口译",
+      "body": "提供专业的本地中文口译服务。"
+    },
+    {
+      "title": "专业团队",
+      "body": "拥有高素质的双语内部员工，以及遍布世界各地的经验丰富的翻译员。"
+    }
+  ],
+  "photoNote": "以下为 AET 历史照片。最新办公地址及到访信息请查看“联系我们”。",
+  "clientsAlt": "原公司网站展示的 AET 客户标志合集",
+  "viewPhoto": "查看照片：{name}",
+  "testimonialsLink": "查看客户评价",
+  "careersLink": "查看职业机会",
+  "photos": [
+    "迈阿密办公室",
+    "波士顿办公室",
+    "尔湾办公室",
+    "旧金山办公室",
+    "纽约办公室",
+    "阿拉斯加国际商务口译",
+    "波士顿贝恩资本口译",
+    "哈佛大学前美国副国务卿口译",
+    "Yelp 奖项 — 2016",
+    "公证",
+    "马萨诸塞州公证员"
+  ]
+}

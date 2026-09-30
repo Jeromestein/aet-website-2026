@@ -29,6 +29,11 @@ Deployment is intentionally left to the owner.
 
 ## Scope
 
+About AET is implemented at `/about`, `/zh/about`, and `/es/about`, with a shared
+history timeline, service highlights, archival photo gallery and client collection.
+The footer uses the localized route and five legacy About entry points redirect
+there. See [About content provenance](content/about/README.md).
+
 The homepage uses a shared `app/[locale]/page.tsx` template with Next.js i18n
 (`next-intl`) for English, Chinese, and Spanish. English uses `/`; Chinese and
 Spanish use `/zh` and `/es`. Migrate each additional page once through this same
