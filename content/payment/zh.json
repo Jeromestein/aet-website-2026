@@ -1,0 +1,25 @@
+{
+  "title": "付款",
+  "eyebrow": "支付 AET 服务费用",
+  "description": "填写服务及付款信息，然后前往 PayPal 完成支付。",
+  "sections": { "card": "银行卡付款", "alternatives": "其他付款方式", "security": "付款与处理", "shipping": "邮寄选项" },
+  "form": {
+    "intro": "请输入 AET 办公室报价中的金额。提交表格后，PayPal 将在新标签页打开以完成付款。",
+    "name": "姓名", "email": "电子邮箱", "phone": "电话号码",
+    "address": "邮寄地址（第一行）", "address2": "邮寄地址（第二行，可选）",
+    "city": "城市", "state": "州／省", "zip": "邮编", "addressGroup": "邮寄地址（可选）", "service": "申请的服务",
+    "serviceOther": "如选择其他服务，请说明", "office": "收款办公室",
+    "amount": "付款金额（美元）", "amountHelp": "请填写报价单或账单上的准确美元金额。",
+    "terms": "我已阅读并同意服务条款及隐私声明。",
+    "termsLink": "服务条款", "privacyLink": "隐私声明", "submit": "开始在线付款",
+    "newTab": "PayPal 将在新标签页打开"
+  },
+  "services": { "certified": "认证翻译", "evaluation": "国外学历评估", "interpretation": "口译", "other": "其他服务" },
+  "offices": { "miami": "迈阿密总部", "boston": "波士顿办公室", "california": "加州办公室", "nyc": "纽约办公室" },
+  "alternatives": {
+    "intro": "旧付款页也提供存款、支票和 Zelle 转账。汇款前请联系负责您服务的办公室，确认最新收款信息。",
+    "contact": "联系办公室", "zelle": "Zelle 转账", "bank": "银行存款或转账", "check": "支票"
+  },
+  "security": { "paragraph": "此表格只收集服务及联系信息。付款信息会在前往 PayPal 后输入。" },
+  "shipping": { "intro": "如果服务需要邮寄纸质材料，下方采用官网现行的统一邮寄价格。将邮费计入付款金额前，请先与办公室确认邮寄方式。", "domestic": "美国境内", "international": "国际邮寄" }
+}

@@ -5,6 +5,50 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Payment landing-flow parity — September 30, 2026
+
+- Restored the legacy empty `item_name` in the PayPal handoff. The previous
+  service-name prefill bypassed the Purchase details step. Required-field
+  validation, office selection, USD amount, and localized return URLs remain.
+- Used the existing port-3021 server and synthetic $1 preview information to
+  obtain the updated API's handoff HTML. Opened that HTML through a temporary
+  local preview in the Codex in-app browser; PayPal reached
+  `/webapps/shoppingcart#/checkout/openButton` with Description, $1.00, quantity
+  1, and Continue. Verified desktop and 390px mobile views. No Continue click,
+  login, card entry, or payment completion; downstream guest checkout unverified.
+- Local checks passed for all 12 office/locale combinations, Other Services,
+  six invalid submissions, TypeScript, and i18n. Removed the temporary preview.
+  Screenshots: `output/playwright/payment-open-button-desktop.jpg` and
+  `output/playwright/payment-open-button-mobile.jpg`. No build or deployment.
+
+### Payment page draft — September 29, 2026
+
+- Built English, Chinese and Spanish `/payment` pages with the shared service
+  shell, the source form fields and four existing payment-office choices.
+  The form ports the old PHP processor to a local PayPal HTML-form handoff,
+  with server-side office routing and validation; no REST API credential or new
+  merchant choice was added. Local ignored merchant configuration was copied
+  from the legacy source.
+- Optional mailing address is collapsible. Terms and privacy links remain
+  available. Secondary methods direct users to confirm current instructions
+  with their office rather than republishing unverified bank information.
+  Shipping tables reuse the shared Pricing records.
+- The header and footer link to the localized route, and `/e-pay.php` redirects
+  to `/payment`. A real or sandbox payment was not submitted. Before launch,
+  verify office recipients, payment return/cancel behavior, and reconciliation. The legacy
+  IPN success handler did not record transactions; a browser return is not
+  proof of payment. Deployment needs the payment environment values.
+- Local handoff checks generated PayPal forms for all four offices with the
+  expected amount, USD currency and localized return URL; malformed office,
+  amount and terms submissions returned 400. No PayPal form was submitted.
+  The Chinese payment form and cancel-return page rendered in the in-app
+  browser. Typecheck, i18n and whitespace checks passed; no build or deploy.
+- Navigation follow-up: header Payment, footer popular Payment, and the
+  homepage online-payment text now resolve to the active locale. The in-app
+  browser checked Chinese and Spanish links and the homepage payment link;
+  `/e-pay.php?ref=demo` returned 308 to `/payment?ref=demo` locally.
+  Typecheck and i18n checks passed. No payment was submitted.
+
 ### Contact — September 29, 2026
 
 - Built localized English, Chinese and Spanish Contact pages with the legacy

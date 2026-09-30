@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: "/e-contact.php", destination: "/contact", permanent: true },
       { source: "/e-contact-zh.php", destination: "/zh/contact", permanent: true },
       { source: "/e-contact-es.php", destination: "/es/contact", permanent: true },
+      { source: "/e-pay.php", destination: "/payment", permanent: true },
       { source: "/e-notarized.php", destination: "/certified-translation", permanent: true },
       { source: "/e-notarized-zh.php", destination: "/zh/certified-translation", permanent: true },
       { source: "/e-notarized-es.php", destination: "/es/certified-translation", permanent: true },

@@ -22,7 +22,10 @@ pnpm typecheck
 
 Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
 
-Import this directory's repository into Vercel, choose the Next.js preset, and keep the default build/output settings. No environment variables, database, or external API keys are required. Deployment is intentionally left to the owner.
+Import this directory's repository into Vercel and choose the Next.js preset. The
+Payment page requires the server-only `PAYPAL_BUSINESS_*` and `PAYMENT_SITE_URL`
+values documented in `.env.example`; other pages need no API keys or database.
+Deployment is intentionally left to the owner.
 
 ## Scope
 
@@ -32,9 +35,12 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Other service details, contact, payment,
-blog, office, and policy destinations still point to the existing production
-website. Payment is not implemented in this project.
+app.americantranslationservice.com portal. Blog, office-detail, and policy
+destinations still depend on the existing production website. The
+localized Contact page is implemented. A localized Payment page is available
+at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
+footer link to the localized page, and `/e-pay.php` redirects there. Merchant
+accounts and payment reconciliation still need live review before launch.
 
 Pricing is implemented at `/pricing`, `/zh/pricing`, and `/es/pricing`. The
 Services menu and footer use these localized routes. `/e-fee.php` redirects to

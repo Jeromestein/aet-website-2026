@@ -1,0 +1,25 @@
+{
+  "title": "Payment",
+  "eyebrow": "Pay for AET Services",
+  "description": "Complete the form for your quoted service and continue to PayPal to pay.",
+  "sections": { "card": "Card Payment", "alternatives": "Other Payment Methods", "security": "Payment & Processing", "shipping": "Shipping Options" },
+  "form": {
+    "intro": "Enter the amount quoted by your AET office. After you submit, PayPal opens in a new tab to complete the payment.",
+    "name": "Your Name", "email": "Your Email", "phone": "Your Phone Number",
+    "address": "Mailing Address (First line)", "address2": "Mailing Address (Second line, optional)",
+    "city": "City", "state": "State", "zip": "Zip Code", "addressGroup": "Mailing address (optional)", "service": "Requested Service",
+    "serviceOther": "Please specify if you choose other", "office": "Pay to which office",
+    "amount": "Amount in $", "amountHelp": "Use the exact USD amount on your quote or invoice.",
+    "terms": "I have read and agree to the Service Terms and Privacy Notice.",
+    "termsLink": "Service Terms", "privacyLink": "Privacy Notice", "submit": "Start Online Payment",
+    "newTab": "PayPal opens in a new tab"
+  },
+  "services": { "certified": "Certified Translation", "evaluation": "Foreign Credential Evaluation", "interpretation": "Interpretation", "other": "Other Services" },
+  "offices": { "miami": "Miami Headquarters", "boston": "Boston Office", "california": "California Office", "nyc": "New York Office" },
+  "alternatives": {
+    "intro": "The legacy payment page also offers deposit, check, and Zelle transfer. Contact the office handling your service to confirm current instructions before sending money.",
+    "contact": "Contact an Office", "zelle": "Zelle transfer", "bank": "Bank deposit or transfer", "check": "Check"
+  },
+  "security": { "paragraph": "This form collects service and contact details. Payment details are entered after you continue to PayPal." },
+  "shipping": { "intro": "If your service includes physical delivery, use the current shared shipping rates below. Confirm the option with your office before adding any shipping charge to your payment.", "domestic": "Domestic", "international": "International" }
+}

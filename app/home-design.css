@@ -48,6 +48,7 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
 .fce-benefits li + li { margin-top: 22px; }
 .fce-benefits li > svg { flex-shrink: 0; margin-top: 3px; color: var(--action-blue); }
 .fce-benefits strong { font-weight: 600; }
+.fce-benefits a { color: inherit; text-decoration: underline; text-underline-offset: .2em; }
 .featured-service { padding: 40px; min-height: 620px; }
 .evaluation-types { margin: 24px 0 32px; }
 .evaluation-types > div + div { border-top: 1px solid #ffffff30; padding-top: 24px; margin-top: 24px; }

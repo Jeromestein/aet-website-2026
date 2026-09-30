@@ -1,0 +1,46 @@
+.section { margin-bottom: 68px; scroll-margin-top: 110px; }
+.section h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
+.form { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px; }
+.formIntro, .sectionIntro { max-width: 780px; font-size: 17px; line-height: 1.7; color: var(--muted); margin: 0 0 28px; }
+.fieldsThree, .fieldsTwo { display: grid; gap: 18px; margin-bottom: 20px; }
+.fieldsThree { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fieldsTwo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.field { min-width: 0; }
+.field label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.field input, .field select { display: block; width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 8px; padding: 11px 14px; background: var(--paper); color: var(--ink); font: inherit; }
+.field input:focus-visible, .field select:focus-visible, .legal input:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 2px; }
+.field select { cursor: pointer; }
+.field small { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.asterisk { color: var(--orange); }
+.addressDetails { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 15px 0; margin: 0 0 25px; }
+.addressDetails summary { cursor: pointer; font-size: 15px; font-weight: 600; }
+.addressDetails[open] summary { margin-bottom: 19px; }
+.addressDetails .fieldsThree { margin-bottom: 0; }
+.amountInput { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.amountInput span { padding-left: 14px; color: var(--muted); }
+.amountInput input { border: 0; background: transparent; padding-left: 8px; }
+.amountInput:focus-within { outline: 3px solid var(--action-blue); outline-offset: 2px; }
+.amountInput input:focus-visible { outline: 0; }
+.legal { display: flex; gap: 12px; border-top: 1px solid var(--line); padding-top: 23px; margin-top: 4px; }
+.legal input { width: 19px; height: 19px; flex: none; margin: 2px 0 0; accent-color: var(--action-blue); }
+.legal label { line-height: 1.6; font-size: 14px; }
+.legal p { display: flex; flex-wrap: wrap; gap: 15px; margin: 8px 0 0; }
+.legal a { display: inline-flex; gap: 3px; align-items: center; color: var(--action-blue); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.submitRow { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 27px; }
+.submitRow button { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 8px; min-height: 54px; padding: 12px 22px; cursor: pointer; font: inherit; font-weight: 600; }
+.submitRow small { color: var(--muted); }
+.methodCards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.methodCard { min-width: 0; padding: 23px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+.methodCard svg { color: var(--accent); }
+.methodCard h3 { font-size: 17px; line-height: 1.4; margin: 18px 0 0; }
+.contactLink { display: inline-flex; align-items: center; gap: 5px; margin-top: 22px; color: var(--action-blue); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.shippingGroup { margin-top: 27px; }
+.shippingGroup h3 { font-size: 20px; margin: 0 0 14px; }
+@media (max-width: 760px) {
+  .section { margin-bottom: 48px; }
+  .form { padding: 20px; }
+  .fieldsThree, .fieldsTwo { grid-template-columns: 1fr; gap: 16px; }
+  .methodCards:global(.card-rail) { display: flex; gap: 16px; }
+  .methodCard { padding: 20px; }
+  .submitRow button { width: 100%; justify-content: center; }
+}

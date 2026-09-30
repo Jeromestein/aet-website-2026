@@ -30,7 +30,7 @@ export function Navigation() {
       { label: t("pricing.title"), href: getPathname({ locale, href: "/pricing" }) },
     ] },
     { label: t("navigation.contact"), href: contactPath(locale) },
-    { label: t("navigation.payment"), href: legacy + "/e-pay.php" },
+    { label: t("navigation.payment"), href: getPathname({ locale, href: "/payment" }) },
     { label: t("navigation.blog"), href: legacy + "/blog" },
   ];
 

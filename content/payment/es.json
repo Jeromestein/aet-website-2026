@@ -1,0 +1,25 @@
+{
+  "title": "Pago",
+  "eyebrow": "Pague los servicios de AET",
+  "description": "Complete el formulario de su servicio y continúe a PayPal para pagar.",
+  "sections": { "card": "Pago con tarjeta", "alternatives": "Otros métodos de pago", "security": "Pago y procesamiento", "shipping": "Opciones de envío" },
+  "form": {
+    "intro": "Ingrese el importe cotizado por su oficina de AET. Al enviar el formulario, PayPal se abrirá en una pestaña nueva para completar el pago.",
+    "name": "Su nombre", "email": "Su correo electrónico", "phone": "Su número de teléfono",
+    "address": "Dirección postal (primera línea)", "address2": "Dirección postal (segunda línea, opcional)",
+    "city": "Ciudad", "state": "Estado", "zip": "Código postal", "addressGroup": "Dirección postal (opcional)", "service": "Servicio solicitado",
+    "serviceOther": "Si elige otro servicio, especifíquelo", "office": "Oficina que recibirá el pago",
+    "amount": "Importe en USD", "amountHelp": "Use el importe exacto en USD de su cotización o factura.",
+    "terms": "He leído y acepto los Términos del servicio y el Aviso de privacidad.",
+    "termsLink": "Términos del servicio", "privacyLink": "Aviso de privacidad", "submit": "Iniciar pago en línea",
+    "newTab": "PayPal se abrirá en una pestaña nueva"
+  },
+  "services": { "certified": "Traducción certificada", "evaluation": "Evaluación de credenciales extranjeras", "interpretation": "Interpretación", "other": "Otros servicios" },
+  "offices": { "miami": "Sede de Miami", "boston": "Oficina de Boston", "california": "Oficina de California", "nyc": "Oficina de Nueva York" },
+  "alternatives": {
+    "intro": "La página de pagos anterior también ofrece depósito, cheque y transferencia por Zelle. Antes de enviar dinero, confirme las instrucciones vigentes con la oficina encargada de su servicio.",
+    "contact": "Contactar una oficina", "zelle": "Transferencia por Zelle", "bank": "Depósito o transferencia bancaria", "check": "Cheque"
+  },
+  "security": { "paragraph": "Este formulario recopila datos del servicio y de contacto. Los datos de pago se ingresan después, en PayPal." },
+  "shipping": { "intro": "Si su servicio incluye entrega física, consulte las tarifas de envío actuales compartidas a continuación. Confirme la opción con su oficina antes de agregar el envío al pago.", "domestic": "Nacional", "international": "Internacional" }
+}
