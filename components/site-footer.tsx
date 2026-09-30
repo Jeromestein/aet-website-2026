@@ -72,8 +72,8 @@ export function SiteFooter() {
           <p>{t("footer.copyright")}</p>
           <nav aria-label={t("footer.legal")}>
             <a href={legacy + "/blog"}>{t("navigation.blog")}</a>
-            <a href={legacy + "/e-terms-of-use.php"}>{t("footer.terms")}</a>
-            <a href={legacy + "/e-privacy-policy.php"}>{t("footer.privacy")}</a>
+            <a href="/terms">{t("footer.terms")}</a>
+            <a href="/privacy">{t("footer.privacy")}</a>
           </nav>
         </div>
       </div>

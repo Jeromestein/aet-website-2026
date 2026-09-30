@@ -1,0 +1,36 @@
+.page { background: var(--paper); color: var(--ink); }
+.hero { background: var(--blue); border-bottom: 1px solid var(--line); padding: 40px 0 48px; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; font-size: 14px; color: var(--muted); }
+.breadcrumb a { text-decoration: underline; text-underline-offset: 4px; }
+.hero h1 { margin: 0; font-size: clamp(36px, 4vw, 56px); line-height: 1.2; letter-spacing: -.035em; }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 740px); gap: 64px; align-items: start; padding-top: 48px; padding-bottom: 80px; }
+.desktopIndex { position: sticky; top: 110px; max-height: calc(100dvh - 134px); overflow-y: auto; padding-right: 12px; }
+.desktopIndex p { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+.desktopIndex ol, .mobileIndex ol { list-style: none; padding: 0; margin: 0; }
+.desktopIndex a, .mobileIndex a { display: flex; align-items: center; min-height: 44px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
+.desktopIndex a:hover, .mobileIndex a:hover { color: var(--orange); }
+.mobileIndex { display: none; }
+.content { min-width: 0; }
+.section { margin-bottom: 44px; scroll-margin-top: 110px; }
+.section:last-child { margin-bottom: 0; }
+.section h2 { margin: 0 0 20px; font-size: clamp(24px, 2.5vw, 30px); line-height: 1.35; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.copy { font-size: 16px; line-height: 1.85; overflow-wrap: anywhere; }
+.copy p { margin: 0 0 18px; }
+.copy h3 { margin: 26px 0 12px; font-size: 19px; line-height: 1.5; font-weight: 600; }
+.copy ul, .copy ol { padding-left: 24px; margin: 0 0 22px; }
+.copy li { padding-left: 4px; margin-bottom: 10px; }
+.copy a { color: var(--action-blue); text-decoration: underline; text-underline-offset: 4px; }
+.copy a:hover { color: var(--orange); }
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: minmax(0, 740px); justify-content: center; gap: 0; }
+  .desktopIndex { display: none; }
+  .mobileIndex { display: block; margin-bottom: 32px; border-block: 1px solid var(--line); }
+  .mobileIndex summary { min-height: 48px; padding: 14px 0; cursor: pointer; font-weight: 600; }
+  .mobileIndex nav { padding-bottom: 12px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 28px 0 36px; }
+  .breadcrumb { font-size: 13px; margin-bottom: 20px; }
+  .layout { padding-top: 28px; padding-bottom: 48px; }
+  .section { margin-bottom: 36px; }
+}

@@ -1,0 +1,66 @@
+{
+  "title": "Privacy Policy",
+  "source": "e-privacy-policy-content.html",
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "html": "<p> American Education and Translation Services (\"AET\") is committed to protecting the privacy of our users. This Privacy Policy outlines how we collect, use, disclose, and safeguard your information when you use our services and visit our website. By using our services, you consent to the practices described in this policy. </p>"
+    },
+    {
+      "id": "information-we-collect",
+      "title": "Information We Collect",
+      "html": "<h3>Personal Information</h3> <p> We may collect personal information that you provide to us, such as: </p> <ul> <li> <strong>Contact Information:</strong> Name, email address, phone number, mailing address. </li> <li> <strong>Payment Information:</strong> Credit card details, billing address. </li> <li> <strong>Professional Information:</strong> Academic records, professional credentials, employment history. </li> <li> <strong>Identification Documents:</strong> Copies of government-issued identification or other documents. </li> <li> <strong>Application Information:</strong> Information provided through our online application forms. </li> <li> <strong>Uploaded Files:</strong> Documents and files you upload to our platform for processing. </li> </ul> <h3> Non-Personal Information </h3> <p> We may also collect non-personal information about your visit to our website, including but not limited to: </p> <ul> <li> <strong>Usage Data:</strong> Pages visited, time spent on pages, clicks, and navigation patterns. </li> <li> <strong>Device Information:</strong> IP address, browser type, operating system, and device type. </li> </ul>"
+    },
+    {
+      "id": "how-we-use-info",
+      "title": "How We Use Your Information",
+      "html": "<h3>Personal Information</h3> <p>We use your personal information to:</p> <ul> <li>Provide and manage our services.</li> <li>Process your transactions and send related information.</li> <li> Communicate with you regarding your requests, inquiries, and customer service issues. </li> <li>Verify your identity and credentials.</li> <li>Improve and personalize our services.</li> <li>Process online applications and forms.</li> <li> Handle uploaded documents for translation or educational services. </li> </ul> <h3> Non-Personal Information </h3> <p>We use non-personal information to:</p> <ul> <li>Analyze and understand how our website is used.</li> <li>Improve our website and services.</li> <li>Customize the user experience.</li> </ul>"
+    },
+    {
+      "id": "online-payment",
+      "title": "Online Payment Processing",
+      "html": "<p> AET offers online payment options through secure third-party payment processors, including PayPal and Stripe. When you make a payment: </p> <ul> <li> Your payment information is processed directly by these third-party processors. </li> <li> AET does not store your credit card numbers, bank account details, or other financial information. </li> <li> All payment transactions are encrypted using industry-standard SSL technology. </li> <li> We may retain certain non-sensitive payment information (such as the last four digits of your credit card, transaction IDs, and transaction amounts) for record-keeping purposes. </li> </ul> <p> For more information about how these payment processors handle your information, please refer to their respective privacy policies. </p>"
+    },
+    {
+      "id": "file-upload-security",
+      "title": "File Upload Security",
+      "html": "<p>When you upload files to our platform:</p> <ul> <li> We implement appropriate technical measures to protect your uploaded documents. </li> <li> Files are stored securely and accessed only by authorized personnel for the purpose of providing our services. </li> <li> We retain files only for the period necessary to complete the requested services, unless otherwise required by law or specified in our agreement with you. </li> <li> We retain personal information and submitted documents for a period of five (5) years from the completion of services, unless a longer retention period is required by law. </li> </ul>"
+    },
+    {
+      "id": "retention-archival",
+      "title": "Retention and Archival of Client Documents",
+      "html": "<p> In addition to electronic safeguards, AET maintains both electronic and physical archives of client-submitted applications and credentials. Electronic records are stored on independent, secure cloud servers with restricted access controls, encryption in transit and at rest, and regular security monitoring. </p> <p> Physical (paper) records are organized and archived by evaluation category, office location, year, and month, and are stored in secure filing rooms with controlled access. All physical records are retained for a minimum of five (5) years from the completion of services, unless a longer retention period is required by law, after which they are securely destroyed. </p> <p> This dual system ensures that client documents, whether submitted electronically or otherwise, are protected, retrievable for verification purposes, and ultimately disposed of in accordance with best practices for security and privacy. </p>"
+    },
+    {
+      "id": "how-we-share",
+      "title": "How We Share Your Information",
+      "html": "<p> By submitting your application, you authorize AET to contact educational institutions, government agencies, licensing boards, and other relevant authorities, which may be located outside your country of residence, to verify the authenticity of your documents. Such disclosures will be made in compliance with applicable privacy laws. </p> <p> We do not sell, trade, or otherwise transfer your personal information to outside parties except as described below: </p> <h3>Service Providers</h3> <p> We may share your information with third-party service providers who perform services on our behalf, such as payment processing, data analysis, email delivery, and customer service. </p> <h3>Payment Processors</h3> <p> When you make payments online, your payment information is shared with secure third-party payment processors (PayPal, Stripe) who handle the transaction. These processors have their own privacy policies governing how they use your information. </p> <h3>Legal Requirements</h3> <p> We may disclose your information if required to do so by law or in response to valid requests by public authorities (e.g., a court or a government agency). </p>"
+    },
+    {
+      "id": "data-security",
+      "title": "Data Security",
+      "html": "<p> We implement a variety of security measures to maintain the safety of your personal information, including: </p> <ul> <li>Encryption of sensitive data</li> <li>Secure servers and networks</li> <li>Regular security assessments</li> <li>Access controls for our systems</li> </ul> <p> However, no method of transmission over the internet or electronic storage is completely secure, and we cannot guarantee its absolute security. </p> <p> Your personal information may be transferred to and processed in countries other than your country of residence, which may have different data protection laws. We will ensure appropriate safeguards are in place to protect your information. </p>"
+    },
+    {
+      "id": "your-choices",
+      "title": "Your Choices",
+      "html": "<h3>Access and Correction</h3> <p> You have the right to access and correct your personal information. If you need to update or correct your information, please contact us. </p> <h3> Marketing Communications </h3> <p> You may opt out of receiving marketing emails from us by following the unsubscribe instructions included in each email or by contacting us directly. </p> <h3>Data Deletion</h3> <p> You may request deletion of your personal information, subject to our legal obligations and legitimate business interests. Please contact us for such requests. </p> <h3>Copy</h3> <p> You may request a copy of the personal information we hold about you, and you may withdraw your consent to our processing of your personal information, subject to our legal and contractual obligations. </p>"
+    },
+    {
+      "id": "third-party-links",
+      "title": "Third-Party Links",
+      "html": "<p> Our website may contain links to third-party websites. We are not responsible for the privacy practices or the content of these websites. We encourage you to read the privacy policies of any linked sites you visit. </p>"
+    },
+    {
+      "id": "changes-policy",
+      "title": "Changes to This Privacy Policy",
+      "html": "<p> We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. Your continued use of our services after any changes indicates your acceptance of the new terms. </p>"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Information",
+      "html": "<p> If you have any questions or concerns about this Privacy Policy, please contact us at: <a href=\"mailto:service@aet21.com\"> <strong>service@aet21.com</strong> </a> </p>"
+    }
+  ]
+}

@@ -4,7 +4,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ArrowUpRight, Building2, CreditCard, Mail, Send } from 'lucide-react';
 import { routing, type Locale } from '@/i18n/routing';
-import { getPathname } from '@/i18n/navigation';
 import { contactPath } from '@/lib/contact';
 import { paymentContent, paymentOffices, paymentServices, type PaymentContent } from '@/lib/payment';
 import { shipping } from '@/lib/pricing';
@@ -72,7 +71,7 @@ function PaymentForm({ c, locale }: { c: PaymentContent; locale: Locale }) {
     </div>
     <div className={styles.legal}>
       <input id="pay-terms" type="checkbox" name="terms" value="1" required />
-      <div><label htmlFor="pay-terms">{f.terms}</label><p><a href={getPathname({ locale, href: '/terms' })} target="_blank" rel="noopener noreferrer">{f.termsLink} <ArrowUpRight size={14} aria-hidden="true" /></a><a href={getPathname({ locale, href: '/privacy' })} target="_blank" rel="noopener noreferrer">{f.privacyLink} <ArrowUpRight size={14} aria-hidden="true" /></a></p></div>
+      <div><label htmlFor="pay-terms">{f.terms}</label><p><a href="/terms" target="_blank" rel="noopener noreferrer">{f.termsLink} <ArrowUpRight size={14} aria-hidden="true" /></a><a href="/privacy" target="_blank" rel="noopener noreferrer">{f.privacyLink} <ArrowUpRight size={14} aria-hidden="true" /></a></p></div>
     </div>
     <input type="hidden" name="website" value="AET 2026 online payment" />
     <input type="hidden" name="infotype" value="online payment" />

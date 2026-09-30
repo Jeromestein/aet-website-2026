@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
+      ...[
+        ['e-privacy-policy', 'privacy'],
+        ['e-terms-of-use', 'terms'],
+      ].flatMap(([source, destination]) => [
+        { source: `/${source}.php`, destination: `/${destination}`, permanent: true },
+        { source: `/${source}.html`, destination: `/${destination}`, permanent: true },
+        { source: `/${source}-es.php`, destination: `/${destination}`, permanent: true },
+        { source: `/${source}-zh.php`, destination: `/${destination}`, permanent: true },
+        { source: `/es/${destination}`, destination: `/${destination}`, permanent: true },
+        { source: `/zh/${destination}`, destination: `/${destination}`, permanent: true },
+      ]),
       { source: "/e-contact.php", destination: "/contact", permanent: true },
       { source: "/e-contact-zh.php", destination: "/zh/contact", permanent: true },
       { source: "/e-contact-es.php", destination: "/es/contact", permanent: true },

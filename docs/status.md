@@ -5,6 +5,30 @@ Progress and verification evidence only. The design baseline lives in [design.md
 Updated September 25, 2026 after the homepage design pass. This records local
 implementation and checks, not production deployment or accessibility certification.
 
+### Privacy and Terms — September 30, 2026
+
+- Added `/privacy` and `/terms` with a shared restrained reading layout,
+  desktop section index and native mobile directory disclosure. Per the owner's
+  follow-up, only English documents remain; Spanish copies and the Chinese
+  fallback notice were removed. All 12 Privacy and 13 Terms sections retain
+  the original text, anchors, lists and emphasis. No effective date was invented.
+- All footer and Payment legal links point to the English routes. Former
+  Chinese/Spanish routes and old English PHP/HTML and Spanish/Chinese PHP
+  aliases redirect there. Legal pages ignore language detection without changing
+  the saved site-language cookie or advertising alternate-language documents.
+- HTTP checks covered both documents through unprefixed, English, Chinese and
+  Spanish paths under all three language preferences: all resolve to English,
+  preserve full text and query parameters, and leave the locale cookie unchanged.
+  Localized Contact/Payment pages and their legal links passed regression checks.
+- In-app browser checked desktop Privacy, mobile Terms at 390px without overflow,
+  and redirects from Chinese Privacy and Spanish Terms to the English pages.
+  Initial connection timeouts were resolved using a fresh tab. Typecheck, i18n
+  and whitespace checks passed. Evidence: `output/playwright/legal-english-only.png`.
+- Reused the existing development server and its automatic configuration reload.
+  No manual server restart, production build, commit, push or deployment here.
+  Owner review of actual payment, analytics, retention and security practices
+  remains before launch; see `content/legal/README.md`.
+
 ### Payment landing-flow parity — September 30, 2026
 
 - Restored the legacy empty `item_name` in the PayPal handoff. The previous

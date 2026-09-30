@@ -162,10 +162,13 @@ links; it does not establish that other offices have closed.
   Required by the homepage's “Explore all institutions” link. Preserve the full
   relevant list, supporting information, logos, and section anchors; keep factual
   acceptance/relationship wording within its source qualifications.
-- [ ] **Terms of Use** — `/e-terms-of-use.php` → Terms of Use page.
-- [ ] **Privacy Policy** — `/e-privacy-policy.php` → Privacy Policy page.
-  For both legal pages, carry the existing text into the new layout and review any
-  changes needed for the actual new payment, contact, analytics, or data handling.
+- [x] **Terms of Use** — `/e-terms-of-use.php` → `/terms` (local implementation).
+- [x] **Privacy Policy** — `/e-privacy-policy.php` → `/privacy` (local implementation).
+  Full English source text and section anchors are retained. Per owner direction,
+  only English documents remain. Footer and Payment links use the English routes;
+  Chinese/Spanish and legacy PHP/English HTML routes redirect. Before launch,
+  review payment, analytics and data-handling statements against actual operations;
+  see [legal provenance and review items](../content/legal/README.md).
 - [ ] **Blog index** — `/blog`, `/blog/`, `/blog/index.php` → Blog index.
   Provide working links to retained articles; normalize these three entry points
   to one destination. Article migration is tracked separately below.

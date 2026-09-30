@@ -35,7 +35,7 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Blog, office-detail, and policy
+app.americantranslationservice.com portal. Blog and office-detail
 destinations still depend on the existing production website. The
 localized Contact page is implemented. A localized Payment page is available
 at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
@@ -136,6 +136,16 @@ response links are supplied. Canonical URLs await the production-domain decision
 
 After moving routes, run `pnpm exec next typegen` if existing generated route types
 still reference the old paths, then run `pnpm typecheck`. This does not build the site.
+
+## Legal documents
+
+`/privacy` and `/terms` use a shared reading layout and the complete English
+legacy text in `content/legal/`. Legal documents are English-only in every site
+language. Footer and Payment links point to these English routes; former Chinese,
+Spanish and legacy legal URLs redirect with section anchors preserved. Visiting
+a legal page does not change the saved site language. See
+[source provenance and launch review](content/legal/README.md) for the operational
+statements that still require owner review.
 
 ## Shared pricing
 
