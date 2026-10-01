@@ -5,6 +5,7 @@ out/
 .env*
 !.env.example
 *.tsbuildinfo
+__pycache__/
 .DS_Store
 
 # Playwright generated artifacts

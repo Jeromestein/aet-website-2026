@@ -1,8 +1,55 @@
 # AET 2026 Website Migration Checklist
 
-Initial inventory: September 28, 2026. Status reconciled September 30, 2026
+Initial inventory: September 28, 2026. Status reconciled October 1, 2026
 against the current working tree, Git history and recorded local verification.
 Source: the local legacy website and the 2026 design, navigation and page code.
+
+## Current checkpoint — October 1, 2026
+
+### 1. Completed
+
+- [x] Implement the original 20 shared destination pages/sections, 80 retained
+  Blog articles and the 28-entry Institutions directory. Language variants use
+  shared Next.js templates; they are not additional page-building tasks.
+- [x] Prepare the 448-path legacy inventory, 277 permanent redirects and SEO
+  configuration for 133 indexable pages. Local route/link/SEO checks are recorded
+  in [status.md](status.md); they do not establish Google indexing or final business approval.
+- [x] Audit the deployed Vercel baseline and prepare locally verified corrections
+  for 15 embedded legacy links, preview noindex and Blog checker false positives.
+  These corrections have passed local checks; hosted release remains pending.
+
+### Deferred by owner — October 1, 2026
+
+Unmigrated legacy content, including the 71 content URLs and nine PDF entries,
+is postponed for possible future pages. It is not a current task, owner decision
+or release blocker. Preserve the inventory and original sources for later use.
+This scope decision supersedes earlier pre-cutover review requirements for that
+unmigrated material, including the detailed backlog notes below. It does not
+approve deleting the sources or mark the content as migrated.
+
+### 2. Next actions
+
+- [ ] Release the prepared corrections through the authorized deployment workflow
+  and verify them on Vercel; keep security-checkpoint-blocked checks explicitly open.
+- [ ] Finish acceptance of the currently retained content, payment and application
+  flows. Unmigrated legacy content is deferred, not part of this release.
+- [ ] Prepare formal-domain cutover and rollback, preserve ownership verification,
+  then validate redirects, assets, crawl controls and transactions on the actual host.
+- [ ] Submit the new sitemap in Search Console and record post-cutover indexing,
+  crawl errors and traffic changes. No automatic monitoring is scheduled.
+
+### 3. Owner decisions and actions
+
+- [ ] Approve unresolved business claims and arrange payment/application acceptance,
+  including confirmation of the four payment recipients.
+- [ ] Provide Search Console access or perform its export, verification and
+  submission steps personally.
+- [ ] Authorize push/deployment or publish personally, and choose the
+  formal-domain cutover window after the outstanding launch gates are resolved.
+
+The [SEO checklist](seo-checklist.md#current-checkpoint--october-1-2026) contains the
+detailed execution order, suggested decisions and acceptance criteria. Existing
+decisions on the official domain, shared i18n and Blog biography exceptions remain unchanged.
 
 ## Scope and current status
 
@@ -26,6 +73,8 @@ PHP entry points**; these are not 109 completed migrations.
 | Four footer office pages | Local implementation and recorded checks complete; committed as `20ef0ab` |
 | Blog | 80 local articles; migration/order changes committed as `63293b4` |
 | Full Institutions page | Local migration complete: 28 entries, three locales, search and category filters; browser checks recorded in status.md |
+| SEO and old URL mapping | 448-path inventory, 277 permanent redirects and 133 indexable pages implemented and locally checked; unmigrated content deferred by owner |
+| Vercel test deployment | Baseline audited; latest local corrections await release; some later hosted checks blocked by Vercel security checkpoint |
 | Production release | Pending business/content review, payment acceptance and deployment |
 
 September 30 biography reassessment: of 109 blog articles, **78 are local (60 original + 18 restored)**, **30 have other historical findings
@@ -242,7 +291,7 @@ establish that other offices have closed.
 The site uses Next.js with `next-intl`. These checks apply to the same shared
 pages listed above; there is no separate Chinese or Spanish page-building phase.
 
-- [ ] Implement each page's layout and behavior once under the existing locale
+- [x] Implement each retained page's layout and behavior once under the existing locale
   routing, with localized text in the project's message/content structure.
 - [ ] Review useful legacy Chinese/Spanish wording and incorporate it into the
   corresponding shared page's localized content. Resolve differences in fees,
@@ -251,8 +300,9 @@ pages listed above; there is no separate Chinese or Spanish page-building phase.
   October 1: 246 old-host links across 39 rendered pages removed; retained
   destinations use the active locale, and ten held article targets are unlinked
   without deleting their text. All 299 page variants and local targets checked.
-- [ ] Map old language URLs to the appropriate locale of the shared page,
+- [x] Map reviewed old language URLs to the appropriate locale of the shared page,
   including `/home-zh.php` → `/zh` and `/home-es.php` → `/es`.
+  Held content URL dispositions remain open in the legacy inventory.
 - [ ] Supply reviewed translations or an explicit fallback for missing localized
   content. Blog article bodies are English-only by owner decision and need neither
   translations nor language-availability notices. A missing old PHP file does not
@@ -410,7 +460,7 @@ locales. These completed aliases do not close the remaining sitewide redirect au
   historical aliases against the current PHP pages and the old sitemap. Reuse
   unique relevant content; do not create a second page for every legacy filename.
 
-## Pages requiring a disposition, not automatic rebuilding
+## Deferred legacy page backlog — not a current release gate
 
 - [ ] **Visa Services** — keep out of the rebuilt navigation/cards/footer.
   Decide how to handle `/e-visaservice.php`, `/e-visaservice-zh.php`, older
@@ -432,7 +482,7 @@ locales. These completed aliases do not close the remaining sitewide redirect au
 - [ ] **Other language sites** — review `/french/`, `/german/`, `/korean/`,
   `/russian/`, and the older `/spanish/` pages. These are outside the new language
   selector, not automatically approved for deletion. Decide on retention,
-  language-appropriate consolidation, or retirement before replacing the domain.
+  language-appropriate consolidation, or retirement when this deferred work resumes.
 - [ ] Exclude backup/test files, raw content fragments, old standalone headers/
   footers, database libraries, and admin/payment implementation files from the
   public page migration. Preserve required backend behavior separately.
@@ -467,19 +517,22 @@ retirement response; do not redirect every removed URL to the homepage.
 - [ ] Migrate linked assets, especially `/down/applicationform.pdf`,
   `/evaluation_report.pdf`, `/cbcevaluation_report.pdf`, translation sample PDFs,
   office images/maps, and institution logos. Check downloads after route changes.
-- [ ] Create an explicit redirect inventory from the legacy `.htaccess`, current
+- [x] Create an explicit redirect inventory from the legacy `.htaccess`, current
   public routes, old sitemap, and linked historical pages. Include `/`,
   `/index.php`, `/home.php`, `/english.html`, `/chinese.html`, old underscored
   service URLs, office aliases, and root HTML article URLs. Preserve case/spelling
   where incoming links rely on it, including `credential-evaluation-for-emloyment`.
-- [ ] Resolve the existing `/office-locations.html` redirect: its target
-  `/office-locations.php` is missing locally. Avoid carrying over that broken
-  target or the old homepage-as-404 fallback. Provide a real not-found page.
-- [ ] Rebuild `sitemap.xml` (and map `/sitemap.html`), canonical URLs, page titles,
+  Inventory: 448 paths and 277 configured permanent redirects. Held paths remain
+  review items; inventory completion does not approve their publication or retirement.
+- [x] Resolve the existing `/office-locations.html` redirect: both it and the
+  former missing `/office-locations.php` now point to `/contact`. Unknown routes
+  return real 404 responses instead of the old homepage-as-404 fallback.
+- [x] Rebuild `sitemap.xml` (and map `/sitemap.html`), canonical URLs, page titles,
   descriptions, language alternates, and appropriate structured data around the
-  final destinations. Preserve only relevant verified site-ownership/analytics
-  configuration. The local old sitemap has 208 entries and is not a complete
-  or validated list of current pages.
+  approved destinations. Local SEO acceptance covers 133 indexable pages.
+- [ ] Preserve relevant verified site-ownership/analytics configuration and
+  validate it after deployment. The local old sitemap has 208 entries and is
+  not a complete or validated list of Google-indexed pages.
 - [ ] Verify every new navigation, language, footer, in-page, download, blog,
   contact, and application link. Test redirects for loops, chains, and missing
   destinations. Review desktop/mobile pages in the Codex in-app browser, including
@@ -505,8 +558,8 @@ retirement response; do not redirect every removed URL to the homepage.
 The September 28 source inventory found local source files/directories for all
 20 original destinations and the two language homepages, plus referenced includes
 for all 109 blog PHP entries. Those historical counts establish source availability,
-not current live behavior. The September 30 reconciliation uses current route/link
-code, Git commits and the existing verification records in `status.md`; browser and
+not current live behavior. The October 1 checklist reconciliation uses current route/link
+code, the 448-path inventory and existing verification records in `status.md`; browser and
 HTTP tests were not rerun for this documentation-only update. Office and contact
 implementation belongs to the separate `20ef0ab` commit and was not altered. No server, payment
 configuration or deployment was changed, and no production build was run.

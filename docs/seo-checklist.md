@@ -3,12 +3,83 @@
 Started September 30, 2026. Work through the stages in order. Check an item only
 after its stated verification passes; local completion does not imply deployment.
 
+## Current checkpoint — October 1, 2026
+
+**Stage: local SEO implementation and verification completed for the approved
+catalog; hosted baseline audited; latest fixes and production cutover pending.**
+This update reconciles repository state with the recorded October 1 checks.
+It does not establish Google's current indexed URLs or Search Console traffic.
+
+### 1. Completed
+
+- [x] Inventory 448 old paths and configure 277 permanent redirects to retained
+  destinations. These are 308 redirects; do not convert them solely for SEO.
+- [x] Implement canonical URLs, language alternates, robots/sitemap and structured
+  data for the approved catalog of 133 indexable pages, including 80 articles.
+- [x] Verify locally: 299 page variants and 4,861 local links; 240 Blog routes;
+  133 SEO/schema pages; 277 redirects; 162 unmapped old paths returning real 404s.
+  A passing 404 test does not approve retiring a held page.
+- [x] Audit the hosted Vercel baseline. Later automated checks encountered a
+  Vercel security checkpoint; that blocked portion is not a hosted pass.
+- [x] Prepare and locally verify the latest fixes: 15 embedded old AI-summary
+  URLs, host-specific noindex for Vercel aliases, and Blog checker false positives.
+  These corrections have passed local checks; hosted release remains pending.
+
+### Deferred by owner — October 1, 2026
+
+Unmigrated legacy content and PDFs are outside the current release scope. The
+71 content URLs and nine PDF entries remain in the inventory for possible future
+pages; they require no decision now and do not block this release. Preserve the
+source files and existing URL records. This deferral does not mark them migrated
+or permanently retired; no routes, redirects or responses are changed by it.
+
+### 2. Next actions, in order
+
+- [ ] **Release the prepared fixes:** after push/deployment authorization, publish
+  through the owner's deployment workflow. Verify Vercel noindex and corrected
+  links on the actual deployment. Resume only permitted hosted checks; do not
+  bypass the security checkpoint or count blocked requests as application errors.
+- [ ] **Prepare cutover:** preserve Search Console ownership verification, confirm
+  retained business content and payment acceptance, and record the deployment
+  owner, cutover window and rollback plan. Keep the old site until these gates close.
+- [ ] **Verify the official domain after cutover:** HTTPS/www routing, permanent
+  redirects directly to final destinations, final-page 200 responses, canonical,
+  hreflang, sitemap, assets and crawl controls. Indexable official pages must not
+  inherit preview noindex; intentional fallback/result noindex remains in place.
+- [ ] **Submit and inspect:** submit the new official-domain sitemap in Search
+  Console and inspect representative service, Blog and translated URLs. Record
+  Google's chosen canonical and crawl/indexing results separately from code tests.
+  Same-domain path changes do not require the Change of Address tool.
+- [ ] **Monitor after launch:** review indexing, unexpected 404/5xx responses,
+  redirect errors and search clicks/impressions against the pre-cutover baseline.
+  Keep permanent redirects at least one year, preferably indefinitely. Record
+  follow-up results; no scheduled monitoring has been created by this checklist.
+
+### 3. Decisions and actions required from the owner
+
+| Item | Decision/action needed | Suggested approach | Blocks |
+| --- | --- | --- | --- |
+| Retained business content | Approve unresolved dated fees/timing, office facts, membership/acceptance wording and other publication claims listed in the migration checklist | Review factual content against current business records; technical migration is not factual approval | Publication acceptance |
+| Search Console | Provide access or perform the export/submission steps; confirm the existing ownership-verification method | Export old URL performance/link data before cutover and preserve active verification | Traffic-based prioritization and Google-side verification |
+| Payment and application acceptance | Confirm all four payment recipients and arrange authorized end-to-end acceptance of payment/application handoffs | Use the agreed test workflow; actual payment completion remains with the owner | Transaction launch acceptance |
+| Release and cutover | Authorize push/deployment or publish personally, and choose the formal-domain cutover window | Release tested fixes first; switch the official domain only after the content and transaction gates close | Hosted fixes and formal launch |
+
+Already settled: the production origin remains
+`https://www.americantranslationservice.com`; pages share Next.js i18n templates;
+English-only Blog bodies do not require separate Chinese/Spanish rebuilds. The
+recorded founder/director biography exception to NACES screening remains in force.
+None of these decisions is reopened by this update.
+
+Detailed URL decisions: [legacy inventory](seo-legacy-urls.md).
+Page/content/payment acceptance: [migration checklist](migration-checklist.md).
+Verification evidence and boundaries: [status](status.md#hosted-audit-and-local-corrections--october-1-2026).
+
 ## Scope and sources
 
 - New site: `aet-website-2026`, existing local preview on port 3021.
 - Legacy AET site: `https://www.americantranslationservice.com/` and the sibling
   `server-54.213.58.23/americantranslationservice.com` checkout.
-- `https://aet21.com/` currently serves a different homepage. Do not assume it is
+- The September 30 audit found a different homepage at `https://aet21.com/`. Do not assume it is
   the new canonical host. The owner confirmed the production origin as
   `https://www.americantranslationservice.com` on September 30, 2026.
 - Preserve the service scope in README.md. Public contacts come from
@@ -39,9 +110,9 @@ after its stated verification passes; local completion does not imply deployment
   section destinations, no loops, and successful final pages.
 - [x] Reconcile all 208 legacy sitemap URLs plus root pages, blog entries and
   Apache aliases: 448 rows in [the complete inventory](seo-legacy-urls.md).
-- [ ] Owner content disposition before cutover: resolve 71 held content URLs
-  (including the 30 previously held article families), nine PDFs and the legacy
-  Search Console verification file. No unrelated homepage redirects.
+- Deferred: the 71 unmigrated content URLs and nine PDFs may become future pages;
+  owner review is postponed and is not a current launch gate.
+- [ ] Confirm and preserve the active Search Console ownership-verification method.
 - [ ] Check host-level redirects on the production deployment after cutover.
 
 ## 2. Canonical URLs and indexing
@@ -56,18 +127,22 @@ after its stated verification passes; local completion does not imply deployment
   canonical indexable URLs only; use real dates rather than the current build date.
 - [x] Add robots.txt with the canonical sitemap URL and Vercel preview noindex.
 - [ ] Verify preview indexing controls on actual hosted preview deployments.
+  October 1: the stable `aet-website-2026.vercel.app` alias lacked noindex. A
+  host-specific header fix passed 42 local host/path cases; deployment and
+  hosted verification of that fix remain pending.
 - [x] Resolve the legacy /sitemap.html destination.
 - [x] Remove old-host body links (October 1): 246 → 0 across the 13 affected
   page families in three locales. Held article references retain text without
   hyperlinks. All 299 page variants, 4,861 local links and 318 unique page/file
   targets passed direct-response, locale and fragment checks.
+  A later audit also fixed 15 encoded old URLs in external AI-summary links;
+  the checker now covers query text as well as direct link destinations.
 - [x] Verify served metadata, language alternates, sitemap URLs and status codes.
 
-Passed local acceptance on September 30: all 133 sitemap URLs (including 80
-articles), eight untranslated variants, two payment-result routes and 28 new
-redirects. Redirect/startup checks used an isolated preview on port 3035 because
-the owner's port-3021 process retained its previous imported redirect table.
-The owner's process still needs a restart to serve that table.
+The September 30 checks used an isolated preview on port 3035 because the owner's
+port-3021 process then retained an earlier redirect table. This blocker is
+superseded: on October 1, all 277 redirects and 133 SEO pages passed on the owner's
+existing port 3021, without an agent-started server or restart.
 
 ## 3. Organization and offices
 
@@ -103,7 +178,8 @@ Implementation notes for stages 3–4:
   units, processing times and interpretation minimums retain their qualifications.
   Quoted services have no invented numeric price. Technical translation and
   notarization have no offers because no shared price table is displayed there.
-- JSON-LD covers 38 pages. Four untranslated Spanish service pages omit duplicate
+- At completion of stages 3–4, JSON-LD covered 38 pages; stage 5 expanded coverage
+  to the full 133-page indexable catalog. Four untranslated Spanish service pages omit duplicate
   markup. Validation uses the served HTML and the official Schema.org vocabulary;
   this is separate from Google's hosted Rich Results Test.
 - Repeat local checks with `python3 scripts/check-structured-data.py` while port
@@ -145,10 +221,10 @@ Stage 5 acceptance:
 - [ ] After owner authorization: submit the sitemap and inspect representative
   URLs in Search Console; record results separately from local checks.
 
-Latest local acceptance: all 133 canonical pages and image URLs, all 277 configured
+Latest local acceptance (October 1, existing port 3021): all 133 canonical pages and image URLs, all 277 configured
 permanent redirects (queries and destination anchors preserved), eight fallback
-pages, two payment results and 162 genuine unmapped-legacy 404s passed on a fresh
-isolated preview. All 133 sitemap pages passed the Schema.org vocabulary checker.
+pages, two payment results and 162 genuine unmapped-legacy 404s passed.
+All 133 sitemap pages passed the Schema.org vocabulary checker.
 
 Hosted code tests (not deployment/crawl tests): Schema.org reported zero errors
 and warnings for Boston Article/Breadcrumb, Expert Opinion Service/Offers, and
@@ -158,6 +234,9 @@ fields remain where verified data is unavailable. See [status](status.md) for li
 
 ## References
 
+- [Google site moves with URL changes](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes)
+- [Google permanent redirects](https://developers.google.com/search/docs/crawling-indexing/301-redirects)
+- [Search Console Change of Address scope](https://support.google.com/webmasters/answer/9370220?hl=en)
 - [Migration inventory](migration-checklist.md)
 - [Implementation evidence](status.md)
 - [Google organization markup](https://developers.google.com/search/docs/appearance/structured-data/organization)

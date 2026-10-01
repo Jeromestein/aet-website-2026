@@ -85,11 +85,16 @@ and [translation provenance](content/certified-translation/README.md) for source
 The production origin is `https://www.americantranslationservice.com`, confirmed
 by the owner on September 30, 2026 and centralized in `lib/seo.ts`. Canonical URLs,
 Open Graph URLs, language alternates and sitemap entries use this origin even
-in local previews. Vercel preview deployments emit noindex metadata. Other public
+in local previews. Vercel preview deployments emit noindex metadata. Every
+`*.vercel.app` alias also receives an `X-Robots-Tag: noindex, follow` header,
+including the stable alias for a Vercel production deployment. The host-specific
+rule does not disable indexing on the official custom domain. Other public
 preview hosts need equivalent noindex configuration before publication.
 
-The complete legacy URL inventory is in `docs/seo-legacy-urls.md`. Before replacing
-the production domain, resolve its held content, PDF and owner-verification rows. Known retained entry points redirect to local routes;
+The complete legacy URL inventory is in `docs/seo-legacy-urls.md`. On October 1,
+the owner deferred unmigrated legacy content and PDFs for possible future pages;
+they are not current tasks or release blockers. Preserve their source inventory.
+Search Console ownership verification remains a launch task. Known retained entry points redirect to local routes;
 removed services are not silently redirected to the homepage. See the SEO checklist
 for verification and remaining launch work.
 
@@ -262,6 +267,9 @@ Export configured redirects without a production build:
 ```sh
 node -e 'require("next/dist/server/config").default("phase-development-server",process.cwd()).then(async c=>require("fs").writeFileSync("/tmp/aet-redirects.json",JSON.stringify(await c.redirects())))'
 python3 scripts/check-content-links.py --url http://localhost:3021
+python3 scripts/test-blog-fragments.py
+python3 scripts/check-blog.py --url http://localhost:3021
+python3 scripts/check-preview-indexing.py
 python3 scripts/check-seo.py --redirects /tmp/aet-redirects.json
 python3 scripts/check-structured-data.py
 python3 scripts/inventory-legacy-seo.py --redirects /tmp/aet-redirects.json
@@ -274,6 +282,13 @@ redirect destinations/queries/anchors, fallback noindex and legacy 404 behavior.
 `check-structured-data.py` checks Schema.org vocabulary and visible facts.
 Use `--base-url` for a different preview. The inventory script reads the sibling
 legacy checkout; it does not execute PHP or alter the old site.
+
+For public staging, pass `--expect-noindex` to `check-seo.py` and `check-blog.py`.
+The indexing test uses Host headers against the local server to verify both
+Vercel aliases and official-domain behavior. Blog HTTP parity uses the actual
+contact renderer; static source hashes independently protect imported prose.
+Avoid repeated hosted bulk crawls if Vercel responds with a security checkpoint;
+record the blocked scope and complete local checks without bypassing protection.
 
 Sharing cards are committed PNGs under `public/share`, so serving them does not
 require a font service or image-generation endpoint. After page title changes,

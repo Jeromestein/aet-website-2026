@@ -32,7 +32,11 @@ def strings(value):
 
 def legacy(href):
     url = urlsplit(href)
-    return url.hostname in HOSTS or (not url.scheme and not url.netloc and re.search(r'\.(?:php|html)$', url.path))
+    # External sharing/AI links can hide a legacy destination in encoded text.
+    embedded_legacy = re.search(
+        r'https?://(?:www\.)?americantranslationservice\.com/[^\s&]*\.(?:php|html)(?:[?#\s&]|$)',
+        unquote(url.query), re.I)
+    return embedded_legacy or url.hostname in HOSTS or (not url.scheme and not url.netloc and re.search(r'\.(?:php|html)$', url.path))
 
 count = 0
 for file in (ROOT / 'content').rglob('*.json'):

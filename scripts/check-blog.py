@@ -4,11 +4,12 @@ Requires beautifulsoup4 and lxml. Use --url http://localhost:3021 for HTTP check
 """
 from pathlib import Path
 from bs4 import BeautifulSoup
+from blog_html import parse_blog_fragment
 from urllib.request import Request, urlopen, build_opener, HTTPRedirectHandler
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from concurrent.futures import ThreadPoolExecutor
-import argparse, collections, hashlib, json, re
+import argparse, collections, hashlib, json, re, subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 CATALOG=json.loads((ROOT/'content/blog/articles.json').read_text())
@@ -21,7 +22,7 @@ allowed={'div','p','h2','h3','h4','ul','ol','li','b','strong','em','i','u','a','
 def normalized(value):return re.sub(r'\s+','',value)
 
 def check_html(slug,body):
- soup=BeautifulSoup(body,'lxml')
+ soup=parse_blog_fragment(body)
  for tag in soup.body.find_all():
   assert tag.name in allowed,(slug,tag.name)
   assert not any(key.startswith('on') or key in ('style','srcdoc') for key in tag.attrs),(slug,tag)
@@ -41,26 +42,31 @@ def check_html(slug,body):
 
 for slug,post in POSTS.items():check_html(slug,post['html'])
 print('Static:', len(POSTS), 'complete English bodies, safe HTML, unique IDs, valid contents links and image files.')
-parser=argparse.ArgumentParser();parser.add_argument('--url');parser.add_argument('--skip-redirects', action='store_true', help='Check routes/images separately when the preview has stale startup configuration');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--url');parser.add_argument('--expect-noindex', action='store_true', help='All article locales must be noindexed on public staging hosts');parser.add_argument('--skip-redirects', action='store_true', help='Check routes/images separately when the preview has stale startup configuration');args=parser.parse_args()
 if not args.url:raise SystemExit(0)
 base=args.url.rstrip('/')
+# Static checks above protect immutable imported prose. HTTP checks account for
+# the reviewed contact substitutions also used by the article page renderer.
+rendered=json.loads(subprocess.check_output(['node', str(ROOT/'scripts/render-blog-check.cjs')], cwd=ROOT))
 
 def fetch(path):
  with urlopen(Request(base+path,headers={'Accept-Language':'en'}),timeout=45) as response:
-  return response.status,response.read()
+  return response.status,response.read(),response.headers
 
 def check_route(item):
  locale,row=item; prefix='' if locale=='en' else '/'+locale
- path=prefix+'/blog/'+row['slug'];status,raw=fetch(path)
+ path=prefix+'/blog/'+row['slug'];status,raw,headers=fetch(path)
  assert status==200,path
  soup=BeautifulSoup(raw,'lxml');assert len(soup.find_all('h1'))==1,path
  main=soup.select_one('main article');assert main is not None,path
  ids=[t['id'] for t in soup.find_all(id=True)];assert len(ids)==len(set(ids)),path
  for a in soup.select('main a[href^="#"]'):assert a['href'][1:] in ids,(path,a['href'])
  robots=soup.find('meta',attrs={'name':'robots'})
- assert (robots is not None and 'noindex' in robots.get('content',''))==(locale!='en'),path
+ # Preview protection may be supplied by the host-specific response header.
+ directives=(robots.get('content','') if robots else '')+' '+headers.get('X-Robots-Tag','')
+ assert ('noindex' in directives.lower())==(args.expect_noindex or locale!='en'),path
  if row['slug']!=PILOT:
-  expected=BeautifulSoup(POSTS[row['slug']]['html'],'lxml')
+  expected=parse_blog_fragment(rendered[row['slug']])
   assert normalized(main.get_text())==normalized(expected.body.get_text()),path
   assert soup.h1.get_text()==POSTS[row['slug']]['title'],path
  return path
@@ -70,7 +76,7 @@ with ThreadPoolExecutor(max_workers=4) as pool:
 print('HTTP:',len(routes),'article routes passed; English body parity, H1, noindex and anchors checked.')
 assets=[asset['path'] for asset in REPORT['assets'].values()]+['/images/blog/boston-evaluation-sample.jpg','/images/blog/boston-reviews-archive.jpg']
 with ThreadPoolExecutor(max_workers=4) as pool:
- for status,raw in pool.map(fetch,assets):assert status==200 and len(raw)>0
+ for status,raw,_ in pool.map(fetch,assets):assert status==200 and len(raw)>0
 print('HTTP:',len(assets),'article images passed.')
 class NoRedirect(HTTPRedirectHandler):
  def redirect_request(self,*args,**kwargs):return None

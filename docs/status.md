@@ -2,6 +2,77 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Release-readiness spot check — October 1, 2026
+
+- User authorized a local commit. Push, deployment and domain/DNS changes were
+  not performed. Latest local fixes still require a hosted release.
+- Live read-only checks: the Vercel homepage returned 200 without the new
+  noindex header; the official www homepage still redirected to Apache
+  `/home.php`; the existing credential-application entry page returned 200 on
+  Vercel. Entry-page availability is not payment/application workflow acceptance.
+- DNS lookup: the apex resolved to the old server, www aliased the apex, and
+  the app subdomain had its own Vercel CNAME. Preserve application and email DNS
+  records when preparing the marketing-site cutover.
+- Release gates: deploy the latest commit and verify it; confirm production
+  payment configuration/recipients and authorized transaction acceptance; prepare
+  Vercel domain binding, DNS rollback and active Search Console verification.
+  After cutover, verify TLS, redirects, crawl controls and submit the new sitemap.
+  Deferred unmigrated content/PDFs are not part of these gates.
+- Pre-commit typecheck, three-language messages, fragment regression tests,
+  static Blog and body-link checks passed. No local production build was run.
+
+### Owner scope decision — October 1, 2026
+
+- Defer all currently unmigrated legacy content and PDF review for possible future
+  pages. The 71 content URLs and nine PDFs are no longer current tasks, owner
+  decisions or release blockers. This supersedes earlier launch-gate wording for
+  that material; acceptance of the currently retained site still applies.
+- Preserve source files and the URL inventory. No content was migrated, deleted
+  or marked permanently retired; no route, redirect, HTTP behavior or deployment
+  was changed. Updated checklists and inventory generation to retain this scope
+  decision on future regenerations.
+
+### Hosted audit and local corrections — October 1, 2026
+
+- Audited `https://aet-website-2026.vercel.app`. The stable Vercel production
+  alias lacked a noindex directive. Added host-specific `X-Robots-Tag` protection
+  for every `*.vercel.app` alias, retaining the official canonical origin and
+  indexing behavior. The local regression check passed 42 host/path cases,
+  including official domains, language pages, assets, robots/sitemap and 404s.
+- Fixed 15 encoded legacy URLs in Evaluation's AI-summary links (five per
+  language). They now refer to each language's canonical Evaluation page.
+  Extended the body-link checker to inspect encoded external query text; it
+  reproduced the old-link failure before the edit and passed after the fix.
+- Corrected the earlier report of three invalid blog fragments: parsing bare
+  date-led fragments with libxml invented paragraph wrappers absent from the
+  source and real article container. The checker now uses a block container;
+  regression cases still detect genuine invalid nesting. No article prose was
+  modified. HTTP parity also now uses the existing contact renderer so reviewed
+  office updates do not trigger false failures; original prose hashes remain
+  independently checked. Three fragment regression tests passed.
+- Hosted baseline checks passed 299 page variants, 4,861 local links, 318 unique
+  targets, 133 SEO/share-image cases and 277 redirects. The later legacy-404
+  checks triggered HTTP 403 with `X-Vercel-Mitigated: challenge`. Hosted crawling
+  stopped; subsequent hosted Blog/schema checks were blocked, not counted as
+  passes. Those responses were Vercel security checkpoints, not application 500s.
+- Local checks on the existing owner-run port 3021 passed: 782 source HTML links,
+  all 299 page variants, 240 Blog routes, 95 article images, 157 Blog redirects,
+  133 SEO/schema pages, all 277 redirects and 162 unmapped legacy 404s. The current
+  blocked-term scan found no unreviewed member-company matches; 14 articles with
+  NACES biography terms remain covered by the existing reviewed exception list.
+- Codex in-app browser: hosted desktop/mobile navigation; local institution
+  search, empty/reset/category states; combined Blog search/topic filters;
+  payment required-field attributes and office switching; Chinese-to-Spanish
+  language switching with the route/fragment retained. Evaluation's corrected
+  links were inspected at desktop and 390px; Spanish Evaluation had no page
+  overflow or broken images at 320px. No browser warning/error was captured.
+  Viewport override reset. Screenshot:
+  `output/playwright/hosted-audit-ai-links-mobile-2026-10-01.jpg`.
+- Typecheck, 259 messages per locale and whitespace checks passed. No production
+  build, server restart, real form submission, payment, push or deployment was
+  performed. These corrections are local; hosted post-deployment verification
+  and payment-provider acceptance remain outstanding.
+
 ### Body-link cleanup — October 1, 2026
 
 - Reproduced 246 old-host body links on 13 page families across English, Chinese

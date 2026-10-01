@@ -7,6 +7,7 @@ parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--base-url',default='http://localhost:3021')
 parser.add_argument('--redirects',type=Path,required=True,help='JSON array exported from next.config redirects()')
 parser.add_argument('--workers',type=int,default=1)
+parser.add_argument('--expect-noindex',action='store_true',help='Require noindex on a public staging host (metadata or HTTP header)')
 args=parser.parse_args()
 BASE=args.base_url; ORIGIN='https://www.americantranslationservice.com'
 class Head(HTMLParser):
@@ -28,7 +29,8 @@ def check_entry(e):
  path=u[len(ORIGIN):] or '/';r,p,_=read(path)
  assert r.url==BASE+path,(path,r.url)
  assert p.canon==[u],(path,p.canon)
- assert not any('noindex' in x for x in p.robots),(path,p.robots)
+ directives=p.robots+[r.headers.get('X-Robots-Tag','')]
+ assert any('noindex' in x.lower() for x in directives)==args.expect_noindex,(path,directives,'preview' if args.expect_noindex else 'production')
  expected={x.attrib['hreflang']:x.attrib['href'] for x in e.findall('x:link',ns)}
  assert p.lang==expected,(path,p.lang,expected)
  assert p.og.get('og:url')==u,(path,p.og)
@@ -71,4 +73,4 @@ for row in missing:
  try: opener.open(BASE + row['path'])
  except urllib.error.HTTPError as error: assert error.code == 404, (row['path'], error.code)
  else: raise AssertionError(('Unexpected successful legacy response',row['path']))
-print(f'Passed: {len(missing)} unmapped legacy paths are genuine 404s; review rows remain owner launch gates.')
+print(f'Passed: {len(missing)} unmapped legacy paths are genuine 404s; unmigrated content/PDF review is deferred by owner, not a current release gate.')

@@ -6,6 +6,15 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async headers() {
+    return [{
+      source: "/:path*",
+      // The project's stable vercel.app alias is a production deployment too.
+      // Protect every Vercel alias without blocking the official custom domain.
+      has: [{ type: "host", value: ".+\\.vercel\\.app" }],
+      headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+    }];
+  },
   async redirects() {
     return [
       ...blogRedirects,

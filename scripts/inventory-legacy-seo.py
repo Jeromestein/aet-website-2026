@@ -1,7 +1,8 @@
 """Reconcile legacy sitemap, root pages, blog entries and Apache aliases.
 
 Read-only against the old checkout. Pass a JSON array from next.config redirects().
-Unreviewed content is recorded as a launch gate, never silently published or retired.
+Unmigrated content is deferred by owner decision on October 1, 2026.
+Preserve its inventory for possible future pages; it is not a current launch gate.
 """
 import argparse
 from collections import Counter
@@ -43,21 +44,21 @@ for path, sources in sorted(urls.items()):
     elif path.startswith('/google'):
         status,reason='owner verification','Legacy Search Console verification file; retain only if owner confirms the property still uses this token'
     elif path.endswith('.pdf'):
-        status,reason='review asset','Unmigrated legacy PDF; contents/version and continued public availability need owner review'
+        status,reason='review asset','Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker'
     elif path in ['/old-index.html','/backup-best-education-credential-evaluation-agencies.html']:
         status,reason='archive','Historical backup; excluded from index and migration'
     else:
-        status,reason='review content','Not in the approved retained catalog; source/content disposition required before cutover'
+        status,reason='review content','Deferred by owner on October 1, 2026; possible future page, not a current release blocker'
     rows.append(dict(path=path,sources=sorted(sources),status=status,destination=destination,reason=reason,sourceExists=file.is_file()))
 out=root/'content/seo';out.mkdir(exist_ok=True)
 (out/'legacy-url-inventory.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n')
 counts=Counter(r['status'] for r in rows)
 lines=['# Legacy SEO URL Reconciliation','',
 'Local source audit, September 30, 2026. Includes all 208 sitemap entries (deduplicated by path), root HTML/PHP files, blog PHP entries, Apache aliases/targets and new application redirects. Static image directories are not crawl-page inventory. No old PHP is executed.','',
-'## Disposition and launch gates','',
+'## Disposition and deferred scope','',
 '- `redirect`, `normalize`, and `retained asset` have implemented destinations.',
 '- `removed scope`, `archive`, `internal source`, and `retired endpoint` are intentionally absent from the new public page catalog. They return a genuine 404 unless mapped above. Do not redirect them to the homepage.',
-'- `review content` and `review asset` remain unapproved for publication or permanent retirement. Keep the old deployment until the owner resolves these rows or provides a legacy-serving arrangement. A default 404 is not approval to lose this content.',
+'- Owner decision, October 1, 2026: `review content` and `review asset` are deferred for possible future pages. They are not current tasks or release blockers. Preserve sources and inventory; no migration, permanent retirement or deletion is approved by this deferral.',
 '- The existing blog review lists 30 held article families plus one visa family. Chinese source-only variants and other standalone findings also remain explicit below.',
 '- `owner verification` requires the owner to confirm Search Console verification. No token is copied or account access changed by this audit.',
 '- Root PDF samples differ from the already retained `/down/` versions. They are not treated as byte-identical aliases.',

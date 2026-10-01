@@ -2,11 +2,11 @@
 
 Local source audit, September 30, 2026. Includes all 208 sitemap entries (deduplicated by path), root HTML/PHP files, blog PHP entries, Apache aliases/targets and new application redirects. Static image directories are not crawl-page inventory. No old PHP is executed.
 
-## Disposition and launch gates
+## Disposition and deferred scope
 
 - `redirect`, `normalize`, and `retained asset` have implemented destinations.
 - `removed scope`, `archive`, `internal source`, and `retired endpoint` are intentionally absent from the new public page catalog. They return a genuine 404 unless mapped above. Do not redirect them to the homepage.
-- `review content` and `review asset` remain unapproved for publication or permanent retirement. Keep the old deployment until the owner resolves these rows or provides a legacy-serving arrangement. A default 404 is not approval to lose this content.
+- Owner decision, October 1, 2026: `review content` and `review asset` are deferred for possible future pages. They are not current tasks or release blockers. Preserve sources and inventory; no migration, permanent retirement or deletion is approved by this deferral.
 - The existing blog review lists 30 held article families plus one visa family. Chinese source-only variants and other standalone findings also remain explicit below.
 - `owner verification` requires the owner to confirm Search Console verification. No token is copied or account access changed by this audit.
 - Root PDF samples differ from the already retained `/down/` versions. They are not treated as byte-identical aliases.
@@ -29,16 +29,16 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 
 | Old path | Status | Destination | Evidence / reason |
 | --- | --- | --- | --- |
-| `/BachelorDegreeCertificate.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
-| `/BirthCertificate.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
-| `/GCSE-equivalent-in-the-USA.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/Indian-degree-evaluation-in-USA.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/MarriageCertificate.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
-| `/Moroccan-high-school-diploma-equivalent-in-USA.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/BachelorDegreeCertificate.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
+| `/BirthCertificate.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
+| `/GCSE-equivalent-in-the-USA.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/Indian-degree-evaluation-in-USA.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/MarriageCertificate.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
+| `/Moroccan-high-school-diploma-equivalent-in-USA.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/Pakistani-degree-equivalency-in-USA.html` | redirect | `/blog/Pakistani-degree-equivalency-in-USA` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/Philippine-high-school-diploma-equivalent-in-USA.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/Sample_NewYork.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
-| `/Sample_cer.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
+| `/Philippine-high-school-diploma-equivalent-in-USA.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/Sample_NewYork.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
+| `/Sample_cer.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
 | `/academic_paper.pdf` | removed scope | — | sitemap. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/apply.php` | retired endpoint | — | source file. Legacy application backend; the new site links to the existing application portal |
 | `/ata-certified-translation-services.html` | redirect | `/blog/ata-certified-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -46,14 +46,14 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/best-credential-evaluation-services.html` | redirect | `/blog/best-credential-evaluation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/blog` | retained page | — | Apache target. Canonical blog index |
 | `/blog/` | normalize | `/blog` | sitemap. Framework trailing-slash normalization |
-| `/blog/GCSE-equivalent-in-the-USA.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/Indian-degree-evaluation-in-USA.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/Moroccan-high-school-diploma-equivalent-in-USA.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/GCSE-equivalent-in-the-USA.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/Indian-degree-evaluation-in-USA.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/Moroccan-high-school-diploma-equivalent-in-USA.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/Pakistani-degree-equivalency-in-USA.php` | redirect | `/blog/Pakistani-degree-equivalency-in-USA` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/Philippine-high-school-diploma-equivalent-in-USA.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/Philippine-high-school-diploma-equivalent-in-USA.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/ata-certified-translation-services.php` | redirect | `/blog/ata-certified-translation-services` | app redirect, source file. Retained equivalent page or section |
-| `/blog/best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/best-places-to-get-your-foreign-degree-evaluated-for-us-employment.php` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/best-places-to-get-your-foreign-degree-evaluated-for-us-employment.php` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/boston-affordable-cheap-translation-services.php` | redirect | `/blog/boston-affordable-cheap-translation-services` | app redirect, source file. Retained equivalent page or section |
 | `/blog/boston-ata-certified-translation-and-interpretation.php` | redirect | `/blog/boston-ata-certified-translation-and-interpretation` | app redirect, source file. Retained equivalent page or section |
 | `/blog/boston-best-certified-translation-services-companies.php` | redirect | `/blog/boston-best-certified-translation-services-companies` | app redirect, source file. Retained equivalent page or section |
@@ -71,39 +71,39 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/blog/boston-visa-application-process-services.php` | removed scope | — | source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/blog/california-barbercosmo-credential-evaluation-and-translations.php` | redirect | `/blog/california-barbercosmo-credential-evaluation-and-translations` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
 | `/blog/california-best-education-credential-evaluation-services.php` | redirect | `/blog/california-best-education-credential-evaluation-services` | app redirect, source file. Retained equivalent page or section |
-| `/blog/cheap-credential-evaluation-services.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/cheap-credential-evaluation-services.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/credential-evaluation-for-education.php` | redirect | `/blog/credential-evaluation-for-education` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/credential-evaluation-for-emloyment.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/dallas-best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/diploma-translation-and-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/credential-evaluation-for-emloyment.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/dallas-best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/diploma-translation-and-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/down/applicationform.pdf` | redirect | `/down/applicationform.pdf` | app redirect, sitemap. Retained equivalent page or section |
 | `/blog/e-aet-expert-opinion-letter.php` | redirect | `/blog/e-aet-expert-opinion-letter` | app redirect, source file. Retained equivalent page or section |
-| `/blog/eb-2-niw-credential-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/eb-2-niw-credential-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/eb-2-niw-expert-opinion-letters.php` | redirect | `/blog/eb-2-niw-expert-opinion-letters` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/education-credential-evaluation-purposes.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/education-credential-evaluation-purposes.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/education-evaluation-h1b-for-india.php` | redirect | `/blog/education-evaluation-h1b-for-india` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/education-evaluation-h1b.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/education-evaluation-h1b.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/evaluation_report.pdf` | redirect | `/evaluation_report.pdf` | app redirect, sitemap. Retained equivalent page or section |
 | `/blog/fastest-uscis-ready-credential-evaluation-services-2026.php` | redirect | `/blog/fastest-uscis-ready-credential-evaluation-services-2026` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/florida-credential-evaluation-services.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/foreign-credential-evaluation-for-immigration.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/florida-credential-evaluation-services.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/foreign-credential-evaluation-for-immigration.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/foreign-credential-evaluation-in-usa-China.php` | redirect | `/blog/foreign-credential-evaluation-in-usa-China` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
 | `/blog/foreign-credential-evaluation-in-usa-csec.php` | redirect | `/blog/foreign-credential-evaluation-in-usa-csec` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/foreign-credential-evaluation-in-usa-gce.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/foreign-credential-evaluation-in-usa-gce.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/foreign-credential-evaluation-in-usa-latin-america.php` | redirect | `/blog/foreign-credential-evaluation-in-usa-latin-america` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/foreign-credential-evaluation-in-usa-waec.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/foreign-high-school-diploma-evaluation-in-usa.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/foreign-credential-evaluation-in-usa-waec.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/foreign-high-school-diploma-evaluation-in-usa.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/georgia-best-education-credential-evaluation-agencies.php` | redirect | `/blog/georgia-best-education-credential-evaluation-agencies` | app redirect, source file. Retained equivalent page or section |
 | `/blog/h1b-expert-opinion-letters.php` | redirect | `/blog/h1b-expert-opinion-letters` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/blog/houston-best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/houston-best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/how-to-find-translation-services-online.php` | redirect | `/blog/how-to-find-translation-services-online` | app redirect, source file. Retained equivalent page or section |
-| `/blog/how-to-get-an-international-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/i-140-education-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/illinois-best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/how-to-get-an-international-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/i-140-education-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/illinois-best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/illinois-credential-evaluation-and-translations.php` | redirect | `/blog/illinois-credential-evaluation-and-translations` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
 | `/blog/index.php` | redirect | `/blog` | app redirect, source file. Retained equivalent page or section |
-| `/blog/international-transcript-evaluation.php` | review content | — | Apache target, sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/international-transcript-evaluation.php` | review content | — | Apache target, sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/los-angeles-affordable-cheap-translation-services.php` | redirect | `/blog/los-angeles-affordable-cheap-translation-services` | app redirect, source file. Retained equivalent page or section |
 | `/blog/los-angeles-ata-certified-translation-and-interpretation.php` | redirect | `/blog/los-angeles-ata-certified-translation-and-interpretation` | app redirect, source file. Retained equivalent page or section |
 | `/blog/los-angeles-best-certified-translation-services-companies.php` | redirect | `/blog/los-angeles-best-certified-translation-services-companies` | app redirect, source file. Retained equivalent page or section |
@@ -118,7 +118,7 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/blog/los-angeles-uscis-certified-translation-services.php` | redirect | `/blog/los-angeles-uscis-certified-translation-services` | app redirect, source file. Retained equivalent page or section |
 | `/blog/miami-affordable-cheap-translation-services.php` | redirect | `/blog/miami-affordable-cheap-translation-services` | app redirect, source file. Retained equivalent page or section |
 | `/blog/miami-ata-certified-translation-and-interpretation.php` | redirect | `/blog/miami-ata-certified-translation-and-interpretation` | app redirect, source file. Retained equivalent page or section |
-| `/blog/miami-best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/miami-best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/blog/miami-certified-and-notorized-translation.php` | redirect | `/blog/miami-certified-and-notorized-translation` | app redirect, source file. Retained equivalent page or section |
 | `/blog/miami-certified-chinese-translation-service.php` | redirect | `/blog/miami-certified-chinese-translation-service` | app redirect, source file. Retained equivalent page or section |
 | `/blog/miami-certified-spanish-translation-services.php` | redirect | `/blog/miami-certified-spanish-translation-services` | app redirect, source file. Retained equivalent page or section |
@@ -153,11 +153,11 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/blog/san-francisco-professional-translation-services-agency.php` | redirect | `/blog/san-francisco-professional-translation-services-agency` | app redirect, source file. Retained equivalent page or section |
 | `/blog/san-francisco-uscis-certified-translation-services.php` | redirect | `/blog/san-francisco-uscis-certified-translation-services` | app redirect, source file. Retained equivalent page or section |
 | `/blog/san-fransico-certified-and-notorized-translation.php` | redirect | `/blog/san-fransico-certified-and-notorized-translation` | app redirect, source file. Retained equivalent page or section |
-| `/blog/texas-best-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/transcript-evaluation-service.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/washington-state-education-credential-evaluation-agencies.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/where-to-evaluate-international-degree-in-usa.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/blog/where-to-get-evaluation-for-uscis.php` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/blog/texas-best-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/transcript-evaluation-service.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/washington-state-education-credential-evaluation-agencies.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/where-to-evaluate-international-degree-in-usa.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/blog/where-to-get-evaluation-for-uscis.php` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/body.html` | internal source | — | source file. PHP include/partial; not a standalone migration target |
 | `/boston-affordable-cheap-translation-services.html` | redirect | `/blog/boston-affordable-cheap-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/boston-ata-certified-translation-and-interpretation.html` | redirect | `/blog/boston-ata-certified-translation-and-interpretation` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -175,18 +175,18 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/boston-uscis-certified-translation-services.html` | redirect | `/blog/boston-uscis-certified-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/boston-visa-application-process-services.html` | removed scope | — | sitemap, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/boston2_en.html` | redirect | `/offices/boston` | app redirect, source file. Retained equivalent page or section |
-| `/c-944-article.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-articles.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/c-944-article.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-articles.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/c-authentication-article.html` | removed scope | — | sitemap, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/c-authentication-article2.html` | removed scope | — | sitemap, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
-| `/c-california-barbercosmo-credential-evaluation-and-translations.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/c-california-barbercosmo-credential-evaluation-and-translations.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/c-chinese-authentication-article.html` | removed scope | — | sitemap, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
-| `/c-eb-2-niw-credential-evaluation.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-education-evaluation-for-h1b.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-how-to-avoid-delays-with-foreign-credential-evaluation.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-i-140-education-evaluation.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-la-interpretation.html` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c-sandiego-interpretation.html` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/c-eb-2-niw-credential-evaluation.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-education-evaluation-for-h1b.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-how-to-avoid-delays-with-foreign-credential-evaluation.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-i-140-education-evaluation.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-la-interpretation.html` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c-sandiego-interpretation.html` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/c-schengen-visa-article.html` | removed scope | — | sitemap, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/c_aboutus.html` | redirect | `/zh/about` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/c_careers.html` | redirect | `/career` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -195,8 +195,8 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/c_evaluation.html` | redirect | `/zh/evaluation` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/c_fee.html` | redirect | `/zh/pricing` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/c_interpretation.html` | redirect | `/zh/interpretation` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/c_interpretation_case.html` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/c_medical.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/c_interpretation_case.html` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/c_medical.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/c_notarized.html` | redirect | `/zh/certified-translation` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/c_nus.html` | redirect | `/zh/notarization` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/c_office_la.html` | redirect | `/zh/offices/los-angeles` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -213,12 +213,12 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/california-barbercosmo-credential-evaluation-and-translations.html` | redirect | `/blog/california-barbercosmo-credential-evaluation-and-translations` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/california-best-education-credential-evaluation-services.html` | redirect | `/blog/california-best-education-credential-evaluation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/cbcevaluation_report.pdf` | retained asset | — | sitemap. Served at the original URL |
-| `/cheap-credential-evaluation-services.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/cheap-credential-evaluation-services.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/chinese.html` | redirect | `/zh` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/credential-evaluation-for-education.html` | redirect | `/blog/credential-evaluation-for-education` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/credential-evaluation-for-emloyment.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/dallas-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/diploma-translation-and-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/credential-evaluation-for-emloyment.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/dallas-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/diploma-translation-and-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/down/BachelorDegreeCertificate.pdf` | retained asset | — | sitemap. Served at the original URL |
 | `/down/BirthCertificate.pdf` | retained asset | — | sitemap. Served at the original URL |
 | `/down/MarriageCertificate.pdf` | retained asset | — | sitemap. Served at the original URL |
@@ -362,28 +362,28 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/e_translation.html` | redirect | `/general-translation` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/e_visaservice.html` | removed scope | — | Apache alias, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
 | `/e_writing.html` | removed scope | — | Apache alias, source file. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
-| `/eb-2-niw-credential-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/eb-2-niw-credential-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/eb-2-niw-expert-opinion-letters.html` | redirect | `/blog/eb-2-niw-expert-opinion-letters` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/education-credential-evaluation-purposes.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/education-credential-evaluation-purposes.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/education-evaluation-h1b-for-india.html` | redirect | `/blog/education-evaluation-h1b-for-india` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/education-evaluation-h1b.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/education-evaluation-h1b.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/english.html` | redirect | `/en` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/es-evaluation.html` | redirect | `/es/evaluation` | app redirect, source file. Retained equivalent page or section |
 | `/es/privacy` | redirect | `/privacy` | app redirect. Retained equivalent page or section |
 | `/es/terms` | redirect | `/terms` | app redirect. Retained equivalent page or section |
 | `/evaluation_report.pdf` | retained asset | — | sitemap. Served at the original URL |
-| `/expert-opinion-letter-h1b.html` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/florida-credential-evaluation-services.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/expert-opinion-letter-h1b.html` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/florida-credential-evaluation-services.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/footer-es.html` | internal source | — | source file. PHP include/partial; not a standalone migration target |
 | `/footer-zh.html` | internal source | — | source file. PHP include/partial; not a standalone migration target |
 | `/footer.html` | internal source | — | source file. PHP include/partial; not a standalone migration target |
-| `/foreign-credential-evaluation-for-immigration.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/foreign-credential-evaluation-for-immigration.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/foreign-credential-evaluation-in-usa-China.html` | redirect | `/blog/foreign-credential-evaluation-in-usa-China` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/foreign-credential-evaluation-in-usa-csec.html` | redirect | `/blog/foreign-credential-evaluation-in-usa-csec` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/foreign-credential-evaluation-in-usa-gce.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/foreign-credential-evaluation-in-usa-gce.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/foreign-credential-evaluation-in-usa-latin-america.html` | redirect | `/blog/foreign-credential-evaluation-in-usa-latin-america` | Apache alias, app redirect, source file. Retained equivalent page or section |
-| `/foreign-credential-evaluation-in-usa-waec.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/foreign-high-school-diploma-evaluation-in-usa.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/foreign-credential-evaluation-in-usa-waec.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/foreign-high-school-diploma-evaluation-in-usa.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/georgia-best-education-credential-evaluation-agencies.html` | redirect | `/blog/georgia-best-education-credential-evaluation-agencies` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/google204a3ce937510196.html` | owner verification | — | source file. Legacy Search Console verification file; retain only if owner confirms the property still uses this token |
 | `/h1b-expert-opinion-letters.html` | redirect | `/blog/h1b-expert-opinion-letters` | Apache alias, app redirect, source file. Retained equivalent page or section |
@@ -396,16 +396,16 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/home-es.php` | redirect | `/es` | app redirect, source file. Retained equivalent page or section |
 | `/home-zh.php` | redirect | `/zh` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
 | `/home.php` | redirect | `/en` | Apache target, app redirect, sitemap, source file. Retained equivalent page or section |
-| `/houston-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/how-to-avoid-delays-with-foreign-credential-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/houston-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/how-to-avoid-delays-with-foreign-credential-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/how-to-find-translation-services-online.html` | redirect | `/blog/how-to-find-translation-services-online` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/how-to-get-an-international-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/i-140-education-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/illinois-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/how-to-get-an-international-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/i-140-education-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/illinois-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/illinois-credential-evaluation-and-translations.html` | redirect | `/blog/illinois-credential-evaluation-and-translations` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/index.php` | redirect | `/` | app redirect, source file. Retained equivalent page or section |
-| `/international-transcript-evaluation.html` | review content | — | Apache alias, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/job_employment.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
+| `/international-transcript-evaluation.html` | review content | — | Apache alias, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/job_employment.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
 | `/location/boston/index.html` | redirect | `/zh/offices/boston` | app redirect, sitemap. Retained equivalent page or section |
 | `/los-angeles-affordable-cheap-translation-services.html` | redirect | `/blog/los-angeles-affordable-cheap-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/los-angeles-ata-certified-translation-and-interpretation.html` | redirect | `/blog/los-angeles-ata-certified-translation-and-interpretation` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -422,7 +422,7 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/los-angeles-uscis-certified-translation-services.html` | redirect | `/blog/los-angeles-uscis-certified-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/miami-affordable-cheap-translation-services.html` | redirect | `/blog/miami-affordable-cheap-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/miami-ata-certified-translation-and-interpretation.html` | redirect | `/blog/miami-ata-certified-translation-and-interpretation` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/miami-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/miami-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/miami-certified-and-notorized-translation.html` | redirect | `/blog/miami-certified-and-notorized-translation` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/miami-certified-chinese-translation-service.html` | redirect | `/blog/miami-certified-chinese-translation-service` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/miami-certified-spanish-translation-services.html` | redirect | `/blog/miami-certified-spanish-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
@@ -457,7 +457,7 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/san-francisco-certified-spanish-translation-services.html` | redirect | `/blog/san-francisco-certified-spanish-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/san-francisco-credential-evaluation-and-translations.html` | redirect | `/blog/san-francisco-credential-evaluation-and-translations` | Apache alias, app redirect, source file. Retained equivalent page or section |
 | `/san-francisco-foreign-credential-evaluation-services.html` | redirect | `/blog/san-francisco-foreign-credential-evaluation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/san-francisco-foreign-language-interpreter-agency.html` | review content | — | source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/san-francisco-foreign-language-interpreter-agency.html` | review content | — | source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/san-francisco-international-credential-evaluation-services.html` | redirect | `/blog/san-francisco-international-credential-evaluation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/san-francisco-interpreting-agencies-companies.html` | redirect | `/blog/san-francisco-interpreting-agencies-companies` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/san-francisco-office.html` | redirect | `/contact#sf` | Apache alias, app redirect, source file. Retained equivalent page or section |
@@ -465,15 +465,15 @@ Local source audit, September 30, 2026. Includes all 208 sitemap entries (dedupl
 | `/san-francisco-uscis-certified-translation-services.html` | redirect | `/blog/san-francisco-uscis-certified-translation-services` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/san-fransico-certified-and-notorized-translation.html` | redirect | `/blog/san-fransico-certified-and-notorized-translation` | app redirect, sitemap, source file. Retained equivalent page or section |
 | `/sitemap.html` | redirect | `/sitemap.xml` | app redirect, sitemap, source file. Retained equivalent page or section |
-| `/texas-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/transcript-evaluation-service.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/usmle.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
+| `/texas-best-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/transcript-evaluation-service.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/usmle.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
 | `/visaapplication.pdf` | removed scope | — | sitemap. Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect |
-| `/washington-state-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/what_we_can_do.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
-| `/where-to-evaluate-international-degree-in-usa.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
-| `/where-to-get-evaluation-for-uscis.html` | review content | — | sitemap, source file. Not in the approved retained catalog; source/content disposition required before cutover |
+| `/washington-state-education-credential-evaluation-agencies.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/what_we_can_do.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
+| `/where-to-evaluate-international-degree-in-usa.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
+| `/where-to-get-evaluation-for-uscis.html` | review content | — | sitemap, source file. Deferred by owner on October 1, 2026; possible future page, not a current release blocker |
 | `/yz.php` | retired endpoint | — | source file. Legacy application backend; the new site links to the existing application portal |
-| `/zglgrzsqb.pdf` | review asset | — | sitemap. Unmigrated legacy PDF; contents/version and continued public availability need owner review |
+| `/zglgrzsqb.pdf` | review asset | — | sitemap. Deferred by owner on October 1, 2026; preserve PDF source for future review, not a current release blocker |
 | `/zh/privacy` | redirect | `/privacy` | app redirect. Retained equivalent page or section |
 | `/zh/terms` | redirect | `/terms` | app redirect. Retained equivalent page or section |
