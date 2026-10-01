@@ -156,6 +156,26 @@ Let content determine the height on mobile and when text is enlarged.
 On mobile, allow 72px above the Hero copy and 88px below the actions so the
 background portrait and content have breathing room without a fixed section height.
 
+### CRM workspace
+
+- Use Poppins 500 for body text and 600 for names, headings and emphasized
+  values. Keep primary table text at 14–15px and secondary labels at least 12px;
+  use 16px client names on mobile cards.
+- Replace client initials with stable office badges: BOS, NYC, MIA, LA and SF.
+  Each office keeps the same color and exposes its full name through accessible
+  text and a tooltip. A separate Office column is unnecessary.
+- Keep Education and Service as separate columns and detail sections. Education
+  means academic history (degree, institution, country and study period), not
+  application purpose. Show missing records explicitly.
+- Make education/service detail triggers visibly interactive with blue
+  underlined text and a persistent right chevron. Highlight the full trigger on
+  hover and keyboard focus, label the destination, and open the matching drawer
+  section. Use independent touch targets on mobile; missing education stays
+  plain, non-interactive text.
+- Display Updated as `YYYY-MM-DD`, without a time, on both desktop and mobile.
+  Preserve all table columns on narrower desktops with local table scrolling;
+  mobile cards retain education, service and the updated date.
+
 ## 4. Homepage Composition
 
 | Order | Section | Core requirement |

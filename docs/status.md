@@ -2,6 +2,75 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### CRM detail entry affordances — October 1, 2026
+
+- Added blue underlined labels, persistent right chevrons, hover/focus styling
+  and destination tooltips to education/service detail triggers. Missing
+  education is plain text without an arrow or a misleading detail action.
+- Mobile cards now have independent client, education and service buttons,
+  each opening the corresponding drawer section, without nested buttons.
+- Passed TypeScript and whitespace checks. In-app browser verified desktop
+  education entry via keyboard, service entry via click, both direct mobile
+  entries, and the mobile card layout without horizontal page overflow.
+- Screenshots: `output/playwright/crm-detail-entry-{desktop,mobile}-2026-10-01.jpg`.
+  Reused the running local preview; no production build or deployment.
+
+### CRM readability and information layout — October 1, 2026
+
+- Increased CRM font sizes and weights. Replaced client initials with consistent
+  BOS/NYC/MIA/LA/SF office badges and removed the separate Office column.
+- Added a dedicated Education column alongside Service, with direct links to
+  separate drawer sections. Education shows fictional degree, institution,
+  country and study-period records; missing education has an explicit empty
+  state. New and imported sample applications start without education records.
+- Updated dates use `YYYY-MM-DD` in the table, mobile cards and application
+  details. Narrow desktop tables retain all columns through local scrolling.
+  Search includes office codes and education fields; CSV exports include
+  education summaries and update dates.
+- Passed TypeScript checks. Codex in-app browser verified desktop (1440px and
+  1280px), mobile (390px) and narrow-screen (320px) states without horizontal
+  page overflow. Checked education/service details, multiple and missing
+  education records, office-badge synchronization and NYC search (three results).
+  Corrected mobile study-period wrapping and verified the final narrow drawer.
+- Screenshots: `output/playwright/crm-refinement-{desktop,mobile,education}-2026-10-01.jpg`.
+  Verification reused the owner's running server on port 3021. The page remains
+  a fictional-data preview; no production integrations, build or deployment.
+
+### CRM interactive visual preview — October 1, 2026
+
+- Added the English CRM preview at `/admin/CRM` (also reachable through the
+  existing locale routing). Based the workflow on the sibling AET App's
+  Applications, Payment Links and Degree Equivalency CRM code. The live reference
+  redirected to login; no production customer records were accessed.
+- Built an AET-branded workspace with office-scoped sample metrics, searchable
+  and sortable application lists, status filters, pagination, a detail drawer,
+  document review, notes and session activity. Added payment-request and
+  pre-evaluation views, a document list, sample application creation, limited CSV
+  import/export and a weighted 4.0-scale GPA calculator.
+- The preview contains explicitly fictional records and amounts. Changes use
+  browser memory only and reset on refresh. Payment requests remain sample
+  drafts, and email previews do not send messages. No authentication, database,
+  payment, storage or email integration was added; Payload is not a dependency.
+  These remain implementation work before this page can become an operational
+  CRM. The existing AET App remains the live business system.
+- Passed TypeScript and whitespace checks. HTTP checks returned 200 for the
+  unprefixed, Chinese and Spanish CRM URLs, each with noindex/nofollow. Confirmed
+  exclusion from the sitemap and that the homepage still returns 200.
+- Codex in-app browser passed desktop (1440px), mobile (390px) and narrow-screen
+  (320px) checks, with no horizontal page overflow. Verified search, combined
+  office/search empty states, clear filters, sorting, pagination, the detail
+  drawer, document review, blocked premature status changes, subsequent status
+  updates, note saving and activity records.
+- Also verified sample application creation, payment-draft creation, invalid CSV
+  rejection and a two-order sample import, the pre-evaluation subset, GPA
+  recalculation (3.57 to 3.68 when the first course changes from 3 to 6 credits),
+  mobile card details, navigation switching and Escape dismissal. No browser
+  warning/error was captured. CSV export is implemented but its download was
+  not separately browser-verified.
+- Screenshots: `output/playwright/crm-preview-{desktop,mobile,detail}-2026-10-01.jpg`.
+  Reused the owner's running development server on port 3021 and left the preview
+  open. No local production build, deployment, commit or push was performed.
+
 ### San Francisco visit policy and Evaluation promise — October 1, 2026
 
 - Updated the shared San Francisco phone to the Los Angeles office number,

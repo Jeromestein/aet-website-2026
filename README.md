@@ -118,6 +118,31 @@ its evaluation types, and Pre-Evaluation Services remain available.
 This scope applies to this rebuilt homepage; it does not delete legacy website
 pages or change the separate application portal.
 
+## CRM visual preview
+
+Open `http://localhost:3021/admin/CRM` to explore the proposed AET operations
+workspace. It uses fictional client records and amounts, with changes kept only
+in browser memory and reset on refresh. The preview is English-only, marked
+noindex/nofollow, and excluded from the public sitemap and navigation.
+
+Applications, payment requests, pre-evaluations and documents have dedicated
+views. Search, office/status filters, sorting, pagination, application details,
+sample document review, notes, application creation, simple CSV import/export,
+draft payment requests and a weighted GPA calculator work locally.
+The application list uses office badges, separate education/service summaries
+and `YYYY-MM-DD` update dates. Education and service summaries open their own
+detail sections; academic records are also fictional preview data.
+
+This is an unauthenticated visual prototype, not the production CRM. It has no
+Payload dependency, database connection, live client files, email delivery or
+payment-provider calls. Authentication, office-scoped authorization, server-side
+business rules and persistence must be implemented before connecting real data.
+The existing AET App remains the operational system.
+
+Source: `components/crm/` and `app/[locale]/admin/CRM/page.tsx`. UI fields and
+workflow references come from the sibling AET App CRM implementation. The live
+reference URL requires login; no production records were used.
+
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
