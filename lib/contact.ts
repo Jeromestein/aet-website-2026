@@ -58,7 +58,7 @@ export const offices: readonly Office[] = [
     wechat: 'LA9499547996', tollFreeChina: '950-4041-5989 / 167-6208-4336',
   }),
   defineOffice({
-    id: 'sf', hours: { weekdays: ['09:00', '17:00'], zone: 'PST' }, phones: ['+1 415-868-4892'], emails: ['ca@aet21.com'],
+    id: 'sf', hours: { weekdays: ['09:00', '17:00'], zone: 'PST' }, phones: ['+1 949-954-7996'], emails: ['ca@aet21.com'],
     postalAddress: { streetAddress: '851 Burlway Rd Ste 421', addressLocality: 'Burlingame', addressRegion: 'CA', postalCode: '94010', addressCountry: 'US' },
     wechat: '18611291421', tollFreeChina: '950-4044-1214 / 167-1526-5057',
   }),

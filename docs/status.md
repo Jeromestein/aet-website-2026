@@ -2,6 +2,27 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### San Francisco visit policy and Evaluation promise — October 1, 2026
+
+- Updated the shared San Francisco phone to the Los Angeles office number,
+  +1 949-954-7996. Added a prominent reservation-required note to its Contact
+  card in English, Chinese and Spanish, and clarified the general visit copy
+  so the no-appointment statement excludes San Francisco.
+- Replaced the Chinese and Spanish AET promise's NACES affiliation wording
+  with a general description of experienced credential evaluation professionals.
+  The English promise already uses this wording and remains unchanged.
+- Passed typecheck, all three language message checks and diff whitespace checks.
+  Local HTTP checks passed the reservation text, telephone link and Evaluation
+  promise on all six localized Contact/Evaluation pages.
+- Codex in-app browser passed English Contact's San Francisco card and Chinese
+  Evaluation's promise at 1440px desktop and 390px mobile. The mobile office
+  anchor reaches the correct card; the Chinese Evaluation page has no horizontal
+  page overflow. Screenshots: `output/playwright/sf-contact-{desktop,mobile}-2026-10-01.png`
+  and `output/playwright/evaluation-promise-{desktop,mobile}-2026-10-01.png`.
+- Verification used the existing development server on port 3021; no production
+  build was run. The owner subsequently requested committing and pushing these
+  changes. Hosted deployment status is not verified by these local checks.
+
 ### Release-readiness spot check — October 1, 2026
 
 - User authorized a local commit. Push, deployment and domain/DNS changes were

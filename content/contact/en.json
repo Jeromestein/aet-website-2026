@@ -17,7 +17,7 @@
     },
     {
       "title": "Visit",
-      "body": "Opt 2. Visit our office with your document. You don't need an appointment."
+      "body": "Opt 2. Visit our office with your document. A reservation is required for the San Francisco office; other offices do not require an appointment."
     }
   ],
   "labels": {
@@ -53,7 +53,8 @@
     },
     "sf": {
       "name": "San Francisco Office",
-      "title": "San Francisco Office - California Branch"
+      "title": "San Francisco Office - California Branch",
+      "visitNote": "Reservation is required."
     },
     "nyc": {
       "name": "New York Office",

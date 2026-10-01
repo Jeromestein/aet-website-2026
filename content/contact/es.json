@@ -17,7 +17,7 @@
     },
     {
       "title": "Visita",
-      "body": "Opción 2. Visite nuestra oficina con su documento. No necesita cita previa."
+      "body": "Opción 2. Visite nuestra oficina con su documento. Se requiere cita previa para la oficina de San Francisco; las demás oficinas no requieren cita."
     }
   ],
   "priority": "PRIORIDAD PARA HABLA HISPANA",
@@ -54,7 +54,8 @@
     },
     "sf": {
       "name": "Oficina de San Francisco",
-      "title": "Oficina de San Francisco - Sucursal de California"
+      "title": "Oficina de San Francisco - Sucursal de California",
+      "visitNote": "Se requiere cita previa."
     },
     "nyc": {
       "name": "Oficina de Nueva York",

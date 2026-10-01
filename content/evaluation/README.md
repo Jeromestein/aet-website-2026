@@ -14,9 +14,12 @@ module with Online and Email tabs. Online contains the current four-step flow;
 Email retains the source three-step list in `content/application-methods.json`.
 Acceptance reminders appear within the selected method. Required documents and
 pre-evaluation notes remain in `applicationNotesHtml`. Chinese and Spanish retain
-the source WES/ECE comparison and
-NACES wording, and shipping-policy wording differs. These are preserved source
-claims, not newly verified facts or translations of the current English page.
+the source WES/ECE comparison, and shipping-policy wording differs. These are
+preserved source claims, not newly verified facts or translations of the current
+English page. On October 1, 2026, the owner requested replacing the NACES
+affiliation wording in the Chinese and Spanish AET promise with a general
+description of experienced credential evaluation professionals, consistent with
+the existing English wording.
 
 HTML fields contain only reviewed static paragraphs, links, emphasis, lists,
 line breaks, and subordinate headings. Bootstrap classes, inline styles,

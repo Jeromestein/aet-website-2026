@@ -10,6 +10,7 @@ export function OfficeCard({ office, content, locale, expanded = false }: { offi
   const hours = officeHours(office, locale);
   return <article data-rail-card id={office.id} className={`${styles.office} ${expanded ? styles.expanded : ""}`} aria-labelledby={`${office.id}-title`}>
     <div className={styles.officeHead}><MapPin size={23} aria-hidden="true" /><h3 id={`${office.id}-title`}>{copy.title}</h3></div>
+    {copy.visitNote && <p className={styles.visitNote}>{copy.visitNote}</p>}
     <dl className={styles.facts}>
       <div><dt>{content.labels.phone}</dt><dd>{office.phones.map((phone, i) => <span key={phone}><a href={phoneHref(phone)}>{phone}</a>{copy.phoneNotes?.[i] && <small>{copy.phoneNotes[i]}</small>}</span>)}</dd></div>
       <div><dt>{content.labels.email}</dt><dd>{office.emails.map(email => <a key={email} href={`mailto:${email}`}>{email}</a>)}</dd></div>

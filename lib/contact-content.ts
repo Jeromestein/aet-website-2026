@@ -14,7 +14,7 @@ export type ContactContent = {
   options: { title: string; body: string }[];
   priority?: string;
   labels: Record<'phone' | 'email' | 'address' | 'hours' | 'whatsapp' | 'wechat' | 'tollFreeChina' | 'fax' | 'qq' | 'more' | 'directions' | 'officeDetails', string>;
-  offices: Record<OfficeId, { name: string; title: string; phoneNotes?: string[] }>;
+  offices: Record<OfficeId, { name: string; title: string; visitNote?: string; phoneNotes?: string[] }>;
   other: { title: string; nyc: string; taiyuan: string; mobile: string };
 };
 

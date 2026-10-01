@@ -3,6 +3,7 @@
 .office { scroll-margin-top: 110px; }
 .officeHead { display: flex; align-items: flex-start; gap: 10px; min-height: 66px; }
 .officeHead h3 { font-size: 21px; line-height: 1.35; margin: 0; }
+.visitNote { margin: 0 0 16px; font-size: 14px; font-weight: 600; }
 .facts { margin: 0; }
 .facts > div { padding: 14px 0; border-top: 1px solid var(--line); }
 .facts dt, .more dt { color: var(--muted); font-size: 13px; font-weight: 600; margin-bottom: 5px; }
