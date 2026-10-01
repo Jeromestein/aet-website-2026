@@ -4,6 +4,8 @@ export const routing = defineRouting({
   locales: ["en", "zh", "es"],
   defaultLocale: "en",
   localePrefix: "as-needed",
+  // Page metadata supplies production-host alternates for actual translations.
+  alternateLinks: false,
   localeCookie: { name: "AET_LOCALE", maxAge: 60 * 60 * 24 * 365 },
 });
 

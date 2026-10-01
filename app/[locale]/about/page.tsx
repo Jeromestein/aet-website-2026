@@ -1,3 +1,6 @@
+import { graph, organizationSchema } from '@/lib/structured-data';
+import { StructuredData } from '@/components/structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { hasLocale } from 'next-intl';
@@ -17,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = aboutContent[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/about', locale, title, description });
 }
 
 export default async function AboutPage({ params }: Props) {
@@ -28,10 +31,11 @@ export default async function AboutPage({ params }: Props) {
   const c = aboutContent[locale];
   const contact = getPathname({ locale, href: '/contact' });
 
-  return <ServicePage locale={locale} title={c.title} label={t('footer.about')} eyebrow={c.eyebrow}
+  return <ServicePage path={'/about'} locale={locale} title={c.title} label={t('footer.about')} eyebrow={c.eyebrow}
     nav={Object.entries(c.sections).map(([id, label]) => ({ id, label }))}
     actions={[{ label: t('home.hero.apply'), href: 'https://app.americantranslationservice.com/credential-evaluation-application' },
       { label: t('home.contact'), href: contact }]}>
+    <StructuredData data={graph([organizationSchema()])} />
     <p className={styles.intro}>{c.intro}</p>
     <section id="history" className={styles.section} aria-labelledby="history-title">
       <h2 id="history-title">{c.sections.history}</h2>

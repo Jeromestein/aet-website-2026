@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = paymentContent[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/payment', locale, title, description });
 }
 
 function Field({ id, name, label, type = 'text', required = false, ...inputProps }: {
@@ -90,7 +91,7 @@ export default async function PaymentPage({ params }: Props) {
   const bankDetails = (rows: { label: string; value: string }[]) => <dl className={styles.bankDetails}>
     {rows.map(({ label, value }) => <div key={label}><dt>{a.fields[label]}:</dt><dd>{value}</dd></div>)}
   </dl>;
-  return <ServicePage locale={locale} title={c.title} label={t('navigation.payment')} eyebrow={c.eyebrow}
+  return <ServicePage path={'/payment'} locale={locale} title={c.title} label={t('navigation.payment')} eyebrow={c.eyebrow}
     nav={[{ id: 'card-payment', label: c.sections.card }, { id: 'other-methods', label: a.navLabel },
       { id: 'payment-security', label: c.sections.security }, { id: 'shipping', label: c.sections.shipping }]}
     actions={[{ label: c.form.submit, href: '#card-payment' }]}>

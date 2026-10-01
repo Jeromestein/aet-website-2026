@@ -1,3 +1,5 @@
+import { BreadcrumbStructuredData } from '@/components/breadcrumb-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -18,7 +20,7 @@ export async function legalMetadata(document: LegalDocument, { params }: LegalPa
   const t = await getTranslations({ locale });
   const title = t(`footer.${document}`);
   const description = `${content.title} — American Education and Translation Services (AET).`;
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: `/${document}`, locale, title, description });
 }
 
 export async function LegalPage({ document, params }: LegalPageProps & { document: LegalDocument }) {
@@ -32,6 +34,7 @@ export async function LegalPage({ document, params }: LegalPageProps & { documen
     <li key={section.id}><a href={`#${section.id}`}>{section.title}</a></li>)}</ol>;
 
   return <>
+    <BreadcrumbStructuredData path={`/${document}`} locale={locale} title={title} />
     <a className="skip-link" href="#main-content">{t('home.skip')}</a>
     <Navigation />
     <main id="main-content" className={styles.page}>

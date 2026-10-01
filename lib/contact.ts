@@ -2,6 +2,13 @@ import { getPathname } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 
 export type OfficeId = 'miami' | 'boston' | 'la' | 'sf' | 'nyc' | 'bj';
+export type OfficePostalAddress = {
+  streetAddress: string;
+  addressLocality: string;
+  addressRegion?: string;
+  postalCode?: string;
+  addressCountry: 'US' | 'CN';
+};
 export type Office = {
   id: OfficeId;
   slug?: string;
@@ -10,6 +17,7 @@ export type Office = {
   phones: readonly string[];
   emails: readonly string[];
   address: string;
+  postalAddress: OfficePostalAddress;
   addressZh?: string;
   addressEs?: string;
   whatsapp?: string;
@@ -19,41 +27,53 @@ export type Office = {
   qq?: string;
 };
 
+/** Derive the displayed address from the same fields used by structured data. */
+function defineOffice({ displayCountry, ...office }: Omit<Office, 'address'> & { displayCountry?: boolean }): Office {
+  const address = office.postalAddress;
+  return {
+    ...office,
+    address: [address.streetAddress, address.addressLocality,
+      [address.addressRegion, address.postalCode].filter(Boolean).join(' '),
+      displayCountry ? 'United States' : undefined,
+    ].filter(Boolean).join(', '),
+  };
+}
+
 /** Public contact facts from the legacy Contact page; LA address chosen by owner. */
 export const offices: readonly Office[] = [
-  {
+  defineOffice({
     id: 'miami', slug: 'miami', footerKey: 'miami', hours: { weekdays: ['09:00', '17:00'], zone: 'EST' }, phones: ['+1 786-250-3999', '+1 786-881-7058'],
     emails: ['info@aet21.com', 'info@americantranslationservice.com'],
-    address: '15321 S Dixie Hwy, #302, Palmetto Bay, FL 33157',
+    postalAddress: { streetAddress: '15321 S Dixie Hwy, #302', addressLocality: 'Palmetto Bay', addressRegion: 'FL', postalCode: '33157', addressCountry: 'US' },
     whatsapp: '786-881-7058', wechat: 'AET-Miami', tollFreeChina: '950 4037 9459', fax: '954 644 7787',
-  },
-  {
+  }),
+  defineOffice({
     id: 'boston', slug: 'boston', footerKey: 'boston', hours: { weekdays: ['09:00', '17:30'], saturday: ['09:30', '12:30'], zone: 'EST' }, phones: ['+1 781-712-0258', '+1 781-605-1970'],
     emails: ['boston@aet21.com', 'boston@americantranslationservice.com'],
-    address: '6 Pleasant Street, #418, Malden, MA 02148', wechat: 'jennifertjchang',
-  },
-  {
+    postalAddress: { streetAddress: '6 Pleasant Street, #418', addressLocality: 'Malden', addressRegion: 'MA', postalCode: '02148', addressCountry: 'US' }, wechat: 'jennifertjchang',
+  }),
+  defineOffice({
     id: 'la', slug: 'los-angeles', footerKey: 'losAngeles', hours: { weekdays: ['08:30', '17:00'], zone: 'PST' }, phones: ['+1 949-954-7996'], emails: ['ca2@aet21.com'],
-    address: '17802 Sky Park Cir, Suite 205 A, Irvine, CA 92614-6403, United States',
+    postalAddress: { streetAddress: '17802 Sky Park Cir, Suite 205 A', addressLocality: 'Irvine', addressRegion: 'CA', postalCode: '92614-6403', addressCountry: 'US' }, displayCountry: true,
     wechat: 'LA9499547996', tollFreeChina: '950-4041-5989 / 167-6208-4336',
-  },
-  {
+  }),
+  defineOffice({
     id: 'sf', hours: { weekdays: ['09:00', '17:00'], zone: 'PST' }, phones: ['+1 415-868-4892'], emails: ['ca@aet21.com'],
-    address: '851 Burlway Rd Ste 421, Burlingame, CA 94010',
+    postalAddress: { streetAddress: '851 Burlway Rd Ste 421', addressLocality: 'Burlingame', addressRegion: 'CA', postalCode: '94010', addressCountry: 'US' },
     wechat: '18611291421', tollFreeChina: '950-4044-1214 / 167-1526-5057',
-  },
-  {
+  }),
+  defineOffice({
     id: 'nyc', hours: { weekdays: ['09:00', '17:30'], zone: 'EST' }, phones: ['+1 718-521-6708'],
     emails: ['nyc@aet21.com', 'nyc@americantranslationservice.com'],
-    address: '60-20 Woodside Ave, Suite 205, Queens, NY 11377', wechat: 'AET_NYC',
-  },
-  {
+    postalAddress: { streetAddress: '60-20 Woodside Ave, Suite 205', addressLocality: 'Queens', addressRegion: 'NY', postalCode: '11377', addressCountry: 'US' }, wechat: 'AET_NYC',
+  }),
+  defineOffice({
     id: 'bj', slug: 'beijing', footerKey: 'beijing', phones: ['010 65913558'], emails: ['beijing@aet21.com'],
-    address: 'Tianshuiyuan Business Center, Building A, Ste 106, No. 2 Tianshuiyuan East, Chaoyang District, Beijing',
+    postalAddress: { streetAddress: 'Tianshuiyuan Business Center, Building A, Ste 106, No. 2 Tianshuiyuan East, Chaoyang District', addressLocality: 'Beijing', addressCountry: 'CN' },
     addressZh: '天水园商务中心A座106室，朝阳区天水园东二号',
     addressEs: 'Centro Empresarial Tianshuiyuan, Edificio A, Ste 106, No. 2 Tianshuiyuan Este, Distrito Chaoyang, Beijing',
     qq: '3135192546',
-  },
+  }),
 ];
 
 export function contactPath(locale: Locale, anchor?: string) {

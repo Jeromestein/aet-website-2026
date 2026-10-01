@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -13,10 +14,15 @@ import styles from './career.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export const metadata: Metadata = {
-  title: 'Careers',
-  description: 'Join the AET team! Explore rewarding careers in education and translation. Unlock growth opportunities and contribute to our dynamic work environment.',
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  return pageMetadata({
+    path: '/career', locale,
+    title: 'Careers',
+    description: 'Join the AET team! Explore rewarding careers in education and translation. Unlock growth opportunities and contribute to our dynamic work environment.',
+  });
+}
 
 const benefitIcons = [Users, GraduationCap, Globe2, Handshake];
 
@@ -37,7 +43,7 @@ export default async function CareerPage({ params }: Props) {
     { id: 'apply', label: content.apply.title },
   ];
 
-  return <ServicePage locale={locale} title={content.title} titleLang="en"
+  return <ServicePage path={'/career'} locale={locale} title={content.title} titleLang="en"
     label={t('footer.career')} eyebrow={content.eyebrow} nav={nav} actions={[]}>
     <div lang="en" className={styles.body}>
       <CareerCopy html={content.introHtml} className={styles.intro} />

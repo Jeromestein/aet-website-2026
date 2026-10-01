@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import blogRedirects from "./content/blog/redirects.json";
+import { legacyEntryRedirects } from "./lib/legacy-redirects";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
@@ -8,6 +9,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...blogRedirects,
+      ...legacyEntryRedirects,
       { source: "/e-credential-evaluation-partners.php", destination: "/institutions", permanent: true },
       ...[
         ["e-aboutus.php", "/about"],

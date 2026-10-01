@@ -1,3 +1,5 @@
+import { BreadcrumbStructuredData } from '@/components/breadcrumb-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -17,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, intro: description } = institutionDirectory[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/institutions', locale, title, description });
 }
 
 export default async function InstitutionsPage({ params }: Props) {
@@ -29,6 +31,7 @@ export default async function InstitutionsPage({ params }: Props) {
   const copy = directoryCopy[locale];
 
   return <>
+    <BreadcrumbStructuredData path={'/institutions'} locale={locale} title={copy.label} />
     <a className="skip-link" href="#main-content">{t('home.skip')}</a>
     <Navigation />
     <main id="main-content" className={styles.page}>

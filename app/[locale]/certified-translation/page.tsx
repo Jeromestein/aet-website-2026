@@ -1,3 +1,5 @@
+import { ServiceStructuredData } from '@/components/service/service-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = certifiedTranslationContent[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/certified-translation', locale, title, description });
 }
 
 export default async function CertifiedTranslationPage({ params }: Props) {
@@ -30,8 +32,9 @@ export default async function CertifiedTranslationPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations();
   const c = certifiedTranslationContent[locale];
-  return <ServicePage locale={locale} title={c.title} label={t('navigation.certified')} nav={c.nav}
+  return <ServicePage path={'/certified-translation'} locale={locale} title={c.title} label={t('navigation.certified')} nav={c.nav}
     actions={[{ label: t('home.contact'), href: contactPath(locale) }, { label: c.nav.find(item => item.id === 'apply')!.label, href: '#apply' }]}>
+    <ServiceStructuredData service={'certified-translation'} locale={locale} />
     {(['define', 'use'] as const).map(id => <section key={id} id={id} className={styles.section} aria-labelledby={`${id}-title`}>
       <h2 id={`${id}-title`}>{c[id].title}</h2><Copy html={c[id].html} />
     </section>)}

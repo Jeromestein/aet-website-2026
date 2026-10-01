@@ -1,3 +1,6 @@
+import { graph, organizationSchema } from '@/lib/structured-data';
+import { StructuredData } from '@/components/structured-data';
+import { pageMetadata } from '@/lib/seo';
 import { documentEvaluationStandard } from "@/lib/pricing";
 import { formatMoney } from "@/lib/pricing-format";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -28,6 +31,14 @@ const apply =
   "https://app.americantranslationservice.com/credential-evaluation-application";
 const pre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+  const metadata = pageMetadata({ path: '/', locale, title: t('title'), description: t('description') });
+  return { ...metadata, openGraph: { ...metadata.openGraph, description: t('ogDescription') } };
+}
+
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
@@ -59,6 +70,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <>
+    <StructuredData data={graph([organizationSchema()])} />
       <a className="skip-link" href="#main-content">{t("home.skip")} </a>
       <Navigation />
       <RevealObserver />

@@ -1,3 +1,4 @@
+import { BreadcrumbStructuredData } from '@/components/breadcrumb-structured-data';
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { useLocale } from 'next-intl';
@@ -14,12 +15,13 @@ export function ServiceCopy({ html, className = '' }: { html: string; className?
   return <div className={`${styles.copy} ${className}`} dangerouslySetInnerHTML={{ __html: renderContactReferences(html, locale) }} />;
 }
 
-export async function ServicePage({ locale, title, titleLang, label, eyebrow, nav, actions, children }: {
-  locale: Locale; title: string; titleLang?: string; label: string; eyebrow?: string;
+export async function ServicePage({ path, locale, title, titleLang, label, eyebrow, nav, actions, children }: {
+  path: string; locale: Locale; title: string; titleLang?: string; label: string; eyebrow?: string;
   nav: { id: string; label: string; child?: boolean }[]; actions: { label: string; href: string }[]; children: ReactNode;
 }) {
   const t = await getTranslations();
   return <>
+    <BreadcrumbStructuredData path={path} locale={locale} title={label} />
     <a className="skip-link" href="#main-content">{t('home.skip')}</a>
     <Navigation />
     <main id="main-content" className={styles.page}>

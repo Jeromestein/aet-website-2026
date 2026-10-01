@@ -1,0 +1,5027 @@
+[
+  {
+    "path": "/BachelorDegreeCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/BirthCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/GCSE-equivalent-in-the-USA.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/Indian-degree-evaluation-in-USA.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/MarriageCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/Moroccan-high-school-diploma-equivalent-in-USA.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/Pakistani-degree-equivalency-in-USA.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/Pakistani-degree-equivalency-in-USA",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/Philippine-high-school-diploma-equivalent-in-USA.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/Sample_NewYork.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/Sample_cer.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/academic_paper.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/apply.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "retired endpoint",
+    "destination": null,
+    "reason": "Legacy application backend; the new site links to the existing application portal",
+    "sourceExists": true
+  },
+  {
+    "path": "/ata-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/ata-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/backup-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "archive",
+    "destination": null,
+    "reason": "Historical backup; excluded from index and migration",
+    "sourceExists": true
+  },
+  {
+    "path": "/best-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/best-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog",
+    "sources": [
+      "Apache target"
+    ],
+    "status": "retained page",
+    "destination": null,
+    "reason": "Canonical blog index",
+    "sourceExists": false
+  },
+  {
+    "path": "/blog/",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "normalize",
+    "destination": "/blog",
+    "reason": "Framework trailing-slash normalization",
+    "sourceExists": false
+  },
+  {
+    "path": "/blog/GCSE-equivalent-in-the-USA.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/Indian-degree-evaluation-in-USA.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/Moroccan-high-school-diploma-equivalent-in-USA.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/Pakistani-degree-equivalency-in-USA.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/Pakistani-degree-equivalency-in-USA",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/Philippine-high-school-diploma-equivalent-in-USA.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/ata-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/ata-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/best-places-to-get-your-foreign-degree-evaluated-for-us-employment.php",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-affordable-cheap-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-ata-certified-translation-and-interpretation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-best-certified-translation-services-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-certified-and-notarized-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-and-notarized-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-certified-chinese-translation-service.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-certified-spanish-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-foreign-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-foreign-language-interpreter-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-international-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-interpreting-agencies-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-professional-translation-services-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-technical-translation-services-company.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-technical-translation-services-company",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-top-certified-translation-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-top-certified-translation-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-uscis-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/boston-visa-application-process-services.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/california-barbercosmo-credential-evaluation-and-translations.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/california-barbercosmo-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/california-best-education-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/california-best-education-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/cheap-credential-evaluation-services.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/credential-evaluation-for-education.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/credential-evaluation-for-education",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/credential-evaluation-for-emloyment.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/dallas-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/diploma-translation-and-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/down/applicationform.pdf",
+    "sources": [
+      "app redirect",
+      "sitemap"
+    ],
+    "status": "redirect",
+    "destination": "/down/applicationform.pdf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/blog/e-aet-expert-opinion-letter.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/e-aet-expert-opinion-letter",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/eb-2-niw-credential-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/eb-2-niw-expert-opinion-letters.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/eb-2-niw-expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/education-credential-evaluation-purposes.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/education-evaluation-h1b-for-india.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/education-evaluation-h1b-for-india",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/education-evaluation-h1b.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/evaluation_report.pdf",
+    "sources": [
+      "app redirect",
+      "sitemap"
+    ],
+    "status": "redirect",
+    "destination": "/evaluation_report.pdf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/blog/fastest-uscis-ready-credential-evaluation-services-2026.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/fastest-uscis-ready-credential-evaluation-services-2026",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/florida-credential-evaluation-services.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-for-immigration.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-in-usa-China.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-China",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-in-usa-csec.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-csec",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-in-usa-gce.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-in-usa-latin-america.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-latin-america",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-credential-evaluation-in-usa-waec.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/foreign-high-school-diploma-evaluation-in-usa.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/georgia-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/georgia-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/h1b-expert-opinion-letters.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/h1b-expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/houston-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/how-to-avoid-delays-with-foreign-credential-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/how-to-find-translation-services-online.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/how-to-find-translation-services-online",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/how-to-get-an-international-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/i-140-education-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/illinois-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/illinois-credential-evaluation-and-translations.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/illinois-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/index.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/international-transcript-evaluation.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-affordable-cheap-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-ata-certified-translation-and-interpretation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-best-certified-translation-services-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-certified-and-notorized-translation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-certified-chinese-translation-service.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-certified-spanish-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-credential-evaluation-and-translations.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-foreign-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-foreign-language-interpreter-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-international-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/los-angeles-uscis-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-affordable-cheap-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-ata-certified-translation-and-interpretation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-certified-and-notorized-translation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-certified-chinese-translation-service.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-certified-spanish-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-credential-evaluation-and-translations.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-foreign-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-international-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-interpreting-agencies-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-language-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-language-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/miami-uscis-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-affordable-cheap-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-ata-certified-translation-and-interpretation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-best-certified-translation-services-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-certified-and-notarized-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-and-notarized-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-certified-chinese-translation-service.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-certified-spanish-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-foreign-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-foreign-language-interpreter-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-international-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-interpreting-agencies-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-professional-translation-services-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-technical-translation-services-company.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-technical-translation-services-company",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/new-york-uscis-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-affordable-cheap-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-ata-certified-translation-and-interpretation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-certified-chinese-translation-service.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-certified-spanish-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-credential-evaluation-and-translations.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-foreign-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-international-credential-evaluation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-interpreting-agencies-companies.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-professional-translation-services-agency.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-francisco-uscis-certified-translation-services.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/san-fransico-certified-and-notorized-translation.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-fransico-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/texas-best-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/transcript-evaluation-service.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/washington-state-education-credential-evaluation-agencies.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/where-to-evaluate-international-degree-in-usa.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/blog/where-to-get-evaluation-for-uscis.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/body.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-affordable-cheap-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-ata-certified-translation-and-interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-best-certified-translation-services-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-certified-and-notarized-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-and-notarized-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-certified-chinese-translation-service.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-certified-spanish-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-foreign-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-foreign-language-interpreter-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-international-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-interpreting-agencies-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-professional-translation-services-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-technical-translation-services-company.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-technical-translation-services-company",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-top-certified-translation-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-top-certified-translation-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-uscis-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/boston-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston-visa-application-process-services.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/boston2_en.html",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-944-article.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-articles.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-authentication-article.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-authentication-article2.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-california-barbercosmo-credential-evaluation-and-translations.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-chinese-authentication-article.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-eb-2-niw-credential-evaluation.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-education-evaluation-for-h1b.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-how-to-avoid-delays-with-foreign-credential-evaluation.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-i-140-education-evaluation.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-la-interpretation.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-sandiego-interpretation.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c-schengen-visa-article.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_aboutus.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/about",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_careers.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/career",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_chinavisaservice.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_contact.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_evaluation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_fee.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/pricing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_interpretation_case.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_medical.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_notarized.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/certified-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_nus.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/notarization",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_office_la.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_office_miami.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_office_sf.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/contact#sf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_offices.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_paper.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_pay.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/payment",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_techtranslation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/technical-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_threecertification.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_translation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/general-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_visaservice.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/c_writing.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/california-barbercosmo-credential-evaluation-and-translations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/california-barbercosmo-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/california-best-education-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/california-best-education-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/cbcevaluation_report.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/cheap-credential-evaluation-services.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/chinese.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/credential-evaluation-for-education.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/credential-evaluation-for-education",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/credential-evaluation-for-emloyment.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/dallas-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/diploma-translation-and-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/down/BachelorDegreeCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/down/BirthCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/down/MarriageCertificate.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/down/applicationform.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/down/evaluation_report.pdf",
+    "sources": [
+      "app redirect",
+      "sitemap"
+    ],
+    "status": "redirect",
+    "destination": "/evaluation_report.pdf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-aboutus-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-aboutus-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-aboutus-es.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/about",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-aboutus-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/about",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-aboutus.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/about",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-aet-expert-opinion-letter.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/e-aet-expert-opinion-letter",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-authentication-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-authentication-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-authentication-zh.php",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-authentication.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-blog.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-careers-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-careers.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/career",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-contact.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-course-by-course-evaluation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/evaluation#service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-credential-evaluation-for-uscis.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/e-credential-evaluation-for-uscis",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-credential-evaluation-partners-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-credential-evaluation-partners.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/institutions",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-evaluation.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es/expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-expert-opinion-letter.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-fee-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-fee.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/pricing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-interpretation-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-interpretation-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-interpretation-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-interpretation.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es/certified-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/certified-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-notarized.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/certified-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-nus-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-nus-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-nus-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/notarization",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-nus.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/notarization",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-beijing-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-beijing-es.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-beijing-es.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-beijing-zh.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-beijing-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-beijing.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-beijing.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/beijing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-boston-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-boston-es.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-boston-es.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-boston-zh.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-boston-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-boston.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-boston.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-los-angeles-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-los-angeles-es.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-los-angeles-es.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-los-angeles-zh.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-los-angeles-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-los-angeles.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-los-angeles.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-miami-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-miami-es.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-miami-es.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/es/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-miami-zh.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-miami-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-miami.html",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-office-miami.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-nyc-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-nyc.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact#nyc",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-san-francisco-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-office-san-francisco.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact#sf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-pay-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-pay.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/payment",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-pre-evaluation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/#pre-evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-privacy-policy-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-privacy-policy-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-privacy-policy-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-privacy-policy-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-privacy-policy.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-privacy-policy.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-tech-translation-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-tech-translation-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-tech-translation-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/technical-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-tech-translation.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/technical-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-terms-of-use-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-terms-of-use-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-terms-of-use-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-terms-of-use-zh.php",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/e-terms-of-use.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-terms-of-use.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-translation-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-translation-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-translation-zh.php",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh/general-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-translation.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/general-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-visaservice-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-visaservice-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-visaservice-zh.php",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-visaservice.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-writing-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-writing-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-writing-zh.php",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e-writing.php",
+    "sources": [
+      "Apache target",
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_aboutus.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/about",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_authentication.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_boston.html",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_careers.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/career",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_chinavisaservice.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_contact.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_evaluation-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_evaluation.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_fee.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/pricing",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_interpretation.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_notarized-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_notarized.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/certified-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_nus.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/notarization",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_office_boston.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_office_nyc.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact#nyc",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_offices.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_pay.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/payment",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_pre_evaluation.html",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/#pre-evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_techtranslation.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/technical-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_testimonials.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/#stories",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_translation.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/general-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_visaservice.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/e_writing.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/eb-2-niw-credential-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/eb-2-niw-expert-opinion-letters.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/eb-2-niw-expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/education-credential-evaluation-purposes.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/education-evaluation-h1b-for-india.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/education-evaluation-h1b-for-india",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/education-evaluation-h1b.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/english.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/en",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/es-evaluation.html",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es/evaluation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/es/privacy",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/es/terms",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/evaluation_report.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "retained asset",
+    "destination": null,
+    "reason": "Served at the original URL",
+    "sourceExists": true
+  },
+  {
+    "path": "/expert-opinion-letter-h1b.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/florida-credential-evaluation-services.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/footer-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/footer-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/footer.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-for-immigration.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-in-usa-China.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-China",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-in-usa-csec.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-csec",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-in-usa-gce.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-in-usa-latin-america.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/foreign-credential-evaluation-in-usa-latin-america",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-credential-evaluation-in-usa-waec.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/foreign-high-school-diploma-evaluation-in-usa.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/georgia-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/georgia-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/google204a3ce937510196.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "owner verification",
+    "destination": null,
+    "reason": "Legacy Search Console verification file; retain only if owner confirms the property still uses this token",
+    "sourceExists": true
+  },
+  {
+    "path": "/h1b-expert-opinion-letters.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/h1b-expert-opinion-letters",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/header-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/header-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/header.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/home-content-es.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/home-content-zh.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/home-content.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "internal source",
+    "destination": null,
+    "reason": "PHP include/partial; not a standalone migration target",
+    "sourceExists": true
+  },
+  {
+    "path": "/home-es.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/es",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/home-zh.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/zh",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/home.php",
+    "sources": [
+      "Apache target",
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/en",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/houston-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/how-to-avoid-delays-with-foreign-credential-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/how-to-find-translation-services-online.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/how-to-find-translation-services-online",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/how-to-get-an-international-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/i-140-education-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/illinois-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/illinois-credential-evaluation-and-translations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/illinois-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/index.php",
+    "sources": [
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/international-transcript-evaluation.html",
+    "sources": [
+      "Apache alias",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/job_employment.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/location/boston/index.html",
+    "sources": [
+      "app redirect",
+      "sitemap"
+    ],
+    "status": "redirect",
+    "destination": "/zh/offices/boston",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-affordable-cheap-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-ata-certified-translation-and-interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-best-certified-translation-services-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-certified-and-notorized-translation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-certified-chinese-translation-service.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-certified-spanish-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-credential-evaluation-and-translations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-foreign-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-foreign-language-interpreter-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-international-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-office.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/los-angeles",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/los-angeles-uscis-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/los-angeles-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-affordable-cheap-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-ata-certified-translation-and-interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-certified-and-notorized-translation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-certified-chinese-translation-service.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-certified-spanish-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-credential-evaluation-and-translations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-foreign-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-international-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-interpreting-agencies-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-language-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-language-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-office.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/offices/miami",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/miami-uscis-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/miami-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-affordable-cheap-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-ata-certified-translation-and-interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-best-certified-translation-services-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-best-certified-translation-services-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-certified-and-notarized-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-and-notarized-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-certified-chinese-translation-service.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-certified-spanish-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-foreign-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-foreign-language-interpreter-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-foreign-language-interpreter-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-international-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-interpreting-agencies-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-professional-translation-services-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-technical-translation-services-company.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-technical-translation-services-company",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-uscis-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/new-york-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/new-york-visa-application-process-services.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/office-locations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/office-locations.php",
+    "sources": [
+      "Apache target",
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/contact",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/old-index.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "archive",
+    "destination": null,
+    "reason": "Historical backup; excluded from index and migration",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-affordable-cheap-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-affordable-cheap-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-ata-certified-translation-and-interpretation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-ata-certified-translation-and-interpretation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-best-education-credential-evaluation-agencies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-certified-chinese-translation-service.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-certified-chinese-translation-service",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-certified-spanish-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-certified-spanish-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-credential-evaluation-and-translations.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-credential-evaluation-and-translations",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-foreign-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-foreign-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-foreign-language-interpreter-agency.html",
+    "sources": [
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-international-credential-evaluation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-international-credential-evaluation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-interpreting-agencies-companies.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-interpreting-agencies-companies",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-office.html",
+    "sources": [
+      "Apache alias",
+      "app redirect",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/contact#sf",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-professional-translation-services-agency.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-professional-translation-services-agency",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-francisco-uscis-certified-translation-services.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-francisco-uscis-certified-translation-services",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/san-fransico-certified-and-notorized-translation.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/blog/san-fransico-certified-and-notorized-translation",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/sitemap.html",
+    "sources": [
+      "app redirect",
+      "sitemap",
+      "source file"
+    ],
+    "status": "redirect",
+    "destination": "/sitemap.xml",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": true
+  },
+  {
+    "path": "/texas-best-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/transcript-evaluation-service.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/usmle.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/visaapplication.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "removed scope",
+    "destination": null,
+    "reason": "Visa, editing or consular-authentication content excluded from rebuilt site; no unrelated redirect",
+    "sourceExists": true
+  },
+  {
+    "path": "/washington-state-education-credential-evaluation-agencies.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/what_we_can_do.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/where-to-evaluate-international-degree-in-usa.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/where-to-get-evaluation-for-uscis.html",
+    "sources": [
+      "sitemap",
+      "source file"
+    ],
+    "status": "review content",
+    "destination": null,
+    "reason": "Not in the approved retained catalog; source/content disposition required before cutover",
+    "sourceExists": true
+  },
+  {
+    "path": "/yz.php",
+    "sources": [
+      "source file"
+    ],
+    "status": "retired endpoint",
+    "destination": null,
+    "reason": "Legacy application backend; the new site links to the existing application portal",
+    "sourceExists": true
+  },
+  {
+    "path": "/zglgrzsqb.pdf",
+    "sources": [
+      "sitemap"
+    ],
+    "status": "review asset",
+    "destination": null,
+    "reason": "Unmigrated legacy PDF; contents/version and continued public availability need owner review",
+    "sourceExists": true
+  },
+  {
+    "path": "/zh/privacy",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/privacy",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  },
+  {
+    "path": "/zh/terms",
+    "sources": [
+      "app redirect"
+    ],
+    "status": "redirect",
+    "destination": "/terms",
+    "reason": "Retained equivalent page or section",
+    "sourceExists": false
+  }
+]

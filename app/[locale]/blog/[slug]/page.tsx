@@ -1,3 +1,5 @@
+import { ArticleStructuredData } from '@/components/blog/article-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import { renderContactReferences } from '@/lib/contact-html';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
@@ -27,31 +29,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale) || !entry) notFound();
   const post = slug === pilotSlug ? pilot : blogPosts[slug];
   if (!post) notFound();
-  return {
-    title: post.title, description: post.description,
-    robots: locale !== 'en' ? { index: false, follow: true } : undefined,
-    openGraph: { title: post.title, description: post.description, type: 'article', locale: 'en_US' },
-  };
+  return pageMetadata({ path: `/blog/${slug}`, locale, title: post.title, description: post.description, type: 'article' });
 }
 
 export default async function BlogArticlePage({ params }: Props) {
   const { locale, slug } = await params;
   const entry = articles.find(article => article.slug === slug);
   if (!hasLocale(routing.locales, locale) || !entry) notFound();
-  if (slug === pilotSlug) return <PilotArticlePage params={params} />;
-  const post = blogPosts[slug];
+  const post = slug === pilotSlug ? pilot : blogPosts[slug];
   if (!post) notFound();
+  const schema = <ArticleStructuredData locale={locale} slug={slug} title={post.title} description={post.description} publishedAt={entry.publishedAt} />;
+  if (slug === pilotSlug) return <>{schema}<PilotArticlePage params={params} /></>;
+  const bodyPost = blogPosts[slug];
   setRequestLocale(locale);
   const t = await getTranslations();
   const c = copy[locale];
-  const index = <ol>{post.toc.map(section => <li key={section.id}><a href={`#${section.id}`} lang="en">{section.title}</a></li>)}</ol>;
+  const index = <ol>{bodyPost.toc.map(section => <li key={section.id}><a href={`#${section.id}`} lang="en">{section.title}</a></li>)}</ol>;
   // All content is an offline, allowlisted import. Only known local link paths
   // are localized; external citations, images and source fragments stay intact.
-  const body = renderContactReferences(post.html, locale, 'en').replace(/href="(\/(?!\/)[^"#?]*)([^\"]*)"/g, (match, path: string, suffix: string) => {
+  const body = renderContactReferences(bodyPost.html, locale, 'en').replace(/href="(\/(?!\/)[^"#?]*)([^\"]*)"/g, (match, path: string, suffix: string) => {
     if (!['/', '/contact', '/evaluation', '/certified-translation', '/expert-opinion-letters', '/general-translation'].includes(path) && !path.startsWith('/blog/')) return match;
     return `href="${getPathname({ locale, href: path })}${suffix}"`;
   });
   return <>
+    {schema}
     <a className="skip-link" href="#main-content">{t('home.skip')}</a>
     <Navigation />
     <main id="main-content" className={styles.page}>
@@ -64,11 +65,11 @@ export default async function BlogArticlePage({ params }: Props) {
       </div></header>
       <div className={`wrap ${styles.layout}`}>
         <aside className={styles.sidebar}>
-          {post.toc.length > 0 && <nav aria-label={c.contents}><p>{c.contents}</p>{index}</nav>}
+          {bodyPost.toc.length > 0 && <nav aria-label={c.contents}><p>{c.contents}</p>{index}</nav>}
           <a className={styles.serviceLink} href={getPathname({ locale, href: '/evaluation' })}>{c.evaluation}<ArrowRight size={18} aria-hidden="true" /></a>
         </aside>
         <div className={styles.body}>
-          {post.toc.length > 0 && <details className={styles.mobileIndex}><summary>{c.contents}</summary><nav aria-label={c.contents}>{index}</nav></details>}
+          {bodyPost.toc.length > 0 && <details className={styles.mobileIndex}><summary>{c.contents}</summary><nav aria-label={c.contents}>{index}</nav></details>}
           <article aria-label={post.title} lang="en" className={styles.imported} dangerouslySetInnerHTML={{ __html: body }} />
           <div className={styles.closing}><a className="button" href={getPathname({ locale, href: '/contact' })}>{c.contact}<ArrowRight size={17} aria-hidden="true" /></a></div>
         </div>

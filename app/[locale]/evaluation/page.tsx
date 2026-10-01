@@ -1,3 +1,5 @@
+import { ServiceStructuredData } from '@/components/service/service-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = evaluationContent[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/evaluation', locale, title, description });
 }
 
 export default async function EvaluationPage({ params }: Props) {
@@ -46,8 +48,9 @@ export default async function EvaluationPage({ params }: Props) {
   const copy = (html: string) => html.replace(/\{\{(\w+)\}\}/g, (_, key: string) => replacements[key] ?? '');
   const groups = [...evaluationGroups, { id: 'preEvaluation', rates: preEvaluation }];
 
-  return <ServicePage locale={locale} title={c.title} label={t('navigation.evaluation')} eyebrow={c.eyebrow} nav={c.nav}
+  return <ServicePage path={'/evaluation'} locale={locale} title={c.title} label={t('navigation.evaluation')} eyebrow={c.eyebrow} nav={c.nav}
     actions={[{ label: t('home.hero.apply'), href: application }, { label: t('home.contact'), href: contactPath(locale) }]}>
+    <ServiceStructuredData service={'evaluation'} locale={locale} />
           <section id="define" aria-labelledby="define-title" className={styles.section}>
             <h2 id="define-title">{c.define.title}</h2><Copy html={c.define.html} />
           </section>

@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { siteOrigin, isPreview } from "@/lib/seo";
 import "../fonts.css";
 import "../globals.css";
 import "../reference-style.css";
@@ -21,6 +22,8 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: "metadata" });
   return {
+    metadataBase: new URL(siteOrigin),
+    robots: isPreview ? { index: false, follow: true } : undefined,
     manifest: "/site.webmanifest",
     title: t("title"),
     description: t("description"),

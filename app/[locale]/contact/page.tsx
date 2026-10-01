@@ -1,3 +1,6 @@
+import { officeGraph } from '@/lib/structured-data';
+import { StructuredData } from '@/components/structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -17,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const { title, description } = contactContent[locale];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: '/contact', locale, title, description });
 }
 
 export default async function ContactPage({ params }: Props) {
@@ -32,8 +35,9 @@ export default async function ContactPage({ params }: Props) {
     ...offices.map(office => ({ id: office.id, label: c.offices[office.id].name, child: true })),
     { id: 'other', label: c.sections.other },
   ];
-  return <ServicePage locale={locale} title={c.title} label={t('navigation.contact')} eyebrow={c.eyebrow} nav={nav}
+  return <ServicePage path={'/contact'} locale={locale} title={c.title} label={t('navigation.contact')} eyebrow={c.eyebrow} nav={nav}
     actions={[{ label: c.findOffice, href: '#offices' }]}>
+    <StructuredData data={officeGraph(locale)} />
     <section id="how" className={styles.section} aria-labelledby="contact-how-title">
       <h2 id="contact-how-title">{c.sections.how}</h2><p className={styles.intro}>{c.introHeading}</p>
       <CardRail className={styles.methods} label={c.sections.how}>{c.options.map((option, i) => <article data-rail-card className={styles.method} key={option.title}>

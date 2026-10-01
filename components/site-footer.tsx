@@ -1,3 +1,4 @@
+import { socialLinks } from "@/lib/organization";
 import { useLocale, useTranslations } from "next-intl";
 import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -7,12 +8,7 @@ import { SocialIcon } from "./social-icon";
 import styles from "./site-footer.module.css";
 
 const legacy = "https://www.americantranslationservice.com";
-const social = [
-  ["LinkedIn", "https://www.linkedin.com/company/american-education-&-translation-services-aet-"],
-  ["Yelp", "https://www.yelp.com/biz/american-education-and-translation-services-malden"],
-  ["Facebook", "https://www.facebook.com/MiamiAET/"],
-  ["Google", "https://www.google.com/search?q=american+education+translation+services&oq=american+education+translation+services&aqs=chrome..69i57j69i60l2j35i39i362l3j46i39i362j35i39i362.213j0j7&sourceid=chrome&ie=UTF-8"],
-] as const;
+
 
 export function SiteFooter() {
   const t = useTranslations();
@@ -38,7 +34,7 @@ export function SiteFooter() {
               <Image src="/brand/aet-logo-footer.svg" alt="American Education and Translation Services,CORP (AET)" width={520} height={120} />
             </a>
             <nav className={styles.social} aria-label={t("footer.socialLabel")}>
-              {social.map(([label, href]) => (
+              {socialLinks.map(([label, href]) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={t("footer.newTab", { name: label === "Google" || label === "Yelp" ? t("footer.reviewLink", { name: label }) : label })}>
                   <SocialIcon name={label} />{label}
                 </a>

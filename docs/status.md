@@ -2,6 +2,128 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### SEO local implementation and final acceptance — September 30, 2026
+
+- Completed the local SEO checklist implementation for the approved 133-page
+  catalog: 80 BlogPosting entities, 130 BreadcrumbList entities and 133 localized
+  static sharing cards. Article dates preserve the source catalog (46 dated,
+  34 undated). Sixty-four articles use existing inline images; sixteen omit
+  image rather than promote archived reports/reviews/certificates or logo artwork.
+  No author or modification date was invented.
+- Replaced clipped service descriptions with complete localized sentences.
+  Open Graph and Twitter metadata use the same canonical page and image.
+  Cards reuse the original logo, palette and actual page titles; system fonts
+  are rasterized into PNGs and are not redistributed. Total PNG size is 7.1 MB.
+- Reconciled all 208 old sitemap entries and related source/alias inventories
+  into 448 unique paths. Added 27 redirects, bringing the application total to
+  277. Chinese service/office aliases and known PDF relative-path aliases now
+  resolve. Each mapping retains its query and required destination anchor.
+- Added reusable `scripts/check-seo.py`, `scripts/inventory-legacy-seo.py`, and
+  `scripts/generate-share-images.py`; expanded the structured-data checker for
+  multi-script graphs, Article/Breadcrumb coverage and article-image visibility.
+- Passed typecheck, all 259 translation messages per locale, whitespace checks,
+  133 canonical/sitemap/hreflang/OG/Twitter/image checks, 277 redirect checks,
+  eight untranslated fallbacks, two payment-result noindex checks, and genuine
+  404 responses for 162 unmapped old paths. Passing 404 behavior does not approve
+  retiring the held content. No production build was run.
+- Schema.org hosted code validation reported zero errors and warnings for
+  representative Boston Article/Breadcrumb, Expert Opinion Service/Offers, and
+  Contact/six-office graphs. The full catalog also passed the official-vocabulary
+  checker. These checks parse rendered markup, not a deployed production crawl.
+- Google Rich Results Test code mode confirmed valid supported items:
+  [Boston article](https://search.google.com/test/rich-results/result?id=BA_XXuvnjHlki1_QBLxF0g)
+  and [Contact directory](https://search.google.com/test/rich-results/result?id=2P3h8Wk5hISMr42OuJl9jQ).
+  No critical errors. The Boston source has optional missing author/image warnings;
+  business entities also have non-critical recommendations. Missing verified facts
+  were not fabricated to remove optional warnings. Results can expire.
+- Codex in-app browser verified the English article desktop layout and Chinese
+  Pricing desktop view. Its viewport override did not take effect (still 1280px),
+  so the required mobile check used the prescribed Playwright CLI fallback.
+  Both Chinese Pricing and the English Boston article passed at 390 × 844 with
+  document width 390 and no horizontal overflow. Browser screenshots are in
+  `output/playwright/seo-pricing-mobile.png`, `seo-article-mobile.png`, and
+  `seo-google-results.jpg`. No UI copy/layout was changed by the schema additions.
+- Local verification used a fresh isolated source copy on port 3035 to load the
+  complete redirect table. The temporary server and Playwright session are now
+  stopped. The owner's port-3021 server remains untouched and
+  needs a restart to pick up redirect imports. Deployment, push and Search Console
+  submission remain owner actions.
+- Remaining launch gates: disposition of 71 content URLs (including 30 previously
+  held article families and other standalone/Chinese sources), nine legacy PDFs,
+  one Search Console verification file, hosted preview noindex and production
+  domain/redirect/crawl checks. See `docs/seo-legacy-urls.md`; none is represented
+  as completed by this local acceptance.
+
+### Organization, office and service structured data — September 30, 2026
+
+- Added safely serialized, server-rendered JSON-LD to 38 pages: homepage/About
+  Organization graphs, six Contact-directory branches and four office-detail
+  templates as LocalBusiness, and seven service types across 17 translated pages.
+  Preserved legacy organization/office entity IDs on the confirmed production host.
+  Untranslated Spanish service fallbacks omit duplicate schema.
+- Postal fields now generate both the existing English address strings and office
+  JSON-LD. Verified all six display addresses against the prior catalog. Phone,
+  email and hours remain shared; no Beijing hours/postcode were invented. Social
+  links come from the footer's existing public list; Boston Yelp belongs to its
+  branch, and the Google search link is excluded from sameAs.
+- Offers use the visible shared pricing records, including the estimated-price
+  label, starting prices, ranges, units, turnaround and interpretation conditions.
+  Quoted services have no numeric price. Expert Opinion Letters uses Service and
+  valid Offer/UnitPriceSpecification records ($620/$700/$800), not the legacy
+  Product/invalid USD type or hardcoded $100 price.
+- Passed TypeScript, i18n, whitespace and the reusable
+  `scripts/check-structured-data.py` checks on the owner's existing port 3021.
+  Checked all 133 sitemap pages, 38 JSON-LD graphs, four untranslated fallbacks,
+  logo availability, official Schema.org vocabulary domains/object ranges,
+  graph references and visible contact/price facts. A direct serializer test also
+  confirmed script-closing input is escaped while Unicode/JSON values round-trip.
+- Closed the prior local redirect acceptance gap using an isolated temporary
+  source copy on port 3035: all 28 new permanent redirects retained query strings
+  and target anchors, and all 133 sitemap routes plus eight fallback and two
+  payment-result routes passed metadata/indexing checks. The temporary webpack
+  preview initially had a corrupt generated prerender manifest; clearing only its
+  generated cache and warming routes sequentially resolved the problem.
+- Codex in-app browser passed the contact directory on port 3021, old English
+  homepage entry with a saved Chinese preference on 3035, and 390px Chinese
+  Beijing-office/Spanish expert-price states. The three expert-price tiers matched
+  JSON-LD. Mobile pages had no horizontal overflow; final browser logs had no
+  errors/warnings. Temporary viewport overrides were reset.
+- Temporary command: `WATCHPACK_POLLING=true pnpm exec next dev --webpack --port 3035`.
+  That process is stopped. The owner's 3021 process was not restarted and still
+  needs a restart for its imported redirect table; page/component changes were
+  verified through its existing hot reload.
+- Updated the SEO checklist. Article/Breadcrumb markup, sharing images and full
+  remaining legacy URL reconciliation are still pending, as are hosted Rich
+  Results Test/Search Console/deployment checks. No build, commit, push or deployment.
+
+### SEO foundation — September 30, 2026
+
+- Created `docs/seo-checklist.md` with staged acceptance criteria. The owner
+  confirmed `https://www.americantranslationservice.com` as the production origin.
+- Added shared URL/metadata helpers, canonical and Open Graph URLs across public
+  pages, and HTML hreflang for actual translations. Removed generic middleware
+  alternates that advertised untranslated/noindex pages or the preview host.
+  English-only blog/career variants and Spanish service fallbacks canonicalize
+  to English and use noindex; legal routing and payment-result noindex remain.
+- Added robots.txt and a sitemap containing 133 canonical pages, including 80
+  English articles. Omitted speculative modification dates. Vercel previews have
+  noindex metadata; hosted preview behavior still requires deployment verification.
+- Added 28 historical entry-point redirects, including the legacy HTML sitemap.
+  English homepage aliases use `/en` to override a saved non-English preference
+  before the existing locale middleware resolves to `/`. Full legacy URL/host
+  migration remains open; this is not a complete redirect inventory.
+- Passed TypeScript, i18n and whitespace checks. HTTP verification passed for all
+  133 sitemap pages: successful direct responses, self-canonical URLs, matching
+  metadata/sitemap alternates, Open Graph URLs, and no unintended noindex. Eight
+  untranslated variants and two payment-result routes passed their indexing checks.
+- Codex in-app browser inspected the English desktop homepage and 390px Chinese
+  homepage/article states. Canonical and language metadata matched expectations;
+  mobile pages had no horizontal overflow. The Chinese legacy homepage preserved
+  its query string. Final new redirect acceptance awaits the owner's restart of
+  port 3021: the running process still caches the earlier imported redirect table.
+- Organization, office, service and article JSON-LD remain next in the checklist.
+  No production build, commit, push, deployment or Search Console action performed.
+
 ### Complete institution directory — September 30, 2026
 
 - Added `/institutions`, `/zh/institutions` and `/es/institutions` through one

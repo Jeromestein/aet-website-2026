@@ -1,3 +1,6 @@
+import { serviceDescription } from '@/lib/service-descriptions';
+import { ServiceStructuredData } from '@/components/service/service-structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale, useLocale, useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -33,10 +36,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, service } = await params;
   if (!hasLocale(routing.locales, locale) || !validService(service)) notFound();
-  const { content, hasLocaleContent } = getOtherServiceContent(service, locale);
-  const description = content.sections.find(section => section.html)?.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
-  return { title: content.title, description, alternates: { canonical: getPathname({ locale, href: `/${service}` }) },
-    robots: hasLocaleContent ? undefined : { index: false, follow: true }, openGraph: { title: content.title, description } };
+  const { content } = getOtherServiceContent(service, locale);
+  const description = serviceDescription(service, locale);
+  return pageMetadata({ path: `/${service}`, locale, title: content.title, description });
 }
 
 function SectionContent({ service, section }: { service: ServiceSlug; section: ServiceSection }) {
@@ -88,9 +90,10 @@ export default async function OtherServicePage({ params }: Props) {
   const action = service === 'technical-translation' ? { label: content.sections.find(section => section.id === 'apply')!.title, href: 'mailto:tech@americantranslationservice.com' }
     : { label: content.sections.find(section => section.id === actionId)?.title ?? t('home.contact'), href: `#${actionId}` };
 
-  return <ServicePage locale={locale} title={content.title} titleLang={hasLocaleContent ? undefined : 'en'} label={t(`navigation.${serviceLabels[service]}`)}
+  return <ServicePage path={`/${service}`} locale={locale} title={content.title} titleLang={hasLocaleContent ? undefined : 'en'} label={t(`navigation.${serviceLabels[service]}`)}
     nav={sections.map(({ id, title }) => ({ id, label: title }))}
     actions={[action, { label: t('home.contact'), href: contactPath(locale) }]}>
+    <ServiceStructuredData service={service} locale={locale} />
     {!hasLocaleContent && <p className={styles.languageNotice} lang="es">El contenido de este servicio está disponible en inglés; la traducción al español aún no está disponible.</p>}
     <div lang={hasLocaleContent ? undefined : 'en'}>{sections.map(section => section.id === 'shipping-options' ? <details key={section.id} id={section.id} className={`${styles.section} ${styles.disclosure}`}>
       <summary>{section.title}</summary><SectionContent service={service} section={section} />

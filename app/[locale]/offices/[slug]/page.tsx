@@ -1,3 +1,6 @@
+import { officeGraph } from '@/lib/structured-data';
+import { StructuredData } from '@/components/structured-data';
+import { pageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -21,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale) || !office) notFound();
   const title = `${contactContent[locale].offices[office.id].name} | AET`;
   const description = officeContent[locale].regions[office.id as keyof typeof officeContent.en.regions];
-  return { title, description, openGraph: { title, description } };
+  return pageMetadata({ path: `/offices/${slug}`, locale, title, description });
 }
 export default async function OfficePage({ params }: Props) {
   const { locale, slug } = await params;
@@ -32,9 +35,10 @@ export default async function OfficePage({ params }: Props) {
   const contact = contactContent[locale];
   const name = contact.offices[office.id].name;
   const services = office.id === 'bj' ? c.beijingServices : c.serviceItems;
-  return <ServicePage locale={locale} title={name} label={name} eyebrow={contact.offices[office.id].title}
+  return <ServicePage path={`/offices/${slug}`} locale={locale} title={name} label={name} eyebrow={contact.offices[office.id].title}
     nav={(['about', 'contact', 'services', 'history', 'guarantee'] as const).map(id => ({ id, label: c[id] }))}
     actions={[{ label: c.quote, href: '#contact' }, { label: c.all, href: contactPath(locale, 'offices') }]}>
+    <StructuredData data={officeGraph(locale, [office])} />
     <section id="about" className={styles.section} aria-labelledby="about-title">
       <h2 id="about-title">{c.about}</h2>
       <p className={styles.lead}>{c.regions[office.id as keyof typeof c.regions]}</p><p>{c.intro}</p>

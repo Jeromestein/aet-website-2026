@@ -82,7 +82,16 @@ email workflow. The three legacy notarized PHP entry points redirect to it.
 See [service-page template](docs/service-page-template.md) before adding services
 and [translation provenance](content/certified-translation/README.md) for sources.
 
-Before replacing the production domain, migrate those routes or host the legacy site at a separate domain and update these URLs; otherwise they will point back to missing pages on the replacement site. This homepage is suitable for a separate Vercel preview immediately. Configure canonical URLs and the full legacy redirect map only when the production domain and migration plan are settled.
+The production origin is `https://www.americantranslationservice.com`, confirmed
+by the owner on September 30, 2026 and centralized in `lib/seo.ts`. Canonical URLs,
+Open Graph URLs, language alternates and sitemap entries use this origin even
+in local previews. Vercel preview deployments emit noindex metadata. Other public
+preview hosts need equivalent noindex configuration before publication.
+
+The complete legacy URL inventory is in `docs/seo-legacy-urls.md`. Before replacing
+the production domain, resolve its held content, PDF and owner-verification rows. Known retained entry points redirect to local routes;
+removed services are not silently redirected to the homepage. See the SEO checklist
+for verification and remaining launch work.
 
 ## Service scope
 
@@ -109,6 +118,7 @@ pages or change the separate application portal.
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
 - [Migration checklist](docs/migration-checklist.md): legacy page scope, priorities, language coverage, blog inventory, and launch dependencies.
+- [SEO checklist](docs/seo-checklist.md): ordered work and acceptance checks for redirects, indexing, metadata, and structured data.
 - [Agent guidance](AGENTS.md): reading order and project working rules.
 
 The design guide specifies intended behavior; check the status file before treating a requirement as implemented.
@@ -154,8 +164,12 @@ fall back to English; development logs and `pnpm check:i18n` report omissions.
 The check also validates message syntax, interpolation arguments, and preservation
 of the original English testimonials. Translated reviews are labeled as translations;
 brand artwork, institution names, and existing application screenshots are retained.
-Localized titles, descriptions, HTML language attributes, and alternate-language
-response links are supplied. Canonical URLs await the production-domain decision.
+Localized titles, descriptions, HTML language attributes, absolute canonical URLs
+and HTML alternate-language links are supplied. Alternates include only genuine
+translations and always use the confirmed production host. English-only blog and
+career variants, and untranslated service fallbacks, canonicalize to English and
+use noindex outside English; only indexable variants appear in the sitemap.
+Legal pages retain their English-only redirects.
 
 After moving routes, run `pnpm exec next typegen` if existing generated route types
 still reference the old paths, then run `pnpm typecheck`. This does not build the site.
@@ -215,3 +229,56 @@ accounts) stay separately configured and must not follow general contact email e
 
 Footer office links and Contact's Office details links use the localized office
 routes. Legacy `e-office-{slug}[{-zh,-es}].php` and `.html` URLs redirect there.
+
+## Structured data
+
+`lib/structured-data.ts` generates Organization, LocalBusiness and Service graphs.
+`components/structured-data.tsx` safely serializes them into server-rendered JSON-LD.
+Homepage/About identify the organization; Contact describes all six offices; each
+local office page describes its branch. Seven retained service types use the shared
+provider ID. Untranslated service fallback pages omit duplicate service markup.
+
+Office postal fields in `lib/contact.ts` also generate the existing English display
+address; edit these fields when updating an address. Localized Beijing addresses
+remain in the same record. Existing social links are shared with the footer through
+`lib/organization.ts`; generic search links are not organization identity links.
+
+Service offers read the visible shared rates from `lib/pricing.ts`, including
+estimated/starting/range prices, units, turnaround and applicable minimums. Do not
+add a second pricing table inside the schema module. Run
+`python3 scripts/check-structured-data.py` against the existing local server to
+check JSON parsing, Schema.org properties, entity references and visible facts.
+The script uses Python's standard library and downloads the official vocabulary;
+`--vocabulary /path/to/cached.json` supports a previously downloaded copy.
+Google rich-result eligibility and post-deployment inspection remain separate checks.
+
+### SEO maintenance checks
+
+Use the existing preview. Restart it after changing the redirect configuration.
+Export configured redirects without a production build:
+
+```sh
+node -e 'require("next/dist/server/config").default("phase-development-server",process.cwd()).then(async c=>require("fs").writeFileSync("/tmp/aet-redirects.json",JSON.stringify(await c.redirects())))'
+python3 scripts/check-seo.py --redirects /tmp/aet-redirects.json
+python3 scripts/check-structured-data.py
+python3 scripts/inventory-legacy-seo.py --redirects /tmp/aet-redirects.json
+```
+
+`check-seo.py` checks sitemap/canonical/hreflang, sharing image dimensions,
+redirect destinations/queries/anchors, fallback noindex and legacy 404 behavior.
+`check-structured-data.py` checks Schema.org vocabulary and visible facts.
+Use `--base-url` for a different preview. The inventory script reads the sibling
+legacy checkout; it does not execute PHP or alter the old site.
+
+Sharing cards are committed PNGs under `public/share`, so serving them does not
+require a font service or image-generation endpoint. After page title changes,
+regenerate them with `python3 scripts/generate-share-images.py` (Pillow required).
+The script defaults to macOS Arial/Arial Unicode fonts; use `--font` and
+`--cjk-font` with available equivalent fonts elsewhere. Fonts are rasterized,
+not copied or redistributed. The unchanged AET logo follows ASSETS.md.
+
+`content/blog/schema-images.json` selects existing inline article imagery of at
+least 50,000 pixels, excluding archived reports, reviews, certificates and logos.
+Recheck image relevance against the article when its content changes. Missing
+verified author, image or date information stays absent from Article markup.
+The publication dates continue to come from the original-source date catalog.
