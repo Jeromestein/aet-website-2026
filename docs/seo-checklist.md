@@ -57,6 +57,10 @@ after its stated verification passes; local completion does not imply deployment
 - [x] Add robots.txt with the canonical sitemap URL and Vercel preview noindex.
 - [ ] Verify preview indexing controls on actual hosted preview deployments.
 - [x] Resolve the legacy /sitemap.html destination.
+- [x] Remove old-host body links (October 1): 246 → 0 across the 13 affected
+  page families in three locales. Held article references retain text without
+  hyperlinks. All 299 page variants, 4,861 local links and 318 unique page/file
+  targets passed direct-response, locale and fragment checks.
 - [x] Verify served metadata, language alternates, sitemap URLs and status codes.
 
 Passed local acceptance on September 30: all 133 sitemap URLs (including 80

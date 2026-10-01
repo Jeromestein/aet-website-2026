@@ -15,7 +15,7 @@
     {
       "id": "price",
       "title": "价格和申请",
-      "html": "<p>如果您需要翻译服务，请联系\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#miami\" rel=\"noopener noreferrer\" target=\"_blank\">迈阿密办公室</a>、\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#boston\" rel=\"noopener noreferrer\" target=\"_blank\">波士顿办公室</a>\n        或\n        <a href=\"https://www.americantranslationservice.com/e-contact.php#la\" rel=\"noopener noreferrer\" target=\"_blank\">洛杉矶办公室</a>\n        获取更多信息。\n      </p>"
+      "html": "<p>如果您需要翻译服务，请联系\n        <a href=\"/contact#miami\" rel=\"noopener noreferrer\" target=\"_blank\">迈阿密办公室</a>、\n        <a href=\"/contact#boston\" rel=\"noopener noreferrer\" target=\"_blank\">波士顿办公室</a>\n        或\n        <a href=\"/contact#la\" rel=\"noopener noreferrer\" target=\"_blank\">洛杉矶办公室</a>\n        获取更多信息。\n      </p>"
     }
   ]
 }

@@ -11,8 +11,8 @@ Definitions, formats, uses, benefits, application instructions, coverage, langua
 and all four FAQ answers retain each source's wording after whitespace and markup
 normalization. Source statements about acceptance, notarization, PDF/paper formats,
 ATA membership, experience and office coverage are retained historical claims,
-not newly verified business or legal guidance. Links to unmigrated destinations
-remain on the legacy domain. The source's commented online application is omitted;
+not newly verified business or legal guidance. Retained internal links use current local routes
+and the active interface locale. The source's commented online application is omitted;
 the page uses its active choose-office, email-documents, and payment instructions.
 
 ## Shared catalog exceptions
@@ -28,7 +28,7 @@ exclusion, general-translation link and shipping policy are retained outside tab
 
 Allowed markup: paragraphs, links, bold/emphasis, line breaks, h3, lists and images.
 Removed Bootstrap/layout wrappers, inline styles, event attributes, scripts and
-comments. Link targets use explicit legacy URLs or local downloads. Blank-target
+comments. Link targets use localized internal routes, external references or local downloads. Blank-target
 links use noopener/noreferrer; images have dimensions, alternative text and lazy
 loading. This renderer must never accept user-submitted HTML.
 

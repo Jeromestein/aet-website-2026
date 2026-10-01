@@ -7,7 +7,7 @@ import { ChevronDown, Globe2, GraduationCap, Handshake, Users } from 'lucide-rea
 import { routing } from '@/i18n/routing';
 import { ServicePage } from '@/components/service/service-page';
 import { CardRail } from '@/components/card-rail';
-import { localizeContactLinks } from '@/lib/contact';
+import { localizeContentLinks } from '@/lib/content-links';
 import content from '@/content/career/en.json';
 import copyStyles from '@/components/service/service-page.module.css';
 import styles from './career.module.css';
@@ -35,7 +35,7 @@ export default async function CareerPage({ params }: Props) {
   // Only local Contact destinations are adapted to the active site language.
   function CareerCopy({ html, className = '' }: { html: string; className?: string }) {
     return <div className={`${copyStyles.copy} ${className}`}
-      dangerouslySetInnerHTML={{ __html: localizeContactLinks(html, locale as 'en' | 'zh' | 'es') }} />;
+      dangerouslySetInnerHTML={{ __html: localizeContentLinks(html, locale as 'en' | 'zh' | 'es') }} />;
   }
   const nav = [
     ...content.groups.map(group => ({ id: group.id, label: group.title })),
@@ -73,7 +73,7 @@ export default async function CareerPage({ params }: Props) {
         <CareerCopy html={content.apply.html} className={styles.application} />
       </section>
       <section className={styles.closing}>
-        <h2 dangerouslySetInnerHTML={{ __html: localizeContactLinks(content.closing.headingHtml, locale) }} />
+        <h2 dangerouslySetInnerHTML={{ __html: localizeContentLinks(content.closing.headingHtml, locale) }} />
         <CareerCopy html={content.closing.html} />
       </section>
     </div>

@@ -61,10 +61,13 @@ remain usable without enclosing the disclosure control in an interactive link.
 Tables scroll within their container on narrow screens.
 
 Known service and office links now target the appropriate local service or
-Contact section, preserving the active interface locale. Seventy-three links from
-retained prose to excluded articles are converted to plain text; no excluded
-article content is imported or merged. External reference links and unmigrated
-non-blog resources remain at their source destinations.
+Contact section, preserving the active interface locale. References to held or
+excluded articles retain their text without a hyperlink; no excluded article
+content is imported or merged. The October 1 follow-up removes the remaining
+old-host body links and uses the shared `lib/content-links.ts` renderer. External
+reference links and the separate application portal keep their destinations.
+Run `python3 scripts/check-content-links.py --url http://localhost:3021` after
+imports to detect old URLs, wrong-language destinations or broken fragments.
 
 `redirects.json` maps 78 PHP entries, their 77 root HTML aliases and two standalone
 root HTML sources to 80 local article routes: **157 permanent redirects**, preserving query strings

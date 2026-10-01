@@ -45,12 +45,7 @@ export default async function BlogArticlePage({ params }: Props) {
   const t = await getTranslations();
   const c = copy[locale];
   const index = <ol>{bodyPost.toc.map(section => <li key={section.id}><a href={`#${section.id}`} lang="en">{section.title}</a></li>)}</ol>;
-  // All content is an offline, allowlisted import. Only known local link paths
-  // are localized; external citations, images and source fragments stay intact.
-  const body = renderContactReferences(bodyPost.html, locale, 'en').replace(/href="(\/(?!\/)[^"#?]*)([^\"]*)"/g, (match, path: string, suffix: string) => {
-    if (!['/', '/contact', '/evaluation', '/certified-translation', '/expert-opinion-letters', '/general-translation'].includes(path) && !path.startsWith('/blog/')) return match;
-    return `href="${getPathname({ locale, href: path })}${suffix}"`;
-  });
+  const body = renderContactReferences(bodyPost.html, locale, 'en');
   return <>
     {schema}
     <a className="skip-link" href="#main-content">{t('home.skip')}</a>

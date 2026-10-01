@@ -156,8 +156,10 @@ to `/`, so English remains selectable after visiting another locale.
 
 The header language selector is available on desktop and mobile. Switching keeps
 the current pathname, query parameters, and fragment. Home and logo links stay in
-the active locale. External legacy pages and the separate application portal keep
-their existing destinations and manage their own language settings.
+the active locale. Imported HTML uses `lib/content-links.ts` to preserve that
+locale on internal page links; downloads and English-only legal URLs stay
+language-neutral. Held article references retain their text without a link.
+External references and the separate application portal keep their destinations.
 
 Edit corresponding keys in all three `messages/*.json` files. Missing messages
 fall back to English; development logs and `pnpm check:i18n` report omissions.
@@ -259,11 +261,14 @@ Export configured redirects without a production build:
 
 ```sh
 node -e 'require("next/dist/server/config").default("phase-development-server",process.cwd()).then(async c=>require("fs").writeFileSync("/tmp/aet-redirects.json",JSON.stringify(await c.redirects())))'
+python3 scripts/check-content-links.py --url http://localhost:3021
 python3 scripts/check-seo.py --redirects /tmp/aet-redirects.json
 python3 scripts/check-structured-data.py
 python3 scripts/inventory-legacy-seo.py --redirects /tmp/aet-redirects.json
 ```
 
+`check-content-links.py` checks imported HTML and all 299 page variants for old
+body links, locale consistency, direct local destinations and valid fragments.
 `check-seo.py` checks sitemap/canonical/hreflang, sharing image dimensions,
 redirect destinations/queries/anchors, fallback noindex and legacy 404 behavior.
 `check-structured-data.py` checks Schema.org vocabulary and visible facts.

@@ -80,14 +80,6 @@ export function contactPath(locale: Locale, anchor?: string) {
   return getPathname({ locale, href: '/contact' }) + (anchor ? `#${anchor}` : '');
 }
 
-/** Redirect reviewed legacy Contact links inside checked-in content HTML. */
-export function localizeContactLinks(html: string, locale: Locale) {
-  const localized = html.replace(/href="(?:https?:\/\/(?:www\.)?americantranslationservice\.com\/)?e-contact(?:-zh|-es)?\.php(?=[#?\"])/gi,
-    `href="${contactPath(locale)}`);
-  return localized.replace(/href="(?:https?:\/\/(?:www\.)?americantranslationservice\.com)?\/?e-office-(miami|boston|los-angeles|beijing)(?:-zh|-es)?\.(?:php|html)(?=[#?\"])/gi,
-    (_, slug: string) => `href="${officePath(locale, featuredOffices.find(office => office.slug === slug)!)}`);
-}
-
 /** Office data is shared by Contact, detail pages, article contacts and mailing addresses. */
 export const featuredOffices = offices.filter(office => office.slug);
 export function getOffice(id: OfficeId): Office {

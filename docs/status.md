@@ -2,6 +2,54 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Body-link cleanup — October 1, 2026
+
+- Reproduced 246 old-host body links on 13 page families across English, Chinese
+  and Spanish (39 rendered pages). The same 299-page crawl now finds zero.
+  Of those 246 references, 42 now resolve directly to local destinations;
+  204 references to ten held article targets retain their text without links.
+- Updated the imported HTML itself, including contact links already rewritten
+  by the old renderer: 145 source references normalized and 96 held references
+  unlinked. Source counts differ from rendered counts because shared content and
+  English-only articles appear across locales. No article was approved, added,
+  retired or redirected by this cleanup.
+- Added one shared HTML link localizer for services, application instructions,
+  careers and blog bodies, including Evaluation's separately rendered pricing
+  headings. Locale changes preserve query strings and section fragments;
+  downloads, legal pages, external references and the application portal retain
+  their intended destinations. Fixed the misspelled San Francisco office URL
+  to the existing Contact office section. Legacy production files are untouched.
+- `scripts/check-content-links.py` passed on the owner's existing port 3021:
+  782 source HTML links, 299 rendered page variants, 4,861 local links and 318
+  unique page/file targets. Every local target returned directly, all fragments
+  existed and page links retained their locale. Body text on all 299 pages was
+  identical to the pre-edit crawl. Existing Blog checks passed for 79 imported
+  bodies, including source prose hashes, markup, images and contents anchors.
+- Typecheck, all 259 messages per locale and whitespace checks passed. Direct
+  localizer checks covered query/fragment retention, repeat rendering, locale
+  switching, and external/file/legal exclusions. No production build was run.
+- Codex in-app browser: desktop Chinese Evaluation pricing links and the actual
+  jump to Chinese Expert Opinion Letters passed. At 390 x 844, the cleaned
+  Chinese Evaluation related-article list and the linked education article
+  rendered correctly, with document width 390 and Chinese navigation preserved.
+  The related article's existing new-tab action did not open a tab in the in-app
+  browser; its inspected href was opened directly for the target-page check.
+  Viewport override was reset. Screenshots: `output/playwright/content-links-desktop-2026-10-01.png`
+  and `output/playwright/content-links-mobile-2026-10-01.png`.
+- The ten article targets below remain held for content/disposition review.
+  Their removed hyperlinks do not resolve the broader SEO launch gates:
+  - `/Indian-degree-evaluation-in-USA.html`
+  - `/best-education-credential-evaluation-agencies.html`
+  - `/credential-evaluation-for-emloyment.html`
+  - `/diploma-translation-and-evaluation.html`
+  - `/education-credential-evaluation-purposes.html`
+  - `/education-evaluation-h1b.html`
+  - `/foreign-credential-evaluation-for-immigration.html`
+  - `/how-to-avoid-delays-with-foreign-credential-evaluation.html`
+  - `/how-to-get-an-international-evaluation.html`
+  - `/international-transcript-evaluation.html`
+- No server restart, commit, push or deployment was performed.
+
 ### SEO local implementation and final acceptance — September 30, 2026
 
 - Completed the local SEO checklist implementation for the approved 133-page

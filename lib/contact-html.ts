@@ -1,5 +1,6 @@
 import references from '@/content/contact/legacy-references.json';
-import { getOffice, localizeContactLinks, officeHours, phoneHref, type OfficeId } from '@/lib/contact';
+import { getOffice, officeHours, phoneHref, type OfficeId } from '@/lib/contact';
+import { localizeContentLinks } from '@/lib/content-links';
 import type { Locale } from '@/i18n/routing';
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
@@ -19,5 +20,5 @@ export function renderContactReferences(html: string, locale: Locale, contentLoc
     const value = office[reference.field as keyof typeof office];
     return escapeHtml(Array.isArray(value) ? value[reference.index ?? 0] ?? '' : typeof value === 'string' ? value : '');
   }).replace(/href="tel:([^"]+)"/g, (_, number: string) => `href="${phoneHref(number)}"`);
-  return localizeContactLinks(updated, locale);
+  return localizeContentLinks(updated, locale);
 }

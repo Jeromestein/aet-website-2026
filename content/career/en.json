@@ -3,7 +3,7 @@
   "sourceSha256": "58a94e196cd691ce92706e3ace3e8621fd8ecfce51da65af362d230fbef04131",
   "title": "Join the AET Team!",
   "eyebrow": "Career Opportunities",
-  "introHtml": "<p> American Education and Translation Services (AET) is a leading provider of translation, interpretation, and educational consulting services. We are always seeking talented professionals to join our dynamic team across our offices in Miami, Boston, New York, Los Angeles, San Francisco, and Irvine. <br/><br/>At AET, we offer rewarding careers in education and translation services, providing opportunities for professional growth in a multicultural environment. Whether you're interested in translation, interpretation, credential evaluation, or business consulting, we have positions that match your skills and career goals. <br/><br/> <a href=\"e-contact.php\"><b>Contact us </b></a>to learn more about career opportunities! </p>",
+  "introHtml": "<p> American Education and Translation Services (AET) is a leading provider of translation, interpretation, and educational consulting services. We are always seeking talented professionals to join our dynamic team across our offices in Miami, Boston, New York, Los Angeles, San Francisco, and Irvine. <br/><br/>At AET, we offer rewarding careers in education and translation services, providing opportunities for professional growth in a multicultural environment. Whether you're interested in translation, interpretation, credential evaluation, or business consulting, we have positions that match your skills and career goals. <br/><br/> <a href=\"/contact\"><b>Contact us </b></a>to learn more about career opportunities! </p>",
   "groups": [
     {
       "id": "full-time",
@@ -124,7 +124,7 @@
     "html": "<p> <strong>Application Process:</strong> <br/>1. Review the job descriptions above and identify positions that match your qualifications and interests. <br/>2. Prepare your resume and cover letter tailored to the specific position. <br/>3. Send your application materials to the specified email address for each position. <br/>4. Include any relevant certifications, portfolios, or work samples as appropriate. <br/><br/> <strong>General Application Information:</strong> <br/>• For Boston office positions: <b>boston@aet21.com</b> <br/>• For Miami office positions: <b>info@aet21.com</b> <br/>• For New York office positions: <b>nyc@aet21.com</b> <br/>• For general inquiries: <b>service@aet21.com</b> <br/><br/> <strong>What to Include:</strong> <br/>• Updated resume with relevant experience <br/>• Cover letter explaining your interest and qualifications <br/>• Language proficiency certificates (if applicable) <br/>• Portfolio or work samples (for translation/design positions) <br/>• References upon request </p>"
   },
   "closing": {
-    "headingHtml": "<a href=\"e-contact.php\"><b>Contact us </b></a>for Career Opportunities!",
+    "headingHtml": "<a href=\"/contact\"><b>Contact us </b></a>for Career Opportunities!",
     "html": "<p> Ready to join our team? We look forward to hearing from you! AET is an equal opportunity employer committed to diversity and inclusion in the workplace. </p>"
   }
 }

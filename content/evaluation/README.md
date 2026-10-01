@@ -30,8 +30,9 @@ also live in that shared catalog. `{{documentPrice}}`, `{{extraCopyPrice}}`,
 Price labels and formatting follow the new Pricing module. Competitor figures
 in localized comparison text are not AET catalog rates.
 
-Relative links to unmigrated pages resolve to the legacy domain. The expert-letter
-link uses its current PHP entry point. Original AI-summary links remain supplied.
+Retained internal links use current local routes and the active interface locale.
+References to held articles retain their text without a hyperlink; their content
+review remains open. Original external AI-summary links remain supplied.
 The application form, two sample reports, and FCE client image were copied unchanged
 into `public/` at their existing paths. The client montage is retained only as a
 source asset; the owner marked it outdated and requested the homepage

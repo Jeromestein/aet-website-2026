@@ -247,8 +247,10 @@ pages listed above; there is no separate Chinese or Spanish page-building phase.
 - [ ] Review useful legacy Chinese/Spanish wording and incorporate it into the
   corresponding shared page's localized content. Resolve differences in fees,
   addresses, service scope, and instructions against the approved common content.
-- [ ] Replace hardcoded English legacy links with locale-aware links as each
-  destination is migrated. Switching language should retain the equivalent page.
+- [x] Replace hardcoded English legacy body links with locale-aware links.
+  October 1: 246 old-host links across 39 rendered pages removed; retained
+  destinations use the active locale, and ten held article targets are unlinked
+  without deleting their text. All 299 page variants and local targets checked.
 - [ ] Map old language URLs to the appropriate locale of the shared page,
   including `/home-zh.php` → `/zh` and `/home-es.php` → `/es`.
 - [ ] Supply reviewed translations or an explicit fallback for missing localized

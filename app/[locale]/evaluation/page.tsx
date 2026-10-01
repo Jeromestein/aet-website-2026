@@ -8,6 +8,7 @@ import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, Cred
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { contactPath } from '@/lib/contact';
+import { localizeContentLinks } from '@/lib/content-links';
 import { ServicePage, ServiceCopy as Copy } from '@/components/service/service-page';
 import { ProcessStory } from '@/components/scroll-stories';
 import { InstitutionCarousel } from '@/components/institution-carousel';
@@ -88,7 +89,7 @@ export default async function EvaluationPage({ params }: Props) {
             {groups.map(group => {
               const label = c.fees.groups.find(item => item.id === group.id)!;
               return <div className={styles.rateGroup} key={group.id}>
-                <h3 dangerouslySetInnerHTML={{ __html: label.html }} />
+                <h3 dangerouslySetInnerHTML={{ __html: localizeContentLinks(label.html, locale) }} />
                 <PricingTable rates={group.rates} caption={pricing(`services.${group.id}`)} showService={false} />
               </div>;
             })}
