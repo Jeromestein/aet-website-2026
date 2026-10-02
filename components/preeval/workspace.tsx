@@ -104,6 +104,7 @@ export default function PreEvaluationWorkspace() {
           <GraduationCap size={17} />
           Pre-evaluations
         </a>
+        <a href="/en/admin/evaluations" className={s.secondary}>Formal evaluations</a>
         <a href="/admin/CRM/preview" className={s.secondary}>
           Other services preview
         </a>

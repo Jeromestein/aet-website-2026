@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
+import { getPathname } from '@/i18n/navigation';
 import { renderContactReferences } from "@/lib/contact-html";
 import applicationMethods from "@/content/application-methods.json";
 import methodStyles from "./application-methods.module.css";
@@ -195,7 +196,7 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
         <div className="journey-heading">
           <h3 className={methodStyles.methodTitle}>{t("home.process.title")}</h3>
           <p>{t("home.process.text")}</p>
-          <a className="button journey-apply" href="https://app.americantranslationservice.com/credential-evaluation-application">
+          <a className="button journey-apply" href={getPathname({ locale, href: '/apply' })}>
             <SquarePen size={24} aria-hidden="true" />{t("home.process.action")}<ArrowUpRight size={24} aria-hidden="true" />
           </a>
         </div>
@@ -210,7 +211,7 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
             <div className="journey-mobile-image"><StepVisual index={i} /></div>
             <div className="journey-card"><span className="journey-number">0{i + 1}</span><div>
               <span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>
-              {i === steps.length - 1 && <a className="text-link" href="https://app.americantranslationservice.com/credential-evaluation-application">{t("home.process.action")} <ArrowUpRight size={18} aria-hidden="true" /></a>}
+              {i === steps.length - 1 && <a className="text-link" href={getPathname({ locale, href: '/apply' })}>{t("home.process.action")} <ArrowUpRight size={18} aria-hidden="true" /></a>}
             </div></div>
           </article>)}</CardRail>
         </div>

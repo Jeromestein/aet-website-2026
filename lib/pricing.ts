@@ -27,6 +27,20 @@ export const certifiedTranslation: readonly Rate[] = [
 export const documentEvaluationStandard = { price: 100, businessDays: 7 } as const;
 /** Evaluation-page rates from e-evaluation-content.html; shared by every locale. */
 export const evaluationExtraCopy: Price = { kind: 'range', min: 40, max: 60 };
+/** Application-only options carried over from the legacy FCE form.
+ * Published website rates above take precedence over legacy form constants.
+ */
+export const evaluationAdditionalDegree = { document: 40, course: 60 } as const;
+export const evaluationReports: readonly Rate[] = [
+  { id: 'pdf', label: 'reportPdf', price: fixed(10) },
+  { id: 'paper', label: 'reportPaper', price: fixed(20) },
+  { id: 'extraCopy', label: 'reportExtra', price: evaluationExtraCopy },
+];
+export const evaluationAddOns: readonly Rate[] = [
+  { id: 'documentAdditional', label: 'documentAdditional', price: fixed(evaluationAdditionalDegree.document) },
+  { id: 'courseAdditional', label: 'courseAdditional', price: fixed(evaluationAdditionalDegree.course) },
+  ...evaluationReports,
+];
 export const preEvaluation: readonly Rate[] = [
   { id: 'preEvaluation', label: 'preEvaluation', price: { kind: 'range', min: 40, max: 60 }, turnaround: { kind: 'hourRange', min: 24, max: 48 } },
 ];

@@ -16,6 +16,16 @@ All test and administrator email uses `tech@meiyugroup.org`; office partitioning
 is omitted. Three historical records were inspected read-only, without bulk import.
 Production deployment, full data transition and formal evaluation remain separate.
 
+## Formal application checkpoint — October 2, 2026
+
+The formal evaluation form-first milestone is complete locally: four localized
+steps, multiple education/service selections, shared website prices, report and
+shipping options, draft restoration, validated persistence and private confirmation.
+The local workflow also covers private uploads, Stripe test checkout, staff review,
+confirmed quotes and manually prepared PDF report release. Automated notifications,
+report authoring, paper dispatch and production launch remain outstanding.
+See [scope and verification](evaluation-application.md).
+
 ## Current checkpoint — October 1, 2026
 
 ### 1. Completed
@@ -94,7 +104,7 @@ PHP entry points**; these are not 109 completed migrations.
 | Full Institutions page | Local migration complete: 28 entries, three locales, search and category filters; browser checks recorded in status.md |
 | SEO and old URL mapping | 448-path inventory, 277 permanent redirects and 133 indexable pages implemented and locally checked; unmigrated content deferred by owner |
 | CRM preview | Interactive fictional-data preview committed as `e67dbc1` on local `dev`; desktop/mobile checks recorded in status.md |
-| AET App replacement | Local pre-evaluation pilot implemented and tested without Payload; formal evaluation, production release and full data transition remain open |
+| AET App replacement | Local pre-evaluation pilot and formal four-step application implemented and tested without Payload; formal local uploads/payment/review/PDF release implemented; production release, notifications and full data transition remain open |
 | Vercel test deployment | Baseline audited; latest local corrections await release; some later hosted checks blocked by Vercel security checkpoint |
 | Production release | Pending business/content review, payment acceptance and deployment |
 
@@ -204,17 +214,21 @@ but do not partition or identify offices in this workflow's frontend.
 
 ### Extend the validated foundation to formal evaluation
 
-- [ ] Reuse validated authentication, persistence, private storage, payment-event
-  processing, email delivery and audit records. Keep pre-evaluation and formal
-  evaluation business rules distinct instead of copying the entire application.
-- [ ] Map and implement formal-evaluation-specific requirements: multiple
-  education/service selections, pricing and additional fees, document review,
-  formal report generation and delivery, as established by the legacy inventory.
+- [x] Complete the formal four-step form with multiple education/service selections,
+  shared website pricing, report/shipping choices, tab-scoped drafts and review.
+- [x] Validate and save formal applications in an isolated schema with idempotent
+  submission, server-calculated estimates and private confirmation access.
+- [x] Reuse staff authentication, persistence, private storage and Stripe test
+  clients; keep formal applications, payments, access and audit records separate.
+- [x] Add document review, confirmed quotes and private PDF report upload/release.
+- [ ] Add automated formal email delivery, report authoring/generation and paper
+  dispatch/tracking, as established by the legacy inventory.
 - [ ] Add any additional required payment methods, balance adjustments, refunds,
   reminders, manual/external order import, exports and reporting. A passing
   single-payment pilot does not validate these separate workflows.
-- [ ] Run formal evaluation's own complete acceptance journeys, including
-  submission, documents, payment, staff processing and report delivery.
+- [x] Run the formal local acceptance journey: submission, private documents,
+  real Stripe sandbox checkout, staff processing, PDF release and customer download.
+- [ ] Run production acceptance after configuration, data transition and rollout.
 
 ### Data transition and retirement
 

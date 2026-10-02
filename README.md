@@ -45,7 +45,16 @@ The homepage uses a shared `app/[locale]/page.tsx` template with Next.js i18n
 Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
-Formal application buttons connect to the existing application portal. In the
+Formal application buttons use the localized `/apply` entry point. In the local
+pilot (`PREEVAL_ENV=local`), this opens the four-step formal evaluation form at
+`/credential-evaluation-application`; other environments retain the existing
+application portal. The form supports shared website pricing, multiple education
+records, report/delivery options, tab-scoped drafts, validated local submissions
+and private confirmation pages. See [formal application scope](docs/evaluation-application.md).
+Formal applications now continue through private document upload, confirmed quotes,
+Stripe test checkout, staff review at `/en/admin/evaluations`, and PDF report release.
+Customer access can be renewed with a staff-issued single-use link. This remains a
+local pilot; automated formal email notifications and production launch are pending. In the
 local pilot (`PREEVAL_ENV=local`), the homepage pre-evaluation button opens the new
 local workflow; other environments retain the existing portal destination. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with

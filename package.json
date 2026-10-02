@@ -10,6 +10,9 @@
     "check:i18n": "node scripts/check-i18n.mjs",
     "preeval:worker": "node --env-file=.env.local --import tsx scripts/preeval/worker.ts",
     "test:preeval": "vitest run tests/preeval.test.ts",
+    "test:evaluation": "vitest run tests/evaluation-application.test.ts tests/evaluation-workflow.test.ts",
+    "test:evaluation:workflow": "node --env-file=.env.local --import tsx scripts/evaluation/workflow-integration.ts",
+    "test:evaluation:integration": "node --env-file=.env.local --import tsx scripts/evaluation/integration.ts",
     "test:preeval:integration": "node --env-file=.env.local --import tsx scripts/preeval/integration.ts"
   },
   "dependencies": {

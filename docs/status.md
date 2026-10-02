@@ -2,6 +2,75 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Formal evaluation application and local workflow — October 2, 2026
+
+- Completed the localized four-step formal application: client details,
+  evaluee/multiple educations, evaluation services and report/shipping options,
+  and review/consent/submission. Includes field-level errors, gated forward
+  navigation, return-to-edit, tab-scoped draft restoration, international
+  addresses, independent recipients and a mobile total before the action buttons.
+- Document-by-Document, Course-by-Course, Expert Opinion Letters and Position
+  Evaluation use the public website catalog in `lib/pricing.ts`. Added the
+  legacy additional-degree and PDF/paper report options to that same catalog
+  and the public Pricing/Evaluation tables. Website prices override conflicting
+  legacy fees/tiers. Extra paper copies retain the published $40–$60 range;
+  translation/custom services remain separate quotes.
+- Added server-side validation/calculation, idempotent local persistence and
+  private confirmations. The new `evaluation` schema and migration were applied
+  only to the existing isolated local Supabase database. Reused the running
+  development server on port 3021; no server/container restart was needed.
+- Passed 52 formal-domain tests, the existing 18 pre-evaluation tests, 20 formal
+  API integration checks, typecheck, three-language message validation and
+  whitespace checks. API acceptance covers price tampering, retries, ownership,
+  24-hour server-enforced expiry, CSRF rejection, request-size limits and private
+  database permissions. Disposable integration records were removed.
+- In-app browser passed the four-step English flow using fictional data, two
+  education records, multiple services/additional degrees, consent validation,
+  submission and receipt reload. Checked PDF switching removes paper/shipping
+  fees, Canada-based billing with a separate U.S. recipient changes shipping
+  options, and extra copies produce the correct fee range. New application
+  starts blank after successful submission.
+- Verified 1440px desktop and 390px mobile layouts, Chinese/Spanish form and
+  receipt localization, language changes with draft retention, website price
+  table display, and the Evaluation-page action opening the local application.
+  Checked mobile page width: no horizontal document overflow.
+- Screenshots under `output/playwright/`: `evaluation-form-zh-desktop.jpg`,
+  `evaluation-services-mobile.jpg`, `evaluation-form-es-mobile.jpg`,
+  `evaluation-receipt-mobile.jpg`, and `evaluation-shared-pricing-desktop.jpg`.
+- Extended the form into a local workflow: supporting-document uploads, private
+  downloads, fixed or confirmed quotes, Stripe test checkout/reconciliation,
+  staff queue and case review, internal notes, customer messages, PDF draft upload,
+  explicit report release, refunds/release gating, and single-use access renewal.
+  Applied the second formal migration only to the existing isolated local database.
+- Latest checks pass: 88 unit tests (52 form, 18 workflow and 18 pre-evaluation),
+  20 form API checks, 59 workflow API checks, typecheck, 461 matching messages per language, and whitespace
+  checks. Workflow acceptance includes synthetic signed payment/refund events,
+  duplicate events, quote locking, private drafts/notes, stale report prevention,
+  access-link replacement/reuse/expiry, CSRF, cancellation and authorization.
+  The real-service test passed 66 checks with isolated Dropbox upload/download,
+  duplicate upload, Stripe test session reuse, exact website amount and expiry.
+- In-app browser completed a real Stripe **sandbox** card checkout for fictional
+  case `e48325a6-f394-4b4f-8997-abdccf2afb5a`: $100 document evaluation + $10 PDF
+  report = $110.00, no surcharge. Return automatically reconciled as paid.
+  Uploaded a synthetic supporting image, reviewed the case, uploaded a clearly
+  marked synthetic PDF, saved staff notes and released the report. After staff
+  logout, the customer downloaded the PDF; its SHA-256 matches the uploaded file.
+- Verified desktop 1440px and mobile 390px customer status, staff detail and staff
+  search/filter states; no horizontal page overflow. Checked Chinese, English and
+  Spanish customer views and private access-link consumption. Screenshots include
+  `formal-case-desktop.jpg`, `formal-case-mobile.jpg`, `formal-workspace-mobile.jpg`,
+  `formal-complete-zh-mobile.jpg`, and `formal-complete-en-desktop.jpg` under
+  `output/playwright/`. Fixed a Next.js route-config re-export caught in the browser.
+- Browser-tested the quote-required branch with extra copies and translation:
+  website estimate $210–$250, staff-confirmed website subtotal $220 plus $50
+  translation, customer-visible total $270. The fixed website fees stayed unchanged;
+  extra copies were $90 for two, within the published $80–$120 range. Captured in
+  `formal-confirmed-quote-zh.jpg`. This second fictional case was not paid.
+- Automated formal emails, self-service email recovery, report authoring, paper
+  dispatch/tracking and production rollout remain open. No email, live charge,
+  production build, commit, push or deployment was performed. The retained browser
+  case and PDFs are explicitly synthetic. See [scope](evaluation-application.md).
+
 ### Pre-evaluation local workflow — October 2, 2026
 
 - Implemented the full local pre-evaluation path: localized form, durable

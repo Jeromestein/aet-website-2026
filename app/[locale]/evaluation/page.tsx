@@ -16,13 +16,12 @@ import { CardRail } from '@/components/card-rail';
 import { BenefitCard } from '@/components/benefit-card';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { evaluationContent } from '@/lib/evaluation';
-import { evaluationGroups, preEvaluation, shipping, documentEvaluationStandard, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
+import { evaluationGroups, evaluationAddOns, preEvaluation, shipping, documentEvaluationStandard, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
 import { formatMoney, formatPrice } from '@/lib/pricing-format';
 import styles from '@/components/service/service-page.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
 
-const application = 'https://app.americantranslationservice.com/credential-evaluation-application';
 const icons = [GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2];
 const benefitIcons = [BriefcaseBusiness, CreditCard, Clock3, ShieldCheck];
 
@@ -40,6 +39,7 @@ export default async function EvaluationPage({ params }: Props) {
   const t = await getTranslations();
   const pricing = await getTranslations('pricing');
   const c = evaluationContent[locale];
+  const application = getPathname({ locale, href: '/apply' });
   const replacements: Record<string, string> = {
     documentPrice: formatMoney(documentEvaluationStandard.price, locale),
     extraCopyPrice: formatPrice(evaluationExtraCopy, locale, pricing),
@@ -94,6 +94,7 @@ export default async function EvaluationPage({ params }: Props) {
               </div>;
             })}
             <Copy html={copy(c.fees.noteHtml)} />
+            <PricingTable rates={evaluationAddOns} caption={t('evaluationApplication.deliveryHeading')} showTime={false} />
             <a className="button" href={getPathname({ locale, href: '/pricing' })}>{pricing('title')}</a>
           </section>
           <details id="shipping-options" className={`${styles.section} ${styles.disclosure}`}>

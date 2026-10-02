@@ -33,7 +33,7 @@ export default async function AboutPage({ params }: Props) {
 
   return <ServicePage path={'/about'} locale={locale} title={c.title} label={t('footer.about')} eyebrow={c.eyebrow}
     nav={Object.entries(c.sections).map(([id, label]) => ({ id, label }))}
-    actions={[{ label: t('home.hero.apply'), href: 'https://app.americantranslationservice.com/credential-evaluation-application' },
+    actions={[{ label: t('home.hero.apply'), href: getPathname({ locale, href: '/apply' }) },
       { label: t('home.contact'), href: contact }]}>
     <StructuredData data={graph([organizationSchema()])} />
     <p className={styles.intro}>{c.intro}</p>

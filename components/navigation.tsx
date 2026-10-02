@@ -10,10 +10,10 @@ import { contactPath } from '@/lib/contact';
 import { LanguageSwitcher, LanguageOptions } from "./language-switcher";
 import styles from "./navigation.module.css";
 
-const application = "https://app.americantranslationservice.com/credential-evaluation-application";
 export function Navigation() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const application = getPathname({ locale, href: '/apply' });
   const pathname = usePathname();
   const home = getPathname({ locale, href: "/" });
   const links = [

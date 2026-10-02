@@ -27,8 +27,6 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
-const apply =
-  "https://app.americantranslationservice.com/credential-evaluation-application";
 const legacyPre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -44,6 +42,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations();
+  const apply = getPathname({ locale, href: '/apply' });
   const pre = process.env.PREEVAL_ENV === 'local'
     ? getPathname({ locale, href: '/degree-equivalency-tool' })
     : legacyPre;

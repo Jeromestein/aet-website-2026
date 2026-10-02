@@ -540,7 +540,7 @@ export function ApplicationResult({
             <h3>{t.reasoning}</h3>
             <p>{app.result.reasoning}</p>
             <a
-              href="https://app.americantranslationservice.com/credential-evaluation-application"
+              href={pathFor(locale, '/apply')}
               className={s.secondary}
             >
               {t.formal}

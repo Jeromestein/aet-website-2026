@@ -18,3 +18,5 @@ __pycache__/
 /.local/
 /.pnpm-store/
 /pre-evaluation-test-document.pdf
+
+/formal-synthetic-report.pdf

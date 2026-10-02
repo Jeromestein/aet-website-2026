@@ -30,6 +30,7 @@ import {
   stripeClient,
   cancelApplication,
 } from "@/lib/preeval/payments";
+import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-application/payments';
 import { downloadFile } from "@/lib/preeval/dropbox";
 
 export const runtime = "nodejs";
@@ -89,6 +90,7 @@ async function handler(
         throw new AppError("invalid_signature");
       }
       await handleStripeEvent(event);
+      await handleFormalEvent(event);
       return response({ received: true });
     }
     const isFileUpload =

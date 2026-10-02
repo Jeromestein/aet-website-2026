@@ -203,6 +203,15 @@ Keep the legacy labels and order:
 Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
 retained service links listed in README.md; languages are English, 简体中文, and Español.
 The selector displays EN, 中文, or ES with a globe icon and marks the selected language.
+Formal application links use the localized `/apply` bridge: the local pilot opens
+the new form, while other environments retain the existing portal. The application
+has four steps (client, evaluee/education, services/delivery, review), a shared
+price summary, and a compact total before mobile continuation/submission controls.
+After submission, keep the customer status page organized into application status,
+supporting documents, payment, and report delivery. Clearly identify local test
+payments. Keep staff-only notes and unreleased reports out of customer views.
+The formal staff workspace uses separate education/service columns and mobile
+case cards, with an explicit final-report release action.
 Home and logo links stay on the active localized homepage; other destinations retain
 the legacy paths.
 
