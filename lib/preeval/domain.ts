@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isCountryCode } from "../legacy-application/countries";
 
 export const BASE_CENTS = 1900;
 // Preserve the legacy gross-up: (19 + 0.30) / (1 - 0.029).
@@ -20,9 +21,9 @@ export const applicationSchema = z
     firstName: text,
     lastName: text,
     middleName: z.string().trim().max(200).default(""),
-    country: text,
+    country: text.refine(isCountryCode),
     schoolName: text,
-    countryOfStudy: text,
+    countryOfStudy: text.refine(isCountryCode),
     degreeObtained: text,
     startDate: date,
     endDate: date,

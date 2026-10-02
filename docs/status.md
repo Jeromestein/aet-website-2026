@@ -2,6 +2,55 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Form and database compatibility — October 2, 2026
+
+- Aligned the new pre-evaluation and formal forms with the original business
+  fields. Country/region controls submit original codes; date selectors retain
+  calendar dates and `{year, month}` education dates. Formal notes are in step 1,
+  education entries remain optional, extra copies are a separate report choice,
+  and shipping uses the client address. The earlier independent-recipient and
+  relaxed international-format behavior described below has been superseded.
+- Pre-evaluation has its optional document picker in the education step. Selected
+  files upload after the application is saved; a failed upload shows a retry
+  message. Country display names are static across server/browser to prevent
+  hydration errors caused by differing locale-data versions.
+- Read only legacy schema metadata and reproduced the five original business
+  table definitions in the isolated local fixture. Verified columns, types,
+  nullability, defaults, primary/foreign keys and check constraints against that
+  metadata. No original business column or constraint was changed. Submission
+  saves original business rows and auxiliary workflow/access rows atomically;
+  workflow bridges update original status, payment and education result fields.
+- Kept the website's formal service rates and actual turnaround options. Added
+  an optional immutable quote snapshot inside the existing service JSON field,
+  plus a small `aet-app` reader patch for service cards, completion estimates,
+  email details and payment eligibility. Historical rows keep their previous
+  calculation. Unconfirmed ranges cannot be charged at their lower bound.
+- Passed 98 website unit tests, 13 rollback-only database compatibility checks,
+  24 formal API checks and 59 workflow API checks. The old application passed
+  29 focused reader/component tests. Both repositories passed type checks;
+  the website has 466 matching valid messages in each language. No production
+  build was run. The API fixtures were removed, including orphaned synthetic
+  business rows from the first test pass.
+- In-app browser: Chinese formal application completed all four steps and saved
+  a fictional request with an extra copy and a $150–$170 unconfirmed estimate.
+  Loaded that saved row through the actual old form reader and confirmed purpose,
+  report code and pending-payment interpretation. Inspected 1280px desktop and
+  390px mobile views. Pre-evaluation passed applicant/education/review navigation,
+  optional documents and displayed $19.88 total; its final submission was not
+  repeated during this pass. Mobile pages have no horizontal overflow.
+- Screenshots in `output/playwright/`: `legacy-compatible-evaluation-desktop.png`,
+  `legacy-compatible-evaluation-mobile.png`, `legacy-compatible-evaluation-saved.png`,
+  `legacy-compatible-preeval-desktop.png`, `legacy-compatible-preeval-mobile.png`.
+  Fixed the country-label hydration mismatch; no new errors appeared on reload.
+  The old full application was not browser-tested; its reader/card changes were
+  verified by data round-trip and component tests without starting its server.
+- This remains local compatibility work. Auxiliary workflow tables still exist;
+  this is not a production cutover, historical migration or simultaneous-edit
+  synchronization between systems. No email, AI job, external upload, actual
+  payment, production database update, push or deployment was performed in this
+  pass. The pre-evaluation rate was not changed. See
+  [the mapping and cutover boundary](legacy-form-compatibility.md).
+
 ### Formal evaluation application and local workflow — October 2, 2026
 
 - Completed the localized four-step formal application: client details,

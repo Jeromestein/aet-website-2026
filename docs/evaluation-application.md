@@ -1,8 +1,10 @@
 # Formal evaluation application
 
 Local application and processing milestone, October 2, 2026. Destination: `aet-website-2026`.
-The legacy FCE form in the sibling `aet-app` is a structural reference; this
-implementation does not merge Payload or copy its database or customer data.
+The legacy FCE form and its existing business tables are the compatibility
+contract. The local fixture reproduces their columns and constraints, without
+copying customer data or changing the production database. See
+[the field mapping and compatibility boundary](legacy-form-compatibility.md).
 
 ## Customer workflow
 
@@ -10,16 +12,20 @@ implementation does not merge Payload or copy its database or customer data.
 and `/es/credential-evaluation-application` share the same four-step form:
 
 1. Client: purpose, office, organization/name, postal address, email, phone and
-   optional fax. International telephone/postal formats are accepted; U.S.
-   destinations require a state and valid ZIP code.
+   optional fax and service notes. Countries/regions use the original codes.
+   Telephone/fax and postal validation retains the existing form format for all
+   countries: `123-456-7890` and `12345` / `12345-6789`.
 2. Evaluee and education: title, legal name, date of birth, and repeatable
-   education records with institution, degree, country and study dates. Position
-   and custom requests may omit academic history. Academic evaluations require it.
+   education records with institution, degree, country and study dates. Education
+   entries are optional as in the original form; every added entry must be complete.
+   Dates use explicit year/month/day selectors and retain the original storage format.
 3. Services and delivery: Document-by-Document, Course-by-Course, Expert Opinion
    Letters, Position Evaluation, custom requests and optional translation.
    Additional degrees cannot exceed the entered education records. Reports can
-   be PDF only or PDF with a paper copy, with additional copies, destination-based
-   shipping and an independent mailing address.
+   be PDF only, PDF with one paper copy, or the separate extra-copy option.
+   Extra copies require a quantity; they do not add the one-paper-copy fee.
+   Shipping uses the client address, which is the address stored by the old form.
+   There is no separate recipient/address field to silently discard.
 4. Review: editable sections, itemized estimate, document preparation notes,
    consent and idempotent submission. A private saved confirmation can be reopened
    and printed from the same browser for 24 hours.
@@ -65,6 +71,14 @@ development server is needed. Apply `20261002000200_formal_evaluation.sql` and
 the normal local Supabase migration workflow. It adds a private `evaluation`
 schema with JSON object constraints and RLS, without modifying pre-evaluation
 tables. Both migrations have been applied to the existing local test database.
+After these migrations, run `pnpm legacy:setup` to prepare the five compatible
+`public` business tables and the auxiliary workflow bridge. This command only
+accepts the isolated local database and refuses to overwrite a partial fixture.
+Applications and individual education rows now write to the original table
+shapes in the same transaction as the auxiliary access/workflow records.
+The private schema continues to hold sessions, files, quote confirmation and
+workflow metadata; it is not a replacement customer-data schema. No historical
+record migration or production database update has been performed.
 
 `POST /api/evaluation/applications` validates all four steps, rejects cross-origin
 and oversized requests, rate-limits submissions, calculates its own estimate and
@@ -129,6 +143,8 @@ pnpm typecheck
 pnpm check:i18n
 pnpm test:evaluation
 pnpm test:preeval
+pnpm test:legacy
+pnpm test:legacy:integration
 pnpm test:evaluation:integration
 pnpm test:evaluation:workflow
 # Optional: real isolated Dropbox uploads and Stripe test session creation/expiration

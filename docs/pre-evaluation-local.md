@@ -9,9 +9,15 @@ migration. The existing AET App remains operational.
 - Direct AI assessment with the legacy customer experience: a generated
   preliminary result appears automatically once payment is confirmed. Staff can
   correct it; mandatory staff approval is not a release gate.
-- One education per application. Required: first/last name, email, residence
+- One education in the customer form, matching the old visible form. Existing
+  multiple-education records remain supported by the business tables and are not
+  merged or discarded. Required: first/last name, email, residence
   country, institution, study country, degree, and start/end month and year.
   Middle name and supporting documents are optional, as in the legacy form.
+  Country selections submit the original codes; study dates are saved as
+  `{year, month}` in the existing education table. The second step includes the
+  optional document picker; files upload after successful application creation.
+  Upload failures show a retry message on the saved application.
 - Legacy price: USD 19.00 plus the rounded legacy Stripe gross-up fee of 0.88;
   checkout total is **USD 19.88**, calculated on the server. Card and Alipay are
   enabled; acceptance exercised card payment.
@@ -77,7 +83,9 @@ writes fails even though the assessment subprocess itself is read-only.
 This project has an isolated Supabase project ID `aet-pre-evaluation-local`, API
 port 55421 and database port 55422. It does not reset or reuse another project's
 Supabase instance. Stop this project's database with `pnpm exec supabase stop`
-from this directory; omit destructive volume-deletion options. Stop the listener
+from this directory; omit destructive volume-deletion options. After local
+Supabase migrations, run `pnpm legacy:setup` once to prepare the compatible
+business-table fixture and workflow bridge. Stop the listener
 and worker with Ctrl+C. No production build is required or permitted locally.
 
 ## Implementation and recovery
@@ -88,7 +96,13 @@ outbox, AI runs, audit entries and rate limits. Every table has RLS enabled and
 no anonymous/authenticated grants. Server code uses the local database connection;
 no browser service credentials are exposed.
 
-Submission writes the application, education and audit together. A random request
+Submission atomically writes `public.aet_core_applications`,
+`public.aet_core_educations` and the auxiliary application/education/audit rows.
+Payment transitions write `public.aet_core_payments`; AI results update only the
+matching education ID in the original JSON-string format. The original tables
+have no residence-country column, so that value remains in the auxiliary table.
+No column was added to the original tables. See
+[the field mapping and compatibility boundary](legacy-form-compatibility.md). A random request
 ID and payload hash prevent duplicate retries or conflicting reuse. Customer
 sessions are scoped to one application; staff permissions are checked on every
 protected API operation. Access tokens are hashed, single-use and exchanged by
@@ -126,6 +140,11 @@ Resend, not necessarily inbox delivery; acceptance separately checked Resend's
 `delivered` status. Expired access links can always be requested again.
 
 ## Acceptance evidence
+
+The service/payment/email checks below describe the earlier pilot milestone.
+The later form-compatibility pass used 98 unit tests, 13 rollback-only database
+checks and browser form navigation; it did not repeat external email, AI,
+Dropbox or Stripe operations. See [current status](status.md).
 
 Verified against the existing local development server and isolated Supabase:
 

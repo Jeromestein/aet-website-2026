@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { ApplicationDate } from '@/components/application-date';
+import { countryOptions, countryLabel, regionOptions } from '@/lib/legacy-application/countries';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Check, ChevronRight, ArrowLeft, Plus, Trash2, ShieldCheck, FileText } from 'lucide-react';
 import { evaluationGroups, evaluationAdditionalDegree, evaluationReports, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
 import { formatPrice, formatTurnaround, formatMoney } from '@/lib/pricing-format';
-import { initialData, emptyEducation, draftSchema, validate, quote, offices, purposes, shippingOptions, isUS, type ApplicationData, type FieldError, type Address } from '@/lib/evaluation-application/domain';
+import { initialData, emptyEducation, draftSchema, validate, quote, offices, purposes, shippingOptions, type ApplicationData, type FieldError, type Address } from '@/lib/evaluation-application/domain';
 import { QuoteSummary } from './summary';
 import s from './application.module.css';
 
@@ -68,7 +70,8 @@ export function EvaluationApplication({ locale, enabled }: { locale: string; ena
       let parent = next as unknown as Record<string, unknown>;
       for (const part of parts.slice(0, -1)) parent = parent[part] as Record<string, unknown>;
       parent[parts[parts.length - 1]] = value;
-      const destination = next.delivery.sameAddress ? next.client : next.delivery.address;
+      const destination = next.client;
+      if (path === 'client.country') next.client.region = '';
       if (next.delivery.shipping && !shippingOptions(destination.country).some(r => r.id === next.delivery.shipping)) next.delivery.shipping = '';
       if (path !== 'terms') next.terms = false;
       return next;
@@ -77,16 +80,16 @@ export function EvaluationApplication({ locale, enabled }: { locale: string; ena
   }
   const fieldError = (id: string) => { const found = errors.find(e => e.path === id); return found ? t(`errors.${found.code}`) : undefined; };
   const accessibility = (id: string) => ({ id, name: id, 'aria-invalid': !!fieldError(id), 'aria-describedby': fieldError(id) ? `${id}-error` : undefined });
-  const input = (id: string, label: string, value: string, options: { type?: string; optional?: boolean; autoComplete?: string } = {}) => <Field id={id} label={label} error={fieldError(id)} optional={options.optional} optionalText={t('optional')}><input {...accessibility(id)} aria-required={!options.optional} type={options.type || 'text'} value={value} maxLength={200} autoComplete={options.autoComplete} onChange={e => update(id, e.target.value)} /></Field>;
+  const input = (id: string, label: string, value: string, options: { type?: string; optional?: boolean; autoComplete?: string } = {}) => <Field id={id} label={label} error={fieldError(id)} optional={options.optional} optionalText={t('optional')}>{options.type === 'date' || options.type === 'month' ? <ApplicationDate id={id} label={label} value={value} onChange={next => update(id, next)} locale={locale} day={options.type === 'date'} invalid={!!fieldError(id)} /> : <input {...accessibility(id)} aria-required={!options.optional} type={options.type || 'text'} value={value} maxLength={200} autoComplete={options.autoComplete} onChange={e => update(id, e.target.value)} />}</Field>;
   const select = (id: string, label: string, value: string, choices: { value: string; label: string }[], optional = false) => <Field id={id} label={label} error={fieldError(id)} optional={optional} optionalText={t('optional')}><select {...accessibility(id)} aria-required={!optional} value={value} onChange={e => update(id, e.target.value)}><option value="">{t('choose')}</option>{choices.map(option => <option value={option.value} key={option.value}>{option.label}</option>)}</select></Field>;
   const renderAddress = (v: Address, prefix: string) => <div className={s.grid}>
     {input(`${prefix}.name`, t(prefix === 'client' ? 'clientName' : 'recipientName'), v.name, { autoComplete: prefix === 'client' ? 'organization' : 'shipping name' })}
-    {input(`${prefix}.country`, t('country'), v.country, { autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} country-name` })}
+    {select(`${prefix}.country`, t('country'), v.country, countryOptions(locale))}
     {input(`${prefix}.street`, t('street'), v.street, { autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} address-line1` })}
     {input(`${prefix}.street2`, t('street2'), v.street2, { optional: true, autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} address-line2` })}
     {input(`${prefix}.city`, t('city'), v.city, { autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} address-level2` })}
-    {input(`${prefix}.region`, t('region'), v.region, { optional: !isUS(v.country), autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} address-level1` })}
-    {input(`${prefix}.postal`, t('postal'), v.postal, { optional: !isUS(v.country), autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} postal-code` })}
+    {select(`${prefix}.region`, t('region'), v.region, regionOptions(v.country, locale))}
+    {input(`${prefix}.postal`, t('postal'), v.postal, { autoComplete: `${prefix === 'client' ? 'billing' : 'shipping'} postal-code` })}
   </div>;
   function navigate(target: number) {
     setServerError('');
@@ -112,10 +115,10 @@ export function EvaluationApplication({ locale, enabled }: { locale: string; ena
     finally { setBusy(false); submitting.current = false; }
   }
   const estimate = quote(data);
-  const destination = data.delivery.sameAddress ? data.client : data.delivery.address;
+  const destination = data.client;
   const price = (v: Parameters<typeof formatPrice>[0]) => formatPrice(v, locale, p);
   const reviewRow = (label: string, value: string) => <div><dt>{label}</dt><dd>{value || '—'}</dd></div>;
-  const reviewAddress = (v: Address) => [v.name, v.street, v.street2, [v.city, v.region, v.postal].filter(Boolean).join(', '), v.country].filter(Boolean).join('\n');
+  const reviewAddress = (v: Address) => [v.name, v.street, v.street2, [v.city, v.region, v.postal].filter(Boolean).join(', '), countryLabel(v.country, locale)].filter(Boolean).join('\n');
   const errorLabel = (path: string) => {
     const names: Record<string, string> = { 'client.name': 'clientName', country: 'country', street: 'street', city: 'city', region: 'region', postal: 'postal', email: 'email', phone: 'phone', fax: 'fax', office: 'office', purpose: 'purpose', title: 'salutation', first: 'firstName', last: 'lastName', birth: 'birth', school: 'school', degree: 'degree', start: 'start', end: 'end', shipping: 'shipping', notes: 'notes', terms: 'termsLink', services: 'servicesStep' };
     const name = names[path] || names[path.split('.').at(-1)!];
@@ -138,11 +141,13 @@ export function EvaluationApplication({ locale, enabled }: { locale: string; ena
               <div className={s.grid}>{select('client.purpose', t('purpose'), data.client.purpose, purposes.map(value => ({ value, label: t(`purposeOptions.${value}`) })))}{select('client.office', t('office'), data.client.office, offices.map(value => ({ value, label: t(`offices.${value}`) })))}</div>
               <h3>{t('contactHeading')}</h3>{renderAddress(data.client, 'client')}
               <div className={s.grid}>{input('client.email', t('email'), data.client.email, { type: 'email', autoComplete: 'email' })}{input('client.phone', t('phone'), data.client.phone, { type: 'tel', autoComplete: 'tel' })}{input('client.fax', t('fax'), data.client.fax, { type: 'tel', optional: true })}</div>
+              <Field id="notes" label={t('notes')} error={fieldError('notes')} optional={!data.services.customized} optionalText={t('optional')}><textarea {...accessibility('notes')} rows={4} maxLength={3000} value={data.notes} onChange={e => update('notes', e.target.value)} /></Field>
+              <p className={s.hint}>{t('legacyFormatNote')}</p>
             </>}
             {step === 1 && <>
               <div className={s.grid}>{select('evaluee.title', t('salutation'), data.evaluee.title, ['mr', 'ms', 'mx'].map(value => ({ value, label: t(`titles.${value}`) })))}{input('evaluee.first', t('firstName'), data.evaluee.first, { autoComplete: 'given-name' })}{input('evaluee.middle', t('middleName'), data.evaluee.middle, { optional: true, autoComplete: 'additional-name' })}{input('evaluee.last', t('lastName'), data.evaluee.last, { autoComplete: 'family-name' })}{input('evaluee.birth', t('birth'), data.evaluee.birth, { type: 'date', autoComplete: 'bday' })}</div>
               <h3>{t('educationHeading')}</h3><p className={s.hint}>{t('educationNote')}</p>
-              {data.educations.map((edu, index) => <fieldset className={s.education} key={index}><legend>{t('educationNumber', { count: index + 1 })}</legend><div className={s.grid}>{input(`educations.${index}.country`, t('studyCountry'), edu.country)}{input(`educations.${index}.school`, t('school'), edu.school)}{input(`educations.${index}.degree`, t('degree'), edu.degree)}{input(`educations.${index}.start`, t('start'), edu.start, { type: 'month' })}{input(`educations.${index}.end`, t('end'), edu.end, { type: 'month' })}</div><button className={s.textButton} type="button" onClick={() => { setData(current => { const next = structuredClone(current); next.educations.splice(index, 1); for (const id of ['document', 'course'] as const) next.services[id].additionalDegrees = Math.min(next.services[id].additionalDegrees, Math.max(0, next.educations.length - 1)); next.terms = false; return next; }); setErrors([]); }}><Trash2 size={16} aria-hidden="true" />{t('removeEducation', { count: index + 1 })}</button></fieldset>)}
+              {data.educations.map((edu, index) => <fieldset className={s.education} key={index}><legend>{t('educationNumber', { count: index + 1 })}</legend><div className={s.grid}>{select(`educations.${index}.country`, t('studyCountry'), edu.country, countryOptions(locale))}{input(`educations.${index}.school`, t('school'), edu.school)}{input(`educations.${index}.degree`, t('degree'), edu.degree)}{input(`educations.${index}.start`, t('start'), edu.start, { type: 'month' })}{input(`educations.${index}.end`, t('end'), edu.end, { type: 'month' })}</div><button className={s.textButton} type="button" onClick={() => { setData(current => { const next = structuredClone(current); next.educations.splice(index, 1); for (const id of ['document', 'course'] as const) next.services[id].additionalDegrees = Math.min(next.services[id].additionalDegrees, Math.max(0, next.educations.length - 1)); next.terms = false; return next; }); setErrors([]); }}><Trash2 size={16} aria-hidden="true" />{t('removeEducation', { count: index + 1 })}</button></fieldset>)}
               <button className={s.secondary} type="button" disabled={data.educations.length >= 20} onClick={() => setData(current => ({ ...current, terms: false, educations: [...current.educations, emptyEducation()] }))}><Plus size={17} aria-hidden="true" />{t('addEducation')}</button>
             </>}
             {step === 2 && <>
@@ -157,20 +162,18 @@ export function EvaluationApplication({ locale, enabled }: { locale: string; ena
               <label className={s.check}><input type="checkbox" checked={data.services.translation} onChange={e => update('services.translation', e.target.checked)} /><span><strong>{t('translation')}</strong><small>{t('translationNote')}</small></span></label>
               <p className={s.notice}>{p('notes.cutoff', { time: pricingPolicy.sameDayCutoff })}</p>
               <h3>{t('deliveryHeading')}</h3>
-              <Field id="delivery.report" label={t('report')} error={fieldError('delivery.report')}><select {...accessibility('delivery.report')} value={data.delivery.report} onChange={e => setData(current => ({ ...current, terms: false, delivery: { ...current.delivery, report: e.target.value as 'pdf' | 'paper', extraCopies: 0, shipping: '' } }))}>{evaluationReports.filter(r => r.id !== 'extraCopy').map(rate => <option key={rate.id} value={rate.id}>{p(`services.${rate.label}`)} — {price(rate.price)}</option>)}</select></Field>
-              {data.delivery.report === 'paper' && <>
-                <Field id="delivery.extraCopies" label={t('extraCopies', { amount: price(evaluationExtraCopy) })} optional optionalText={t('optional')}><input {...accessibility('delivery.extraCopies')} type="number" min="0" max="20" step="1" value={data.delivery.extraCopies} onChange={e => update('delivery.extraCopies', Math.max(0, Math.min(20, Math.trunc(Number(e.target.value) || 0))))} /></Field>
-                <label className={s.check}><input type="checkbox" checked={data.delivery.sameAddress} onChange={e => { update('delivery.sameAddress', e.target.checked); update('delivery.shipping', ''); }} /><span>{t('sameAddress')}</span></label>
-                {!data.delivery.sameAddress && renderAddress(data.delivery.address, 'delivery.address')}
+              <Field id="delivery.report" label={t('report')} error={fieldError('delivery.report')}><select {...accessibility('delivery.report')} value={data.delivery.report} onChange={e => setData(current => ({ ...current, terms: false, delivery: { ...current.delivery, report: e.target.value as 'pdf' | 'paper' | 'extraCopy', extraCopies: e.target.value === 'extraCopy' ? 1 : 0, shipping: '' } }))}>{evaluationReports.map(rate => <option key={rate.id} value={rate.id}>{p(`services.${rate.label}`)} — {price(rate.price)}</option>)}</select></Field>
+              {data.delivery.report !== 'pdf' && <>
+                {data.delivery.report === 'extraCopy' && <Field id="delivery.extraCopies" label={t('extraCopies', { amount: price(evaluationExtraCopy) })} error={fieldError('delivery.extraCopies')}><input {...accessibility('delivery.extraCopies')} type="number" min="1" max="20" step="1" value={data.delivery.extraCopies} onChange={e => update('delivery.extraCopies', Math.max(1, Math.min(20, Math.trunc(Number(e.target.value) || 1))))} /></Field>}
+                <p className={s.hint}>{t('mailingAddressNote')}</p>
                 {select('delivery.shipping', t('shipping'), data.delivery.shipping, shippingOptions(destination.country).map(rate => ({ value: rate.id, label: `${p(`services.${rate.label}`)} — ${price(rate.price)} (${formatTurnaround(rate.turnaround!, p)})` })))}
                 <p className={s.hint}>{t('shippingNote')}</p>
               </>}
-              <Field id="notes" label={t('notes')} error={fieldError('notes')} optional={!data.services.customized} optionalText={t('optional')}><textarea {...accessibility('notes')} rows={4} maxLength={3000} value={data.notes} onChange={e => update('notes', e.target.value)} /></Field>
             </>}
             {step === 3 && <>
               <div className={s.reviewSection}><h3>{t('clientStep')}<button type="button" className={s.textButton} onClick={() => navigate(0)}>{t('edit')}</button></h3><dl className={s.review}>{reviewRow(t('purpose'), data.client.purpose ? t(`purposeOptions.${data.client.purpose}`) : '')}{reviewRow(t('office'), data.client.office ? t(`offices.${data.client.office}`) : '')}{reviewRow(t('contactHeading'), reviewAddress(data.client))}{reviewRow(t('email'), data.client.email)}{reviewRow(t('phone'), data.client.phone)}{data.client.fax && reviewRow(t('fax'), data.client.fax)}</dl></div>
-              <div className={s.reviewSection}><h3>{t('evalueeStep')}<button type="button" className={s.textButton} onClick={() => navigate(1)}>{t('edit')}</button></h3><dl className={s.review}>{reviewRow(t('fullName'), [data.evaluee.title ? t(`titles.${data.evaluee.title}`) : '', data.evaluee.first, data.evaluee.middle, data.evaluee.last].filter(Boolean).join(' '))}{reviewRow(t('birth'), data.evaluee.birth)}{data.educations.map((edu, index) => <div key={index}><dt>{t('educationNumber', { count: index + 1 })}</dt><dd>{edu.degree}<br />{edu.school} · {edu.country}<br />{edu.start} — {edu.end}</dd></div>)}</dl></div>
-              <div className={s.reviewSection}><h3>{t('servicesStep')}<button type="button" className={s.textButton} onClick={() => navigate(2)}>{t('edit')}</button></h3><dl className={s.review}>{evaluationGroups.filter(g => data.services[g.id].tier).map(g => <div key={g.id}><dt>{p(`services.${g.id}`)}</dt><dd>{formatTurnaround(g.rates.find(r => r.id === data.services[g.id].tier)!.turnaround!, p)}{data.services[g.id].additionalDegrees > 0 && <small>{t('additionalCount', { count: data.services[g.id].additionalDegrees })}</small>}</dd></div>)}{data.services.translation && reviewRow(t('translation'), t('quoteRequired'))}{data.services.customized && reviewRow(t('custom'), t('quoteRequired'))}{reviewRow(t('report'), p(`services.${data.delivery.report === 'pdf' ? 'reportPdf' : 'reportPaper'}`))}{data.delivery.report === 'paper' && <>{reviewRow(t('shipping'), data.delivery.shipping ? p(`services.${data.delivery.shipping}`) : '')}{reviewRow(t('recipientName'), reviewAddress(destination))}{reviewRow(t('copies'), String(data.delivery.extraCopies))}</>}{data.notes && reviewRow(t('notes'), data.notes)}</dl></div>
+              <div className={s.reviewSection}><h3>{t('evalueeStep')}<button type="button" className={s.textButton} onClick={() => navigate(1)}>{t('edit')}</button></h3><dl className={s.review}>{reviewRow(t('fullName'), [data.evaluee.title ? t(`titles.${data.evaluee.title}`) : '', data.evaluee.first, data.evaluee.middle, data.evaluee.last].filter(Boolean).join(' '))}{reviewRow(t('birth'), data.evaluee.birth)}{data.educations.map((edu, index) => <div key={index}><dt>{t('educationNumber', { count: index + 1 })}</dt><dd>{edu.degree}<br />{edu.school} · {countryLabel(edu.country, locale)}<br />{edu.start} — {edu.end}</dd></div>)}</dl></div>
+              <div className={s.reviewSection}><h3>{t('servicesStep')}<button type="button" className={s.textButton} onClick={() => navigate(2)}>{t('edit')}</button></h3><dl className={s.review}>{evaluationGroups.filter(g => data.services[g.id].tier).map(g => <div key={g.id}><dt>{p(`services.${g.id}`)}</dt><dd>{formatTurnaround(g.rates.find(r => r.id === data.services[g.id].tier)!.turnaround!, p)}{data.services[g.id].additionalDegrees > 0 && <small>{t('additionalCount', { count: data.services[g.id].additionalDegrees })}</small>}</dd></div>)}{data.services.translation && reviewRow(t('translation'), t('quoteRequired'))}{data.services.customized && reviewRow(t('custom'), t('quoteRequired'))}{reviewRow(t('report'), p(`services.${data.delivery.report === 'extraCopy' ? 'reportExtra' : data.delivery.report === 'pdf' ? 'reportPdf' : 'reportPaper'}`))}{data.delivery.report !== 'pdf' && <>{reviewRow(t('shipping'), data.delivery.shipping ? p(`services.${data.delivery.shipping}`) : '')}{reviewRow(t('recipientName'), reviewAddress(destination))}{reviewRow(t('copies'), String(data.delivery.extraCopies))}</>}{data.notes && reviewRow(t('notes'), data.notes)}</dl></div>
               <div className={s.notice}><strong>{t('documentsHeading')}</strong><p>{t('documentsNote')}</p></div>
               <label className={s.check}><input {...accessibility('terms')} type="checkbox" checked={data.terms} onChange={e => update('terms', e.target.checked)} /><span>{t('agree')} <a href="/terms" target="_blank" rel="noreferrer">{t('termsLink')}</a> {t('and')} <a href="/privacy" target="_blank" rel="noreferrer">{t('privacy')}</a>.</span></label>
               {fieldError('terms') && <p className={s.fieldError} id="terms-error">{fieldError('terms')}</p>}

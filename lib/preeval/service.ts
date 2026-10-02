@@ -1,3 +1,4 @@
+import { saveLegacyPreeval } from "../legacy-application/store";
 import { randomUUID } from "node:crypto";
 import { db, audit, type Row } from "./db";
 import { hash, makeSession, authorize } from "./auth";
@@ -28,7 +29,9 @@ export async function submit(input: unknown) {
         throw new AppError("duplicate_conflict", 409);
       return existing;
     }
-    await tx`insert into preeval.educations(application_id,school_name,country_of_study,degree_obtained,start_date,end_date) values (${created.id},${v.schoolName},${v.countryOfStudy},${v.degreeObtained},${v.startDate},${v.endDate})`;
+    const educationId = randomUUID();
+    await saveLegacyPreeval(tx, created.id, educationId, v);
+    await tx`insert into preeval.educations(id,application_id,school_name,country_of_study,degree_obtained,start_date,end_date) values (${educationId},${created.id},${v.schoolName},${v.countryOfStudy},${v.degreeObtained},${v.startDate},${v.endDate})`;
     await tx`insert into preeval.audit(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
     return created;
   });
@@ -39,6 +42,15 @@ export async function application(id: string, staff = false) {
   const [app] =
     await db()`select a.*,row_to_json(e) as education from preeval.applications a join preeval.educations e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
+  const [legacy] = await db()`select * from public.aet_core_applications where id=${id}`;
+  if (legacy) {
+    app.first_name = legacy.first_name; app.middle_name = legacy.middle_name || '';
+    app.last_name = legacy.last_name; app.email = legacy.email;
+    const [education] = await db()`select * from public.aet_core_educations where id=${app.education.id} and application_id=${id}`;
+    if (education) app.education = { ...education,
+      start_date: `${education.study_start_date.year}-${education.study_start_date.month}`,
+      end_date: `${education.study_end_date.year}-${education.study_end_date.month}` };
+  }
   const files =
     await db()`select id,name,mime_type,bytes,state,created_at from preeval.files where application_id=${id} order by created_at`;
   const visible =

@@ -1,0 +1,581 @@
+{
+  "columns": [
+    {
+      "table_name": "aet_core_applications",
+      "name": "id",
+      "type": "uuid",
+      "required": true,
+      "default_value": "gen_random_uuid()"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "first_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "last_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "email",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "purpose",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "source",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "status",
+      "type": "text",
+      "required": true,
+      "default_value": "'draft'::text"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "created_at",
+      "type": "timestamp with time zone",
+      "required": true,
+      "default_value": "now()"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "updated_at",
+      "type": "timestamp with time zone",
+      "required": true,
+      "default_value": "now()"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "middle_name",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "id",
+      "type": "uuid",
+      "required": true,
+      "default_value": "gen_random_uuid()"
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "application_id",
+      "type": "uuid",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "country_of_study",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "degree_obtained",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "school_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "study_start_date",
+      "type": "jsonb",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "study_end_date",
+      "type": "jsonb",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "ai_output",
+      "type": "jsonb",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "id",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "application_id",
+      "type": "uuid",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "due_amount",
+      "type": "numeric(6,2)",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "payment_status",
+      "type": "text",
+      "required": true,
+      "default_value": "'pending'::text"
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "paid_at",
+      "type": "timestamp with time zone",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "payment_id",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "source",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "notes",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "id",
+      "type": "uuid",
+      "required": true,
+      "default_value": "gen_random_uuid()"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "status",
+      "type": "text",
+      "required": true,
+      "default_value": "'draft'::text"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "current_step",
+      "type": "smallint",
+      "required": true,
+      "default_value": "0"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "country",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "street_address",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "street_address2",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "city",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "region",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "zip_code",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fax",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "phone",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "email",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "purpose",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "purpose_other",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "pronouns",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "first_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "last_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "middle_name",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "date_of_birth",
+      "type": "date",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "service_type",
+      "type": "jsonb",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "delivery_method",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "additional_services",
+      "type": "text[]",
+      "required": false,
+      "default_value": "'{}'::text[]"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "additional_services_quantity",
+      "type": "jsonb",
+      "required": false,
+      "default_value": "'{\"pdf_only\": 0, \"extra_copy\": 0, \"pdf_with_hard_copy\": 0}'::jsonb"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "created_at",
+      "type": "timestamp with time zone",
+      "required": true,
+      "default_value": "now()"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "updated_at",
+      "type": "timestamp with time zone",
+      "required": true,
+      "default_value": "now()"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "submitted_at",
+      "type": "timestamp with time zone",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "payment_status",
+      "type": "text",
+      "required": false,
+      "default_value": "'pending'::text"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "payment_id",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "paid_at",
+      "type": "timestamp with time zone",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "office",
+      "type": "text",
+      "required": false,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "due_amount",
+      "type": "numeric(6,2)",
+      "required": false,
+      "default_value": "NULL::numeric"
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "id",
+      "type": "uuid",
+      "required": true,
+      "default_value": "gen_random_uuid()"
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "application_id",
+      "type": "uuid",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "country_of_study",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "degree_obtained",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "school_name",
+      "type": "text",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "study_start_date",
+      "type": "jsonb",
+      "required": true,
+      "default_value": null
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "study_end_date",
+      "type": "jsonb",
+      "required": true,
+      "default_value": null
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "aet_core_applications",
+      "name": "aet_core_applications_email_check",
+      "type": "c",
+      "definition": "CHECK ((email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'::text))"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "aet_core_applications_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "aet_core_applications",
+      "name": "aet_core_applications_status_check",
+      "type": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])))"
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "aet_core_educations_application_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (application_id) REFERENCES aet_core_applications(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "aet_core_educations",
+      "name": "aet_core_educations_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "aet_core_payments_application_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (application_id) REFERENCES aet_core_applications(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "aet_core_payments",
+      "name": "aet_core_payments_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_delivery_method_check",
+      "type": "c",
+      "definition": "CHECK ((delivery_method = ANY (ARRAY['no_delivery_needed'::text, 'usps_first_class_domestic'::text, 'usps_first_class_international'::text, 'usps_priority_domestic'::text, 'usps_express_domestic'::text, 'ups_express_domestic'::text, 'usps_express_international'::text, 'fedex_express_international'::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_email_check",
+      "type": "c",
+      "definition": "CHECK ((email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'::text))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_fax_check",
+      "type": "c",
+      "definition": "CHECK ((fax ~ '^\\d{3}-\\d{3}-\\d{4}$'::text))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_payment_status_check",
+      "type": "c",
+      "definition": "CHECK ((payment_status = ANY (ARRAY['pending'::text, 'paid'::text, 'failed'::text, 'expired'::text, 'refunded'::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_payment_status_check1",
+      "type": "c",
+      "definition": "CHECK ((payment_status = ANY (ARRAY['boston'::text, 'new york'::text, 'miami'::text, 'san francisco'::text, 'los angeles'::text, NULL::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_phone_check",
+      "type": "c",
+      "definition": "CHECK ((phone ~ '^\\d{3}-\\d{3}-\\d{4}$'::text))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_pronouns_check",
+      "type": "c",
+      "definition": "CHECK ((pronouns = ANY (ARRAY['mr'::text, 'ms'::text, 'mx'::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_purpose_check",
+      "type": "c",
+      "definition": "CHECK ((purpose = ANY (ARRAY['evaluation-uscis'::text, 'evaluation-immigration'::text, 'evaluation-employment'::text, 'evaluation-education'::text, 'immigration'::text, 'employment'::text, 'education'::text, 'other'::text, 'translation'::text, 'evaluation'::text, 'interpretation'::text, 'visa'::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_status_check",
+      "type": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])))"
+    },
+    {
+      "table_name": "fce_applications",
+      "name": "fce_applications_zip_code_check",
+      "type": "c",
+      "definition": "CHECK ((zip_code ~ '^\\d{5}(-\\d{4})?$'::text))"
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "fce_educations_application_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (application_id) REFERENCES fce_applications(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "fce_educations",
+      "name": "fce_educations_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    }
+  ]
+}

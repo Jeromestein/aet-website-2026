@@ -54,7 +54,12 @@ and private confirmation pages. See [formal application scope](docs/evaluation-a
 Formal applications now continue through private document upload, confirmed quotes,
 Stripe test checkout, staff review at `/en/admin/evaluations`, and PDF report release.
 Customer access can be renewed with a staff-issued single-use link. This remains a
-local pilot; automated formal email notifications and production launch are pending. In the
+local pilot; automated formal email notifications and production launch are pending.
+Both application forms now save business fields through the original table
+contracts. After the local Supabase migrations, run `pnpm legacy:setup`; it
+creates a schema-only local fixture and installs auxiliary workflow bridges.
+Existing production tables and records are untouched. See
+[field mappings and the old-reader compatibility patch](docs/legacy-form-compatibility.md). In the
 local pilot (`PREEVAL_ENV=local`), the homepage pre-evaluation button opens the new
 local workflow; other environments retain the existing portal destination. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
@@ -153,6 +158,7 @@ remains the production system until a separately authorized cutover.
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
+- [Form/database compatibility](docs/legacy-form-compatibility.md): original field mappings, website price snapshots, local setup and cutover limits.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
 - [Migration checklist](docs/migration-checklist.md): legacy page scope, CRM replacement milestones on `dev`, language coverage, blog inventory, and launch dependencies.
 - [SEO checklist](docs/seo-checklist.md): ordered work and acceptance checks for redirects, indexing, metadata, and structured data.

@@ -229,7 +229,10 @@
       "general": "Translation, proofreading, and English writing.",
       "shipping": "Delivery time is separate from service processing time."
     },
-    "shippingGroups": { "domestic": "Domestic", "international": "International" },
+    "shippingGroups": {
+      "domestic": "Domestic",
+      "international": "International"
+    },
     "columns": {
       "service": "Document / Service",
       "price": "Estimated Price",
@@ -347,7 +350,7 @@
     "office": "Office",
     "contactHeading": "Contact information",
     "email": "Email address",
-    "phone": "Phone (include country code)",
+    "phone": "Phone (123-456-7890)",
     "fax": "Fax",
     "salutation": "Title",
     "firstName": "First name",
@@ -356,7 +359,7 @@
     "birth": "Date of birth",
     "fullName": "Evaluee name",
     "educationHeading": "Education history",
-    "educationNote": "Add each degree you want evaluated. For a position evaluation or a custom request without academic credentials, remove the empty education entry.",
+    "educationNote": "Add your education records. Remove an empty entry if it does not apply.",
     "educationNumber": "Education {count}",
     "studyCountry": "Country of study",
     "school": "Institution name",
@@ -370,7 +373,7 @@
     "additionalCount": "Additional degrees: {count}",
     "from": "From {amount}",
     "custom": "Help me choose / custom evaluation",
-    "customNote": "Describe what you need below. A quote is required.",
+    "customNote": "You may describe your needs in Step 1. The fee requires a separate quote.",
     "translation": "Certified English translation needed",
     "translationNote": "Translation is quoted after reviewing your documents and is not included in this estimate.",
     "deliveryHeading": "Report & delivery",
@@ -426,8 +429,8 @@
     "errors": {
       "required": "Complete this required field.",
       "email": "Enter a valid email address.",
-      "phone": "Enter a valid phone number, including country code.",
-      "postal": "Enter a valid U.S. ZIP code.",
+      "phone": "Use 123-456-7890 for phone and fax.",
+      "postal": "Use a five-digit ZIP code or ZIP+4 (12345-6789).",
       "birth": "Enter a valid date of birth that is not in the future.",
       "month": "Enter a valid month and year that is not in the future.",
       "order": "The end date must be on or after the start date.",
@@ -438,7 +441,10 @@
       "delivery": "PDF-only reports cannot include paper copies or shipping.",
       "shipping": "Choose a shipping method for the destination country.",
       "details": "Describe the custom service you need.",
-      "terms": "Review and accept the terms before submitting."
+      "terms": "Review and accept the terms before submitting.",
+      "country": "Select a country from the list.",
+      "address": "Enter the client name, complete street address and city.",
+      "amount": "This request exceeds the existing application limit. Please contact AET."
     },
     "purposeOptions": {
       "uscis": "USCIS / immigration",
@@ -460,7 +466,9 @@
       "course": "Degree equivalency, credits, grades and GPA.",
       "expert": "Combines academic study with relevant professional experience.",
       "position": "Evaluation of a position’s responsibilities and degree requirements."
-    }
+    },
+    "legacyFormatNote": "Phone/fax 123-456-7890; ZIP code 12345 or 12345-6789. Contact AET if your address does not fit this format.",
+    "mailingAddressNote": "Paper reports are mailed to the client address entered in Step 1."
   },
   "evaluationWorkflow": {
     "title": "Your evaluation application",

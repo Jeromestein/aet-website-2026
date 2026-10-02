@@ -1,4 +1,7 @@
 const en = {
+  chooseCountry: "Select country",
+  documentsBeforeSubmit: "Optional. Select up to 5 PDF/JPG/PNG files (20 MB each). They upload when you submit; reselect after refreshing this page.",
+  documentRetry: "Your application was saved, but some documents could not be uploaded. Please upload the missing files below.",
   eyebrow: "AET PRE-EVALUATION",
   title: "Understand your degree’s U.S. equivalency.",
   intro:
@@ -24,9 +27,9 @@ const en = {
   degreeObtained: "Name of degree",
   startDate: "Start month and year",
   endDate: "End month and year",
-  hint: "Enter the institution and degree names in English, as in the previous application form.",
+  hint: "Enter the institution and degree names in English.",
   required:
-    "All fields are required except middle name. Documents can be uploaded after submitting.",
+    "All fields are required except middle name and supporting documents.",
   terms: "I have read and agree to AET’s Terms of Service.",
   termsLink: "Terms of Service",
   education: "Education",
@@ -112,6 +115,9 @@ const en = {
 export type Copy = typeof en;
 const zh: Copy = {
   ...en,
+  chooseCountry: "请选择国家",
+  documentsBeforeSubmit: "选填。可选择最多 5 个 PDF／JPG／PNG 文件，每个不超过 20 MB。提交申请时上传；刷新页面后需重新选择。",
+  documentRetry: "申请已保存，但部分文件上传失败。请在下方补传尚未上传的文件。",
   eyebrow: "AET 学历预评估",
   title: "了解您的学历在美国对应的水平。",
   intro: "先获得一份初步评估，再规划下一步的正式学历认证。",
@@ -136,8 +142,8 @@ const zh: Copy = {
   degreeObtained: "学历／学位名称",
   startDate: "入学年月",
   endDate: "毕业年月",
-  hint: "请与旧版表格一致，使用英文填写学校和学位名称。",
-  required: "除中间名外，以下信息均为必填。提交后可上传补充材料。",
+  hint: "请使用英文填写学校和学位名称。",
+  required: "除中间名和证明材料外，以下信息均为必填。",
   terms: "我已阅读并同意 AET 服务条款。",
   termsLink: "服务条款",
   education: "学历信息",
@@ -212,6 +218,9 @@ const zh: Copy = {
 };
 const es: Copy = {
   ...en,
+  chooseCountry: "Seleccione el país",
+  documentsBeforeSubmit: "Opcional. Seleccione hasta 5 archivos PDF/JPG/PNG (20 MB cada uno). Se cargan al enviar; vuelva a seleccionarlos tras actualizar la página.",
+  documentRetry: "La solicitud se guardó, pero algunos documentos no se cargaron. Adjunte los archivos pendientes abajo.",
   eyebrow: "PREEVALUACIÓN AET",
   title: "Conozca la equivalencia de su título en EE. UU.",
   intro:
@@ -237,9 +246,9 @@ const es: Copy = {
   degreeObtained: "Nombre del título",
   startDate: "Mes y año de inicio",
   endDate: "Mes y año de finalización",
-  hint: "Escriba los nombres de la institución y del título en inglés, como en el formulario anterior.",
+  hint: "Escriba los nombres de la institución y del título en inglés.",
   required:
-    "Todos los campos son obligatorios salvo el segundo nombre. Puede subir documentos después del envío.",
+    "Todos los campos son obligatorios salvo el segundo nombre y los documentos de apoyo.",
   terms: "He leído y acepto las condiciones de servicio de AET.",
   termsLink: "Condiciones de servicio",
   education: "Estudios",

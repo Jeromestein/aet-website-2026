@@ -1,4 +1,6 @@
 "use client";
+import { ApplicationDate } from "@/components/application-date";
+import { countryOptions, countryLabel } from "@/lib/legacy-application/countries";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
@@ -79,6 +81,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
     endDate: "",
   });
   const [terms, setTerms] = useState(false);
+  const [documents, setDocuments] = useState<File[]>([]);
   const requestId = useRef("");
   useEffect(() => {
     requestId.current =
@@ -103,7 +106,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
     if (step < 2) {
       const form = new FormData(event.currentTarget);
       for (const field of fields)
-        current[field] = String(form.get(field) || "");
+        current[field] = field.endsWith("Date") ? values[field] : String(form.get(field) || "");
       setValues(current);
     }
     if (
@@ -129,7 +132,13 @@ export function ApplicationForm({ locale }: { locale: string }) {
         requestId: requestId.current,
       });
       sessionStorage.removeItem("aet-pre-evaluation-request");
-      window.location.assign(data.url);
+      let uploadFailed = false;
+      for (const document of documents) {
+        const body = new FormData(); body.set('file', document);
+        try { await api(`applications/${data.id}/files`, body); }
+        catch { uploadFailed = true; }
+      }
+      window.location.assign(data.url + (uploadFailed ? '&upload=retry' : ''));
     } catch (e) {
       setError(errorText(t, (e as Error).message));
       setBusy(false);
@@ -169,7 +178,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
                     }
                   >
                     {t[name as keyof typeof t]}
-                    <input
+                    {name.endsWith('Date') ? <ApplicationDate id={name} label={t[name as keyof typeof t]} value={values[name]} onChange={next => setValues(v => ({...v,[name]:next}))} locale={locale} /> : ['country', 'countryOfStudy'].includes(name) ? <select name={name} required value={values[name]} onChange={e => setValues(v => ({ ...v, [name]: e.target.value }))}>
+                      <option value="">{t.chooseCountry}</option>
+                      {countryOptions(locale).map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select> : <input
                       name={name}
                       value={values[name]}
                       onChange={(e) =>
@@ -197,10 +209,23 @@ export function ApplicationForm({ locale }: { locale: string }) {
                                   ? "country-name"
                                   : "off"
                       }
-                    />
+                    />}
                   </label>
                 ))}
               </div>
+              {step === 1 && <div>
+                <label className={s.field}>{t.documents}
+                  <input type="file" multiple accept="application/pdf,image/jpeg,image/png" onChange={event => {
+                    const selected = Array.from(event.target.files || []);
+                    if (selected.length > 5 || selected.some(file => file.size > 20 * 1024 * 1024 || !['application/pdf','image/jpeg','image/png'].includes(file.type))) {
+                      setError(t.invalid_file); event.target.value = ''; setDocuments([]); return;
+                    }
+                    setDocuments(selected); setError('');
+                  }} />
+                </label>
+                <p className={s.helper}>{t.documentsBeforeSubmit}</p>
+                {documents.map((file,index)=><p key={index}>{file.name}</p>)}
+              </div>}
             </>
           ) : (
             <>
@@ -211,10 +236,11 @@ export function ApplicationForm({ locale }: { locale: string }) {
                   .map(([name, value]) => (
                     <div key={name}>
                       <dt>{t[name as keyof typeof t]}</dt>
-                      <dd>{value}</dd>
+                      <dd>{["country", "countryOfStudy"].includes(name) ? countryLabel(value, locale) : value}</dd>
                     </div>
                   ))}
               </dl>
+              {documents.length > 0 && <p>{t.documents}: {documents.map(file => file.name).join(", ")}</p>}
               <Prices locale={locale} />
               <label className={s.check}>
                 <input
@@ -411,6 +437,7 @@ export function ApplicationResult({
   }
   useEffect(() => {
     load();
+    if (new URLSearchParams(location.search).get('upload') === 'retry') setError(t.documentRetry);
     setCancelled(
       new URLSearchParams(location.search).get("checkout") === "cancelled",
     );

@@ -11,7 +11,7 @@ export function ApplicationDetails({ data }: { data: ApplicationData }) {
     {data.educations.map((edu, i) => <div key={i}><dt>{t('educationNumber', { count: i + 1 })}</dt><dd>{edu.degree}<br />{edu.school} · {edu.country}<br />{edu.start} — {edu.end}</dd></div>)}
     <div><dt>{t('purpose')}</dt><dd>{t('purposeOptions.' + data.client.purpose)}</dd></div>
     {(data.services.customized || data.services.translation) && <div><dt>{t('servicesStep')}</dt><dd>{[data.services.customized && t('custom'), data.services.translation && t('translation')].filter(Boolean).join('\n')}</dd></div>}
-    {data.delivery.report === 'paper' && <div><dt>{t('deliveryHeading')}</dt><dd>{[destination.name, destination.street, destination.street2, destination.city, destination.region, destination.postal, destination.country].filter(Boolean).join('\n')}</dd></div>}
+    {data.delivery.report !== 'pdf' && <div><dt>{t('deliveryHeading')}</dt><dd>{[destination.name, destination.street, destination.street2, destination.city, destination.region, destination.postal, destination.country].filter(Boolean).join('\n')}</dd></div>}
     {data.notes && <div><dt>{t('notes')}</dt><dd>{data.notes}</dd></div>}
   </dl>;
 }

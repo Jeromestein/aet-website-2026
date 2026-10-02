@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isCountryCode, regionOptions } from '../legacy-application/countries';
 import { evaluationGroups, evaluationAdditionalDegree, evaluationReports, shipping, type Price, type Turnaround } from '../pricing';
 
 export const serviceIds = ['document', 'course', 'expert', 'position'] as const;
@@ -14,7 +15,7 @@ export const draftSchema = z.object({
   evaluee: z.object({ title: z.enum(['', 'mr', 'ms', 'mx']), first: text, middle: text, last: text, birth: text }).strict(),
   educations: z.array(educationSchema).max(20),
   services: z.object({ document: choice, course: choice, expert: choice, position: choice, customized: z.boolean(), translation: z.boolean() }).strict(),
-  delivery: z.object({ report: z.enum(['pdf', 'paper']), extraCopies: z.number().int().min(0).max(20), shipping: text, sameAddress: z.boolean(), address: addressSchema }).strict(),
+  delivery: z.object({ report: z.enum(['pdf', 'paper', 'extraCopy']), extraCopies: z.number().int().min(0).max(20), shipping: text, sameAddress: z.literal(true), address: addressSchema }).strict(),
   notes: z.string().trim().max(3000),
   terms: z.boolean(),
 }).strict();
@@ -40,15 +41,15 @@ export function validate(data: ApplicationData, throughStep = 3): FieldError[] {
   const required = (v: string, path: string, step: number) => { if (!v.trim()) add(path, 'required', step); };
   const address = (v: Address, prefix: string, step: number) => {
     for (const key of ['name', 'country', 'street', 'city'] as const) required(v[key], `${prefix}.${key}`, step);
-    if (isUS(v.country)) {
-      required(v.region, `${prefix}.region`, step);
-      if (!/^\d{5}(-\d{4})?$/.test(v.postal)) add(`${prefix}.postal`, 'postal', step);
-    }
+    if (!isCountryCode(v.country)) add(`${prefix}.country`, 'country', step);
+    if (!regionOptions(v.country).some(region => region.value === v.region)) add(`${prefix}.region`, 'required', step);
+    if (!/^\d{5}(-\d{4})?$/.test(v.postal)) add(`${prefix}.postal`, 'postal', step);
+    if (v.name.length < 2 || v.street.length < 5 || v.city.length < 2) add(`${prefix}.street`, 'address', step);
   };
   address(data.client, 'client', 0);
   if (!z.email().safeParse(data.client.email).success) add('client.email', 'email', 0);
-  if (data.client.phone.replace(/\D/g, '').length < 7 || !/^[+\d\s().-]+$/.test(data.client.phone)) add('client.phone', 'phone', 0);
-  if (data.client.fax && (data.client.fax.replace(/\D/g, '').length < 7 || !/^[+\d\s().-]+$/.test(data.client.fax))) add('client.fax', 'phone', 0);
+  if (!/^\d{3}-\d{3}-\d{4}$/.test(data.client.phone)) add('client.phone', 'phone', 0);
+  if (data.client.fax && !/^\d{3}-\d{3}-\d{4}$/.test(data.client.fax)) add('client.fax', 'phone', 0);
   required(data.client.office, 'client.office', 0); required(data.client.purpose, 'client.purpose', 0);
   for (const key of ['title', 'first', 'last'] as const) required(data.evaluee[key], `evaluee.${key}`, 1);
   const birth = data.evaluee.birth;
@@ -57,25 +58,27 @@ export function validate(data: ApplicationData, throughStep = 3): FieldError[] {
   data.educations.forEach((edu, i) => {
     const prefix = `educations.${i}`;
     for (const key of ['school', 'country', 'degree'] as const) required(edu[key], `${prefix}.${key}`, 1);
+    if (!isCountryCode(edu.country)) add(`${prefix}.country`, 'country', 1);
     for (const key of ['start', 'end'] as const) if (!monthValid(edu[key])) add(`${prefix}.${key}`, 'month', 1);
     if (edu.start > edu.end) add(`${prefix}.end`, 'order', 1);
   });
   if (!serviceIds.some(id => data.services[id].tier) && !data.services.customized) add('services', 'service', 2);
-  if (['document', 'course', 'expert'].some(id => data.services[id as ServiceId].tier) && !data.educations.length) add('services', 'education', 2);
   for (const id of serviceIds) {
     const selected = data.services[id];
     if (selected.tier && !evaluationGroups.find(g => g.id === id)!.rates.some(r => r.id === selected.tier)) add(`services.${id}.tier`, 'tier', 2);
     if (selected.additionalDegrees && (!selected.tier || !['document', 'course'].includes(id) || selected.additionalDegrees >= data.educations.length)) add(`services.${id}.additionalDegrees`, 'degrees', 2);
   }
-  if (data.services.customized && !data.notes.trim()) add('notes', 'details', 2);
   if (data.delivery.report === 'pdf') {
     if (data.delivery.shipping || data.delivery.extraCopies) add('delivery.report', 'delivery', 2);
   } else {
-    if (!data.delivery.sameAddress) address(data.delivery.address, 'delivery.address', 2);
-    const destination = data.delivery.sameAddress ? data.client : data.delivery.address;
+    const destination = data.client;
+    if (data.delivery.report === 'extraCopy' && data.delivery.extraCopies < 1) add('delivery.extraCopies', 'required', 2);
+    if (data.delivery.report === 'paper' && data.delivery.extraCopies) add('delivery.extraCopies', 'delivery', 2);
     const rate = shipping.find(r => r.id === data.delivery.shipping);
     if (!rate || (isUS(destination.country) !== rate.id.startsWith('domestic'))) add('delivery.shipping', 'shipping', 2);
   }
+  if (!data.delivery.sameAddress || Object.values(data.delivery.address).some(Boolean)) add('delivery.address', 'delivery', 2);
+  if (!errors.length && quote(data).max > 999999) add('services', 'amount', 2);
   if (!data.terms) add('terms', 'terms', 3);
   return errors;
 }
@@ -102,9 +105,8 @@ export function quote(data: ApplicationData): Quote {
     add(group.id, rate.price, 1, rate.id, rate.turnaround);
     if (group.id === 'document' || group.id === 'course') add(`${group.id}Additional`, { kind: 'fixed', amount: evaluationAdditionalDegree[group.id] }, selected.additionalDegrees);
   }
-  add(`report${data.delivery.report === 'pdf' ? 'Pdf' : 'Paper'}`, evaluationReports.find(r => r.id === data.delivery.report)!.price);
-  if (data.delivery.report === 'paper') {
-    add('reportExtra', evaluationReports.find(r => r.id === 'extraCopy')!.price, data.delivery.extraCopies);
+  add(data.delivery.report === 'extraCopy' ? 'reportExtra' : `report${data.delivery.report === 'pdf' ? 'Pdf' : 'Paper'}`, evaluationReports.find(r => r.id === data.delivery.report)!.price, data.delivery.report === 'extraCopy' ? data.delivery.extraCopies : 1);
+  if (data.delivery.report !== 'pdf') {
     if (data.delivery.shipping) {
       const rate = shipping.find(r => r.id === data.delivery.shipping);
       if (!rate) throw new Error('Unknown shipping');

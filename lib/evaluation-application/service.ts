@@ -1,3 +1,4 @@
+import { fromLegacyFormal } from '../legacy-application/mapping';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
@@ -25,6 +26,17 @@ export async function access(id: string) {
 export async function application(id: string, admin: boolean): Promise<ApplicationRecord> {
   const [row] = await db()`select id,locale,data,quote,status,payment_status,version,input_version,confirmed_quote,customer_message,released_file_id,created_at,updated_at from evaluation.applications where id=${id}`;
   if (!row) throw new AppError('not_found', 404);
+  const [legacy] = await db()`select * from public.fce_applications where id=${id}`;
+  if (legacy) {
+    const educationRows = await db()`select * from public.fce_educations where application_id=${id} order by array_position(${legacy.service_type.websiteQuote?.educationIds || []}::text[],id::text),id`;
+    row.data = fromLegacyFormal(legacy, educationRows, row.data);
+    // Old local pilot receipts without a public record remain readable.
+    // The submitted price snapshot is never recomputed from today's catalog.
+    if (legacy.service_type.websiteQuote?.version === 1) {
+      const { version: _version, educationIds: _educationIds, ...savedQuote } = legacy.service_type.websiteQuote;
+      row.quote = savedQuote;
+    }
+  }
   const files = await db()`select id,kind,name,bytes,input_version,created_at from evaluation.files where application_id=${id} and state='ready' order by created_at`;
   row.files = files.filter(f => admin || f.kind === 'document' || canDownloadReport(row as ApplicationRecord, f.id));
   row.total = payableTotal(row as ApplicationRecord);

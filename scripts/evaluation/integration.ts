@@ -11,9 +11,9 @@ let count = 0;
 function check(ok: unknown, description: string) { assert.ok(ok, description); count++; console.log(`PASS ${description}`); }
 function payload() {
   const data = initialData();
-  data.client = { ...data.client, name: 'Fictional Evaluation API Test', email: `test-${randomUUID()}@example.test`, country: 'United States', street: '123 Fictional Street', city: 'Miami', region: 'FL', postal: '33101', phone: '+1 202 555 0149', office: 'Miami', purpose: 'education' };
+  data.client = { ...data.client, name: 'Fictional Evaluation API Test', email: `test-${randomUUID()}@example.test`, country: 'US', street: '123 Fictional Street', city: 'Miami', region: 'FL', postal: '33101', phone: '202-555-0149', office: 'Miami', purpose: 'education' };
   data.evaluee = { title: 'mx', first: 'Fictional', middle: '', last: 'Applicant', birth: '1995-02-28' };
-  data.educations = [{ school: 'Fictional University', country: 'Canada', degree: 'Bachelor of Science', start: '2013-09', end: '2017-06' }];
+  data.educations = [{ school: 'Fictional University', country: 'CA', degree: 'Bachelor of Science', start: '2013-09', end: '2017-06' }];
   data.services.expert.tier = 'standard'; data.terms = true;
   data.notes = 'Disposable formal-evaluation integration fixture. No email, payment or file upload.';
   return { requestId: randomUUID(), locale: 'en', data };
@@ -26,6 +26,11 @@ async function main() { try {
   const input = payload(); const key = randomBytes(32).toString('hex');
   const created = await post(input, key); check(created.status === 201, 'valid submission is persisted');
   const { id } = await created.json(); ids.push(id);
+  const [legacy] = await sql`select * from public.fce_applications where id=${id}`;
+  const educationRows = await sql`select * from public.fce_educations where application_id=${id}`;
+  check(legacy.purpose === 'evaluation-education' && legacy.phone === '202-555-0149' && legacy.country === 'US', 'real API submission uses legacy business fields and codes');
+  check(educationRows.length === 1 && educationRows[0].study_start_date.month === '09', 'real API submission creates the original education relationship');
+  check(legacy.service_type.professionalExperience.speed === '21day' && legacy.due_amount === '630.00', 'legacy reader receives the saved website amount');
   const setCookie = created.headers.get('set-cookie')!; const cookie = setCookie.split(';')[0];
   check(/HttpOnly/i.test(setCookie) && /SameSite=strict/i.test(setCookie), 'receipt access uses a restricted HTTP-only cookie');
   const saved = await get(id, cookie); const receipt = await saved.json();
@@ -35,6 +40,7 @@ async function main() { try {
   check(!('access_hash' in receipt) && !('request_hash' in receipt), 'receipt excludes credential and idempotency hashes');
   check(saved.headers.get('cache-control') === 'no-store', 'private responses cannot be cached');
   const duplicate = await post(input, key); check(duplicate.status === 200 && (await duplicate.json()).id === id, 'retries reuse the original application');
+  check((await sql`select count(*)::int as count from public.fce_educations where application_id=${id}`)[0].count === 1, 'retry does not duplicate legacy education rows');
   const changed = structuredClone(input); changed.data.client.name = 'Changed Test';
   check((await post(changed, key)).status === 409, 'changed retry is not silently treated as saved');
   check((await post(input, randomBytes(32).toString('hex'))).status === 409, 'idempotency key alone cannot take over an application');
@@ -60,6 +66,7 @@ async function main() { try {
   console.log(`${count} formal evaluation API checks passed.`);
 } finally {
   for (const id of ids.filter(Boolean)) await sql`delete from evaluation.applications where id=${id} and data->>'notes'='Disposable formal-evaluation integration fixture. No email, payment or file upload.'`;
+  for (const id of ids.filter(Boolean)) await sql`delete from public.fce_applications where id=${id}`;
   await sql.end();
 } }
 main().catch(error => { console.error(error); process.exitCode = 1; });

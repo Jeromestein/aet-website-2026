@@ -20,9 +20,9 @@ async function req(path: string, body?: unknown, cookie = '', expected = 200, re
  return { content, cookie: res.headers.get('set-cookie')?.split(';')[0] || cookie };
 }
 async function create(custom = false) {
- const data = initialData(); Object.assign(data.client, { name: 'Fictional Workflow Test', email: `workflow-${randomUUID()}@example.test`, country: 'United States', street: '123 Fictional Street', city: 'Miami', region: 'FL', postal: '33101', phone: '+1 202 555 0149', office: 'Miami', purpose: 'education' });
+ const data = initialData(); Object.assign(data.client, { name: 'Fictional Workflow Test', email: `workflow-${randomUUID()}@example.test`, country: 'US', street: '123 Fictional Street', city: 'Miami', region: 'FL', postal: '33101', phone: '202-555-0149', office: 'Miami', purpose: 'education' });
  data.evaluee={ title: 'mx', first: 'Fictional', middle: '', last: 'Applicant', birth: '1995-02-28' };
- data.educations=[{ school: 'Fictional University', country: 'Canada', degree: 'Bachelor of Science', start: '2013-09', end: '2017-06' }];
+ data.educations=[{ school: 'Fictional University', country: 'CA', degree: 'Bachelor of Science', start: '2013-09', end: '2017-06' }];
  data.services.document.tier='standard'; data.services.translation=custom; data.notes='Disposable formal workflow fixture.'; data.terms=true;
  const res=await fetch(origin+'/api/evaluation/applications',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','X-Application-Key':randomBytes(32).toString('hex')},body:JSON.stringify({requestId:randomUUID(),locale:'en',data})});
  assert.equal(res.status,201); const {id}=await res.json();ids.push(id);return {id,cookie:res.headers.get('set-cookie')!.split(';')[0],path:'applications/'+id};
@@ -107,6 +107,7 @@ async function main(){try{
 }finally{
  // Remove only this run's private local fixtures. Dropbox synthetic test uploads remain in the isolated test directory.
  for(const id of ids) await sql`delete from evaluation.applications where id=${id} and data->>'notes'='Disposable formal workflow fixture.'`;
+ for (const id of ids.filter(Boolean)) await sql`delete from public.fce_applications where id=${id}`;
  await sql`delete from preeval.sessions where hash=${digest(adminToken)}`;
  for (const eventId of eventIds) await sql`delete from evaluation.payment_events where id=${eventId}`;
  await sql.end();

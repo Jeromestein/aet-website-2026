@@ -229,7 +229,10 @@
       "general": "翻译、校对及英文写作。",
       "shipping": "配送时间与服务处理时间分开计算。"
     },
-    "shippingGroups": { "domestic": "美国境内", "international": "国际" },
+    "shippingGroups": {
+      "domestic": "美国境内",
+      "international": "国际"
+    },
     "columns": {
       "service": "文件／服务",
       "price": "参考价格",
@@ -347,7 +350,7 @@
     "office": "受理办公室",
     "contactHeading": "联系信息",
     "email": "电子邮箱",
-    "phone": "电话（含国家区号）",
+    "phone": "电话（123-456-7890）",
     "fax": "传真",
     "salutation": "称谓",
     "firstName": "名",
@@ -356,7 +359,7 @@
     "birth": "出生日期",
     "fullName": "被评估人姓名",
     "educationHeading": "教育经历",
-    "educationNote": "请添加需要评估的每项学历。如仅申请职位评估或不涉及学历的定制服务，可移除空白学历条目。",
+    "educationNote": "添加您的学历记录。不适用时可移除空白记录。",
     "educationNumber": "学历 {count}",
     "studyCountry": "就读国家或地区",
     "school": "学校名称",
@@ -370,7 +373,7 @@
     "additionalCount": "额外学历：{count} 项",
     "from": "{amount} 起",
     "custom": "协助选择／定制评估",
-    "customNote": "请在下方说明需求，费用需另行报价。",
+    "customNote": "可在第一步的补充说明中填写需求，费用需另行报价。",
     "translation": "需要英文认证翻译",
     "translationNote": "翻译费用需审阅文件后报价，未包含在当前估算中。",
     "deliveryHeading": "报告与寄送",
@@ -426,8 +429,8 @@
     "errors": {
       "required": "请填写此必填项。",
       "email": "请填写有效的电子邮箱。",
-      "phone": "请填写有效电话号码（含国家区号）。",
-      "postal": "请填写有效的美国邮编。",
+      "phone": "电话和传真请使用 123-456-7890 格式。",
+      "postal": "请输入五位邮编或 12345-6789 格式的邮编。",
       "birth": "请填写有效的出生日期，不可晚于今天。",
       "month": "请填写有效年月，不可晚于当前月份。",
       "order": "毕业时间不可早于入学时间。",
@@ -438,7 +441,10 @@
       "delivery": "仅 PDF 报告不能包含纸质副本或邮寄服务。",
       "shipping": "请选择适用于收件国家的寄送方式。",
       "details": "请说明您需要的定制服务。",
-      "terms": "提交前请阅读并同意相关条款。"
+      "terms": "提交前请阅读并同意相关条款。",
+      "country": "请从列表选择国家。",
+      "address": "请填写客户姓名、完整街道地址和城市。",
+      "amount": "本申请超过现有系统的金额范围，请联系 AET。"
     },
     "purposeOptions": {
       "uscis": "USCIS／移民",
@@ -460,7 +466,9 @@
       "course": "提供学位等同性、学分、成绩及 GPA。",
       "expert": "结合学历背景与相关专业工作经验。",
       "position": "评估职位职责及学历要求。"
-    }
+    },
+    "legacyFormatNote": "电话／传真为 123-456-7890，邮编为 12345 或 12345-6789。若您的地址无法使用此格式，请联系 AET。",
+    "mailingAddressNote": "纸质报告将寄往第一步填写的客户地址。"
   },
   "evaluationWorkflow": {
     "title": "您的学历评估申请",

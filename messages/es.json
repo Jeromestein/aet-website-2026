@@ -229,7 +229,10 @@
       "general": "Traducción, corrección de textos y redacción en inglés.",
       "shipping": "El plazo de envío es independiente del tiempo de procesamiento del servicio."
     },
-    "shippingGroups": { "domestic": "Nacional", "international": "Internacional" },
+    "shippingGroups": {
+      "domestic": "Nacional",
+      "international": "Internacional"
+    },
     "columns": {
       "service": "Documento / Servicio",
       "price": "Precio estimado",
@@ -347,7 +350,7 @@
     "office": "Oficina",
     "contactHeading": "Información de contacto",
     "email": "Correo electrónico",
-    "phone": "Teléfono (con código de país)",
+    "phone": "Teléfono (123-456-7890)",
     "fax": "Fax",
     "salutation": "Tratamiento",
     "firstName": "Nombre",
@@ -356,7 +359,7 @@
     "birth": "Fecha de nacimiento",
     "fullName": "Nombre del evaluado",
     "educationHeading": "Historial académico",
-    "educationNote": "Añada cada título que desea evaluar. Para una evaluación de puesto o solicitud personalizada sin estudios, elimine la entrada académica vacía.",
+    "educationNote": "Añada sus estudios. Elimine una entrada vacía si no corresponde.",
     "educationNumber": "Estudios {count}",
     "studyCountry": "País de estudios",
     "school": "Nombre de la institución",
@@ -370,7 +373,7 @@
     "additionalCount": "Títulos adicionales: {count}",
     "from": "Desde {amount}",
     "custom": "Ayuda para elegir / evaluación personalizada",
-    "customNote": "Describa lo que necesita a continuación. Requiere presupuesto.",
+    "customNote": "Puede describir sus necesidades en el paso 1. El servicio requiere un presupuesto.",
     "translation": "Necesito traducción certificada al inglés",
     "translationNote": "La traducción se cotiza tras revisar los documentos y no está incluida en esta estimación.",
     "deliveryHeading": "Informe y entrega",
@@ -426,8 +429,8 @@
     "errors": {
       "required": "Complete este campo obligatorio.",
       "email": "Ingrese un correo electrónico válido.",
-      "phone": "Ingrese un teléfono válido con código de país.",
-      "postal": "Ingrese un código postal válido de EE. UU.",
+      "phone": "Use el formato 123-456-7890 para teléfono y fax.",
+      "postal": "Use cinco dígitos o ZIP+4 (12345-6789).",
       "birth": "Ingrese una fecha de nacimiento válida que no sea futura.",
       "month": "Ingrese un mes y año válidos que no sean futuros.",
       "order": "La fecha de fin no puede ser anterior al inicio.",
@@ -438,7 +441,10 @@
       "delivery": "Los informes solo PDF no incluyen copias impresas ni envío.",
       "shipping": "Elija un envío válido para el país de destino.",
       "details": "Describa el servicio personalizado que necesita.",
-      "terms": "Revise y acepte los términos antes de enviar."
+      "terms": "Revise y acepte los términos antes de enviar.",
+      "country": "Seleccione un país de la lista.",
+      "address": "Indique el nombre del cliente, la dirección completa y la ciudad.",
+      "amount": "Esta solicitud supera el límite actual. Contacte a AET."
     },
     "purposeOptions": {
       "uscis": "USCIS / inmigración",
@@ -460,7 +466,9 @@
       "course": "Equivalencia, créditos, calificaciones y promedio (GPA).",
       "expert": "Combina estudios y experiencia profesional pertinente.",
       "position": "Evalúa las funciones y los requisitos académicos de un puesto."
-    }
+    },
+    "legacyFormatNote": "Teléfono/fax 123-456-7890; código postal 12345 o 12345-6789. Contacte a AET si su dirección no admite este formato.",
+    "mailingAddressNote": "Los informes impresos se envían a la dirección del cliente del paso 1."
   },
   "evaluationWorkflow": {
     "title": "Su solicitud de evaluación",
