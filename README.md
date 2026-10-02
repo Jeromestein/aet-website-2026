@@ -45,8 +45,9 @@ The homepage uses a shared `app/[locale]/page.tsx` template with Next.js i18n
 Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
-Application and pre-evaluation buttons connect to the existing
-app.americantranslationservice.com portal. Miami, Boston, Los Angeles and Beijing
+Formal application buttons connect to the existing application portal. In the
+local pilot (`PREEVAL_ENV=local`), the homepage pre-evaluation button opens the new
+local workflow; other environments retain the existing portal destination. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
 English, Chinese and Spanish variants. The localized Contact page is implemented. A localized Payment page is available
 at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
@@ -118,36 +119,33 @@ its evaluation types, and Pre-Evaluation Services remain available.
 This scope applies to this rebuilt homepage; it does not delete legacy website
 pages or change the separate application portal.
 
-## CRM visual preview
+## Pre-evaluation workflow and CRM
 
-Open `http://localhost:3021/admin/CRM` to explore the proposed AET operations
-workspace. It uses fictional client records and amounts, with changes kept only
-in browser memory and reset on refresh. The preview is English-only, marked
-noindex/nofollow, and excluded from the public sitemap and navigation.
+The local pre-evaluation pilot is implemented at `/degree-equivalency-tool` with
+English, Chinese and Spanish customer pages. `/status-check` sends an access link
+by Application ID; `/admin/login` authenticates the authorized staff email.
+`/admin/CRM` reads durable application, education, document, payment and result
+records. It supports notes, supplemental-information requests, AI retries,
+result corrections, email retries and audit history, without office partitioning.
 
-Applications, payment requests, pre-evaluations and documents have dedicated
-views. Search, office/status filters, sorting, pagination, application details,
-sample document review, notes, application creation, simple CSV import/export,
-draft payment requests and a weighted GPA calculator work locally.
-The application list uses office badges, separate education/service summaries
-and `YYYY-MM-DD` update dates. Education and service summaries open their own
-detail sections; academic records are also fictional preview data.
+The pilot uses isolated local Supabase, private Dropbox test files, Stripe test
+payments, Resend email redirected to `tech@meiyugroup.org`, and the existing
+Codex ChatGPT login for direct AI assessments. It has no Payload dependency.
+Paid applications automatically show the generated preliminary result. Read
+[local setup, behavior and acceptance](docs/pre-evaluation-local.md) before running
+the worker or service tests. Nothing has been deployed or migrated in bulk.
 
-This is an unauthenticated visual prototype, not the production CRM. It has no
-Payload dependency, database connection, live client files, email delivery or
-payment-provider calls. Authentication, office-scoped authorization, server-side
-business rules and persistence must be implemented before connecting real data.
-The existing AET App remains the operational system.
-
-Source: `components/crm/` and `app/[locale]/admin/CRM/page.tsx`. UI fields and
-workflow references come from the sibling AET App CRM implementation. The live
-reference URL requires login; no production records were used.
+The previous fictional CRM remains at `/admin/CRM/preview`, behind staff login.
+Its other application, payment-request, document, CSV and GPA interactions remain
+browser-memory prototypes. Preview office badges are historical design fixtures;
+the new operational pre-evaluation workspace does not use them. The old AET App
+remains the production system until a separately authorized cutover.
 
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
-- [Migration checklist](docs/migration-checklist.md): legacy page scope, priorities, language coverage, blog inventory, and launch dependencies.
+- [Migration checklist](docs/migration-checklist.md): legacy page scope, CRM replacement milestones on `dev`, language coverage, blog inventory, and launch dependencies.
 - [SEO checklist](docs/seo-checklist.md): ordered work and acceptance checks for redirects, indexing, metadata, and structured data.
 - [Agent guidance](AGENTS.md): reading order and project working rules.
 

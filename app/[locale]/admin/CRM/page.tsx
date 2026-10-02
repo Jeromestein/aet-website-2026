@@ -1,12 +1,20 @@
-import type { Metadata } from 'next';
-import CRMPreview from '@/components/crm/crm-preview';
+import type { Metadata } from "next";
+import PreEvaluationWorkspace from "@/components/preeval/workspace";
+import PreEvaluationShell from "@/components/preeval/shell";
+import { session } from "@/lib/preeval/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: 'AET Workspace — CRM Preview',
-  description: 'An interactive preview of the AET operations workspace, using fictional sample records.',
+  title: "AET Workspace — Pre-Evaluations",
+  description: "Manage pre-evaluation applications and preliminary results.",
   robots: { index: false, follow: false },
 };
 
-export default function CRMPage() {
-  return <CRMPreview />;
+export default async function CRMPage() {
+  if ((await session())?.role !== "admin") redirect("/admin/login");
+  return (
+    <PreEvaluationShell locale="en" workspace>
+      <PreEvaluationWorkspace />
+    </PreEvaluationShell>
+  );
 }

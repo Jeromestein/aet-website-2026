@@ -29,7 +29,7 @@ import {
 import { Navigation, RevealObserver } from "@/components/navigation";
 const apply =
   "https://app.americantranslationservice.com/credential-evaluation-application";
-const pre =
+const legacyPre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -44,6 +44,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations();
+  const pre = process.env.PREEVAL_ENV === 'local'
+    ? getPathname({ locale, href: '/degree-equivalency-tool' })
+    : legacyPre;
   const services = [
     { icon: Languages, number: "02", title: t("navigation.certified"), text: t("home.services.certifiedText"), href: "/certified-translation", tag: t("home.services.translationTag") },
     { icon: MessageCircle, number: "03", title: t("navigation.interpretation"), text: t("home.services.interpretationText"), href: "/interpretation", tag: t("navigation.interpretation") },

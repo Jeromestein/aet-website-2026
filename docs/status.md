@@ -2,6 +2,82 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Pre-evaluation local workflow — October 2, 2026
+
+- Implemented the full local pre-evaluation path: localized form, durable
+  application/education, private Dropbox documents, Stripe test checkout and
+  signed callbacks, direct AI assessment, automatic paid-result display,
+  Resend notifications, application recovery and staff workspace.
+- Owner decisions: retain legacy required/optional fields and USD 19.88 total;
+  no separate OCR; automatic AI release after payment with staff corrections;
+  no office partitioning; administrator and sole test recipient are
+  `tech@meiyugroup.org`. These supersede the earlier manual-result-first plan.
+- Started isolated Supabase `aet-pre-evaluation-local` on ports 55421/55422.
+  Reused the owner's running development server on port 3021. Existing
+  Supabase instances, old application data and production settings were not
+  changed. Exactly three old records were read for structural inspection;
+  no historical identity/document data was imported.
+- Passed 18 domain tests, 21 API integration checks and 30 lifecycle checks.
+  Coverage includes idempotent submission, private/cross-application access,
+  token/session expiry and reuse, duplicate/signed/mismatched payment events,
+  cancellation/expiry, interrupted-upload retry, Resend failure/retry, staff
+  corrections, stable result timestamps and refund ordering. Anonymous
+  database access was separately denied as expected. Refund/async-failure
+  states were simulated on isolated fixtures, not real transactions.
+- Completed a real Stripe **sandbox** card checkout for a fictional application.
+  The signed callback and server reconciliation recorded the exact USD 19.88;
+  the customer result unlocked automatically. Dropbox upload/download returned
+  identical bytes. Codex account authentication generated real output from
+  form fields and then from an uploaded PDF; the result correctly identified
+  the PDF as explicitly fictional. No OpenAI API key or OCR service was used.
+- Resend confirmed `delivered` for application, result, recovery, supplemental
+  information and corrected-result messages to the approved test mailbox.
+  Inbox placement was not manually inspected; workspace `sent` means provider
+  acceptance, while this verification used Resend's delivery status.
+- In-app browser passed English customer submission/payment/upload/result,
+  secure recovery, staff login, search, notes, information requests and result
+  correction. Desktop and 390px mobile views were inspected. Chinese and
+  Spanish form/landing navigation, localized metadata and language switching
+  were checked. An access-link Strict Mode issue found during testing was
+  corrected and the emailed link successfully reopened the saved application.
+- Typecheck, 18 domain tests, site i18n validation and whitespace checks passed.
+  No production build, push or deployment. Setup, processes, limitations and
+  acceptance commands: [pre-evaluation-local.md](pre-evaluation-local.md).
+- Screenshots: `output/playwright/preeval-result-{desktop,mobile}.jpg`,
+  `preeval-workspace-{desktop,mobile}.jpg`, `preeval-form-zh-mobile.jpg`.
+  Earlier CRM-preview and website evidence below remains historical.
+
+### Pre-evaluation-first development priority — October 1, 2026
+
+- Reordered the replacement checklist around the owner's proposed pre-evaluation
+  pilot. It supersedes the earlier saved-application-only first milestone and
+  includes test payments, controlled email delivery, staff review and results.
+- Read the sibling AET App's degree-equivalency form/types, submission action,
+  Stripe webhook branch, result/status hooks and customer success/result UI.
+  These show an existing path covering the intended shared capabilities; no
+  external service or production transaction was exercised.
+- Kept formal-evaluation-specific pricing/report/delivery work and legacy AI/OCR
+  parity separate. The pilot can first validate delivery of a staff-confirmed
+  preliminary result; it does not establish full evaluation or AI readiness.
+- This is a documentation/priority update on `dev`. The CRM still uses fictional
+  fixtures, and no backend integration, email send, payment or deployment was
+  performed in this update.
+
+### CRM branch and checklist reconciliation — October 1, 2026
+
+- Confirmed `e67dbc1` on local `dev` contains the CRM preview, UI refinements and
+  related documentation. Local `main` is at `3f81ccb`, matching the local
+  `origin/main` reference. The branch transfer did not push or deploy anything.
+- Extended the migration checklist with the owner's no-merge/no-Payload
+  replacement direction, completed preview work and ordered backend milestones.
+  The next milestone is a persistent test application with staff access,
+  education/service data and private documents; payments/email and legacy-data
+  transition remain unchecked.
+- Reconciled against current Git state, preview source, dependency/route files,
+  sibling AET App record types and its CRM authentication/office-filter code.
+  Existing browser/typecheck evidence supports only the completed preview work.
+  This documentation update does not establish production-service readiness.
+
 ### CRM detail entry affordances — October 1, 2026
 
 - Added blue underlined labels, persistent right chevrons, hover/focus styling

@@ -13,3 +13,8 @@ __pycache__/
 /playwright-report/
 /test-results/
 /.playwright-cli/
+
+# Local private acceptance data and service logs
+/.local/
+/.pnpm-store/
+/pre-evaluation-test-document.pdf

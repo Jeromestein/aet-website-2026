@@ -1,8 +1,20 @@
-# AET 2026 Website Migration Checklist
+# AET 2026 Website and App Migration Checklist
 
 Initial inventory: September 28, 2026. Status reconciled October 1, 2026
 against the current working tree, Git history and recorded local verification.
-Source: the local legacy website and the 2026 design, navigation and page code.
+Sources: the local legacy website, sibling AET App implementation, and the 2026
+design, navigation and page code. App replacement is tracked separately from
+the original public-page migration counts.
+
+## Pre-evaluation checkpoint — October 2, 2026
+
+The owner-approved local pre-evaluation workflow is implemented and its complete
+customer/staff journey has passed local acceptance. See
+[local setup and verification boundaries](pre-evaluation-local.md). Direct AI
+replaces the old OCR stage; paid results are automatic with staff correction.
+All test and administrator email uses `tech@meiyugroup.org`; office partitioning
+is omitted. Three historical records were inspected read-only, without bulk import.
+Production deployment, full data transition and formal evaluation remain separate.
 
 ## Current checkpoint — October 1, 2026
 
@@ -17,6 +29,10 @@ Source: the local legacy website and the 2026 design, navigation and page code.
 - [x] Audit the deployed Vercel baseline and prepare locally verified corrections
   for 15 embedded legacy links, preview noindex and Blog checker false positives.
   These corrections have passed local checks; hosted release remains pending.
+- [x] Build and locally verify the interactive CRM preview, including office
+  badges, education/service detail entries and full update dates. Commit
+  `e67dbc1` is on local `dev`; local `main` remains at `3f81ccb`. The CRM uses
+  fictional data and is not an operational backend.
 
 ### Deferred by owner — October 1, 2026
 
@@ -29,6 +45,9 @@ approve deleting the sources or mark the content as migrated.
 
 ### 2. Next actions
 
+- [x] On `dev`, complete the local [pre-evaluation pilot](#first-end-to-end-milestone--pre-evaluation)
+  below: customer submission, durable application/education records, private
+  files, test payment, email delivery, staff review and result release.
 - [ ] Release the prepared corrections through the authorized deployment workflow
   and verify them on Vercel; keep security-checkpoint-blocked checks explicitly open.
 - [ ] Finish acceptance of the currently retained content, payment and application
@@ -74,6 +93,8 @@ PHP entry points**; these are not 109 completed migrations.
 | Blog | 80 local articles; migration/order changes committed as `63293b4` |
 | Full Institutions page | Local migration complete: 28 entries, three locales, search and category filters; browser checks recorded in status.md |
 | SEO and old URL mapping | 448-path inventory, 277 permanent redirects and 133 indexable pages implemented and locally checked; unmigrated content deferred by owner |
+| CRM preview | Interactive fictional-data preview committed as `e67dbc1` on local `dev`; desktop/mobile checks recorded in status.md |
+| AET App replacement | Local pre-evaluation pilot implemented and tested without Payload; formal evaluation, production release and full data transition remain open |
 | Vercel test deployment | Baseline audited; latest local corrections await release; some later hosted checks blocked by Vercel security checkpoint |
 | Production release | Pending business/content review, payment acceptance and deployment |
 
@@ -107,6 +128,105 @@ retained old URL needs a working destination before the old host is retired.
 No new route naming convention for migrated detail pages is established here:
 retain old URLs or record an explicit old-to-new redirect when a destination is
 implemented. Follow the existing locale routing for all shared page templates.
+
+## AET App replacement — dev branch
+
+The owner chose to build the replacement inside `aet-website-2026`, keep website
+content in code, and avoid both a repository merge and a new Payload dependency.
+Continue CRM development on `dev`. The old AET App stays operational until its
+required business workflows and data have passed replacement acceptance.
+Completing the public website/SEO checklist alone does not retire AET App.
+The deferred legacy content/PDF backlog remains deferred.
+
+### Completed preview work
+
+- [x] Establish the CRM route and workspace navigation with fictional fixtures;
+  exclude it from the public sitemap and set noindex/nofollow.
+- [x] Implement local search, office/status filters, sorting, pagination,
+  application details, sample document review, notes and activity.
+- [x] Add payment-request, pre-evaluation and document views, sample creation,
+  limited CSV import/export and a GPA calculator. These are preview interactions,
+  not production services; the CSV download still needs browser acceptance.
+- [x] Increase text size/weight, replace client initials with office badges,
+  retain separate Education/Service sections and use `YYYY-MM-DD` update dates.
+- [x] Make detail entries visibly clickable and independently usable on mobile;
+  verify their corresponding drawers, keyboard entry and responsive layouts.
+- [x] Commit the preview as `e67dbc1` and move it to local `dev`. Restore local
+  `main` to the pre-CRM commit; no branch was pushed in this workflow.
+
+### First end-to-end milestone — pre-evaluation
+
+Owner priority: prove the replacement through the smaller pre-evaluation
+(degree-equivalency) workflow first. This supersedes the previous first milestone
+that stopped at a saved application without payments/email. The pilot validates
+shared infrastructure; it does not establish full credential-evaluation readiness.
+
+The legacy implementation contains application/education persistence, a dedicated
+Stripe checkout path and webhook branch, application-confirmation and result
+emails, file upload, AI-assisted results, and staff status/result editing.
+Code presence is not evidence that those integrations currently work in production.
+
+Owner decisions on October 2 supersede the earlier staff-confirmed-first and
+separate AI/OCR enhancement proposals. Required fields and fees follow the legacy
+implementation; attachments remain optional. Direct AI results use the legacy
+automatic paid-customer experience. Staff can correct them. Keep an office field
+but do not partition or identify offices in this workflow's frontend.
+
+- [x] Map the required/optional fields, USD 19.00 base fee and USD 0.88 Stripe fee,
+  payment/application/result states, access and notification behavior.
+- [x] Prepare isolated local Supabase and private Dropbox test storage; reuse
+  existing Stripe test and Resend services without Payload. Restrict staff/test
+  email to `tech@meiyugroup.org`.
+- [x] Build shared English/Chinese/Spanish submission, result, status-recovery and
+  access pages. Persist validated application, education and file records;
+  authorize customer access independently of Application ID.
+- [x] Implement staff email-link login and backend permissions, and connect
+  `/admin/CRM` to durable records, notes, documents, results and audit activity.
+- [x] Verify Stripe test checkout, server-derived pricing, signed callbacks,
+  duplicate handling, reconciliation, unpaid cancellation and checkout expiry.
+- [x] Deliver confirmation/result/recovery mail to the approved inbox through
+  Resend; record attempts and verify failed-send retry and result deduplication.
+- [x] Generate preliminary results automatically through the existing local
+  Codex ChatGPT account. Read PDF pages/images directly, record inputs/output,
+  reject stale results, expose failures/retry and allow staff correction.
+- [x] Pass the complete local journey: form → saved application/education →
+  confirmation → optional Dropbox PDF → direct AI → real Stripe sandbox card
+  payment → automatic result → result email → secure recovery → staff handling.
+- [x] Verify denied/cross-application access, expired/reused tokens and sessions,
+  duplicate submissions/uploads/callbacks, interrupted-upload recovery, invalid
+  signatures/amounts/ownership, email retry and logout. Constructed refund and
+  asynchronous-failure events exercise local states; they are not live refunds.
+- [x] Inspect exactly three historical records read-only, retaining only a
+  de-identified structural report locally. Do not migrate full history.
+- [ ] Separately authorize and implement production configuration, hosted AI and
+  worker operation, real-payment/email routing, data transition and cutover.
+  Local acceptance does not establish those production conditions.
+
+### Extend the validated foundation to formal evaluation
+
+- [ ] Reuse validated authentication, persistence, private storage, payment-event
+  processing, email delivery and audit records. Keep pre-evaluation and formal
+  evaluation business rules distinct instead of copying the entire application.
+- [ ] Map and implement formal-evaluation-specific requirements: multiple
+  education/service selections, pricing and additional fees, document review,
+  formal report generation and delivery, as established by the legacy inventory.
+- [ ] Add any additional required payment methods, balance adjustments, refunds,
+  reminders, manual/external order import, exports and reporting. A passing
+  single-payment pilot does not validate these separate workflows.
+- [ ] Run formal evaluation's own complete acceptance journeys, including
+  submission, documents, payment, staff processing and report delivery.
+
+### Data transition and retirement
+
+- [ ] Rehearse migration using a controlled dataset; reconcile application and
+  payment counts/amounts, education records, file links and staff access.
+- [ ] Define the final data-sync or write-freeze window, backups, domain/link
+  changes, payment callback and email routing, and a tested rollback procedure.
+- [ ] Complete the required business acceptance and owner-managed release;
+  verify live customer/staff workflows before stopping writes to the old app.
+- [ ] Retire the old deployment and archive its repository only after the
+  replacement and data reconciliation pass. Preserve required historical data
+  and audit records; do not delete the old repository as part of UI work.
 
 ## Already present in the new homepage
 
@@ -496,8 +616,9 @@ retirement response; do not redirect every removed URL to the homepage.
 
 - [ ] Keep **Apply Now / Online Application / Start Application** linked to
   `https://app.americantranslationservice.com/credential-evaluation-application`.
-- [ ] Keep **Start Your Pre-Evaluation** linked to
-  `https://app.americantranslationservice.com/degree-equivalency-tool`.
+- [x] Preserve the production **Start Your Pre-Evaluation** portal destination.
+  The local pilot homepage uses `/degree-equivalency-tool` only when
+  `PREEVAL_ENV=local`; switching the production destination remains a release task.
 - [ ] Verify the handoff to existing application/status/upload and checkout flows
   after the website changes. These remain in `aet-app`; they are not marketing
   pages to copy into the new website.

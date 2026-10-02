@@ -244,7 +244,7 @@ export default function CRMPreview() {
       <div className={s.workspaceLabel}><span className={s.workspaceMark}><LayoutDashboard size={17} /></span><div>AET Workspace<small>Client services</small></div><span className={s.liveDot} /></div>
       <p className={s.navLabel}>WORKSPACE</p>
       <nav aria-label="CRM navigation" className={s.nav}>
-        {navigation.map(item => <button type="button" key={item.id} onClick={() => changeView(item.id)} className={view === item.id ? s.navActive : ''} aria-current={view === item.id ? 'page' : undefined}>
+        {navigation.map(item => <button type="button" key={item.id} onClick={() => item.id === 'equivalency' ? window.location.assign('/admin/CRM') : changeView(item.id)} className={view === item.id ? s.navActive : ''} aria-current={view === item.id ? 'page' : undefined}>
           <item.icon size={19} strokeWidth={1.7} /><span>{item.label}</span>{item.count !== undefined && <span className={s.navCount}>{item.count}</span>}
         </button>)}
       </nav>
