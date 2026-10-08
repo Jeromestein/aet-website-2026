@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Phone, type LucideIcon } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { ServicePage } from '@/components/service/service-page';
 import { CardRail } from '@/components/card-rail';
@@ -13,6 +13,8 @@ import { offices, getOffice, otherContacts, phoneHref } from '@/lib/contact';
 import { contactContent } from '@/lib/contact-content';
 import { OfficeCard } from '@/components/offices/office-card';
 import styles from './contact.module.css';
+
+const methodIcons: Record<string, LucideIcon> = { phone: Phone, email: Mail, wechat: MessageCircle, visit: MapPin };
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -40,10 +42,13 @@ export default async function ContactPage({ params }: Props) {
     <StructuredData data={officeGraph(locale)} />
     <section id="how" className={styles.section} aria-labelledby="contact-how-title">
       <h2 id="contact-how-title">{c.sections.how}</h2><p className={styles.intro}>{c.introHeading}</p>
-      <CardRail className={styles.methods} label={c.sections.how}>{c.options.map((option, i) => <article data-rail-card className={styles.method} key={option.title}>
-        {i === 0 ? <Mail size={26} aria-hidden="true" /> : <MapPin size={26} aria-hidden="true" />}
-        <h3>{option.title}</h3><p>{option.body}</p>
-      </article>)}</CardRail>
+      <CardRail className={styles.methods} label={c.sections.how}>{c.options.map(option => {
+        const Icon = methodIcons[option.id];
+        return <article data-rail-card className={styles.method} key={option.id}>
+          <Icon size={26} aria-hidden="true" />
+          <h3>{option.title}</h3><p>{option.body}</p>
+        </article>;
+      })}</CardRail>
       {c.priority && <p className={styles.priority}><Phone size={19} aria-hidden="true" />{c.priority}: <a href={phoneHref(otherContacts.spanish.phone)}>{otherContacts.spanish.phone}</a></p>}
     </section>
     <section id="offices" className={styles.section} aria-labelledby="contact-offices-title">

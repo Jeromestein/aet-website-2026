@@ -2,6 +2,22 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Four contact methods — October 8, 2026
+
+- Updated the shared Contact instructions to Phone, Email, WeChat, Visit in that
+  order, with matching icons and English, Chinese, and Spanish copy. The four
+  office detail pages reuse these instructions. Retained the one-office guidance
+  and San Francisco reservation exception; office contact values remain centralized.
+- Typecheck, i18n validation, and whitespace checks passed. Local HTTP checks
+  verified method ordering across all 15 localized Contact and office detail pages.
+- Codex in-app browser passed English desktop (1440px), all three Contact locales
+  on mobile (390px), and the Spanish Boston office instructions on mobile. English
+  mobile controls reached each of the four cards and disabled Next on the last;
+  mobile pages had no horizontal page overflow. Desktop evidence:
+  `output/playwright/contact-four-methods-desktop.jpg`.
+- Reused the existing server on port 3021 without restarting it. No build, commit,
+  push, or deployment was performed.
+
 ### Payment Zelle priority — October 8, 2026
 
 - Kept Card Payment first and moved Zelle instructions, all six steps, the office
