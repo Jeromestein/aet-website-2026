@@ -1,5 +1,23 @@
 # Asset and content provenance
 
+## CSLB Blog illustrations — October 8, 2026
+
+- `public/images/blog/cslb-construction-documents.png`: 1672 × 941 editorial
+  illustration generated with the built-in imagegen tool. Copied unchanged from
+  `/Users/plusone/.codex/generated_images/01a11ce3-305f-74d3-a218-7ee43f7a910f/exec-d4b8c1fe-39f6-4c85-bbcf-7d05f66f3c70.png`.
+  It is labeled as AI-generated and represents no real office, document, or endorsement.
+- `public/images/document-consultation.jpg`: reused unchanged from the licensed
+  Mizuno K / Pexels asset documented below. The article presents it as an illustrative
+  stock photograph, with a responsive crop that keeps the people and files visible.
+  No AET employment or client relationship is asserted.
+
+Both figures have descriptions, captions, explicit dimensions, responsive image
+sources, and lazy loading through Next Image. Original source files remain intact.
+
+Generation prompt:
+
+> Use case: photorealistic-natural. Asset type: a wide editorial photograph-style illustration for an educational blog about using overseas academic credentials toward a California contractor license. Create one polished, natural-looking image, landscape 16:9 composition. Scene: a quiet architect or construction planner's desk beside a softly lit window. Subject: an unbranded white hard hat, neatly spread blue architectural floor plans, a plain navy document folder with cream academic-looking papers partly visible, a mechanical pencil and a small metal ruler. The academic papers should be understated and contain no legible text, seals, signatures, badges or official-looking emblems. Background: softly defocused low-rise building under construction, subtle and secondary. Calm morning daylight, realistic paper and plastic textures, restrained pale blue, white, warm neutral and navy palette to fit a professional education and translation website. Objects should be composed together naturally in the central 75 percent so the image works in responsive web layouts. All main objects fully framed, no people, no oversized props, no text overlay, no collage, no labels, no logos, no CSLB branding, no diploma ribbon, no graduation cap, no approval stamps, no watermark. This is illustrative editorial artwork, not a claimed real office or evidence of accreditation.
+
 Institution directory additions (September 30, 2026): 17 unchanged legacy logos
 are stored in `public/images/institutions/directory/`. Source paths and SHA-256
 digests are listed in `content/institutions/assets.json`. The source's WCUI image

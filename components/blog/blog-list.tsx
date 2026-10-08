@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { articleUrl, topics, type BlogArticle, type BlogCopy, type BlogTopic } from '@/lib/blog';
+import { articleTitle, articleUrl, topics, type BlogArticle, type BlogCopy, type BlogTopic } from '@/lib/blog';
 import styles from './blog.module.css';
 import type { Locale } from '@/i18n/routing';
 
@@ -11,7 +11,7 @@ export function BlogList({ articles, copy, locale }: { articles: BlogArticle[]; 
   const [topic, setTopic] = useState<BlogTopic | 'all'>('evaluation');
   const words = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const visible = articles.filter(article => (topic === 'all' || article.topic === topic) &&
-    words.every(word => `${article.title} ${article.city ?? ''} ${copy.topics[article.topic]}`.toLocaleLowerCase().includes(word)));
+    words.every(word => `${articleTitle(article, locale)} ${article.title} ${article.slug.replaceAll('-', ' ')} ${article.city ?? ''} ${copy.topics[article.topic]}`.toLocaleLowerCase().includes(word)));
   const reset = () => { setQuery(''); setTopic('evaluation'); };
 
   return <section className={`wrap ${styles.library}`} aria-labelledby="articles-heading">
@@ -40,7 +40,7 @@ export function BlogList({ articles, copy, locale }: { articles: BlogArticle[]; 
       {visible.length ? <ul className={styles.grid}>{visible.map(article => <li key={article.slug}>
         <article className={styles.card}>
           <div className={styles.cardMeta}><span>{copy.topics[article.topic]}</span><span lang={article.city ? 'en' : undefined}>{article.city ?? copy.general}</span></div>
-          <h3 lang="en"><a href={articleUrl(article, locale)}>{article.title}</a></h3>
+          <h3 lang={article.titles?.[locale] ? (locale === 'zh' ? 'zh-Hans' : locale) : 'en'}><a href={articleUrl(article, locale)}>{articleTitle(article, locale)}</a></h3>
           <span className={styles.read} aria-hidden="true">{copy.read}<ArrowUpRight size={19} /></span>
         </article>
       </li>)}</ul> : <div className={styles.empty}><Search size={32} aria-hidden="true" /><h3>{copy.empty}</h3><p>{copy.emptyHint}</p><button type="button" className="button" onClick={reset}>{copy.reset}</button></div>}

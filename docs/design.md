@@ -240,6 +240,12 @@ shapes belong mainly to facts. Keep decorative artwork out of the reading path.
 
 ## Blog editorial priority
 
+Use [Blog article structure](blog-requirements.md) for the short writing format.
+Specific uses, countries, licensing scenarios, and explanatory guides
+belong in Blog by default; retain service pages for core offerings with distinct
+delivery needs. Link relevant articles from service pages instead of adding a
+service subpage for every use case.
+
 Credential evaluation is the primary Blog topic. Use it in the page headline,
 introductory copy, featured guide and default article list. Translation,
 interpretation and expert opinion letters remain available through a quieter
@@ -249,9 +255,11 @@ Do not change the sitewide service scope to accomplish this Blog-specific hierar
 
 Use a readable article column, semantic sections, desktop contents navigation and
 a native mobile contents disclosure. Preserve original article prose, authorship
-and dates where supplied. Blog article bodies are intentionally English-only; do
-not show language-availability notices or plan translations. Shared navigation and
-index controls remain localized. Source images must
+and dates where supplied. Retained legacy article bodies remain English-only,
+without language-availability notices. The owner-approved CSLB guide has complete
+English, Chinese, and Spanish versions; index only languages with translated
+article content, using matching canonical URLs, alternates, and structured data.
+Shared navigation and index controls remain localized. Source images must
 be described by their actual contents. Historical report/review images must not
 be presented as current contact details or current ratings.
 

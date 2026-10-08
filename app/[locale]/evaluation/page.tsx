@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, CreditCard, ShieldCheck } from 'lucide-react';
+import { ArrowRight, GraduationCap, ListOrdered, BriefcaseBusiness, FileCheck2, Clock3, CreditCard, ShieldCheck } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { contactPath } from '@/lib/contact';
@@ -16,9 +16,11 @@ import { CardRail } from '@/components/card-rail';
 import { BenefitCard } from '@/components/benefit-card';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { evaluationContent } from '@/lib/evaluation';
+import { cslbBlogPath, cslbEntry } from '@/lib/cslb';
 import { evaluationGroups, preEvaluation, shipping, documentEvaluationStandard, evaluationExtraCopy, pricingPolicy } from '@/lib/pricing';
 import { formatMoney, formatPrice } from '@/lib/pricing-format';
 import styles from '@/components/service/service-page.module.css';
+import cslbStyles from '@/components/service/cslb.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -40,6 +42,7 @@ export default async function EvaluationPage({ params }: Props) {
   const t = await getTranslations();
   const pricing = await getTranslations('pricing');
   const c = evaluationContent[locale];
+  const cslb = cslbEntry[locale];
   const replacements: Record<string, string> = {
     documentPrice: formatMoney(documentEvaluationStandard.price, locale),
     extraCopyPrice: formatPrice(evaluationExtraCopy, locale, pricing),
@@ -54,6 +57,10 @@ export default async function EvaluationPage({ params }: Props) {
     <ServiceStructuredData service={'evaluation'} locale={locale} />
           <section id="define" aria-labelledby="define-title" className={styles.section}>
             <h2 id="define-title">{c.define.title}</h2><Copy html={c.define.html} />
+            <aside className={cslbStyles.entry} aria-labelledby="cslb-guide-title">
+              <h3 id="cslb-guide-title">{cslb.title}</h3><p>{cslb.body}</p>
+              <a href={getPathname({ locale, href: cslbBlogPath })}>{cslb.action}<ArrowRight size={18} aria-hidden="true" /></a>
+            </aside>
           </section>
           <div className={styles.section}>
             <ProcessStory id="steps" variant="embedded" />

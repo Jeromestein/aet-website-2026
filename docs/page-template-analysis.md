@@ -2,6 +2,10 @@
 
 Local-source review: September 29, 2026.
 
+This is the historical template analysis. For the current article writing format,
+use [Blog article structure](blog-requirements.md).
+Earlier migration counts and proposed sequences below describe that review date.
+
 ## Recommendation
 
 Use eight layout families and two purpose-specific pages, assembled from shared

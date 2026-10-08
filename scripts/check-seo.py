@@ -43,7 +43,13 @@ def check_entry(e):
  assert 'hreflang=' not in r.headers.get('Link',''),path
  return path
 with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool: checked=list(pool.map(check_entry,entries))
-assert len([u for u in urls if '/blog/' in u])==80
+root = Path(__file__).resolve().parents[1]
+blog_catalog = json.loads((root/'content/blog/articles.json').read_text()) + json.loads((root/'content/blog/authored/articles.json').read_text())
+blog_paths = {'/blog/' + row['slug'] for row in blog_catalog}
+blog_paths.update('/' + locale + '/blog/' + row['slug']
+                  for row in blog_catalog for locale in ('zh', 'es')
+                  if row.get('titles', {}).get(locale))
+assert {u.removeprefix(ORIGIN) for u in urls if '/blog/' in u} == blog_paths
 for pth in ['/zh/career','/es/career','/es/technical-translation','/es/interpretation','/es/general-translation','/es/notarization','/zh/blog/miami-foreign-credential-evaluation-services','/es/blog/miami-foreign-credential-evaluation-services']:
  _,p,_=read(pth);assert p.canon==[ORIGIN+pth[3:]],(pth,p.canon);assert any('noindex' in x for x in p.robots),pth;assert not p.lang,(pth,p.lang)
 for pth in ['/payment/result','/zh/payment/result']:
@@ -63,7 +69,7 @@ for source,dest in aliases:
   if dp.fragment:assert dp.fragment in p.ids,(source,dp.fragment)
  else:raise AssertionError(source+' did not redirect')
 _,_,robots=read('/robots.txt');assert 'Sitemap: '+ORIGIN+'/sitemap.xml' in robots
-print(json.dumps({'sitemap_pages':len(checked),'blog_articles':80,'fallback_checks':8,'payment_result_checks':2,'redirect_checks':len(aliases),'sharing_images':len(checked),'canonical_alternates_og_robots':'passed'}))
+print(json.dumps({'sitemap_pages':len(checked),'blog_articles':len(blog_catalog),'blog_routes':len(blog_paths),'fallback_checks':8,'payment_result_checks':2,'redirect_checks':len(aliases),'sharing_images':len(checked),'canonical_alternates_og_robots':'passed'}))
 
 # Historical content without a destination must be a real not-found response,
 # never a homepage redirect or a successful blank page (soft 404).

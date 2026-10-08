@@ -54,12 +54,13 @@ footer link to the localized page, and `/e-pay.php` redirects there. Merchant
 accounts and payment reconciliation still need live review before launch.
 
 The Blog index is available at `/blog`, `/zh/blog`, and `/es/blog`, with 80
-retained articles and search. Credential evaluation is the primary topic:
-its 28 articles appear by default, with other topics in a secondary selector.
-All 80 English article bodies are local at `/blog/[slug]`; 157 legacy PHP/HTML
-article URLs redirect to them. Article bodies remain English-only across locales,
-without language-availability notices. Shared navigation and index controls stay
-localized. Cards and page titles use each source body's heading; the original
+retained articles and one new CSLB guide. Credential evaluation is the primary topic:
+its 29 articles appear by default, with other topics in a secondary selector.
+All 81 articles are local at `/blog/[slug]`; 157 legacy PHP/HTML article URLs
+redirect to them. The 80 retained bodies remain English-only across locales,
+without language-availability notices. The CSLB guide has complete English,
+Chinese, and Spanish versions with localized titles and search metadata.
+Shared navigation and index controls stay localized. Cards and page titles use each source body's heading; the original
 metadata titles remain in the source catalog for provenance. `/blog/` and
 `/blog/index.php` redirect to `/blog`. Local migration is complete; publication
 review of dated claims and production cutover remain open. See
@@ -74,6 +75,12 @@ It preserves legacy prose and reuses Pricing's table component and shared rates.
 The homepage/header/footer use these routes, and the three legacy evaluation PHP
 URLs redirect to them. Original form and sample PDFs are served locally.
 See [content provenance](content/evaluation/README.md) for source details.
+
+The CSLB guide is a Blog article at `/blog/cslb-foreign-credential-evaluation`,
+in English, Chinese, and Spanish, with an entry on each Evaluation page. The former `/evaluation/cslb` paths
+redirect to the article in the same interface language and preserve query strings.
+It covers education credit, document requirements, AI reading links, and contact
+before ordering. See [authored content notes](content/blog/authored/README.md).
 
 Certified Translation is implemented at `/certified-translation`,
 `/zh/certified-translation`, and `/es/certified-translation`. It uses the shared
@@ -121,6 +128,7 @@ pages or change the separate application portal.
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
+- [Blog article structure](docs/blog-requirements.md): search-focused titles, reader questions, direct answers, and AI links near the top.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
 - [Migration checklist](docs/migration-checklist.md): legacy page scope, priorities, language coverage, blog inventory, and launch dependencies.
 - [SEO checklist](docs/seo-checklist.md): ordered work and acceptance checks for redirects, indexing, metadata, and structured data.

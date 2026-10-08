@@ -2,6 +2,130 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### CSLB Blog CTA destinations — October 8, 2026
+
+- Replaced email CTAs and drafts in all three languages with the California
+  phone number, localized Contact page, and existing evaluation application.
+  Introductory and process CTAs now go directly to Contact. Updated the short
+  Blog guide and click methods to match; earlier email-related notes are superseded.
+- Typecheck, i18n, whitespace, and HTTP checks passed for all three articles and
+  Contact destinations, including the office anchor and absence of mailto links.
+  The application URL matches the existing site entry; no form was submitted.
+- Browser policy still blocks rendered desktop/mobile verification. Reused the
+  existing server without restarting; no build, commit, push, or deployment.
+
+### CSLB Blog translations — October 8, 2026
+
+- Added complete Chinese and Spanish versions of the CSLB guide at the owner's
+  request. Titles, body, contents, image descriptions/captions, AI prompts, inquiry
+  controls, and email drafts now follow the selected language. The 80 retained
+  articles remain English-only; the earlier CSLB language scope below is superseded.
+- Each version has a self-referencing canonical URL, matching language alternates,
+  BlogPosting language, and localized sharing card. The sitemap contains 83 article
+  URLs for 81 articles. Blog cards/search use translated titles; queued click events
+  include the article locale. Updated the existing SEO/schema checkers accordingly.
+- Passed typecheck, i18n, checker syntax, whitespace, and focused HTTP checks for
+  all three article/index/parent pages, translated figures/contact/AI URLs, metadata,
+  JSON-LD, sharing images, sitemap alternates, and query-preserving 308 redirects.
+  Six pilot/imported article routes retained their previous indexing rules.
+- Visually inspected both new sharing cards and fixed Chinese punctuation wrapping.
+  The prior browser policy denial still prevents rendered desktop/mobile and live
+  copy/language-switch verification. Reused the running port-3021 server; no build,
+  commit, push, or deployment.
+
+### CSLB Blog imagery — October 8, 2026
+
+- Added a generated construction-planning illustration near the article beginning
+  and reused the licensed document-consultation photograph after the materials
+  section. Visible captions identify illustrative use; alt text describes the
+  contents. Image provenance and the generation prompt are recorded in ASSETS.md.
+- Added optional figures to authored articles, with responsive Next Image sources,
+  fixed aspect ratios, and lazy loading. The lead asset also supplies BlogPosting
+  imagery; the schema checker now recognizes optimized image URLs.
+- Inspected both source images. Typecheck, whitespace, and checker syntax passed.
+  HTTP checks passed all three article interfaces, captions, image dimensions,
+  optimized image loading, and the English article image schema. Responsive WebP
+  responses at 384px and 828px were about 11–46 KB.
+- The previous in-app browser policy denial remains a visual-verification blocker;
+  no alternate browser bypass was attempted. Desktop/mobile rendered appearance
+  has not been verified. Reused the existing port-3021 server without restarting;
+  no build, commit, push, deployment, or advertising action.
+
+### CSLB Blog conversion — October 8, 2026
+
+- Created `/blog/cslb-foreign-credential-evaluation` with the approved title,
+  direct introduction, first-person questions, official source links, and California
+  email/phone inquiry actions. The shared Blog layout retains English prose across
+  all three interfaces. A requirements-review date is shown; no publication date
+  or author is invented before launch.
+- Added five AI destinations near the beginning and a copyable question containing
+  the public canonical URL. Claude and Grok use entry-page links. Click intent is
+  queued in `dataLayer`; no analytics tag, lead reporting, or ad campaign is active.
+- New authored content has its own catalog/registry outside the legacy importer.
+  Blog search includes slugs so “CSLB” finds the approved question title. There are
+  now 81 articles, including 29 evaluation articles. Evaluation links directly to
+  the guide; all three former service routes return 308 with query values retained.
+- Removed the superseded translated service drafts, their sharing images, and
+  unused service-shell additions. Added one 1200 × 630 Blog sharing card and
+  updated sitemap coverage without modifying the 80 imported article sources.
+- Passed typecheck, i18n, whitespace, all three article/parent/index HTTP checks,
+  TOC IDs, contact targets, encoded AI URLs, canonical/noindex/BlogPosting rules,
+  sharing-image dimensions, 308 query preservation, and sitemap membership.
+  The existing 79-body static checker and representative pilot/imported HTTP
+  regressions passed. Inspected the generated sharing card visually.
+- Browser security policy rejected the in-app local-page operation. Desktop/mobile
+  visual checks and copy/prefill interactions were not run; no alternate browser
+  bypass was attempted. External AI fetching could reach Claude/Grok entry pages
+  but could not verify ChatGPT/Perplexity/Google query behavior. Copyable text is
+  available as the fallback. See [authored content notes](../content/blog/authored/README.md).
+- Port 3021 was initially down. Sandboxed `pnpm dev` hit file-watcher errors and
+  was stopped; the approved sandbox-external `pnpm dev` is running at
+  `http://localhost:3021`. No production build, commit, push, deployment, inquiry,
+  or advertising purchase was performed.
+
+### Short Blog article guide — October 8, 2026
+
+- Reviewed the existing 80-article collection and related guidance, then narrowed
+  `docs/blog-requirements.md` at the owner's request to six writing rules and an
+  example outline: search-focused titles, direct answers, first-person questions,
+  AI links after the introduction, scannable content, and a relevant closing action.
+- Updated documentation entry points to match the narrower scope. Existing
+  language, design, migration, and verification guidance remains in its own files.
+- Local references and whitespace checked. Documentation only: no page edits,
+  new AI links, analytics changes, browser run, or build at that stage. The later
+  owner-approved CSLB conversion is recorded above.
+
+### CSLB evaluation subpage — October 8, 2026
+
+- Historical draft, superseded by the Blog conversion above.
+- Added `/evaluation/cslb` with English, Chinese, and Spanish content and a
+  localized entry on each Evaluation page. The guide covers education credit,
+  documents, sealed official transcripts, next steps, fees, FAQs, and contact.
+  Official CSLB sources and content boundaries are recorded in
+  `content/blog/authored/README.md` (moved during the Blog conversion).
+- Reused the service-page shell with an optional introduction and parent
+  breadcrumb. Added localized metadata, three-level breadcrumb structured data,
+  sitemap entries, and three 1200 x 630 sharing images. The existing image
+  generator can now limit generation to explicitly selected sitemap paths.
+- Inquiry actions use the California contact catalog and a localized email
+  template; no new backend or application-portal purpose was added. No AICE
+  reference, CSLB endorsement, guaranteed acceptance, or credit outcome appears
+  in the new copy. AET eligibility and the report type still require CSLB
+  confirmation before a customer orders.
+- Typecheck, existing i18n checks, new locale-content structure checks, and
+  whitespace checks passed. Served HTML checks passed all three routes, parent
+  links, canonicals, language alternates, sharing images, breadcrumbs, five FAQs,
+  section anchors, pricing/contact destinations, and email/phone targets.
+- Codex in-app browser verified English and Chinese desktop at 1440px, all three
+  languages at 390px, and Chinese/Spanish at 320px without horizontal page
+  overflow. Checked the main contact action, English/Chinese FAQ disclosure,
+  all three mobile process cards and disabled final Next control, language
+  switching with the route/fragment retained, and the Chinese Evaluation entry
+  link. Mail and phone destinations were inspected without sending or calling.
+  Screenshots: `output/playwright/cslb-{en-desktop,zh-desktop,zh-mobile,es-contact-mobile}-2026-10-08.png`.
+- Reused the existing server on port 3021. No production build, commit, push,
+  deployment, advertising campaign, or external submission was performed.
+
 ### Four contact methods — October 8, 2026
 
 - Updated the shared Contact instructions to Phone, Email, WeChat, Visit in that

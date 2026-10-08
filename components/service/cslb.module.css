@@ -1,0 +1,8 @@
+.entry { margin-top: 30px; padding: 26px 28px; border: 1px solid var(--line); background: var(--blue); border-radius: 20px; }
+.entry h3 { font-size: 23px; line-height: 1.4; margin: 0 0 14px; }
+.entry p { font-size: 16px; line-height: 1.8; margin: 0 0 16px; }
+.entry a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--action-blue); text-decoration: underline; text-underline-offset: 4px; font-weight: 600; }
+.entry svg { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .entry { padding: 22px; }
+}

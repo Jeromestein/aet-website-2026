@@ -8,6 +8,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import urllib.request
+from urllib.parse import urlsplit, parse_qs
 import xml.etree.ElementTree as ET
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -41,7 +42,9 @@ class Page(HTMLParser):
         if tag == 'script' and attrs.get('type') == 'application/ld+json':
             self.script = ''
         if tag == 'img':
-            self.images.append(attrs.get('src', ''))
+            src = attrs.get('src', '')
+            parsed = urlsplit(src)
+            self.images.append(parse_qs(parsed.query).get('url', [src])[0] if parsed.path == '/_next/image' else src)
         if tag == 'a':
             self.links.append(attrs.get('href', ''))
         if tag == 'link' and attrs.get('rel') == 'canonical':
@@ -148,7 +151,8 @@ def check(url):
             assert trail[-1]['name'] in text, (path, 'Invisible breadcrumb title')
         elif node['@type'] == 'BlogPosting':
             assert node['headline'] in text
-            assert node['url'] == page.canonical[0] and node['inLanguage'] == 'en'
+            language = 'zh-Hans' if path.startswith('/zh/') else 'es' if path.startswith('/es/') else 'en'
+            assert node['url'] == page.canonical[0] and node['inLanguage'] == language
             if 'image' in node:
                 assert node['image'].removeprefix(origin) in page.images, (path, 'Image absent from article')
             assert 'author' not in node and 'dateModified' not in node
