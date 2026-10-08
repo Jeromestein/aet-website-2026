@@ -1439,3 +1439,16 @@ implementation and checks, not production deployment or accessibility certificat
       their targets; it does not submit forms or validate external workflows.
 - [ ] Owner-managed deployment and production checks. No commit, push, or deployment
       was performed as part of this design pass.
+
+## 2026-10-08 — Boston address update
+
+- Updated the shared Boston postal address to `6 Pleasant Street, #419, Malden, MA 02148`.
+  Office cards, directions, structured data, payment recipient addresses, and mapped
+  legacy article references derive their current address from this catalog.
+- Verified rendered HTML for the English, Chinese, and Spanish Boston office pages,
+  Contact, Payment, and the Boston translation-company article: each includes the new
+  address and excludes the former suite number.
+- Codex in-app browser checks passed for the Chinese Boston contact section at desktop
+  and 390px mobile widths; the address wraps correctly and the directions URL uses #419.
+- Used a temporary local preview on port 3021 with Watchpack polling because native
+  file watching exceeded the environment limit. No production build or deployment.
