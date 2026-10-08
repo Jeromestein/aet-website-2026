@@ -4,7 +4,7 @@
   "description": "Complete el formulario de su servicio y continúe a PayPal para pagar.",
   "sections": {
     "card": "Pago con tarjeta",
-    "alternatives": "Depósito/Cheque/Transferencia por Zelle",
+    "alternatives": "Transferencia por Zelle / Depósito / Cheque",
     "security": "Seguridad y procesamiento de pagos",
     "shipping": "Opciones de envío"
   },
@@ -57,7 +57,7 @@
       "Ingrese el importe de la transferencia → seleccione “Continue”.",
       "Seleccione “Confirm” para completar el pago."
     ],
-    "bankTitle": "Nuestra información bancaria",
+    "bankTitle": "Información bancaria para Zelle",
     "selectOffice": "Seleccione una oficina:",
     "offices": {
       "miami": "Miami",
@@ -80,7 +80,8 @@
     "zelleEmail": "Correo de Zelle:",
     "noteLabel": "Nota:",
     "note": "Para consultar la lista de bancos participantes en Zelle, visite:",
-    "navLabel": "Zelle/Transferencia bancaria"
+    "navLabel": "Zelle/Transferencia bancaria",
+    "depositCheckTitle": "Depósito / Cheque"
   },
   "security": {
     "columns": [
@@ -103,6 +104,19 @@
         ]
       },
       {
+        "method": "Transferencia por Zelle",
+        "details": [
+          [
+            "Procesamiento en tiempo real",
+            "Transferencia digital protegida por el banco"
+          ],
+          [
+            "Notificación instantánea",
+            "Transferencia por correo electrónico cifrada"
+          ]
+        ]
+      },
+      {
         "method": "Transferencia/Depósito bancario",
         "details": [
           [
@@ -116,19 +130,6 @@
           [
             "Se requiere verificación manual",
             "Verificación del estado de cuenta bancario"
-          ]
-        ]
-      },
-      {
-        "method": "Transferencia por Zelle",
-        "details": [
-          [
-            "Procesamiento en tiempo real",
-            "Transferencia digital protegida por el banco"
-          ],
-          [
-            "Notificación instantánea",
-            "Transferencia por correo electrónico cifrada"
           ]
         ]
       },

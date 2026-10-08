@@ -103,11 +103,6 @@ export default async function PaymentPage({ params }: Props) {
     </section>
     <section id="other-methods" className={styles.section} aria-labelledby="other-methods-title">
       <h2 id="other-methods-title">{c.sections.alternatives}</h2>
-      <div className={styles.instructionCard}><h3>{a.miami}</h3>{bankDetails(paymentBankDetails.miami)}</div>
-      <div className={styles.instructionCard}><h3>{a.boston}</h3>
-        <h4>{a.deposit}</h4>{bankDetails(paymentBankDetails.boston)}
-        <h4>{a.check}</h4>{bankDetails(paymentBankDetails.check)}
-      </div>
       <h3 className={styles.subheading}>{a.instructions}</h3>
       <div className={styles.instructionCard}><h3><span aria-hidden="true">📋 </span>{a.stepsTitle}</h3>
         <ol className={styles.steps}>{a.steps.map(step => <li key={step}>{step}</li>)}</ol>
@@ -116,6 +111,12 @@ export default async function PaymentPage({ params }: Props) {
       <p className={styles.note}><strong>{a.noteLabel}</strong> {a.note}{' '}
         <a href="https://www.zellepay.com/get-started" target="_blank" rel="noopener noreferrer">https://www.zellepay.com/get-started</a>
       </p>
+      <h3 className={styles.subheading}>{a.depositCheckTitle}</h3>
+      <div className={styles.instructionCard}><h3>{a.miami}</h3>{bankDetails(paymentBankDetails.miami)}</div>
+      <div className={styles.instructionCard}><h3>{a.boston}</h3>
+        <h4>{a.deposit}</h4>{bankDetails(paymentBankDetails.boston)}
+        <h4>{a.check}</h4>{bankDetails(paymentBankDetails.check)}
+      </div>
     </section>
     <section id="payment-security" className={styles.section} aria-labelledby="payment-security-title">
       <h2 id="payment-security-title">{c.sections.security}</h2>

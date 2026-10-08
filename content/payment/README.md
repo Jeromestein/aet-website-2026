@@ -43,3 +43,9 @@
   must confirm receipt in PayPal. Do not publish this route as the public
   payment destination until the four payees, return/cancel states, and payment
   reconciliation have been reviewed and tested in a safe payment environment.
+
+- October 8, 2026: prioritize Zelle immediately after Card Payment. The alternative
+  methods heading lists Zelle first; its instructions, office selector and
+  explicitly named Zelle Bank Information precede the retained Deposit / Check
+  details. Apply the same method order in the processing table and all three
+  locales. This presentation update does not change recipients or payment terms.

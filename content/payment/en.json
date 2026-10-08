@@ -4,7 +4,7 @@
   "description": "Complete the form for your quoted service and continue to PayPal to pay.",
   "sections": {
     "card": "Card Payment",
-    "alternatives": "Deposit/Check/Zelle Transfer",
+    "alternatives": "Zelle Transfer / Deposit / Check",
     "security": "Payment Security & Processing",
     "shipping": "Shipping Options"
   },
@@ -57,7 +57,7 @@
       "Enter the transfer amount → select \"Continue\".",
       "Select \"Confirm\" to complete the payment."
     ],
-    "bankTitle": "Our Bank Information",
+    "bankTitle": "Zelle Bank Information",
     "selectOffice": "Select Office:",
     "offices": {
       "miami": "Miami",
@@ -80,7 +80,8 @@
     "zelleEmail": "Zelle Email:",
     "noteLabel": "Note:",
     "note": "For a list of Zelle participating banks, visit:",
-    "navLabel": "Zelle/Bank Transfer"
+    "navLabel": "Zelle/Bank Transfer",
+    "depositCheckTitle": "Deposit / Check"
   },
   "security": {
     "columns": [
@@ -103,6 +104,19 @@
         ]
       },
       {
+        "method": "Zelle Transfer",
+        "details": [
+          [
+            "Real-time processing",
+            "Bank-secured digital transfer"
+          ],
+          [
+            "Instant notification",
+            "Encrypted email transfer"
+          ]
+        ]
+      },
+      {
         "method": "Bank Transfer/Deposit",
         "details": [
           [
@@ -116,19 +130,6 @@
           [
             "Manual verification required",
             "Bank statement verification"
-          ]
-        ]
-      },
-      {
-        "method": "Zelle Transfer",
-        "details": [
-          [
-            "Real-time processing",
-            "Bank-secured digital transfer"
-          ],
-          [
-            "Instant notification",
-            "Encrypted email transfer"
           ]
         ]
       },

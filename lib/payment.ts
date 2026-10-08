@@ -29,7 +29,7 @@ export type PaymentContent = {
   services: Record<PaymentService, string>;
   offices: Record<PaymentOffice, string>;
   alternatives: {
-    navLabel: string; miami: string; boston: string; deposit: string; check: string; instructions: string;
+    navLabel: string; depositCheckTitle: string; miami: string; boston: string; deposit: string; check: string; instructions: string;
     stepsTitle: string; steps: string[]; bankTitle: string; selectOffice: string;
     offices: Record<PaymentOffice, string>; fields: Record<string, string>;
     businessName: string; zelleEmail: string; noteLabel: string; note: string;

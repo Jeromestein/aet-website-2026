@@ -2,6 +2,24 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Payment Zelle priority — October 8, 2026
+
+- Kept Card Payment first and moved Zelle instructions, all six steps, the office
+  selector and Zelle note ahead of the retained Deposit / Check details. Renamed
+  the alternatives heading to list Zelle first and the bank panel to Zelle Bank
+  Information, with equivalent Chinese and Spanish copy. Added a Deposit / Check
+  subheading to distinguish the later bank/check details.
+- Aligned the processing table with Card, Zelle, Bank Transfer/Deposit, Check.
+  Verified all other localized payment copy is preserved; recipients, amounts,
+  payment validation and handoff behavior were not changed.
+- Typecheck, i18n and whitespace checks passed. Codex in-app browser verified
+  English desktop at 1440px (including Boston office switching), and Chinese
+  and Spanish mobile at 390px with no horizontal page overflow. Screenshots:
+  `output/playwright/payment-zelle-{desktop,zh-mobile,es-mobile}-2026-10-08.png`.
+- Port 3021 was not running. Started `pnpm dev`; sandbox file-watcher failures
+  required restarting that process outside the sandbox. The preview server
+  remains running at `http://localhost:3021`. No build, payment, push or deployment.
+
 ### San Francisco visit policy and Evaluation promise — October 1, 2026
 
 - Updated the shared San Francisco phone to the Los Angeles office number,

@@ -4,7 +4,7 @@
   "description": "填写服务及付款信息，然后前往 PayPal 完成支付。",
   "sections": {
     "card": "银行卡付款",
-    "alternatives": "存款／支票／Zelle 转账",
+    "alternatives": "Zelle 转账／存款／支票",
     "security": "付款安全与处理",
     "shipping": "邮寄选项"
   },
@@ -57,7 +57,7 @@
       "输入转账金额 → 选择“Continue”。",
       "选择“Confirm”完成付款。"
     ],
-    "bankTitle": "我们的银行信息",
+    "bankTitle": "Zelle 收款银行信息",
     "selectOffice": "选择办公室：",
     "offices": {
       "miami": "迈阿密",
@@ -80,7 +80,8 @@
     "zelleEmail": "Zelle 邮箱：",
     "noteLabel": "注意：",
     "note": "支持 Zelle 的银行列表请见：",
-    "navLabel": "Zelle／银行转账"
+    "navLabel": "Zelle／银行转账",
+    "depositCheckTitle": "存款／支票"
   },
   "security": {
     "columns": [
@@ -103,6 +104,19 @@
         ]
       },
       {
+        "method": "Zelle 转账",
+        "details": [
+          [
+            "实时处理",
+            "银行保障的数字转账"
+          ],
+          [
+            "即时通知",
+            "加密邮箱转账"
+          ]
+        ]
+      },
+      {
         "method": "银行转账／存款",
         "details": [
           [
@@ -116,19 +130,6 @@
           [
             "需要人工核实",
             "银行对账单核实"
-          ]
-        ]
-      },
-      {
-        "method": "Zelle 转账",
-        "details": [
-          [
-            "实时处理",
-            "银行保障的数字转账"
-          ],
-          [
-            "即时通知",
-            "加密邮箱转账"
           ]
         ]
       },
