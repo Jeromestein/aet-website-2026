@@ -13,3 +13,12 @@ __pycache__/
 /playwright-report/
 /test-results/
 /.playwright-cli/
+
+# Local test reports and synthetic fixtures
+/.local/
+/formal-synthetic-report.pdf
+/pre-evaluation-test-document.pdf
+
+# Supabase CLI local state
+/supabase/.temp/
+/supabase/.branches/
