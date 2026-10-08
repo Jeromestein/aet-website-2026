@@ -21,9 +21,11 @@ each with its own canonical URL and matching language metadata. The sitemap now
 contains 83 article URLs for 81 articles. No author or publication date is invented.
 
 Article lists sort by original publication date, newest first, across all topics,
-filters and searches. `dates.json` stores ISO dates extracted by the importer from
-leading source dates/bylines; 46 articles have dates and 34 are undated. Undated
-articles follow dated articles, with inventory order preserved for ties. The
+filters and searches. For retained articles, `dates.json` stores ISO dates extracted
+by the importer from leading source dates/bylines; 46 have dates and 34 are undated.
+New articles use `publishedAt` in `authored/articles.json`; the CSLB guide is dated
+October 8, 2026. Undated articles follow dated articles, with inventory order
+preserved for ties. The
 featured guide remains an independent editorial selection.
 
 ## Source authority

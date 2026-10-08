@@ -2,6 +2,16 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### CSLB Blog publication date — October 8, 2026
+
+- Set the new guide's publication date to October 8, 2026. Its previous null value
+  put it after dated articles; the existing newest-first sort now places it first.
+  The separate Boston featured recommendation remains an editorial selection.
+- Updated the date guidance and schema checker for authored articles. Typecheck,
+  whitespace, and HTTP checks passed: all three Blog lists show CSLB first among
+  29 evaluation articles, preserve the full date order, and expose the matching
+  article publication date. Browser policy still blocks rendered visual checks.
+
 ### CSLB Blog CTA destinations — October 8, 2026
 
 - Replaced email CTAs and drafts in all three languages with the California

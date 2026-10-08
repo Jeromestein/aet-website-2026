@@ -18,6 +18,10 @@ parser.add_argument('--vocabulary', type=Path, help='Optional cached Schema.org 
 args = parser.parse_args()
 origin = 'https://www.americantranslationservice.com'
 organization_id = origin + '/#organization'
+root = Path(__file__).resolve().parents[1]
+dates = json.loads((root / 'content/blog/dates.json').read_text())
+dates.update({article['slug']: article['publishedAt'] for article in
+              json.loads((root / 'content/blog/authored/articles.json').read_text())})
 
 
 def fetch(url):
@@ -156,7 +160,6 @@ def check(url):
             if 'image' in node:
                 assert node['image'].removeprefix(origin) in page.images, (path, 'Image absent from article')
             assert 'author' not in node and 'dateModified' not in node
-            dates = json.loads((Path(__file__).resolve().parents[1] / 'content/blog/dates.json').read_text())
             assert node.get('datePublished') == dates.get(unlocalized.split('/')[-1])
         elif node['@type'] == 'Service':
             assert node['url'] == page.canonical[0], (path, 'Service URL drift')

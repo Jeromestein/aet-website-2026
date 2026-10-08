@@ -5,13 +5,15 @@ index metadata; `lib/authored-blog-posts.ts` registers server-only article bodie
 The shared Blog route renders their introduction, AI links, sections, and inquiry.
 Keep the catalog title and each localized `titles` entry identical to its body
 title. Catalog `titles` declares which translated versions are indexable; register
-the matching locale body before adding a title. `publishedAt` stays null until
-publication; a visible requirements-review date is not a publication date.
+the matching locale body before adding a title. Set `publishedAt` when adding a
+new article for publication so date sorting places it correctly; reserve null for
+drafts or unknown dates. A requirements-review date is a separate field.
 
 ## CSLB guide
 
 Prepared October 8, 2026 at `/blog/cslb-foreign-credential-evaluation`, replacing
-the earlier service-page draft. The original JSON contains English; sibling
+the earlier service-page draft, with a publication date of October 8, 2026.
+The original JSON contains English; sibling
 `.zh.json` and `.es.json` files contain full Chinese and Spanish translations.
 Body copy, figures, AI prompts, contact actions, index titles, and sharing cards
 follow the selected language. Each version has its own canonical URL, hreflang
