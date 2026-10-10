@@ -27,6 +27,14 @@ Payment page requires the server-only `PAYPAL_BUSINESS_*` and `PAYMENT_SITE_URL`
 values documented in `.env.example`; other pages need no API keys or database.
 Deployment is intentionally left to the owner.
 
+## Analytics
+
+The shared locale layout loads Google tag `G-7SF10M7GBE` with `next/script`
+after hydration on all English, Chinese, and Spanish pages. Keep a single
+installation. GA4 enhanced measurement must include browser-history page changes
+to track client-side navigation. Blog click objects remain queued in `dataLayer`;
+custom GA4 events and Google Ads conversions are not configured by this tag.
+
 ## Scope
 
 The complete institution directory is available at `/institutions`,

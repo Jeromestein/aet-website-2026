@@ -1,5 +1,20 @@
 # AET Implementation Status
 
+## 2026-10-10 — GA4 Google tag
+
+- Added Google tag `G-7SF10M7GBE` to the shared locale layout with
+  `next/script` after hydration, covering English, Chinese and Spanish pages
+  while preserving the existing `dataLayer` queue.
+- Passed typecheck, whitespace checks and HTTP checks for all three homepages
+  and CSLB articles. In-app browser navigation from the homepage through Blog
+  to the CSLB article retained exactly one initializer and one loader.
+- Visually checked the homepage and CSLB article at the default desktop viewport,
+  plus the article at 390px with no horizontal overflow. Screenshots:
+  `output/playwright/ga4-cslb-{desktop,mobile}-2026-10-10.jpg`.
+- GA4 receipt and enhanced-measurement settings are not verified. Custom blog
+  click events and Google Ads conversions still need separate configuration.
+  Reused the existing dev server; no build, commit, push or deployment.
+
 ## 2026-10-10 — CSLB institution entry
 
 - Replaced the CSLB initials placeholder with the unchanged 392 × 99 logo from
