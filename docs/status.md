@@ -1,5 +1,23 @@
 # AET Implementation Status
 
+## 2026-10-10 — Translation navigation group
+
+- Added Translation between Evaluation and Other Services in the shared desktop
+  and mobile navigation. Moved Certified Translation, Technical Translation,
+  Interpretation, and General Translation into it, preserving their destinations.
+  Renamed Services to Other Services across English, Chinese, and Spanish.
+- Tightened compact desktop spacing through 1392px after finding the English
+  application button crowded the right edge at narrower desktop widths.
+- Passed typecheck, i18n validation, and whitespace checks. In-app browser checks
+  covered English desktop at 1201px and 1440px, Spanish desktop navigation, and
+  Chinese mobile at 390px and 320px. Verified both dropdown contents, desktop
+  exclusivity and Escape, mobile scrolling, and General Translation navigation
+  with automatic menu closure. Checked narrow English and Chinese layouts have
+  no horizontal overflow. Screenshots: `output/playwright/header-translation-*.png`.
+- Restarted the preview with the owner's explicit authorization using
+  `WATCHPACK_POLLING=true pnpm dev` at `http://localhost:3021`; it remains running.
+  No production build, commit, push, or deployment.
+
 ## 2026-10-10 — Visa Service and shared pricing
 
 - Restored `/visa-service` and `/zh/visa-service` from the English/Chinese legacy

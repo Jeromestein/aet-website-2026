@@ -179,19 +179,22 @@ services.” sentence or add a separate badge card.
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
 navigation, a separate language selector, and an orange Online Application button
 at the far right linking to the existing credential-evaluation application.
-Keep the legacy labels and order:
-Home, Evaluation, Services, Contact, Payment, Blog. Services contains the seven
-retained service links listed in README.md; languages are English, 简体中文, and Español.
+Use this navigation order: Home, Evaluation, Translation, Other Services, Contact,
+Payment, Blog. Translation contains Certified Translation, Technical Translation,
+Interpretation, and General Translation, in that order. Other Services contains
+Expert Opinion Letters, Notarization, Visa Services, and Pricing. Use the same
+localized groups on desktop and mobile; languages are English, 简体中文, and Español.
 The selector displays EN, 中文, or ES with a globe icon and marks the selected language.
 Home and logo links stay on the active localized homepage; other destinations retain
-the legacy paths.
+the legacy paths. Use compact desktop spacing between 1201px and 1392px so both
+service groups and the application button retain room within the header.
 
 At 1200px and below, show the logo, a compact language selector, and one circular
 two-line menu button. Allow the logo to shrink proportionally on narrow phones
 while retaining 44px control targets.
 Open a navy panel filling the viewport below the 76px header, with numbered
-navigation rows, an expandable Services list, an Online Application button below
-the navigation, and language choices at the bottom.
+navigation rows, expandable Translation and Other Services lists, an Online
+Application button below the navigation, and language choices at the bottom.
 The panel scrolls when content exceeds the viewport. With JavaScript, lock background
 scrolling and focus while open; close on selection or Escape, restore trigger focus,
 and clear open menus when crossing the desktop breakpoint. Native disclosures

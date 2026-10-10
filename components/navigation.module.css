@@ -52,10 +52,10 @@
 .application { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; min-height: 46px; padding: 12px 20px; border-radius: 999px; background: var(--orange); color: var(--surface); font-size: .875rem; font-weight: 600; line-height: 1.4; white-space: nowrap; transition: background 180ms ease; }
 .application:hover { background: var(--orange-hover); }
 
-@media (1200px < width <= 1320px) {
-  .shell { gap: 20px; padding-inline: 24px; }
+@media (1200px < width <= 1392px) {
+  .shell { gap: 14px; padding-inline: 24px; }
   .brand { flex-basis: 260px; }
-  .desktopList { gap: 18px; }
+  .desktopList { gap: 14px; }
   .navLink { font-size: .875rem; }
   .language { padding-left: 16px; }
 }
