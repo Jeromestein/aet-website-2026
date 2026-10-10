@@ -18,6 +18,7 @@ const descriptions = {
     en: 'General translation services for personal and business documents. Review estimated per-word pricing and request a quote.',
     zh: '提供个人及商务文件的一般翻译服务，查看按字数计算的预估费用并咨询报价。',
   },
+  'visa-service': { en: 'American Eduation and Translation Services offer Visa Application services. Contact us today for information!', zh: '美国教育和翻译服务提供签证申请服务。今天就联系我们获取信息！' },
   notarization: {
     en: 'Notarization services from AET. Review the available services and contact an office about your document requirements.',
     zh: '了解 AET 公证服务，并联系办公室咨询文件要求。',

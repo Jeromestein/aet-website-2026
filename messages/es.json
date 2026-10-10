@@ -16,7 +16,8 @@
     "interpretation": "Interpretación",
     "expert": "Cartas de opinión de expertos",
     "general": "Traducción general",
-    "notarization": "Notarización"
+    "notarization": "Notarización",
+    "visa": "Servicios de visado"
   },
   "languageSwitcher": {
     "choose": "Elegir idioma",
@@ -219,7 +220,8 @@
       "expert": "Cartas de opinión experta",
       "interpretation": "Interpretación",
       "general": "Otros servicios",
-      "shipping": "Opciones de envío"
+      "shipping": "Opciones de envío",
+      "visa": "Servicios de visado"
     },
     "intro": {
       "translation": "Precios estimados para documentos habituales.",
@@ -227,9 +229,13 @@
       "expert": "Evaluación de experiencia profesional / cartas de opinión experta.",
       "interpretation": "Tarifas de interpretación entre chino e inglés.",
       "general": "Traducción, corrección de textos y redacción en inglés.",
-      "shipping": "El plazo de envío es independiente del tiempo de procesamiento del servicio."
+      "shipping": "El plazo de envío es independiente del tiempo de procesamiento del servicio.",
+      "visa": "Tarifas del servicio de visado, tasas consulares y de solicitud, y fotografías."
     },
-    "shippingGroups": { "domestic": "Nacional", "international": "Internacional" },
+    "shippingGroups": {
+      "domestic": "Nacional",
+      "international": "Internacional"
+    },
     "columns": {
       "service": "Documento / Servicio",
       "price": "Precio estimado",
@@ -249,7 +255,8 @@
       "notApplicable": "No aplica",
       "yes": "Sí",
       "no": "No",
-      "hourRange": "{min}–{max} horas"
+      "hourRange": "{min}–{max} horas",
+      "variable": "Varía — consúltenos"
     },
     "units": {
       "copy": "{amount}/copia",
@@ -257,7 +264,8 @@
       "page": "{amount}/página",
       "word": "{amount}/palabra",
       "chineseWord": "{amount}/palabra en chino",
-      "englishWord": "{amount}/palabra en inglés"
+      "englishWord": "{amount}/palabra en inglés",
+      "person": "{amount}/persona"
     },
     "services": {
       "degree": "Certificados de título",
@@ -287,7 +295,28 @@
       "technicalProofreading": "Corrección de textos técnicos",
       "nonTechnicalProofreading": "Corrección de textos no técnicos",
       "englishWriting": "Redacción en inglés",
-      "preEvaluation": "Preevaluación"
+      "preEvaluation": "Preevaluación",
+      "visa_advertisedChina": "Visado de China — precio inicial en la introducción",
+      "visa_chinaTourist": "Visado Q2/L de China — reunión familiar / turismo",
+      "visa_chinaOther": "Visado M/F/Z/R/X de China — negocios / trabajo / experto / estudiante",
+      "visa_canadaService": "Visado de Canadá — servicio de AET",
+      "visa_schengenService": "Visado Schengen — servicio normal",
+      "visa_ukService": "Visado del Reino Unido — servicio normal",
+      "visa_japanService": "Visado de Japón — servicio",
+      "visa_koreaService": "Visado de Corea — servicio",
+      "visa_chinaUS": "Tasa consular de China — ciudadanos de EE. UU.",
+      "visa_chinaCanada": "Tasa consular de China — ciudadanos de Canadá",
+      "visa_chinaOtherCountries": "Tasa consular de China — otras nacionalidades",
+      "visa_canadaApplication": "Canadá IRCC — solicitud y datos biométricos",
+      "visa_canadaShipping": "Canadá VAC — envío prioritario de ida y vuelta",
+      "visa_canadaTotal": "Canadá — total de solicitud y envío",
+      "visa_japanSingle": "Tasa de Japón — entrada única (hasta 3 meses)",
+      "visa_japanMultiple": "Tasa de Japón — entradas múltiples (1–5 años)",
+      "visa_koreaApplication": "Tasa consular de Corea",
+      "visa_schengenConsulate": "Tasa Schengen — varía según el país",
+      "visa_ukConsulate": "Tasa UKVI — varía según la estancia",
+      "visa_photoFour": "Fotos — 4 fotos de identificación",
+      "visa_photoTwo": "Fotos — 2 fotos con el servicio de visado de China"
     },
     "notes": {
       "translationQuote": "Los precios son estimados. La cotización exacta se proporciona tras revisar el documento. Contacte a nuestras oficinas de Miami o Boston.",
@@ -300,7 +329,15 @@
       "shipping": "Las tarifas incluyen franqueo y gestión. En envíos nacionales con seguimiento de USPS, se envía otra copia de la traducción sin cargo si se pierde el paquete. En envíos internacionales, se cobra de nuevo el envío si se pierde el paquete.",
       "disclaimer": "Todas las tarifas son orientativas. AET puede ajustar los precios, que pueden variar entre oficinas. Confirme la cotización final y el plazo con su oficina.",
       "proofreading": "Los pedidos de {proofreadingDiscountMinimumPages} páginas o más pueden beneficiarse de una tarifa reducida.",
-      "writing": "El cliente debe proporcionar un esquema y el contenido básico."
+      "writing": "El cliente debe proporcionar un esquema y el contenido básico.",
+      "visaAdvertised": "Precio inicial indicado en la introducción; la tarifa Q2/L se muestra por separado.",
+      "visaService": "Tarifa de AET; las tasas consulares y otros cargos son adicionales.",
+      "visaDisclaimer": "Todos los precios son orientativos. Confirme el precio final con el personal de AET."
+    },
+    "visaGroups": {
+      "service": "Tarifas de servicio de AET",
+      "external": "Tasas consulares, de solicitud y de envío",
+      "photo": "Servicio de fotografías"
     }
   }
 }

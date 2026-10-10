@@ -16,7 +16,8 @@
     "interpretation": "Interpretation",
     "expert": "Expert Opinion Letters",
     "general": "General Translation",
-    "notarization": "Notarization"
+    "notarization": "Notarization",
+    "visa": "Visa Services"
   },
   "languageSwitcher": {
     "choose": "Choose language",
@@ -219,7 +220,8 @@
       "expert": "Expert Opinion Letters",
       "interpretation": "Interpretation",
       "general": "Other Services",
-      "shipping": "Shipping Options"
+      "shipping": "Shipping Options",
+      "visa": "Visa Services"
     },
     "intro": {
       "translation": "Estimated pricing for common documents.",
@@ -227,9 +229,13 @@
       "expert": "Professional Experience Evaluation / Expert Opinion Letters.",
       "interpretation": "Rates for interpretation between Chinese and English.",
       "general": "Translation, proofreading, and English writing.",
-      "shipping": "Delivery time is separate from service processing time."
+      "shipping": "Delivery time is separate from service processing time.",
+      "visa": "Visa service fees, consular/application charges, and photo services."
     },
-    "shippingGroups": { "domestic": "Domestic", "international": "International" },
+    "shippingGroups": {
+      "domestic": "Domestic",
+      "international": "International"
+    },
     "columns": {
       "service": "Document / Service",
       "price": "Estimated Price",
@@ -249,7 +255,8 @@
       "notApplicable": "N/A",
       "yes": "Yes",
       "no": "No",
-      "hourRange": "{min}–{max} hours"
+      "hourRange": "{min}–{max} hours",
+      "variable": "Varies — contact us"
     },
     "units": {
       "copy": "{amount}/copy",
@@ -257,7 +264,8 @@
       "page": "{amount}/page",
       "word": "{amount}/word",
       "chineseWord": "{amount}/Chinese word",
-      "englishWord": "{amount}/English word"
+      "englishWord": "{amount}/English word",
+      "person": "{amount}/person"
     },
     "services": {
       "degree": "Degree Certificates",
@@ -287,7 +295,28 @@
       "technicalProofreading": "Proofreading — Technical",
       "nonTechnicalProofreading": "Proofreading — Non-technical",
       "englishWriting": "Writing (in English)",
-      "preEvaluation": "Pre-Evaluation"
+      "preEvaluation": "Pre-Evaluation",
+      "visa_advertisedChina": "China Visa — introductory starting price",
+      "visa_chinaTourist": "China Q2/L Visa — family reunion / tourist",
+      "visa_chinaOther": "China M/F/Z/R/X Visa — business / work / expert / student",
+      "visa_canadaService": "Canada Visa — AET service fee",
+      "visa_schengenService": "Schengen Visa — normal service",
+      "visa_ukService": "UK Visa — normal service",
+      "visa_japanService": "Japan Visa — service fee",
+      "visa_koreaService": "Korean Visa — service fee",
+      "visa_chinaUS": "China consular fee — US citizens",
+      "visa_chinaCanada": "China consular fee — Canadian citizens",
+      "visa_chinaOtherCountries": "China consular fee — other nationalities",
+      "visa_canadaApplication": "Canada IRCC application and biometrics",
+      "visa_canadaShipping": "Canada VAC round-trip priority shipping",
+      "visa_canadaTotal": "Canada application + shipping total",
+      "visa_japanSingle": "Japan consular fee — single entry (within 3 months)",
+      "visa_japanMultiple": "Japan consular fee — multiple entry (1–5 years)",
+      "visa_koreaApplication": "Korea consular fee",
+      "visa_schengenConsulate": "Schengen consular fee — varies by country",
+      "visa_ukConsulate": "UKVI application fee — varies by stay",
+      "visa_photoFour": "Photo Service — 4 ID photos",
+      "visa_photoTwo": "Photo Service — 2 photos with China Visa service"
     },
     "notes": {
       "translationQuote": "Prices are estimates. An exact quote is provided after reviewing the actual document. Contact our Miami or Boston office for details.",
@@ -300,7 +329,15 @@
       "shipping": "Shipping fees include postage and handling. For U.S. shipping with USPS tracking, a second translation copy is sent at no charge if the package is lost. For international shipping, shipping fees are charged again if the package is lost.",
       "disclaimer": "All listed fees are for reference. AET may adjust prices, and prices may vary by office. Contact your office to confirm the final quote and processing time.",
       "proofreading": "Customers with orders of {proofreadingDiscountMinimumPages} pages or more can enjoy a discounted rate.",
-      "writing": "Clients should provide an outline and basic content."
+      "writing": "Clients should provide an outline and basic content.",
+      "visaAdvertised": "Starting price stated in the service introduction; the Q2/L rate is listed separately.",
+      "visaService": "AET service fee; consular and other charges are separate.",
+      "visaDisclaimer": "All prices above for reference only. Please check with AET staff for final price."
+    },
+    "visaGroups": {
+      "service": "AET service fees",
+      "external": "Consular, application and shipping charges",
+      "photo": "Photo Service"
     }
   }
 }

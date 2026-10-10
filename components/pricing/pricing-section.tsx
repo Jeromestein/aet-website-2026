@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { certifiedTranslation, evaluationGroups, pricingAnchors, expertOpinion, interpretation, otherServices, shipping, pricingPolicy, type PricingSectionId } from '@/lib/pricing';
+import { VisaPricing } from './visa-pricing';
 import { PricingTable } from './pricing-table';
 import styles from './pricing.module.css';
 
@@ -22,6 +23,7 @@ export function PricingSection({ section }: { section: PricingSectionId }) {
     {section === 'expert' && <PricingTable rates={expertOpinion} caption={title} showService={false} />}
     {section === 'interpretation' && <><PricingTable rates={interpretation} caption={title} showTime={false} showNotes /><p className={styles.note}>{t('notes.interpretation')}</p></>}
     {section === 'general' && <PricingTable rates={otherServices} caption={title} showTime={false} showNotes />}
+    {section === 'visa' && <VisaPricing />}
     {section === 'shipping' && <>
       <PricingTable rates={shipping} caption={title} showTracking />
       <p className={styles.note}>{t('notes.shipping')}</p>

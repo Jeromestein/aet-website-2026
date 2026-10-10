@@ -1,5 +1,35 @@
 # AET Implementation Status
 
+## 2026-10-10 — Visa Service and shared pricing
+
+- Restored `/visa-service` and `/zh/visa-service` from the English/Chinese legacy
+  PHP body files, using the shared service-page layout. Spanish shows a labeled
+  English body fallback with noindex. Added Services menu/footer links, sitemap
+  entries, English/Chinese sharing images, Service offers and four legacy redirects.
+- Preserved all nine source sections in both languages, including their office
+  literals, qualifications and processing times. The photo-promotion image is
+  transcribed as accessible text. The dedicated China-details page remains an
+  external legacy destination. See `content/visa-service/README.md` for exceptions.
+- Added one Visa fee catalog in `lib/pricing.ts`. Source-body interpolation, the
+  service pricing summary, global Pricing and structured offers share its values.
+  The 21 table rows separate service, external and photo fees; Canada's combined
+  charge is derived. The introductory China fee and Q2/L starting fee remain
+  separate source claims. Undefined consular charges are marked as variable.
+- Passed `pnpm typecheck`, `pnpm check:i18n`, `git diff --check` and
+  `python3 scripts/check-visa.py`. The latter compares all source sections,
+  rendered pricing parity in all three locales, anchors, metadata, JSON-LD and
+  the four legacy main-page entry points.
+- Codex in-app browser: English service page and Pricing Visa section inspected
+  at 1440px desktop and 390px mobile; Chinese service page at 320px. Section-index
+  jumps work, tables stack on phones, and checked pages have no horizontal overflow.
+  Corrected the Visa table's desktop qualification-column width. Screenshots are
+  under `output/playwright/visa-*.png`.
+- Started the previously unavailable preview with `WATCHPACK_POLLING=true pnpm dev`
+  at `http://localhost:3021`; restarted the agent-owned process after observing
+  stale development modules. Preview remains running for owner review.
+- No production build, commit, push or deployment.
+
+
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
 ### CSLB Blog publication date — October 8, 2026

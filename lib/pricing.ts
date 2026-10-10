@@ -3,9 +3,10 @@
  * Keep prices and turnaround together; localized messages contain presentation only.
  */
 export type Price =
-  | { kind: 'fixed' | 'from'; amount: number; unit?: 'copy' | 'hour' | 'page' | 'word' | 'chineseWord' | 'englishWord' }
+  | { kind: 'fixed' | 'from'; amount: number; unit?: 'person' | 'copy' | 'hour' | 'page' | 'word' | 'chineseWord' | 'englishWord' }
   | { kind: 'range'; min: number; max: number; unit?: 'hour' | 'page' | 'word' | 'chineseWord' | 'englishWord' }
-  | { kind: 'quote' };
+  | { kind: 'quote' }
+  | { kind: 'variable' };
 export type Turnaround =
   | { kind: 'businessDays' | 'hours'; value: number }
   | { kind: 'businessDayRange'; min: number; max: number }
@@ -76,11 +77,65 @@ export const shipping: readonly Rate[] = [
   { id: 'internationalFedex', label: 'internationalFedex', price: fixed(93), turnaround: { kind: 'businessDayRange', min: 1, max: 3 }, tracking: true },
 ];
 export const pricingPolicy = { sameDayCutoff: '1:00pm EST', simultaneousMinimumHours: 3, telephoneMinimumHours: 0.5, proofreadingDiscountMinimumPages: 10 } as const;
-export const pricingSections = ['translation', 'evaluation', 'expert', 'interpretation', 'general', 'shipping'] as const;
+export const pricingSections = ['translation', 'evaluation', 'expert', 'interpretation', 'general', 'visa', 'shipping'] as const;
 export type PricingSectionId = typeof pricingSections[number];
 
 export const evaluationGroups = [
   { id: "document", rates: documentEvaluation }, { id: "course", rates: courseEvaluation },
   { id: "expert", rates: expertOpinion }, { id: "position", rates: positionEvaluation },
 ] as const;
-export const pricingAnchors: Record<PricingSectionId, string> = { translation: "translation", evaluation: "evaluation", expert: "expert-opinion", interpretation: "interpretation", general: "other", shipping: "shipping" };
+export const pricingAnchors: Record<PricingSectionId, string> = { translation: "translation", evaluation: "evaluation", expert: "expert-opinion", interpretation: "interpretation", general: "other", visa: "visa", shipping: "shipping" };
+
+/** Visa fees from the legacy Visa Service pages, preserved at the owner's request.
+ * The introductory starting price and Q2/L starting price are distinct source claims.
+ * Consular/application charges are separate from AET service fees.
+ */
+const visaBaseFees = {
+  advertisedChina: 75,
+  photoFour: 15,
+  photoTwo: 12,
+  chinaTourist: 99,
+  chinaOther: 300,
+  chinaUS: 140,
+  chinaCanada: 68,
+  chinaOtherMin: 23,
+  chinaOtherMax: 122,
+  canadaService: 500,
+  canadaApplication: 180,
+  canadaShipping: 76,
+  schengenService: 450,
+  ukService: 450,
+  japanService: 415,
+  japanSingle: 27,
+  japanMultiple: 55,
+  koreaService: 350,
+  koreaApplication: 40,
+} as const;
+export const visaFees = { ...visaBaseFees, canadaTotal: visaBaseFees.canadaApplication + visaBaseFees.canadaShipping } as const;
+export const visaServiceRates: readonly Rate[] = [
+  { id: 'advertisedChina', label: 'visa_advertisedChina', price: { kind: 'from', amount: visaFees.advertisedChina }, note: 'visaAdvertised' },
+  { id: 'chinaTourist', label: 'visa_chinaTourist', price: { kind: 'from', amount: visaFees.chinaTourist, unit: 'person' }, note: 'visaService' },
+  { id: 'chinaOther', label: 'visa_chinaOther', price: { kind: 'fixed', amount: visaFees.chinaOther, unit: 'person' }, note: 'visaService' },
+  { id: 'canadaService', label: 'visa_canadaService', price: { kind: 'fixed', amount: visaFees.canadaService, unit: 'person' }, note: 'visaService' },
+  { id: 'schengenService', label: 'visa_schengenService', price: { kind: 'fixed', amount: visaFees.schengenService, unit: 'person' }, note: 'visaService' },
+  { id: 'ukService', label: 'visa_ukService', price: { kind: 'fixed', amount: visaFees.ukService, unit: 'person' }, note: 'visaService' },
+  { id: 'japanService', label: 'visa_japanService', price: { kind: 'fixed', amount: visaFees.japanService, unit: 'person' }, note: 'visaService' },
+  { id: 'koreaService', label: 'visa_koreaService', price: { kind: 'fixed', amount: visaFees.koreaService, unit: 'person' }, note: 'visaService' },
+];
+export const visaExternalRates: readonly Rate[] = [
+  { id: 'chinaUS', label: 'visa_chinaUS', price: fixed(visaFees.chinaUS) },
+  { id: 'chinaCanada', label: 'visa_chinaCanada', price: fixed(visaFees.chinaCanada) },
+  { id: 'chinaOtherCountries', label: 'visa_chinaOtherCountries', price: { kind: 'range', min: visaFees.chinaOtherMin, max: visaFees.chinaOtherMax } },
+  { id: 'canadaApplication', label: 'visa_canadaApplication', price: fixed(visaFees.canadaApplication) },
+  { id: 'canadaShipping', label: 'visa_canadaShipping', price: fixed(visaFees.canadaShipping) },
+  { id: 'canadaTotal', label: 'visa_canadaTotal', price: fixed(visaFees.canadaTotal) },
+  { id: 'japanSingle', label: 'visa_japanSingle', price: fixed(visaFees.japanSingle) },
+  { id: 'japanMultiple', label: 'visa_japanMultiple', price: fixed(visaFees.japanMultiple) },
+  { id: 'koreaApplication', label: 'visa_koreaApplication', price: fixed(visaFees.koreaApplication) },
+  { id: 'schengenConsulate', label: 'visa_schengenConsulate', price: { kind: 'variable' } },
+  { id: 'ukConsulate', label: 'visa_ukConsulate', price: { kind: 'variable' } },
+];
+export const visaPhotoRates: readonly Rate[] = [
+  { id: 'photoFour', label: 'visa_photoFour', price: fixed(visaFees.photoFour) },
+  { id: 'photoTwo', label: 'visa_photoTwo', price: fixed(visaFees.photoTwo) },
+];

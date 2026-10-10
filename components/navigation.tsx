@@ -26,6 +26,7 @@ export function Navigation() {
       { label: t("navigation.expert"), href: getPathname({ locale, href: "/expert-opinion-letters" }) },
       { label: t("navigation.general"), href: getPathname({ locale, href: "/general-translation" }) },
       { label: t("navigation.notarization"), href: getPathname({ locale, href: "/notarization" }) },
+      { label: t("navigation.visa"), href: getPathname({ locale, href: "/visa-service" }) },
       { label: t("pricing.title"), href: getPathname({ locale, href: "/pricing" }) },
     ] },
     { label: t("navigation.contact"), href: contactPath(locale) },

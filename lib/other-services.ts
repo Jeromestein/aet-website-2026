@@ -11,7 +11,10 @@ import generalZh from '@/content/general-translation/zh.json';
 import notarizationEn from '@/content/notarization/en.json';
 import notarizationZh from '@/content/notarization/zh.json';
 
-export const serviceSlugs = ['technical-translation', 'interpretation', 'expert-opinion-letters', 'general-translation', 'notarization'] as const;
+import visaEn from '@/content/visa-service/en.json';
+import visaZh from '@/content/visa-service/zh.json';
+
+export const serviceSlugs = ['technical-translation', 'interpretation', 'expert-opinion-letters', 'general-translation', 'notarization', 'visa-service'] as const;
 export type ServiceSlug = typeof serviceSlugs[number];
 export type ServiceSection = { id: string; title: string; html: string; scenarios?: string[] };
 export type ServiceContent = { source: string; title: string; sections: ServiceSection[] };
@@ -21,6 +24,7 @@ const contents: Record<ServiceSlug, Partial<Record<Locale, ServiceContent>>> = {
   interpretation: { en: interpretationEn, zh: interpretationZh },
   'expert-opinion-letters': { en: expertEn, zh: expertZh, es: expertEs },
   'general-translation': { en: generalEn, zh: generalZh },
+  'visa-service': { en: visaEn, zh: visaZh },
   notarization: { en: notarizationEn, zh: notarizationZh },
 };
 

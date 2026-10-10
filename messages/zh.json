@@ -16,7 +16,8 @@
     "interpretation": "口译",
     "expert": "专家意见函",
     "general": "一般翻译",
-    "notarization": "公证"
+    "notarization": "公证",
+    "visa": "签证服务"
   },
   "languageSwitcher": {
     "choose": "选择语言",
@@ -219,7 +220,8 @@
       "expert": "专家意见信",
       "interpretation": "口译",
       "general": "其他服务",
-      "shipping": "配送选项"
+      "shipping": "配送选项",
+      "visa": "签证服务"
     },
     "intro": {
       "translation": "常见文件的参考价格。",
@@ -227,9 +229,13 @@
       "expert": "工作经验评估／专家意见信。",
       "interpretation": "以下为中英文之间的口译收费。",
       "general": "翻译、校对及英文写作。",
-      "shipping": "配送时间与服务处理时间分开计算。"
+      "shipping": "配送时间与服务处理时间分开计算。",
+      "visa": "签证服务费、领馆及申请费用和照片服务。"
     },
-    "shippingGroups": { "domestic": "美国境内", "international": "国际" },
+    "shippingGroups": {
+      "domestic": "美国境内",
+      "international": "国际"
+    },
     "columns": {
       "service": "文件／服务",
       "price": "参考价格",
@@ -249,7 +255,8 @@
       "notApplicable": "不适用",
       "yes": "有",
       "no": "无",
-      "hourRange": "{min}–{max} 小时"
+      "hourRange": "{min}–{max} 小时",
+      "variable": "费用因情况而异，请咨询"
     },
     "units": {
       "copy": "{amount}/份",
@@ -257,7 +264,8 @@
       "page": "{amount}/页",
       "word": "{amount}/词",
       "chineseWord": "{amount}/中文字",
-      "englishWord": "{amount}/英文词"
+      "englishWord": "{amount}/英文词",
+      "person": "{amount}/人"
     },
     "services": {
       "degree": "学位证书",
@@ -287,7 +295,28 @@
       "technicalProofreading": "技术内容校对",
       "nonTechnicalProofreading": "非技术内容校对",
       "englishWriting": "英文写作",
-      "preEvaluation": "预评估"
+      "preEvaluation": "预评估",
+      "visa_advertisedChina": "中国签证 — 简介起价",
+      "visa_chinaTourist": "中国Q2/L签证 — 家庭团聚/旅游",
+      "visa_chinaOther": "中国M/F/Z/R/X签证 — 商务/工作/专家/学生",
+      "visa_canadaService": "加拿大签证 — AET服务费",
+      "visa_schengenService": "申根签证 — 正常服务",
+      "visa_ukService": "英国签证 — 正常服务",
+      "visa_japanService": "日本签证 — 服务费",
+      "visa_koreaService": "韩国签证 — 服务费",
+      "visa_chinaUS": "中国领馆费用 — 美国公民",
+      "visa_chinaCanada": "中国领馆费用 — 加拿大公民",
+      "visa_chinaOtherCountries": "中国领馆费用 — 其他国家公民",
+      "visa_canadaApplication": "加拿大IRCC申请及生物识别采集费",
+      "visa_canadaShipping": "加拿大VAC往返优先邮寄费",
+      "visa_canadaTotal": "加拿大申请及邮寄费用合计",
+      "visa_japanSingle": "日本领馆费用 — 一次入境（3个月内）",
+      "visa_japanMultiple": "日本领馆费用 — 多次入境（1至5年）",
+      "visa_koreaApplication": "韩国领馆费用",
+      "visa_schengenConsulate": "申根领馆费用 — 因国家而异",
+      "visa_ukConsulate": "英国UKVI申请费 — 因停留时间而异",
+      "visa_photoFour": "照片服务 — 4张证件照",
+      "visa_photoTwo": "照片服务 — 订购中国签证服务时的2张照片"
     },
     "notes": {
       "translationQuote": "以上为参考价格。我们会在查看实际文件后提供准确报价。详情请联系迈阿密或波士顿办公室。",
@@ -300,7 +329,15 @@
       "shipping": "配送费包含邮资和处理费。美国境内使用带 USPS 追踪的配送方式，若包裹丢失，将免费补寄一份翻译文件。国际配送若包裹丢失，需再次支付配送费。",
       "disclaimer": "所有费用仅供参考，AET 可调整价格，不同办公室的价格可能有所不同。请向办理办公室确认最终报价和处理时间。",
       "proofreading": "校对订单达到 {proofreadingDiscountMinimumPages} 页及以上可享优惠。",
-      "writing": "客户需提供提纲及基本内容。"
+      "writing": "客户需提供提纲及基本内容。",
+      "visaAdvertised": "服务简介中的起价；Q2/L签证费用另列。",
+      "visaService": "AET服务费；领馆及其他费用另计。",
+      "visaDisclaimer": "以上所有价格仅供参考。请联系AET工作人员确认最终价格。"
+    },
+    "visaGroups": {
+      "service": "AET服务费",
+      "external": "领馆、申请及邮寄费用",
+      "photo": "照片服务"
     }
   }
 }

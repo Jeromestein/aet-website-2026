@@ -107,7 +107,7 @@ for verification and remaining launch work.
 
 ## Service scope
 
-As requested by the owner on September 28, 2026, the Services menu retains only:
+The Services menu retains the following services (Visa restored by owner request on October 10, 2026):
 
 - Certified Translation
 - Technical Translation
@@ -115,8 +115,9 @@ As requested by the owner on September 28, 2026, the Services menu retains only:
 - Expert Opinion Letters
 - General Translation
 - Notarization
+- Visa Services
 
-Visa Services, Editing/Proofreading, and China Consular Authentication are removed
+Editing/Proofreading and China Consular Authentication are removed
 from the rebuilt website's desktop/mobile navigation, homepage service cards,
 and footer wherever previously listed. Do not reintroduce their labels or links
 when copying content from the legacy website. Foreign Credential Evaluation,
@@ -219,7 +220,12 @@ time display; `messages/*.json` contains wording, not fee or turnaround values.
 Example: `<PricingSection section="translation" />` or
 `<PricingTable rates={expertOpinion} caption={localizedTitle} showService={false} />`.
 
-China Visa is excluded. Other Services includes translation, proofreading, and
+Visa fees are now included from the legacy Visa Service pages, as requested on
+October 10, 2026. `visaFees` supplies the source prose, service tables, Pricing
+page and structured offers. The introductory China starting fee and Q2/L starting
+fee remain distinct. Consular/application charges are separate from AET fees;
+Canada's application-plus-shipping total is derived. See
+[Visa provenance](content/visa-service/README.md). Other Services includes translation, proofreading, and
 English writing, as confirmed by the owner. Their rates and the proofreading
 discount threshold share the pricing catalog.
 No application-form-only add-ons have been imported. Existing old-site service

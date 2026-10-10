@@ -1,5 +1,9 @@
 /** Retained entry points from the legacy AET homepage and Apache redirects. */
 export const legacyEntryRedirects = [
+  ["/e-visaservice.php", "/visa-service"],
+  ["/e-visaservice-zh.php", "/zh/visa-service"],
+  ["/e_visaservice.html", "/visa-service"],
+  ["/c_visaservice.html", "/zh/visa-service"],
   ["/index.php", "/"],
   ["/home.php", "/en"],
   ["/home-zh.php", "/zh"],

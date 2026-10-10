@@ -1,3 +1,5 @@
+import { renderVisaPrices } from '@/lib/visa';
+import { VisaPricing } from '@/components/pricing/visa-pricing';
 import { serviceDescription } from '@/lib/service-descriptions';
 import { ServiceStructuredData } from '@/components/service/service-structured-data';
 import { pageMetadata } from '@/lib/seo';
@@ -10,7 +12,7 @@ import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { contactPath } from '@/lib/contact';
 import { getOtherServiceContent, serviceSlugs, type ServiceSlug, type ServiceSection } from '@/lib/other-services';
-import { interpretation, expertOpinion, generalTranslation, shipping } from '@/lib/pricing';
+import { interpretation, expertOpinion, generalTranslation, shipping, visaFees } from '@/lib/pricing';
 import { ServicePage, ServiceCopy } from '@/components/service/service-page';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { InstitutionCarousel } from '@/components/institution-carousel';
@@ -22,7 +24,7 @@ type Props = { params: Promise<{ locale: string; service: string }> };
 
 const serviceLabels = {
   'technical-translation': 'technical', interpretation: 'interpretation',
-  'expert-opinion-letters': 'expert', 'general-translation': 'general', notarization: 'notarization',
+  'expert-opinion-letters': 'expert', 'general-translation': 'general', notarization: 'notarization', 'visa-service': 'visa',
 } as const;
 
 function validService(value: string): value is ServiceSlug {
@@ -44,6 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function SectionContent({ service, section }: { service: ServiceSlug; section: ServiceSection }) {
   const pricing = useTranslations('pricing');
   const locale = useLocale() as (typeof routing.locales)[number];
+  if (service === 'visa-service') return <>
+    {section.id === 'apply' && <aside className={styles.languageNotice} lang="en"><strong>(New) High quality ID photo service</strong><br />For ${visaFees.photoFour}: you get 2 US + 2 China Passport / Visa photos!<br />Also take ID photos for over 100 countries.</aside>}
+    <div className={styles.copy} dangerouslySetInnerHTML={{ __html: renderVisaPrices(section.html) }} />
+  </>;
   if (section.id === 'partners') return null;
   if (service === 'expert-opinion-letters' && section.id === 'shipping-options') return <>
     <div id="shipping">
@@ -86,12 +92,12 @@ export default async function OtherServicePage({ params }: Props) {
   const t = await getTranslations();
   const { content, hasLocaleContent } = getOtherServiceContent(service, locale);
   const sections = content.sections.filter(section => section.id !== 'blog-list' || service === 'expert-opinion-letters');
-  const actionId = service === 'interpretation' ? 'area' : service === 'expert-opinion-letters' ? 'steps' : service === 'general-translation' ? 'price' : 'sign';
+  const actionId = service === 'visa-service' ? 'apply' : service === 'interpretation' ? 'area' : service === 'expert-opinion-letters' ? 'steps' : service === 'general-translation' ? 'price' : 'sign';
   const action = service === 'technical-translation' ? { label: content.sections.find(section => section.id === 'apply')!.title, href: 'mailto:tech@americantranslationservice.com' }
     : { label: content.sections.find(section => section.id === actionId)?.title ?? t('home.contact'), href: `#${actionId}` };
 
   return <ServicePage path={`/${service}`} locale={locale} title={content.title} titleLang={hasLocaleContent ? undefined : 'en'} label={t(`navigation.${serviceLabels[service]}`)}
-    nav={sections.map(({ id, title }) => ({ id, label: title }))}
+    nav={[...sections.map(({ id, title }) => ({ id, label: title })), ...(service === 'visa-service' ? [{ id: 'price', label: t('pricing.title') }] : [])]}
     actions={[action, { label: t('home.contact'), href: contactPath(locale) }]}>
     <ServiceStructuredData service={service} locale={locale} />
     {!hasLocaleContent && <p className={styles.languageNotice} lang="es">El contenido de este servicio está disponible en inglés; la traducción al español aún no está disponible.</p>}
@@ -104,5 +110,6 @@ export default async function OtherServicePage({ params }: Props) {
       : <section key={section.id} id={section.id} className={styles.section} aria-labelledby={`${section.id}-title`}>
         <h2 id={`${section.id}-title`}>{section.title}</h2><SectionContent service={service} section={section} />
       </section>)}</div>
+    {service === 'visa-service' && <section id="price" className={styles.section} aria-labelledby="visa-price-title"><h2 id="visa-price-title">{t('pricing.title')}</h2><VisaPricing /></section>}
   </ServicePage>;
 }

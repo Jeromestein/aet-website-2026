@@ -4,7 +4,7 @@ const localizedPages = new Set([
   '/', '/about', '/contact', '/institutions', '/pricing', '/evaluation',
   '/certified-translation', '/payment', '/blog', '/career',
   '/technical-translation', '/interpretation', '/expert-opinion-letters',
-  '/general-translation', '/notarization',
+  '/general-translation', '/notarization', '/visa-service',
   ...['miami', 'boston', 'los-angeles', 'beijing'].map(slug => `/offices/${slug}`),
 ]);
 

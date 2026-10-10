@@ -1,3 +1,4 @@
+import { renderVisaPrices } from '@/lib/visa';
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from '@/i18n/routing';
 import { StructuredData } from '@/components/structured-data';
@@ -6,7 +7,7 @@ import { absoluteUrl, indexableLocales, localizedPath } from '@/lib/seo';
 import { certifiedTranslationContent } from '@/lib/certified-translation';
 import { evaluationContent } from '@/lib/evaluation';
 import { getOtherServiceContent, type ServiceSlug } from '@/lib/other-services';
-import { certifiedTranslation, evaluationGroups, preEvaluation, expertOpinion, interpretation, generalTranslation, pricingPolicy, type Rate } from '@/lib/pricing';
+import { certifiedTranslation, evaluationGroups, preEvaluation, expertOpinion, interpretation, generalTranslation, pricingPolicy, visaServiceRates, type Rate } from '@/lib/pricing';
 import { formatPrice, formatTurnaround } from '@/lib/pricing-format';
 
 type SchemaService = 'evaluation' | 'certified-translation' | ServiceSlug;
@@ -15,9 +16,10 @@ const serviceRates: Partial<Record<SchemaService, readonly Rate[]>> = {
   'certified-translation': certifiedTranslation,
   'expert-opinion-letters': expertOpinion,
   interpretation,
+  'visa-service': visaServiceRates,
   'general-translation': generalTranslation,
 };
-const units = { copy: 'copy', hour: 'hour', page: 'page', word: 'word', chineseWord: 'Chinese word', englishWord: 'English word' };
+const units = { person: 'person', copy: 'copy', hour: 'hour', page: 'page', word: 'word', chineseWord: 'Chinese word', englishWord: 'English word' };
 
 export async function ServiceStructuredData({ service, locale }: { service: SchemaService; locale: Locale }) {
   const path = `/${service}`;
@@ -49,5 +51,5 @@ export async function ServiceStructuredData({ service, locale }: { service: Sche
       } } : {}),
     };
   });
-  return <StructuredData data={serviceGraph({ path, locale, name: content.title, description, offers })} />;
+  return <StructuredData data={serviceGraph({ path, locale, name: content.title, description: service === 'visa-service' ? renderVisaPrices(description) : description, offers })} />;
 }

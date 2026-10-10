@@ -37,7 +37,7 @@ and government agencies nationwide. Keep this sentence with **Explore all instit
 Use the existing service names: Foreign Credential Evaluation; Document by Document
 Evaluation; Course by Course Evaluation; Expert Opinion Letters; Pre-Evaluation
 Services; Certified Translation; Interpretation; Technical Translation;
-General Translation; Notarization. Exclude Visa Services, Editing/Proofreading,
+General Translation; Notarization; Visa Services. Exclude Editing/Proofreading,
 and China Consular Authentication from navigation, service cards, and footer
 links, following the service scope in README.md.
 Retain original supporting headings such as Why Choose Us, Other Services, and
@@ -180,7 +180,7 @@ services.” sentence or add a separate badge card.
 navigation, a separate language selector, and an orange Online Application button
 at the far right linking to the existing credential-evaluation application.
 Keep the legacy labels and order:
-Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
+Home, Evaluation, Services, Contact, Payment, Blog. Services contains the seven
 retained service links listed in README.md; languages are English, 简体中文, and Español.
 The selector displays EN, 中文, or ES with a globe icon and marks the selected language.
 Home and logo links stay on the active localized homepage; other destinations retain
