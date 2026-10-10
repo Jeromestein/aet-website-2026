@@ -18,6 +18,7 @@ Open http://localhost:3021. The development port is configured in `package.json`
 ```sh
 pnpm check:i18n
 pnpm typecheck
+node scripts/check-blog-contact.cjs
 ```
 
 Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
@@ -32,8 +33,12 @@ Deployment is intentionally left to the owner.
 The shared locale layout loads Google tag `G-7SF10M7GBE` with `next/script`
 after hydration on all English, Chinese, and Spanish pages. Keep a single
 installation. GA4 enhanced measurement must include browser-history page changes
-to track client-side navigation. Blog click objects remain queued in `dataLayer`;
-custom GA4 events and Google Ads conversions are not configured by this tag.
+to track client-side navigation. Authored Blog phone and Contact-page buttons
+also send `contact_us` with article, locale, method and placement. Same-tab web
+links wait for the event callback or a separate two-second fallback; telephone
+and new-tab actions retain native behavior. Other Blog click objects remain in
+`dataLayer`. These events measure contact intent, not completed inquiries.
+GA4 receipt, key-event settings and Google Ads import still need account verification.
 
 ## Scope
 

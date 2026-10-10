@@ -47,7 +47,10 @@ blocked. No AI response, indexing, or recommendation is promised.
 `ArticleAction` queues `blog_contact_click`, `blog_ai_click`, and `blog_ai_copy`
 in `dataLayer`, with article, locale, method, and placement only. Contact methods
 are `phone`, `contact_page`, and `application`. The shared locale layout now loads
-GA4 tag `G-7SF10M7GBE`, but these custom click objects are not yet forwarded as
-GA4 events or configured as Google Ads conversions. The queued fields contain no
-personal information or document data. These events represent clicks, not
-qualified leads or sales.
+GA4 tag `G-7SF10M7GBE`. Phone and Contact-page buttons additionally send the
+owner-provided `contact_us` event with those same non-personal fields. Application
+and AI clicks remain queue-only. Same-tab web navigation waits for Google's event
+callback or an independent two-second fallback; phone, modified and new-tab
+clicks retain native behavior. Missing or failing analytics never blocks a link.
+These events represent contact intent, not completed applications, qualified
+leads or sales. GA4 receipt and Google Ads conversion import remain unverified.

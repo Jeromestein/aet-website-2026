@@ -1,5 +1,23 @@
 # AET Implementation Status
 
+## 2026-10-10 — Blog contact event
+
+- Connected the owner's `contact_us` event to authored Blog phone and Contact-page
+  buttons in all three locales, with article, locale, method and placement.
+  Existing article queues remain; application and AI clicks do not send this event.
+- Same-tab web links wait for Google's callback or an independent two-second
+  fallback, guarded against duplicate navigation. Phone, modified and new-tab
+  actions remain native; missing or failing analytics does not block navigation.
+- Passed typecheck, whitespace checks and `node scripts/check-blog-contact.cjs`:
+  localized events, callback/timeout races, absent/throwing analytics, cancellation,
+  native link behavior and event scope. Tests use fakes and send no analytics data.
+- In-app browser verified the English intro CTA on desktop and Chinese closing
+  CTA at 390px reach their localized `/contact#la` destinations. Screenshots:
+  `output/playwright/contact-event-{desktop,mobile}-2026-10-10.jpg`.
+  No console errors on the checked desktop route or mobile horizontal overflow.
+- Reused port 3021 and reset the viewport. No build, commit, push or deployment.
+  GA4 receipt, key-event settings and Google Ads import remain unverified.
+
 ## 2026-10-10 — GA4 Google tag
 
 - Added Google tag `G-7SF10M7GBE` to the shared locale layout with
