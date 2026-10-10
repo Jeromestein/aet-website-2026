@@ -1,5 +1,28 @@
 # AET Implementation Status
 
+## 2026-10-10 — CSLB institution entry
+
+- Replaced the CSLB initials placeholder with the unchanged 392 × 99 logo from
+  CSLB's official website header. Updated only the CSLB record in English,
+  Chinese and Spanish using the authored Blog guide: education credit, practical
+  experience, evaluation/translation and provider/report confirmation. Added a
+  localized article link; other institution records and the total of 28 remain.
+- Passed typecheck, existing i18n checks, whitespace checks and focused three-locale
+  HTTP/source comparisons for record scope, logo, complete notes and article URLs.
+  The logo response and SHA-256 digest match the downloaded official artwork.
+- In-app browser verified the Chinese desktop card at 1440px and mobile at 390px,
+  CSLB search, keyboard disclosure expansion, natural logo dimensions, no mobile
+  horizontal overflow, and navigation to the Chinese Blog article. Screenshots:
+  `output/playwright/institutions-cslb-desktop.png` and `institutions-cslb-mobile.png`.
+- The existing 3021 process served stale compiled directory content after reload,
+  although the new static logo was available. Verification used a temporary source
+  copy with `WATCHPACK_POLLING=true pnpm exec next dev --webpack --port 3034`.
+  That process was stopped after verification and the viewport override was reset.
+  At the owner's request, stopped the stale 3021 process; it required SIGKILL
+  after SIGTERM left the development lock held. Verified the lock could be
+  acquired and released. After the owner restarted it, final HTTP checks confirmed
+  the updated logo and copy on 3021. No production build or manual deployment.
+
 ## 2026-10-10 — Translation navigation group
 
 - Added Translation between Evaluation and Other Services in the shared desktop

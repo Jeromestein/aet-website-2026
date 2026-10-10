@@ -192,9 +192,13 @@
         {
           "id": "licensing-government-1",
           "name": "Contractors State License Board (CSLB)",
-          "description": "加州承包商执照管理机构，负责执照申请、考试、监管及消费者保护。",
-          "note": "CSLB 考试由 PSI 计算机考试中心管理，通常采用预约制，没有固定的年度考试日期。",
-          "initials": "CSLB"
+          "description": "加州承包商执照委员会。海外教育经历可用于申请教育抵扣，帮助满足执照申请的经验要求；具体抵扣年限和执照审批结果由 CSLB 决定。",
+          "note": "符合条件的教育或培训经历，最多可抵扣四年经验要求中的三年，但仍须至少具备一年实际工作经验。用于申请教育抵扣的海外学位需要评估，非英文材料还需翻译成英文。请准备学位证、成绩单和拟申请的执照类别。下单前，请向 CSLB 确认 AET 及拟订购的报告是否符合要求；评估不保证执照获批。",
+          "logo": "/images/institutions/directory/CSLB.png",
+          "article": {
+            "href": "/blog/cslb-foreign-credential-evaluation",
+            "label": "阅读 CSLB 学历评估指南"
+          }
         },
         {
           "id": "licensing-government-2",

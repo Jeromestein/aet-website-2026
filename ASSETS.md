@@ -1,5 +1,12 @@
 # Asset and content provenance
 
+## CSLB institution logo — October 10, 2026
+
+`public/images/institutions/directory/CSLB.png` is an unchanged copy of the
+392 × 99 PNG used in the [CSLB website header](https://www.cslb.ca.gov/images/header_organization.png).
+Its checksum is recorded in `content/institutions/assets.json`. The mark identifies
+the listed agency; it does not indicate CSLB endorsement of or affiliation with AET.
+
 ## CSLB Blog illustrations — October 8, 2026
 
 - `public/images/blog/cslb-construction-documents.png`: 1672 × 941 editorial

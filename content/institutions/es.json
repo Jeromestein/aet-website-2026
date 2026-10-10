@@ -192,9 +192,13 @@
         {
           "id": "licensing-government-1",
           "name": "Contractors State License Board (CSLB)",
-          "description": "Junta de licencias de contratistas de California, responsable de solicitudes, exámenes, regulación y protección del consumidor.",
-          "note": "Los exámenes CSLB se gestionan en centros informatizados de PSI y suelen ser con cita, sin fecha anual fija.",
-          "initials": "CSLB"
+          "description": "Junta de California que regula las licencias de contratistas. Los estudios extranjeros pueden servir para solicitar crédito por educación dentro de los requisitos de experiencia; el CSLB decide el crédito y la concesión de la licencia.",
+          "note": "La educación o formación que reúna los requisitos puede contar hasta por tres de los cuatro años de experiencia exigidos; sigue siendo necesario al menos un año de experiencia práctica. Los títulos extranjeros presentados para crédito por educación requieren evaluación y los documentos que no estén en inglés necesitan traducción. Prepare su título, certificado de notas y clasificación de licencia. Antes de contratar el servicio, confirme con el CSLB si AET y el informe propuesto cumplen los requisitos; una evaluación no garantiza la aprobación.",
+          "logo": "/images/institutions/directory/CSLB.png",
+          "article": {
+            "href": "/blog/cslb-foreign-credential-evaluation",
+            "label": "Leer la guía de evaluación para el CSLB"
+          }
         },
         {
           "id": "licensing-government-2",

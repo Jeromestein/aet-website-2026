@@ -10,6 +10,7 @@ export type DirectoryEntry = {
   note: string;
   logo?: string;
   initials?: string;
+  article?: { href: string; label: string };
 };
 export type DirectorySection = { id: string; title: string; description: string; entries: DirectoryEntry[] };
 export type DirectoryContent = { title: string; intro: string; closing: string; applyUrl: string; sections: DirectorySection[] };
