@@ -15,6 +15,8 @@ Preserve existing AET wording, named services, testimonials, and factual claims.
 Do not substitute aspirational slogans, invent metrics, or change fees, processing
 times, membership dates, ratings, or acceptance statements during visual work.
 Distinguish a preliminary assessment from a formal credential evaluation.
+Do not publish AET's ATA membership ID in website copy, metadata, or image alt text.
+Use the official ATA company profile link for membership verification.
 
 **Hero heading:** Professional Translation & Evaluation Services
 

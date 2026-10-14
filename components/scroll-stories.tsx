@@ -17,7 +17,7 @@ function useFacts() {
   return [
   { value: "15+", title: t("home.facts.experience"), text: t("home.facts.experienceText"), Icon: GraduationCap },
   { value: "100+", title: t("home.facts.languages"), text: t("home.facts.languagesText"), Icon: Globe2 },
-  { value: "2009", title: t("home.facts.ata"), text: t("home.facts.ataText"), Icon: FileCheck2 },
+  { value: "2009", title: t("home.facts.ata"), text: t("home.facts.ataText"), Icon: FileCheck2, href: "https://www.atanet.org/member-directory/american-education-and-translation-services-llc/" },
   { value: "A+", title: t("home.facts.bbb"), text: t("home.facts.bbbText"), Icon: ShieldCheck },
   { value: "5", title: t("home.facts.reviews"), text: t("home.facts.reviewsText"), Icon: Star },
 ];
@@ -103,8 +103,9 @@ export function ImpactStory() {
         <p>{t("home.facts.text")}</p>
       </div>
       <CardRail className="impact-orbit" label={t("home.facts.label")}>
-        {facts.map(({ value, title, text, Icon }, i) => <BenefitCard
-          data-rail-card key={value} variant="story" title={title} value={value}
+        {facts.map(({ value, title, text, Icon, href }, i) => <BenefitCard
+          data-rail-card key={value} variant="story" value={value}
+          title={href ? <a className="fact-link" href={href}>{title}</a> : title}
           className={`impact-fact ${value === "2009" ? "wide-figure" : ""} ${i === active ? "is-active" : ""}`}
           aria-hidden={enhanced ? i !== active : undefined}
           visual={value === "5" ? <div className="fact-review-stars" aria-hidden="true">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={24} fill="currentColor" strokeWidth={1.2} />)}</div> : <Icon className="fact-icon" size={54} strokeWidth={1.1} aria-hidden="true" />}

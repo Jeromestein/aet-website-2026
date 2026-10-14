@@ -9,6 +9,8 @@
 .fact-icon { margin:0 auto 14px;color:#779fbf; }
 .impact-fact strong { display:block;font-size:clamp(65px,8vw,116px);font-weight:500;letter-spacing:-6px;line-height:1.1;color:var(--action-blue); }
 .impact-fact h3 { font-size:24px;margin:20px 0 12px; }
+.fact-link { display:inline-flex;align-items:center;min-height:44px;color:var(--action-blue);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px; }
+.fact-link:hover { color:var(--orange); }
 .impact-fact p { max-width:340px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.8; }
 .story-dots { display:none; }
 .impact-story.is-enhanced { height:calc(100vh + var(--fact-count) * 65vh); }

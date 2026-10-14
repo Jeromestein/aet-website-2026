@@ -1,5 +1,25 @@
 # AET Implementation Status
 
+## 2026-10-14 — ATA membership links
+
+- Linked the homepage ATA fact heading, About timeline reference, and Certified
+  Translation certificate image and ATA text to AET's official ATA member-directory
+  profile in English, Chinese, and Spanish.
+- Removed the membership-ID sentence from all three Certified Translation locales
+  and added the missing space after ATA in the Chinese certificate caption.
+  A full source/content/text-asset scan found no remaining ID references; the ATA
+  logo and certificate images were visually checked and do not display the ID.
+- Passed typecheck, whitespace checks, and rendered-link checks across all nine
+  localized pages. The in-app browser verified the Chinese homepage on desktop
+  and at 390px, the mobile certificate section, and the About timeline. Clicking
+  the homepage member link reached AET's official ATA company profile; the mobile
+  homepage had no page-level horizontal overflow.
+- Screenshots: `output/playwright/ata-member-{desktop,mobile}-2026-10-14.png`.
+  The corrected Chinese certificate copy also passed desktop and 390px in-app
+  visual checks, with no page overflow; all three rendered service pages omit
+  the ID. Screenshots: `output/playwright/ata-copy-{desktop,mobile}-2026-10-14.png`.
+  Reused port 3021 and reset the viewport. No build, commit, push, or deployment.
+
 ## 2026-10-10 — Blog contact event
 
 - Connected the owner's `contact_us` event to authored Blog phone and Contact-page
