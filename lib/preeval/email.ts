@@ -66,8 +66,8 @@ export async function applicationEmail(
     html,
   });
 }
-export async function administratorEmail(locale: string) {
-  const link = await makeLink(null, "admin", configuration().admin, locale);
+export async function administratorEmail() {
+  const link = await makeLink(null, "admin", configuration().admin, "en");
   await enqueueEmail({
     kind: "admin_access",
     key: "admin:" + crypto.randomUUID(),

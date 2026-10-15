@@ -2,6 +2,42 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Staff routing and worktree documentation — October 15, 2026
+
+- Recorded the required legacy production dashboard URL, English-only staff
+  scope, multilingual customer scope and current email-link authentication.
+  Clarified that office badges/filters apply only to the fictional preview.
+- Added the main/dev checkout paths, ports 3021/3022, owner-managed VS Code
+  startup, local origin/email configuration and Git-merge integration workflow.
+- Recorded the proposed single Vercel project with website/app domains, the
+  distinction between DNS binding and hostname/path routing, and outstanding
+  production configuration, worker/AI operation, acceptance and rollback work.
+  Hostname routing and domain configuration remain unimplemented in this pass.
+- Documentation was reconciled with the current proxy, package scripts,
+  worktree listing and non-secret local configuration. Checked document links
+  and whitespace; no application tests or browser checks were repeated for
+  this documentation-only update. No push, deployment or DNS change was made.
+
+### English-only staff routes — October 15, 2026
+
+- Staff pages now use English with canonical unprefixed `/admin/*` URLs.
+  The legacy dashboard remains `/admin/CRM`; localized admin paths and the
+  lowercase CRM alias permanently redirect to their canonical counterparts.
+  New staff email links use `/admin/access`. Customer pages remain localized,
+  and visiting staff pages does not overwrite the saved website language.
+- Passed TypeScript checking, the 466-message English/Chinese/Spanish locale
+  check, and 28 HTTP routing assertions against the user's existing port 3022
+  development server. Checks cover all three locale-prefix redirects, query
+  preservation, CRM casing, English login/access responses, protected-page
+  login redirects, and Chinese/Spanish public-page rendering.
+- In-app browser: the existing `/zh/admin/login` tab redirected to
+  `/admin/login`, showing the English login form without language controls.
+  Desktop and 390px mobile views passed visual inspection; the mobile page
+  has no horizontal overflow. Screenshots are in `output/playwright/` as
+  `staff-login-desktop-2026-10-15.png` and `staff-login-mobile-2026-10-15.png`.
+- Authenticated dashboard content and real email-link delivery/consumption
+  were not exercised in this pass. Authentication requirements are unchanged.
+
 ### Form and database compatibility — October 2, 2026
 
 - Aligned the new pre-evaluation and formal forms with the original business

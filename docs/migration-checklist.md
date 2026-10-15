@@ -6,6 +6,32 @@ Sources: the local legacy website, sibling AET App implementation, and the 2026
 design, navigation and page code. App replacement is tracked separately from
 the original public-page migration counts.
 
+## Staff routing and local worktree checkpoint — October 15, 2026
+
+- [x] Keep staff login, access confirmation and dashboards English-only, without
+  language selectors or language-prefixed browser URLs. Preserve `/admin/CRM`.
+- [x] Redirect old `/en/admin/*`, `/zh/admin/*`, `/es/admin/*` and lowercase CRM
+  links to canonical staff URLs, preserving query parameters and website language.
+- [x] Use `/admin/access` for new staff email links; retain email-link authentication
+  and multilingual customer pages. No simplified-login alternative was implemented.
+- [x] Verify 28 local route assertions and desktop/mobile login views on port
+  3022. Authenticated dashboard and real email-link checks were not repeated for
+  this routing change; see [the dated evidence](status.md#english-only-staff-routes--october-15-2026).
+- [x] Document the dev worktree, owner-managed VS Code startup, port 3022 and
+  ignored local configuration. Branches share history and are integrated by Git
+  merge; they are not separate permanent website/backend applications.
+- [ ] Implement and verify hostname routing for the proposed one-project,
+  two-domain deployment. Preserve the full legacy dashboard address
+  `https://app.americantranslationservice.com/admin/CRM`; specify host/root
+  redirects and avoid exposing locale prefixes on staff pages.
+- [ ] Configure Vercel domains/DNS and production services only in an authorized
+  cutover, with access links, callbacks, workers, acceptance and rollback covered.
+  The legacy AET App remains operational. See [the deployment proposal](../README.md#application-domains-and-staff-urls).
+
+The dated checkpoints below retain earlier implementation and verification
+history; older branch commit IDs and preview-only descriptions are not current
+worktree status.
+
 ## Pre-evaluation checkpoint — October 2, 2026
 
 The owner-approved local pre-evaluation workflow is implemented and its complete
@@ -26,7 +52,7 @@ confirmed quotes and manually prepared PDF report release. Automated notificatio
 report authoring, paper dispatch and production launch remain outstanding.
 See [scope and verification](evaluation-application.md).
 
-## Current checkpoint — October 1, 2026
+## Website checkpoint — October 1, 2026 (historical)
 
 ### 1. Completed
 

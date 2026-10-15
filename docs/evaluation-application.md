@@ -108,7 +108,7 @@ signed events. The existing pre-evaluation webhook also dispatches formal events
 so the existing local listener can be reused. A dedicated formal webhook exists at
 `/api/evaluation/stripe-webhook`. Only test keys/events are accepted.
 
-`/en/admin/evaluations` reuses the existing administrator login and provides search,
+`/admin/evaluations` reuses the existing administrator login and provides search,
 status filtering, paginated cases, education and service columns, application
 and delivery details, internal notes, customer-visible information requests,
 quote confirmation, PDF report upload/release and audit history. Edits include an

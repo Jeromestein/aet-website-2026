@@ -13,6 +13,36 @@ pnpm dev
 
 Open http://localhost:3021. The development port is configured in `package.json`.
 
+### Main and dev worktrees
+
+The current local setup uses two checkouts of the same Git repository:
+
+| Branch | Local directory | Preview |
+| --- | --- | --- |
+| `main` | `/Users/plusone/Desktop/Code/aet-website-2026` | `http://localhost:3021` |
+| `dev` | `/Users/plusone/Desktop/Code/aet-website-2026-dev` | `http://localhost:3022` |
+
+Open the intended directory in VS Code and run its server from your own terminal.
+For the dev worktree, use:
+
+```sh
+pnpm exec next dev --port 3022
+```
+
+`pnpm dev` still selects port 3021 in both checkouts; `.env.local` does not
+override that explicit script argument. Reuse the owner's running server for
+the matching checkout. The dev worktree's ignored `.env.local` uses port 3022
+for `PREEVAL_ORIGIN` and `PAYMENT_SITE_URL`. Keep secrets out of Git and restart
+the user-managed process after changing startup configuration when required.
+
+Worktrees share Git history but have separate files, dependencies and local
+configuration. They do not automatically isolate external services or databases;
+both checkouts can still point to the same local Supabase instance. `main` and
+`dev` are development branches, not permanent website/backend applications.
+To integrate later, commit the intended changes on `dev`, merge `dev` into
+`main` from the main checkout, resolve conflicts and verify the result before
+an explicitly authorized push or deployment. Do not copy folders over `main`.
+
 ## Validation and deployment
 
 ```sh
@@ -24,8 +54,53 @@ Local production builds are not run under the project instructions. The owner ma
 
 Import this directory's repository into Vercel and choose the Next.js preset. The
 Payment page requires the server-only `PAYPAL_BUSINESS_*` and `PAYMENT_SITE_URL`
-values documented in `.env.example`; other pages need no API keys or database.
+values documented in `.env.example`. Public marketing pages need no database;
+the application pilot has separate service requirements in
+[the local setup guide](docs/pre-evaluation-local.md).
 Deployment is intentionally left to the owner.
+
+### Application domains and staff URLs
+
+The owner requires the existing staff address to remain
+`https://app.americantranslationservice.com/admin/CRM`, including the legacy
+uppercase `CRM` path. Staff pages are English-only and never expose `/en`,
+`/zh` or `/es` prefixes. Customer website/application pages retain three languages.
+
+The recommended deployment arrangement discussed with the owner is one Vercel
+project for this combined codebase, with both custom hostnames attached:
+
+| Hostname | Intended content after cutover |
+| --- | --- |
+| `www.americantranslationservice.com` | Public website and service content |
+| `app.americantranslationservice.com` | Customer applications, status/access pages and staff `/admin/*` pages |
+
+This is a proposed deployment arrangement, not an already configured domain split.
+A separate Vercel project is only needed if independent deployments/configuration
+are deliberately chosen; the `app` prefix alone does not require a second project.
+Vercel supports adding multiple custom domains through the project's domain
+settings. See [Vercel custom-domain configuration](https://vercel.com/docs/domains/working-with-domains/add-a-domain).
+
+The routing has two layers: DNS and Vercel domain bindings deliver requests to
+the project; application routing then reads the requested hostname and pathname
+to select the intended content. The Next.js `app/` source directory does not
+automatically bind an `app.` subdomain. A future hostname rule in `proxy.ts`
+can redirect or internally rewrite requests; an internal rewrite keeps the
+public browser URL unchanged. See [Next.js Proxy](https://nextjs.org/docs/app/api-reference/file-conventions/proxy).
+
+Already implemented locally: `proxy.ts` handles `/admin/*` through an English-only
+middleware, internally resolving the existing `[locale]` pages as English. It
+redirects prefixed admin links and `/admin/crm` to their unprefixed canonical paths,
+preserves query parameters, and leaves the saved public-site language unchanged.
+The browser therefore displays `/admin/CRM`, while the page implementation can
+remain under `app/[locale]/admin/CRM/page.tsx`. Authentication remains required.
+
+Still pending: hostname-based separation, root/wrong-host behavior, Vercel/DNS
+configuration, production application origins, access/payment return URLs and
+webhook validation, hosted worker/AI operation, and production acceptance with
+rollback. The current pilot deliberately rejects non-local origins/databases;
+binding a domain does not make it production-ready. Keep the existing AET App
+operational until the separately authorized cutover. No deployment or DNS change
+was made as part of the English-only staff update.
 
 ## Scope
 
@@ -52,7 +127,7 @@ application portal. The form supports shared website pricing, multiple education
 records, report/delivery options, tab-scoped drafts, validated local submissions
 and private confirmation pages. See [formal application scope](docs/evaluation-application.md).
 Formal applications now continue through private document upload, confirmed quotes,
-Stripe test checkout, staff review at `/en/admin/evaluations`, and PDF report release.
+Stripe test checkout, staff review at `/admin/evaluations`, and PDF report release.
 Customer access can be renewed with a staff-issued single-use link. This remains a
 local pilot; automated formal email notifications and production launch are pending.
 Both application forms now save business fields through the original table
@@ -138,6 +213,10 @@ pages or change the separate application portal.
 The local pre-evaluation pilot is implemented at `/degree-equivalency-tool` with
 English, Chinese and Spanish customer pages. `/status-check` sends an access link
 by Application ID; `/admin/login` authenticates the authorized staff email.
+Staff pages use English-only, unprefixed `/admin/*` URLs, including the legacy
+`/admin/CRM` address. Old language-prefixed staff links redirect to these URLs;
+the website language preference is preserved. Administrator email links open
+`/admin/access`; customer recovery keeps its localized pages.
 `/admin/CRM` reads durable application, education, document, payment and result
 records. It supports notes, supplemental-information requests, AI retries,
 result corrections, email retries and audit history, without office partitioning.

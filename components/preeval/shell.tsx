@@ -8,17 +8,19 @@ export default function PreEvaluationShell({
   children,
   narrow = false,
   workspace = false,
+  staff = false,
 }: {
   locale: string;
   children: ReactNode;
   narrow?: boolean;
   workspace?: boolean;
+  staff?: boolean;
 }) {
-  const t = copy(locale);
+  const t = copy(staff ? "en" : locale);
   return (
     <div className={s.page}>
       <header className={s.header}>
-        <a href={pathFor(locale, "/")}>
+        <a href={staff ? "/admin/CRM" : pathFor(locale, "/")}>
           <img
             className={s.logo}
             src="/brand/aet-logo-header.svg"
@@ -27,11 +29,17 @@ export default function PreEvaluationShell({
             alt="American Education and Translation Services,CORP (AET)"
           />
         </a>
-        <nav className={s.links} aria-label="Pre-evaluation navigation">
-          <a className={s.statusLink} href={pathFor(locale, "/status-check")}>
-            {t.check}
-          </a>
-          <LanguageLinks locale={locale} />
+        <nav className={s.links} aria-label={staff ? "Workspace navigation" : "Pre-evaluation navigation"}>
+          {staff ? (
+            <a className={s.statusLink} href="/">Back to website</a>
+          ) : (
+            <>
+              <a className={s.statusLink} href={pathFor(locale, "/status-check")}>
+                {t.check}
+              </a>
+              <LanguageLinks locale={locale} />
+            </>
+          )}
         </nav>
       </header>
       <main

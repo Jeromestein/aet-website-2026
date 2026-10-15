@@ -158,6 +158,21 @@ background portrait and content have breathing room without a fixed section heig
 
 ### CRM workspace
 
+- Staff pages are English-only, including login and access-link confirmation.
+  Keep the legacy `/admin/CRM` URL and all `/admin/*` routes unprefixed.
+  Redirect existing `/en/admin/*`, `/zh/admin/*`, `/es/admin/*`, and lowercase
+  `/admin/crm` entries to their canonical staff URLs. Hide language selectors.
+  Staff navigation must not change the customer's saved website language.
+  Customer-facing website and application pages remain multilingual.
+- Preserve `https://app.americantranslationservice.com/admin/CRM` as the intended
+  production dashboard address. The proposed domain routing and pending deployment
+  work are documented in [README.md](../README.md#application-domains-and-staff-urls).
+- Retain the `office` concept in the data model, but do not show specific offices
+  or partition the operational pre-evaluation frontend by office. Historical
+  office badges and filters below belong only to the fictional CRM preview.
+
+The following presentation rules apply to the retained fictional CRM preview:
+
 - Use Poppins 500 for body text and 600 for names, headings and emphasized
   values. Keep primary table text at 14–15px and secondary labels at least 12px;
   use 16px client names on mobile cards.

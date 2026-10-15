@@ -317,7 +317,7 @@ export function AccessForm({
     try {
       await api(
         admin ? "admin/login" : "access/request",
-        admin ? { email: value, locale } : { applicationId: value.trim() },
+        admin ? { email: value } : { applicationId: value.trim() },
       );
       setSent(true);
     } catch (e) {
@@ -364,8 +364,8 @@ export function AccessForm({
     </>
   );
 }
-export function ConsumeLink({ locale }: { locale: string }) {
-  const t = copy(locale),
+export function ConsumeLink({ locale, admin = false }: { locale: string; admin?: boolean }) {
+  const t = copy(admin ? "en" : locale),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [ready, setReady] = useState(false);
@@ -389,11 +389,11 @@ export function ConsumeLink({ locale }: { locale: string }) {
   }
   return (
     <>
-      <p className={s.eyebrow}>{t.eyebrow}</p>
-      <h1 className={s.title}>{t.accessTitle}</h1>
+      <p className={s.eyebrow}>{admin ? "AET WORKSPACE" : t.eyebrow}</p>
+      <h1 className={s.title}>{admin ? t.adminTitle : t.accessTitle}</h1>
       <div className={s.card}>
         <LockKeyhole size={32} />
-        <p>{t.accessIntro}</p>
+        <p>{admin ? "Use your secure link to open the AET workspace." : t.accessIntro}</p>
         <button
           className={s.button}
           onClick={consume}
@@ -407,8 +407,8 @@ export function ConsumeLink({ locale }: { locale: string }) {
           </p>
         )}
         <div className={s.buttons}>
-          <a href={pathFor(locale, "/status-check")}>{t.check}</a>
-          <a href={pathFor(locale, "/admin/login")}>{t.adminTitle}</a>
+          {!admin && <a href={pathFor(locale, "/status-check")}>{t.check}</a>}
+          <a href="/admin/login">{t.adminTitle}</a>
         </div>
       </div>
     </>

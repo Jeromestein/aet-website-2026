@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function CRMPage() {
   if ((await session())?.role !== "admin") redirect("/admin/login");
   return (
-    <PreEvaluationShell locale="en" workspace>
+    <PreEvaluationShell locale="en" workspace staff>
       <PreEvaluationWorkspace />
     </PreEvaluationShell>
   );

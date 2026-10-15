@@ -19,8 +19,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep stable design decisions in the design guide and completion evidence in the
   status file. Do not duplicate progress logs or external reference histories in the guide.
 - Use pnpm. Do not run `pnpm build` or its production-build aliases locally.
-- Prefer the owner's existing development server on port 3021. Start or restart it
-  only when explicitly requested or when verification is blocked without one.
+- Prefer the owner's existing development server for the checkout being edited:
+  main uses port 3021; the sibling dev worktree uses port 3022. See README.md for
+  the worktree paths and dev command. Start or restart a server only when explicitly
+  requested or when verification is blocked without one.
 - After frontend changes, verify affected desktop/mobile states in the Codex in-app
   browser; use Playwright as a fallback. Report verification scope and any blocker.
 - Deployment remains with the owner. Do not deploy or push without an explicit request.

@@ -140,9 +140,7 @@ async function handler(
         typeof body.email === "string" &&
         body.email.toLowerCase().trim() === configuration().admin
       )
-        await administratorEmail(
-          ["en", "zh", "es"].includes(body.locale) ? body.locale : "en",
-        );
+        await administratorEmail();
       after(flushEmails);
       return response({ ok: true });
     }

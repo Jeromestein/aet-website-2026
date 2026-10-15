@@ -53,11 +53,12 @@ export async function makeLink(
   locale: string,
 ) {
   const token = secret();
-  await db()`insert into preeval.tokens(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${locale},now()+interval '24 hours')`;
+  const linkLocale = role === "admin" ? "en" : locale;
+  await db()`insert into preeval.tokens(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${linkLocale},now()+interval '24 hours')`;
   return (
     configuration().origin +
-    (locale === "en" ? "" : "/" + locale) +
-    "/access#token=" +
+    (role === "admin" ? "/admin/access" : (locale === "en" ? "" : "/" + locale) + "/access") +
+    "#token=" +
     token
   );
 }

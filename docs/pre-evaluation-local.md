@@ -32,12 +32,24 @@ migration. The existing AET App remains operational.
 
 ## Open locally
 
-- Customer start: <http://localhost:3021/degree-equivalency-tool>
-- Application recovery: <http://localhost:3021/status-check>
-- Staff sign-in: <http://localhost:3021/admin/login>
-- Staff records: <http://localhost:3021/admin/CRM>
+Use the dev worktree at `/Users/plusone/Desktop/Code/aet-website-2026-dev`.
+Its current preview and local application origins use port 3022:
+
+- Customer start: <http://localhost:3022/degree-equivalency-tool>
+- Application recovery: <http://localhost:3022/status-check>
+- Staff sign-in: <http://localhost:3022/admin/login>
+- Staff records: <http://localhost:3022/admin/CRM>
 - Previous fictional CRM preview: `/admin/CRM/preview`, behind the same staff
   authentication. Other services in that preview remain fictional.
+
+Staff login, email-link confirmation and dashboard pages are English-only.
+New staff links open `/admin/access`; `/en/admin/*`, `/zh/admin/*`, `/es/admin/*`
+and lowercase `/admin/crm` redirect to canonical unprefixed staff URLs. Staff
+pages have no language selector and do not overwrite the saved website language.
+Email-link authentication remains in place; no password or local-login bypass
+was added. The intended production dashboard remains
+`https://app.americantranslationservice.com/admin/CRM`. Hostname routing and
+deployment remain pending; see [the deployment proposal](../README.md#application-domains-and-staff-urls).
 
 Customer pages share English, Chinese and Spanish routes. AI results and emails
 remain English, matching the legacy result experience. The homepage uses the
@@ -48,8 +60,13 @@ noindex and excluded from the public sitemap.
 ## Local setup and processes
 
 Use `.env.example` as the variable reference; secrets belong only in the ignored
-`.env.local`. The pilot rejects remote database URLs, remote origins, live Stripe
-keys/events, and Dropbox roots outside the named test folder.
+`.env.local`. In the dev worktree, `PREEVAL_ORIGIN` and `PAYMENT_SITE_URL` are
+`http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `PREEVAL_TEST_EMAIL` both use
+`tech@meiyugroup.org`. `PREEVAL_CODEX_BIN` points to the dev worktree's installed
+Codex executable. Reuse the configured local database and test services without
+copying secrets into documentation. The pilot rejects remote database URLs,
+remote origins, live Stripe keys/events, and Dropbox roots outside the named
+test folder.
 
 Prerequisites: Node 20.9+, pnpm, Docker, Stripe CLI, the bundled project Codex CLI
 with an existing ChatGPT login, and Poppler (`pdfinfo` and `pdftoppm`). The current
@@ -60,11 +77,14 @@ with `PREEVAL_CODEX_MODEL`.
 ```sh
 pnpm install --frozen-lockfile
 pnpm exec supabase start -x studio,imgproxy,storage-api,realtime,edge-runtime,logflare,vector,supavisor
-pnpm dev
+pnpm exec next dev --port 3022
 ```
 
-Reuse an already-running `pnpm dev` on port 3021. Run each remaining process in a
-separate terminal:
+Run setup/start commands only for services that are not already available.
+The owner starts the dev server in VS Code; reuse that running port 3022 server.
+`pnpm dev` still hardcodes port 3021, which is used by the main checkout. See
+[the worktree setup](../README.md#main-and-dev-worktrees). Run each remaining
+process from the dev worktree in a separate terminal:
 
 ```sh
 node --env-file=.env.local scripts/preeval/stripe-listen.mjs
