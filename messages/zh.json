@@ -7,7 +7,7 @@
     "contact": "联系我们",
     "payment": "付款",
     "blog": "博客",
-    "apply": "在线申请",
+    "apply": "立即申请",
     "homeLabel": "AET 首页",
     "mainLabel": "主导航",
     "mobileLabel": "移动端导航",
@@ -32,7 +32,8 @@
       "line2": "与学历",
       "line3": "认证服务",
       "text": "专业翻译与学历认证服务，深受美国移民局（USCIS）、高校及全美政府机构信赖。",
-      "apply": "立即申请",
+      "apply": "学历评估申请",
+      "contact": "翻译及其他服务咨询",
       "image": "一位专业人士坐在桌前使用笔记本电脑"
     },
     "services": {
@@ -127,7 +128,7 @@
       "eyebrow": "02 / 清晰的办理流程",
       "title": "简单四步，完成申请",
       "text": "选择认证用途、填写申请、选择认证类型，然后上传文件。",
-      "action": "开始申请",
+      "action": "开始在线申请",
       "screen": "AET 在线申请",
       "purposeLabel": "认证用途",
       "purposeTitle": "告诉我们您的认证用途",

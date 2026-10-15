@@ -7,7 +7,7 @@
     "contact": "Contact",
     "payment": "Payment",
     "blog": "Blog",
-    "apply": "Online Application",
+    "apply": "Apply Now",
     "homeLabel": "AET home",
     "mainLabel": "Main navigation",
     "mobileLabel": "Mobile navigation",
@@ -32,7 +32,8 @@
       "line2": "Translation &",
       "line3": "Evaluation Services",
       "text": "Professional translations and credential evaluations trusted by USCIS, colleges, and government agencies nationwide.",
-      "apply": "Apply Now",
+      "apply": "Apply for Credential Evaluation",
+      "contact": "Contact for Translation & Other services",
       "image": "Professional seated at a desk with a laptop"
     },
     "services": {
@@ -127,7 +128,7 @@
       "eyebrow": "02 / A CLEAR PATH FORWARD",
       "title": "Simple 4-Step Process",
       "text": "Tell us your purpose, complete your application, choose an evaluation type, and upload your documents.",
-      "action": "Start Application",
+      "action": "Start Online Application",
       "screen": "AET ONLINE APPLICATION",
       "purposeLabel": "YOUR PURPOSE",
       "purposeTitle": "Tell us your purpose",

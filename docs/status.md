@@ -1,5 +1,37 @@
 # AET Implementation Status
 
+## 2026-10-15 — Hero service-specific actions
+
+- Changed the Hero evaluation action to Apply for Credential Evaluation
+  (学历评估申请) and linked it to the homepage `#process` section. Added dedicated
+  Hero contact copy for translation and other services in all three languages;
+  other Contact Us labels are unchanged. The contact action uses theme navy
+  with white text and retains the localized Contact destination.
+- Allowed long action labels to wrap while retaining fixed icon sizes. In-app
+  browser verified English/Chinese desktop layouts at 1440px, English mobile
+  at 390px, and Chinese/Spanish at 320px without horizontal overflow. Verified
+  the Chinese evaluation action lands below the header on desktop and mobile,
+  and the English contact action opens `/contact`.
+- Typecheck, i18n validation, and whitespace checks passed. Screenshots are
+  `output/playwright/hero-actions-*-2026-10-15.png`. Reused the existing preview;
+  no build, commit, push, or deployment.
+
+## 2026-10-15 — Apply Now navigation and online application labels
+
+- Renamed the desktop/mobile header action to Apply Now and linked it to the
+  active language's homepage `#process` section. Renamed the shared process
+  actions to Start Online Application, retaining their application-portal URL.
+  Updated English, Chinese, and Spanish labels.
+- Corrected initial hash alignment after hydration expands the preceding
+  homepage scroll story; the process section now lands below the sticky header.
+- Typecheck, i18n validation, and whitespace checks passed. In-app browser
+  verified cross-page navigation in all three languages, English at 1440px
+  desktop and 390px mobile, and Spanish at 320px. Mobile menus close on selection;
+  same-page navigation reaches the section, and checked phones have no horizontal
+  overflow. The online action still targets the existing application portal.
+- Screenshots: `output/playwright/apply-now-{desktop,mobile}-2026-10-15.png`.
+  Used the existing local server; no build, commit, push, or deployment.
+
 ## 2026-10-15 — Live Stripe Checkout preparation
 
 - Added explicit test/live modes with no credential fallback. Boston and NYC use

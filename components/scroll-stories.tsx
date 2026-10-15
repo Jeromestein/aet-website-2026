@@ -147,6 +147,12 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
   useEffect(() => {
+    if (!ready || window.location.hash !== `#${id}`) return;
+    // Align after hydration expands the preceding scroll story.
+    const frame = requestAnimationFrame(() => root.current?.scrollIntoView({ behavior: "instant" }));
+    return () => cancelAnimationFrame(frame);
+  }, [ready, id]);
+  useEffect(() => {
     if (variant === "embedded" || method !== "online") return;
     const media = window.matchMedia("(min-width: 851px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)");
     const cards = Array.from(root.current?.querySelectorAll<HTMLElement>(".journey-stage") ?? []);

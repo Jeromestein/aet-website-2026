@@ -7,7 +7,7 @@
     "contact": "Contacto",
     "payment": "Pagos",
     "blog": "Blog",
-    "apply": "Solicitud en línea",
+    "apply": "Solicitar ahora",
     "homeLabel": "Inicio de AET",
     "mainLabel": "Navegación principal",
     "mobileLabel": "Navegación móvil",
@@ -32,7 +32,8 @@
       "line2": "de traducción y",
       "line3": "evaluación",
       "text": "Traducciones profesionales y evaluaciones de credenciales académicas que cuentan con la confianza de USCIS, universidades y organismos gubernamentales de todo el país.",
-      "apply": "Solicitar ahora",
+      "apply": "Solicitar evaluación de credenciales",
+      "contact": "Consultar sobre traducción y otros servicios",
       "image": "Profesional sentado ante un escritorio con una computadora portátil"
     },
     "services": {
@@ -127,7 +128,7 @@
       "eyebrow": "02 / UN CAMINO CLARO",
       "title": "Un proceso sencillo de 4 pasos",
       "text": "Indique el propósito, complete la solicitud, elija el tipo de evaluación y suba sus documentos.",
-      "action": "Iniciar solicitud",
+      "action": "Iniciar solicitud en línea",
       "screen": "SOLICITUD EN LÍNEA DE AET",
       "purposeLabel": "SU PROPÓSITO",
       "purposeTitle": "Indique el propósito",

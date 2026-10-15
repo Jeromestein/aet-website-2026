@@ -27,8 +27,6 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
-const apply =
-  "https://app.americantranslationservice.com/credential-evaluation-application";
 const pre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -90,10 +88,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </h1>
             <p className="hero-description">{t("home.hero.text")} </p>
             <div className="hero-buttons">
-              <a className="button primary hero-apply" href={apply}>
-                <SquarePen size={19} aria-hidden="true" /> {t("home.hero.apply")} </a>
+              <a className="button primary hero-apply" href="#process">
+                <SquarePen size={19} aria-hidden="true" /> <span>{t("home.hero.apply")}</span> </a>
               <a className="button hero-contact" href={contactPath(locale)}>
-                <Phone size={18} aria-hidden="true" /> {t("home.contact")} </a>
+                <Phone size={18} aria-hidden="true" /> <span>{t("home.hero.contact")}</span> </a>
             </div>
           </div>
           <div className="hero-visual">
