@@ -19,13 +19,22 @@ Open http://localhost:3021. The development port is configured in `package.json`
 pnpm check:i18n
 pnpm typecheck
 node scripts/check-blog-contact.cjs
+node scripts/check-payment.cjs
 ```
 
 Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
 
 Import this directory's repository into Vercel and choose the Next.js preset. The
 Payment page requires the server-only `PAYPAL_BUSINESS_*` and `PAYMENT_SITE_URL`
-values documented in `.env.example`; other pages need no API keys or database.
+values documented in `.env.example`. Stripe Checkout uses `STRIPE_PAYMENT_MODE`
+(`test` or `live`) and separate server-side credentials for each account/mode.
+California/Miami use `STRIPE_{TEST,LIVE}_SECRET_KEY`; Boston/NYC use the same
+names with `_BOS`. No credential fallback is allowed. Live mode removes test
+copy and requires an HTTPS `PAYMENT_SITE_URL`. Local development remains in test
+mode. Production defaults to disabled unless its mode is explicitly configured.
+See [payment integration notes](content/payment/README.md) for setup, verification
+and the manual reconciliation boundary. Git pushes do not upload `.env.local`.
+Other pages need no API keys or database.
 Deployment is intentionally left to the owner.
 
 ## Analytics
@@ -62,9 +71,10 @@ Application and pre-evaluation buttons connect to the existing
 app.americantranslationservice.com portal. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
 English, Chinese and Spanish variants. The localized Contact page is implemented. A localized Payment page is available
-at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
-footer link to the localized page, and `/e-pay.php` redirects there. Merchant
-accounts and payment reconciliation still need live review before launch.
+at `/payment`; its form supports the existing PayPal HTML-form handoff and an
+optional Stripe Checkout. The header and
+footer link to the localized page, and `/e-pay.php` redirects there. Production environment configuration, deployed return routes and office payment
+reconciliation must be verified before client use.
 
 The Blog index is available at `/blog`, `/zh/blog`, and `/es/blog`, with 80
 retained articles and one new CSLB guide. Credential evaluation is the primary topic:

@@ -25,7 +25,10 @@ export type PaymentContent = {
     city: string; state: string; zip: string; service: string; serviceOther: string;
     addressGroup: string; office: string; amount: string; amountHelp: string; terms: string; termsLink: string;
     privacyLink: string; submit: string; newTab: string;
+    provider: string; paypalDescription: string; stripe: string; stripeDescription: string;
+    stripeNotice: string; stripeOfficeUnavailable: string; stripeAmountHelp: string; stripeSubmit: string; stripeNewTab: string; stripeTerms: string;
   };
+  stripeLive: Pick<PaymentContent['form'], 'stripe' | 'stripeDescription' | 'stripeNotice' | 'stripeAmountHelp' | 'stripeSubmit' | 'stripeNewTab' | 'stripeTerms'>;
   services: Record<PaymentService, string>;
   offices: Record<PaymentOffice, string>;
   alternatives: {

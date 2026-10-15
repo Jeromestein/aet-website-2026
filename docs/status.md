@@ -1,5 +1,99 @@
 # AET Implementation Status
 
+## 2026-10-15 — Live Stripe Checkout preparation
+
+- Added explicit test/live modes with no credential fallback. Boston and NYC use
+  the Boston account; California and Miami use the original account in each mode.
+  Production leaves Stripe disabled unless a mode is explicitly configured.
+- Reused the original account's existing live credential from the application
+  project after confirming that its test/live keys identify the same account.
+  That account reports charges and payouts enabled. Both account groups now have
+  local test/live credentials; `.env.local` remains ignored and uses test mode.
+- The form asks for an office before offering Stripe. Live-mode form, Checkout,
+  and result text omit test wording in all three languages. Test mode keeps its
+  explicit labels. Stale forms cannot silently switch between test and live.
+- Added retry idempotency, office/mode/source verification, a required public
+  HTTPS return origin for live payments, and customer/service metadata for manual
+  reconciliation. This standalone flow does not create an application/order or
+  automate fulfillment and email; see `content/payment/README.md` for deployment.
+- Created one unpaid $0.50 live Checkout session for each office and verified the
+  amount, live mode, office metadata, and unpaid result. Visually checked both
+  accounts' hosted Checkout branding, then expired all four unpaid sessions.
+  No card details were entered and no real payment was made in these checks.
+- Passed typecheck, i18n validation, whitespace checks, and the expanded isolated
+  payment checks for routing, mode guards, idempotency, response verification,
+  malformed inputs, and the existing PayPal paths.
+- In-app browser checks passed for English, Chinese, and Spanish live form
+  choices, all four offices, and Chinese desktop/390px form and cancellation
+  result states. Mobile had no horizontal overflow. Screenshots are in
+  `output/playwright/stripe-live-{form-desktop,form-mobile,result-mobile}-2026-10-15.png`
+  and `stripe-{bos,original}-live-checkout-2026-10-15.png`.
+- Reused the owner's test server on port 3021. A temporary isolated live-copy
+  preview on port 3029 used fixture keys and was stopped after verification.
+  No production build or deployment was run. Hosted production variables and
+  deployment remain pending; Git does not upload `.env.local`. Customer release
+  still requires the deployed return flow and operational reconciliation check.
+
+## 2026-10-15 — Boston / NYC Stripe account routing
+
+- Boston and NYC now select `STRIPE_TEST_SECRET_KEY_BOS`; California and Miami
+  retain the original test key. Missing Boston credentials cannot fall back to
+  the original account. Return verification uses the same office account and
+  rejects mismatched office metadata, even between Boston and NYC.
+- Created dedicated test/live restricted keys in the Boston/NYC Stripe account,
+  each with Checkout Sessions write/read permission only. Saved both secrets
+  and the corresponding publishable keys to ignored `.env.local` (mode 600),
+  preserving the original entries. `.env.example` contains blank placeholders.
+  The payment integration accepts test credentials only and never reads the
+  reserved live credential; no live API request or payment was made.
+- Pinned requests to API version `2026-09-30.endive` and replaced the removed
+  static payment-method parameter with the supported card eligibility filter.
+  This resolves the new account's rejected Checkout request without expanding
+  key permissions. The original account also passed test-session creation.
+- Passed typecheck, i18n validation, whitespace checks and the expanded isolated
+  `node scripts/check-payment.cjs` checks for all office routes, restricted test
+  keys, account isolation, tampered inputs and the existing PayPal paths.
+- Submitted the Boston form without a configured Boston key and verified its
+  localized unavailable result in the in-app browser on desktop and at 390px,
+  with no horizontal overflow. Screenshots:
+  `output/playwright/stripe-bos-unavailable-{desktop,mobile}-2026-10-15.png`.
+- After the owner completed Stripe verification, used the in-app browser to
+  submit Boston and NYC forms to the Boston/NYC account's branded sandbox
+  Checkout. Completed one Boston $0.50 test-card payment and verified the
+  website's success page; NYC Checkout and its cancel return also passed.
+  Retrieved both sessions with the restricted test key and confirmed test mode,
+  50 USD cents and their respective office metadata. No real money was charged.
+  Desktop screenshots: `output/playwright/stripe-bos-success-2026-10-15.png`,
+  `output/playwright/stripe-nyc-checkout-2026-10-15.png` and
+  `output/playwright/stripe-nyc-cancel-2026-10-15.png`.
+- Reused port 3021 and reset the viewport. No build, commit, push or deployment.
+
+## 2026-10-15 — Stripe test Checkout
+
+- Added an optional Stripe test choice to the existing Payment form in English,
+  Chinese and Spanish, preserving PayPal as the default. The selected amount
+  opens hosted Checkout in a new tab; the original form remains available.
+- Only a server-side test key enables Stripe. Amounts use integer USD cents;
+  live keys and unexpected Checkout destinations are rejected. Return pages
+  verify the session with Stripe before displaying test success and explain
+  cancelled, incomplete, unverified and unavailable outcomes.
+- Completed a $0.50 sandbox card payment from the Chinese form through Stripe
+  to the verified success page, using synthetic customer details and the official
+  test card. Also checked Stripe's return link reaches the cancelled result.
+  No real money was charged and no service order was created.
+- Passed typecheck, i18n validation, whitespace checks, three-locale rendered-page
+  checks and `node scripts/check-payment.cjs`. The isolated script checks amount
+  boundaries, test/live credentials, redirects, result verification, failures and
+  all four existing PayPal merchant paths without external requests.
+- In-app browser verified the desktop form and success/cancel states, plus the
+  Stripe option at 390px with no horizontal overflow. Screenshots are saved as
+  `output/playwright/stripe-{form-desktop,form-mobile,checkout-test,success,cancel}-2026-10-15.jpg`.
+- This initial test used the original configured Stripe account; the subsequent
+  Boston/NYC routing change is recorded above. Order persistence, webhooks and
+  application/email workflows remain future work. See `content/payment/README.md`.
+  Reused port 3021 and reset the viewport. Changes are on `main`; no build,
+  commit, push or deployment.
+
 ## 2026-10-14 — ATA membership links
 
 - Linked the homepage ATA fact heading, About timeline reference, and Certified

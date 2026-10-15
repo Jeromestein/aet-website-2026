@@ -2,6 +2,16 @@
 .section h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
 .form { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 30px; }
 .formIntro, .sectionIntro { max-width: 780px; font-size: 17px; line-height: 1.7; color: var(--muted); margin: 0 0 28px; }
+.providers { min-width: 0; border: 0; padding: 0; margin: 0 0 24px; }
+.providers legend { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.providerOptions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.providerOption { display: flex; align-items: flex-start; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.providerOption:has(input:checked) { border-color: var(--action-blue); background: var(--blue); box-shadow: inset 0 0 0 1px var(--action-blue); }
+.providerOption input { width: 18px; height: 18px; flex: none; margin: 3px 0 0; accent-color: var(--action-blue); }
+.providerOption input:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 3px; }
+.providerOption strong { display: block; font-size: 16px; line-height: 1.5; }
+.providerOption small { display: block; color: var(--muted); font-size: 13px; line-height: 1.6; margin-top: 5px; }
+.paymentNotice { padding: 15px 18px; margin: 0 0 24px; background: var(--blue); border-left: 3px solid var(--action-blue); font-size: 14px; line-height: 1.7; }
 .fieldsThree, .fieldsTwo { display: grid; gap: 18px; margin-bottom: 20px; }
 .fieldsThree { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .fieldsTwo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -34,7 +44,7 @@
 @media (max-width: 760px) {
   .section { margin-bottom: 48px; }
   .form { padding: 20px; }
-  .fieldsThree, .fieldsTwo { grid-template-columns: 1fr; gap: 16px; }
+  .fieldsThree, .fieldsTwo, .providerOptions { grid-template-columns: 1fr; gap: 16px; }
   .submitRow button { width: 100%; justify-content: center; }
 }
 
@@ -84,3 +94,5 @@
   .shippingTable { font-size: 12px; }
   .shippingTable th, .shippingTable td { padding: 10px 7px; }
 }
+
+.officeField { margin-bottom: 1.5rem; }

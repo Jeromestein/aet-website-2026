@@ -1,7 +1,7 @@
 {
   "title": "付款",
   "eyebrow": "支付 AET 服务费用",
-  "description": "填写服务及付款信息，然后前往 PayPal 完成支付。",
+  "description": "填写服务付款信息并选择付款方式。",
   "sections": {
     "card": "银行卡付款",
     "alternatives": "Zelle 转账／存款／支票",
@@ -9,7 +9,7 @@
     "shipping": "邮寄选项"
   },
   "form": {
-    "intro": "请输入 AET 办公室报价中的金额。提交表格后，PayPal 将在新标签页打开以完成付款。",
+    "intro": "请选择负责您服务的办公室，再选择付款方式。",
     "name": "姓名",
     "email": "电子邮箱",
     "phone": "电话号码",
@@ -28,7 +28,17 @@
     "termsLink": "服务条款",
     "privacyLink": "隐私声明",
     "submit": "开始在线付款",
-    "newTab": "PayPal 将在新标签页打开"
+    "newTab": "PayPal 将在新标签页打开",
+    "provider": "付款方式",
+    "paypalDescription": "支付已报价的服务费用。",
+    "stripe": "Stripe · 测试支付",
+    "stripeDescription": "体验银行卡付款流程，不会实际扣款。",
+    "stripeNotice": "仅供测试：不会实际扣款，也不会创建服务订单。请使用 Stripe 测试卡，不要使用真实银行卡。",
+    "stripeAmountHelp": "测试金额以美元计，最低 $0.50，不会实际扣款。",
+    "stripeSubmit": "前往 Stripe 测试付款",
+    "stripeNewTab": "Stripe 测试付款页面将在新标签页中打开",
+    "stripeTerms": "我了解这仅是测试，不会实际扣款或创建服务订单。",
+    "stripeOfficeUnavailable": "此办公室暂不支持 Stripe，请使用 PayPal 或下方其他付款方式。"
   },
   "services": {
     "certified": "认证翻译",
@@ -173,5 +183,14 @@
   "card": {
     "restriction": "我们仅接受 Visa 和 MasterCard。超过 $250 请使用 Zelle 或 Venmo。",
     "description": "安全便捷地在线支付 AET 服务费用。通过值得信赖的付款方式，投资教育与翻译服务，助力您的发展。立即开始安全付款！"
+  },
+  "stripeLive": {
+    "stripe": "Stripe · 银行卡付款",
+    "stripeDescription": "通过 Stripe 安全支付服务费用。",
+    "stripeNotice": "请按 AET 办公室确认的报价付款。办公室核对到账后，会将款项关联到您的服务申请。",
+    "stripeAmountHelp": "请填写报价单或账单上的准确美元金额，最低 $0.50。",
+    "stripeSubmit": "前往 Stripe 付款",
+    "stripeNewTab": "Stripe 付款页面将在新标签页中打开",
+    "stripeTerms": "我已阅读并同意服务条款及隐私声明。"
   }
 }
