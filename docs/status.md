@@ -2,6 +2,149 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Independent new-website administrator — October 15, 2026
+
+- Provisioned the owner-approved `errplusone@gmail.com` membership as an active
+  administrator for Boston, New York, Miami, San Francisco, Los Angeles and
+  unassigned records. The owner created the confirmed Auth identity and entered
+  the password in Supabase. No invitation or application email was sent.
+- Added independent staff support without a legacy/Payload user. The private
+  roster uses its existing UUID as the primary key and permits a null legacy ID;
+  recovery tokens support both native staff and existing legacy-linked tokens.
+  Added an idempotent, validation-first administrative provisioning command.
+- Passed TypeScript, all 175 unit tests and 20 native cloud/cleanup checks.
+  Coverage includes unmapped identity denial, password login, original dashboard,
+  all-office permissions, password reset/token invalidation, deactivation and
+  logout. Temporary Auth/membership/recovery fixtures were removed.
+- In-app browser passed native test-account login into the original `/admin/CRM`,
+  all five office options plus unassigned, and sign-out to `/admin/login` on the
+  owner's 3022 server. Screenshot:
+  `output/playwright/native-staff-dashboard-2026-10-15.png`.
+  The real owner's password was not collected or tested by the agent.
+- Final verification confirmed the real account is linked, confirmed, active and
+  password-enabled. All three original employee credential/scope fingerprints and
+  the complete legacy user table match their pre-change baseline. Both migration
+  and cutover switches remain false. The business database remains the isolated
+  cloud preview; no production business records were copied.
+- Work stayed in `aet-website-2026-dev`, directly connected to cloud Supabase.
+  No Docker, server restart, production build, deployment, commit or push.
+
+### Original CRM connected to cloud business workflows — October 15, 2026
+
+- Restored the original CRM presentation at `/admin/CRM`: sidebar, four overview
+  cards, document strip, status tabs, desktop table, mobile cards, education/service
+  triggers and right-hand detail drawer. The simplified lists are no longer the
+  staff entry points. Formal list/detail URLs and the former preview URL redirect
+  into the connected workspace; no fictional records are embedded in its UI.
+- Added a staff-only workspace endpoint. Office permissions apply before overview
+  metrics, filters, search, sorting, pagination, document/payment summaries and CSV
+  export. The formal legacy office, including NULL, remains authoritative. Export
+  covers all matching pages, escapes spreadsheet formulas and caps at 5,000 cases.
+- Connected drawer notes, formal status/quotes/report actions, preliminary result
+  corrections, information requests, payment history, customer access and audit to
+  existing protected APIs. Formal payment history and preliminary office are
+  staff-only detail fields. New application opens existing intake forms; import
+  orders and standalone payment drafts explicitly remain unavailable. GPA retains
+  its local calculator behavior.
+- Verified on the owner's existing `aet-website-2026-dev` server at 3022, directly
+  against isolated cloud Supabase. TypeScript, 173 unit tests and 325 cloud checks
+  passed; cleanup added four checks (329 total). The focused cloud run used
+  `--seed-directly` for synthetic preliminary fixtures after the public intake
+  limiter rejected repeated setup. The public limiter was not changed or reset.
+- In-app browser passed 1440px desktop, 390px mobile and 320px narrow mobile;
+  education/service drawers, persisted notes after reload, status/audit updates,
+  preliminary result save, office/search/empty states, pagination, document/report
+  and payment views, old detail/preview redirects, denied-office drawer, new-form
+  links, GPA, mobile focus trap/Escape and sign-out. Mobile widths had no page-level
+  horizontal overflow. CSV contents and scope were verified through the HTTP API.
+- Removed all temporary test users and business records. Employee credential/scope
+  fingerprints and production business policies/triggers match their baseline;
+  Auth user count restored. Both staff migration/cutover switches remain false.
+  No Docker, server restart, production build, deployment, commit or push.
+- Screenshots (synthetic records, since cleaned up):
+  `output/playwright/crm-connected-{desktop,mobile,mobile-drawer}-2026-10-15.png`.
+
+### Cloud business database and office permissions — October 15, 2026
+
+- Continued only in `aet-website-2026-dev` using the owner's existing 3022 server,
+  directly against cloud Supabase project `qrxztgdemfodemlcabcq`; no Docker,
+  production build, server restart by Codex, deployment or push.
+- Prepared three private preview schemas (23 tables) and a restricted business
+  login. Copied legacy table definitions, checks/indexes and internal foreign
+  keys only; no real customer rows. Workflow triggers target preview tables.
+  Auth and business connections remain separate. Business connection attempts
+  to read credentials or update production applications were rejected.
+- Passed **241 HTTP/database acceptance checks plus four final cleanup checks**
+  using three disposable staff identities and 12 fictional applications. Tested
+  the approved all-office, west/Miami and east office groups across all five
+  named offices and unassigned records: list/detail/update/file/report/access-link
+  authorization, explicit unassigned access and immediate deactivation.
+- Confirmed customer/staff isolation, private notes, optimistic concurrency,
+  idempotent submission, education relationships, exact prices, result payment
+  gates/refund revocation and legacy workflow/payment bridges. Fixed formal
+  queue office labels to use the same authoritative business record as access
+  checks, including a null office and a conflicting workflow JSON snapshot.
+- Cloud preview suppresses business email delivery and AI work, and blocks
+  Stripe/Dropbox calls before the network. Six confirmation outbox entries were
+  deduplicated with zero delivery attempts. File metadata and report release
+  were tested; real file transfer, charges, provider webhooks and mail/AI delivery
+  were not tested in this pass.
+- In-app browser passed authenticated CRM/formal lists on desktop (1440px),
+  pre-evaluation detail and note save with an audit entry, and formal detail at
+  390px with no horizontal overflow. The west fixture saw exactly four allowed
+  records in each workflow. Logout returned to `/admin/login`; viewport reset.
+  Evidence in `output/playwright/`: `cloud-crm-desktop-2026-10-15.png`,
+  `cloud-detail-desktop-2026-10-15.png`, `cloud-formal-desktop-2026-10-15.png`,
+  `cloud-formal-mobile-detail-2026-10-15.png`.
+- All **171 unit tests**, TypeScript and whitespace checks passed. Synthetic
+  business/Auth/staff records were removed. Real employee credential/membership
+  snapshots and production policy/trigger metadata compared unchanged. Both
+  migration/cutover flags remain false; original employee login remains active.
+- Production cutover remains pending: legacy direct Data API policies are broader
+  than the new office rules and need coordinated remediation, followed by
+  production workflow backfill, external service acceptance and restore rehearsal.
+  Details and reproducible commands are in [staff-auth.md](staff-auth.md).
+
+### Supabase staff authentication candidate — October 15, 2026
+
+- Implemented password login, visibility toggle, user-requested password recovery,
+  reset and logout in the correct `aet-website-2026-dev` worktree on port 3022.
+  Supabase Auth and the private roster connect directly to the cloud; no Docker
+  runtime is required for this authentication path. This repository has no
+  Payload runtime dependency. The dependency inventory and rollout boundaries
+  are recorded in [staff-auth.md](staff-auth.md).
+- Prepared the three owner-approved employee mappings and office scopes. All
+  three remain pending, with original legacy hashes/salts and no Auth UUIDs.
+  Both employee-migration and staff-cutover switches remain false. The previous
+  staff email-login page, endpoint, links and sessions are retained for the
+  transition; customer authentication remains independent.
+- Passed TypeScript checking, all 157 tests in the current checkout (including
+  43 focused staff-auth tests), and 24 synthetic cloud acceptance assertions.
+  Cloud checks cover concurrent first login, exact password preservation,
+  confirmed identity without an invitation call, refresh, 3022 HTTP cookies,
+  authenticated CRM page rendering, origin rejection, recovery/reset, retired
+  password rejection, account deactivation and logout. Fixture records were
+  deleted; the Auth user count returned to zero and all real staff records were
+  compared unchanged. No application recovery mail was sent by these tests.
+- In-app browser passed desktop 1440px and mobile 390px login inspection, password
+  visibility, failed-login messaging, unknown-email recovery confirmation,
+  invalid-reset-link handling and the retained email-login entry. Mobile width
+  is 390px with no horizontal overflow. Screenshots in `output/playwright/`:
+  `supabase-staff-login-desktop-2026-10-15.png`,
+  `supabase-staff-login-mobile-2026-10-15.png`, and
+  `supabase-staff-forgot-mobile-2026-10-15.png`.
+- At the initial authentication checkpoint, full business-data operations were
+  not rerun because the local workflow database was unavailable. The later cloud
+  acceptance above supersedes that limitation for isolated business operations. Office access helpers are covered by unit tests;
+  end-to-end list/detail/mutation/file authorization against the target business
+  schema, customer/payment integrations, cloud business configuration, direct
+  Data API policy review and restore rehearsal remain pre-cutover requirements.
+- The owner restarted 3022 after the authorized connection configuration copy.
+  No real employee was migrated; no production login was retired. No production
+  build, deployment or push was run. The mistaken legacy-checkout code changes
+  were restored and that checkout was verified clean. No encrypted backup or
+  business data was copied into this project.
+
 ### Staff routing and worktree documentation — October 15, 2026
 
 - Recorded the required legacy production dashboard URL, English-only staff

@@ -1,3 +1,4 @@
+import { table } from "../preeval/db";
 import type { TransactionSql } from 'postgres';
 import { randomUUID } from 'node:crypto';
 import { toLegacyFormal, toLegacyPreeval, toLegacyEducation } from './mapping';
@@ -8,11 +9,11 @@ export async function saveLegacyFormal(tx: TransactionSql, id: string, data: App
   const educations = data.educations.map(education => ({ id: randomUUID(), application_id: id, ...toLegacyEducation(education) }));
   const row = { id, ...toLegacyFormal(data, quote), submitted_at: new Date().toISOString() };
   row.service_type.websiteQuote = { version: 1, ...quote, educationIds: educations.map(education => education.id) };
-  await tx`insert into public.fce_applications ${tx({ ...row, service_type: tx.json(JSON.parse(JSON.stringify(row.service_type))), additional_services_quantity: tx.json(row.additional_services_quantity) })}`;
-  for (const education of educations) await tx`insert into public.fce_educations ${tx(education)}`;
+  await tx`insert into ${table("public.fce_applications")} ${tx({ ...row, service_type: tx.json(JSON.parse(JSON.stringify(row.service_type))), additional_services_quantity: tx.json(row.additional_services_quantity) })}`;
+  for (const education of educations) await tx`insert into ${table("public.fce_educations")} ${tx(education)}`;
 }
 export async function saveLegacyPreeval(tx: TransactionSql, id: string, educationId: string, input: ApplicationInput) {
   const { application, education } = toLegacyPreeval(input);
-  await tx`insert into public.aet_core_applications ${tx({ id, ...application })}`;
-  await tx`insert into public.aet_core_educations ${tx({ id: educationId, application_id: id, ...education })}`;
+  await tx`insert into ${table("public.aet_core_applications")} ${tx({ id, ...application })}`;
+  await tx`insert into ${table("public.aet_core_educations")} ${tx({ id: educationId, application_id: id, ...education })}`;
 }

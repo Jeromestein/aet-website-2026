@@ -3,11 +3,11 @@ import { z } from 'zod';
 import { configuration, required } from '@/lib/preeval/config';
 import { authorize, sameOrigin, limit } from '@/lib/preeval/auth';
 import { AppError, MAX_FILE_BYTES } from '@/lib/preeval/domain';
-import { db } from '@/lib/preeval/db';
+import { table, db } from '@/lib/preeval/db';
 import { downloadFile } from '@/lib/preeval/dropbox';
 import { stripeClient } from '@/lib/preeval/payments';
 import { cookieName } from '@/lib/evaluation-application/server';
-import { access, application, addFile, staffAction, makeAccessLink, consumeAccess } from '@/lib/evaluation-application/service';
+import { access, staffAccess, application, addFile, staffAction, makeAccessLink, consumeAccess } from '@/lib/evaluation-application/service';
 import { checkout, reconcile, cancel, handleStripeEvent } from '@/lib/evaluation-application/payments';
 import { canDownloadReport, receiptPath, type ApplicationRecord } from '@/lib/evaluation-application/workflow';
 export const runtime = 'nodejs';
@@ -44,20 +44,24 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       return res;
     }
     if (endpoint === 'admin/applications' && !post) {
-      await authorize(); const url = new URL(request.url); const q = (url.searchParams.get('q') || '').slice(0, 100); const status = url.searchParams.get('status') || 'all';
+      const current = await authorize(); const url = new URL(request.url); const q = (url.searchParams.get('q') || '').slice(0, 100); const status = url.searchParams.get('status') || 'all';
       const page = Math.max(1, Math.min(10000, Math.trunc(Number(url.searchParams.get('page')) || 1)));
       const filter = '%' + q.replace(/[\\%_]/g, '\\$&') + '%';
-      const rows = await db()`select id,data->'client'->>'name' as name,data->'client'->>'email' as email,data->'client'->>'office' as office,data->'educations' as educations,data->'services' as services,status,payment_status,created_at,updated_at,
-        (select count(*)::int from evaluation.files where application_id=a.id and kind='document' and state='ready') file_count,count(*) over()::int total
-        from evaluation.applications a where (${status}='all' or status=${status} or payment_status=${status}) and ((data->'client'->>'name')||' '||(data->'client'->>'email')||' '||id::text) ilike ${filter}
-        order by created_at desc limit 20 offset ${(page - 1) * 20}`;
+      const rows = await db()`select a.id,a.data->'client'->>'name' as name,a.data->'client'->>'email' as email,
+        case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office,
+        a.data->'educations' as educations,a.data->'services' as services,a.status,a.payment_status,a.created_at,a.updated_at,
+        (select count(*)::int from ${table("evaluation.files")} where application_id=a.id and kind='document' and state='ready') file_count,count(*) over()::int total
+        from ${table("evaluation.applications")} a left join ${table("public.fce_applications")} l on l.id=a.id
+        where (${!current.offices} or ((case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end)=any(${current.offices || []}::text[]) or ((case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end) is null and ${Boolean(current.include_unassigned)})))
+        and (${status}='all' or a.status=${status} or a.payment_status=${status}) and ((a.data->'client'->>'name')||' '||(a.data->'client'->>'email')||' '||a.id::text) ilike ${filter}
+        order by a.created_at desc limit 20 offset ${(page - 1) * 20}`;
       return response({ rows, total: rows[0]?.total || 0, page });
     }
     if (path[0] === 'applications' && path[1]) {
       const id = path[1];
       // Staff routes always require a staff session even when a customer cookie also exists.
       const staffRoute = ['staff', 'reports', 'access-link', 'admin'].includes(path[2]);
-      const current = staffRoute ? { admin: true, actor: (await authorize()).email as string } : await access(id);
+      const current = staffRoute ? await staffAccess(id) : await access(id);
       if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);
       if (path[2] === 'admin' && path.length === 3 && !post) return response(await application(id, true));
       if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); return response({ ok: true }); }
@@ -74,7 +78,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       }
       if (path[2] === 'files' && path.length === 4 && !post) {
         if (!z.uuid().safeParse(path[3]).success) throw new AppError('not_found', 404);
-        const [file] = await db()`select * from evaluation.files where id=${path[3]} and application_id=${id} and state='ready'`;
+        const [file] = await db()`select * from ${table("evaluation.files")} where id=${path[3]} and application_id=${id} and state='ready'`;
         if (!file) throw new AppError('not_found', 404);
         const app = await application(id, current.admin);
         if (!current.admin && file.kind === 'report' && !canDownloadReport(app as ApplicationRecord, file.id)) throw new AppError('access_denied', 403);

@@ -167,11 +167,27 @@ background portrait and content have breathing room without a fixed section heig
 - Preserve `https://app.americantranslationservice.com/admin/CRM` as the intended
   production dashboard address. The proposed domain routing and pending deployment
   work are documented in [README.md](../README.md#application-domains-and-staff-urls).
-- Retain the `office` concept in the data model, but do not show specific offices
-  or partition the operational pre-evaluation frontend by office. Historical
-  office badges and filters below belong only to the fictional CRM preview.
+- Use a compact email/password login card with the existing full AET logo,
+  navy actions, cool-white surfaces, visible field labels, a password visibility
+  control and a quiet password-recovery link. Do not offer public registration
+  or repeat employee invitations. Keep the previous staff sign-in entry during
+  transition until the explicit cutover; customer access links remain separate.
+- Retain office permissions on the server using the owner's approved staff
+  roster. Scope statistics, searches, documents, payments and CSV exports before
+  returning data. Office selectors contain only permitted offices and, when
+  authorized, Unassigned. A selector never grants access.
+- Use the original CRM layout as the connected workspace: fixed sidebar, four
+  overview cards, document strip, status tabs, table/mobile cards and a right-hand
+  detail drawer. Formal and preliminary evaluations share the shell. Education
+  and Service open their own drawer sections; edits persist through the existing
+  authenticated workflow APIs. Older formal-list/detail URLs open the matching
+  workspace view/drawer. The former preview URL opens this workspace too.
+- Distinguish unavailable actions from working ones. Bulk import and standalone
+  payment drafts have no connected backend; explain this without simulated saves.
+  New applications use the existing service intake forms. In the isolated cloud
+  preview, identify the workspace and retain paused external delivery controls.
 
-The following presentation rules apply to the retained fictional CRM preview:
+The following presentation rules apply to the connected CRM workspace:
 
 - Use Poppins 500 for body text and 600 for names, headings and emphasized
   values. Keep primary table text at 14–15px and secondary labels at least 12px;

@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { db, type Row } from "./db";
+import { table, db, type Row } from "./db";
 import { configuration, required } from "./config";
 import { makeLink } from "./auth";
 
@@ -25,7 +25,7 @@ export async function enqueueEmail({
   html: string;
 }) {
   // All pilot email, including any legacy CC/BCC, is contained in one owner-approved inbox.
-  await db()`insert into preeval.emails(application_id,kind,dedupe_key,subject,recipient,html) values (${applicationId || null},${kind},${key},${subject},${configuration().recipient},${html}) on conflict(dedupe_key) do nothing`;
+  await db()`insert into ${table("preeval.emails")}(application_id,kind,dedupe_key,subject,recipient,html) values (${applicationId || null},${kind},${key},${subject},${configuration().recipient},${html}) on conflict(dedupe_key) do nothing`;
 }
 export async function applicationEmail(
   app: Row,
@@ -39,7 +39,7 @@ export async function applicationEmail(
         ? `result:${app.id}:${app.result_version}`
         : `${kind}:${app.id}:${crypto.randomUUID()}`;
   if (
-    (await db()`select id from preeval.emails where dedupe_key=${key}`).length
+    (await db()`select id from ${table("preeval.emails")} where dedupe_key=${key}`).length
   )
     return;
   const link = await makeLink(app.id, "customer", app.email, app.locale);
@@ -76,11 +76,12 @@ export async function administratorEmail() {
   });
 }
 export async function flushEmails() {
+  if (configuration().cloudPreview) return;
   const sql = db();
-  await sql`update preeval.emails set state='failed',error='interrupted' where state='sending' and locked_at<now()-interval '3 minutes'`;
+  await sql`update ${table("preeval.emails")} set state='failed',error='interrupted' where state='sending' and locked_at<now()-interval '3 minutes'`;
   const rows =
-    await sql`update preeval.emails set state='sending',locked_at=now(),attempts=attempts+1 where id in
-    (select id from preeval.emails where state in ('queued','failed') and attempts<5 and available_at<=now() order by created_at limit 5 for update skip locked) returning *`;
+    await sql`update ${table("preeval.emails")} set state='sending',locked_at=now(),attempts=attempts+1 where id in
+    (select id from ${table("preeval.emails")} where state in ('queued','failed') and attempts<5 and available_at<=now() order by created_at limit 5 for update skip locked) returning *`;
   const resend = new Resend(required("RESEND_API_KEY"));
   for (const row of rows) {
     try {
@@ -94,9 +95,9 @@ export async function flushEmails() {
         { idempotencyKey: row.id },
       );
       if (error || !data) throw new Error(error?.name || "delivery_failed");
-      await sql`update preeval.emails set state='sent',provider_id=${data.id},sent_at=now(),error=null,locked_at=null where id=${row.id}`;
+      await sql`update ${table("preeval.emails")} set state='sent',provider_id=${data.id},sent_at=now(),error=null,locked_at=null where id=${row.id}`;
     } catch (error) {
-      await sql`update preeval.emails set state='failed',error=${error instanceof Error ? error.message.slice(0, 150) : "delivery_failed"},available_at=now()+interval '60 seconds',locked_at=null where id=${row.id}`;
+      await sql`update ${table("preeval.emails")} set state='failed',error=${error instanceof Error ? error.message.slice(0, 150) : "delivery_failed"},available_at=now()+interval '60 seconds',locked_at=null where id=${row.id}`;
     }
   }
 }

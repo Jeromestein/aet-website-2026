@@ -4,6 +4,22 @@ Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complet
 local pre-evaluation workflow, not a production cutover or formal-evaluation
 migration. The existing AET App remains operational.
 
+## Current cloud preview — October 15, 2026
+
+The current `aet-website-2026-dev` preview on **3022** connects directly to the
+existing cloud Supabase project using restricted private preview schemas.
+**Docker is not required.** The owner already runs the Next development server.
+Do not start the local database, Stripe listener or external worker for this mode.
+Mail, payments, file-storage calls and AI processing are paused during business
+permission acceptance. Employee migration and staff cutover remain disabled.
+
+See [the active configuration and acceptance procedure](staff-auth.md#cloud-business-preview).
+The setup below documents the earlier optional local-database/service pilot;
+its test fixtures and Docker commands are not the current cloud workflow.
+Current password-based staff login and office scopes are documented in
+[staff-auth.md](staff-auth.md). Historical email-login descriptions below are
+superseded by that document; the old staff entry is retained only for transition.
+
 ## Owner-approved behavior
 
 - Direct AI assessment with the legacy customer experience: a generated

@@ -43,6 +43,29 @@ To integrate later, commit the intended changes on `dev`, merge `dev` into
 `main` from the main checkout, resolve conflicts and verify the result before
 an explicitly authorized push or deployment. Do not copy folders over `main`.
 
+## Staff authentication
+
+The new password-based staff login at `/admin/login` uses cloud Supabase Auth
+without Docker. Staff membership and office scopes are prepared administratively;
+verified first login can preserve the existing email and password without another
+registration or invitation. Both employee-migration and staff-cutover switches
+remain off in the local preview, and the previous email-login entry is retained.
+
+Independent website administrators can already sign in with an explicitly
+confirmed Supabase Auth account and private membership while both switches are
+off. The owner sets the password in Supabase; the server-only
+`scripts/staff/add-native-admin.mts` command assigns approved all-office access
+without creating a legacy employee or sending an invitation. See
+[independent administrator setup](docs/staff-auth.md#independent-administrators-without-employee-migration).
+
+See [the dependency inventory and rollout plan](docs/staff-auth.md) for the
+approved roster, server-only configuration, test results and remaining production
+work. Authentication uses `STAFF_AUTH_DATABASE_URL`. The 3022 business preview
+now connects directly to the same cloud project through a restricted
+`PREEVAL_DATABASE_URL`, using private preview schemas and synthetic records.
+No Docker is needed. Existing employee login and production business records
+remain in the old application. See [cloud preview boundaries](docs/staff-auth.md#cloud-business-preview).
+
 ## Validation and deployment
 
 ```sh
@@ -212,27 +235,29 @@ pages or change the separate application portal.
 
 The local pre-evaluation pilot is implemented at `/degree-equivalency-tool` with
 English, Chinese and Spanish customer pages. `/status-check` sends an access link
-by Application ID; `/admin/login` authenticates the authorized staff email.
+by Application ID; `/admin/login` is the separate staff authentication entry.
 Staff pages use English-only, unprefixed `/admin/*` URLs, including the legacy
 `/admin/CRM` address. Old language-prefixed staff links redirect to these URLs;
 the website language preference is preserved. Administrator email links open
-`/admin/access`; customer recovery keeps its localized pages.
-`/admin/CRM` reads durable application, education, document, payment and result
-records. It supports notes, supplemental-information requests, AI retries,
-result corrections, email retries and audit history, without office partitioning.
+`/admin/access`; customer status and result pages remain localized.
+`/admin/CRM` uses the original sidebar, overview cards, status tabs, desktop table,
+mobile cards and detail drawer with durable formal/pre-evaluation data. Statistics,
+search, office filters, pagination, document/payment views and CSV export all use
+server-enforced staff office permissions. Notes, formal status/quotes/reports,
+preliminary result corrections, information requests and audit history use the
+existing workflow APIs. `/admin/evaluations` and its detail links redirect into the
+corresponding workspace view/drawer; `/admin/CRM/preview` redirects to the workspace.
 
-The pilot uses isolated local Supabase, private Dropbox test files, Stripe test
-payments, Resend email redirected to `tech@meiyugroup.org`, and the existing
-Codex ChatGPT login for direct AI assessments. It has no Payload dependency.
-Paid applications automatically show the generated preliminary result. Read
-[local setup, behavior and acceptance](docs/pre-evaluation-local.md) before running
-the worker or service tests. Nothing has been deployed or migrated in bulk.
+The 3022 checkout connects directly to isolated cloud Supabase preview schemas;
+Docker is not used. Business email, AI, Stripe and file transfer remain paused in
+this mode. Both employee migration/cutover switches stay off. The old AET App
+remains the production system until a separately authorized cutover. See
+[cloud preview boundaries](docs/staff-auth.md#cloud-business-preview).
 
-The previous fictional CRM remains at `/admin/CRM/preview`, behind staff login.
-Its other application, payment-request, document, CSV and GPA interactions remain
-browser-memory prototypes. Preview office badges are historical design fixtures;
-the new operational pre-evaluation workspace does not use them. The old AET App
-remains the production system until a separately authorized cutover.
+Bulk import and standalone payment drafts remain unavailable, with explicit UI
+explanations. New application opens the existing intake forms; GPA remains a local
+calculator. No action displays a successful save unless its API has succeeded.
+Historical local-pilot setup is retained in [local workflow notes](docs/pre-evaluation-local.md).
 
 ## Documentation
 

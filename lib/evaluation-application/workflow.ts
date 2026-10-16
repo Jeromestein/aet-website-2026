@@ -4,7 +4,7 @@ import { AppError } from '../preeval/domain';
 export const statuses = ['submitted', 'reviewing', 'needs_information', 'processing', 'completed', 'cancelled'] as const;
 export type ConfirmedQuote = { base: number; additional: number; total: number; explanation: string };
 export type ApplicationFile = { id: string; kind: 'document' | 'report'; name: string; bytes: number; input_version: number; created_at: string };
-export type ApplicationRecord = { id: string; locale: string; created_at: string; updated_at: string; version: number; input_version: number; status: typeof statuses[number]; payment_status: string; data: ApplicationData; quote: Quote; confirmed_quote: ConfirmedQuote | null; customer_message: string; files: ApplicationFile[]; total: number | null; released_file_id: string | null; staff_notes?: string; audit?: { id: number; actor: string; action: string; created_at: string }[] };
+export type ApplicationRecord = { id: string; locale: string; created_at: string; updated_at: string; version: number; input_version: number; status: typeof statuses[number]; payment_status: string; data: ApplicationData; quote: Quote; confirmed_quote: ConfirmedQuote | null; customer_message: string; files: ApplicationFile[]; total: number | null; released_file_id: string | null; staff_notes?: string; payments?: { id: string; session_id: string | null; amount_cents: number; status: string; created_at: string }[]; audit?: { id: number; actor: string; action: string; created_at: string }[] };
 const cents = z.number().int().min(0).max(999999);
 export const staffSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('notes'), version: z.number().int(), notes: z.string().max(10000) }).strict(),

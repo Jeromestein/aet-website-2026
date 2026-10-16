@@ -1,6 +1,6 @@
 import { NextResponse, after } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/preeval/db";
+import { table, db } from "@/lib/preeval/db";
 import { configuration, required } from "@/lib/preeval/config";
 import { AppError, resultPath, MAX_FILE_BYTES } from "@/lib/preeval/domain";
 import {
@@ -128,13 +128,14 @@ async function handler(
       ) {
         await limit("access:" + body.applicationId, 3, 600);
         const [app] =
-          await db()`select * from preeval.applications where id=${body.applicationId}`;
+          await db()`select * from ${table("preeval.applications")} where id=${body.applicationId}`;
         if (app) await applicationEmail(app, "access");
       }
       after(flushEmails);
       return response({ ok: true });
     }
     if (endpoint === "admin/login" && isPost) {
+      if (process.env.STAFF_AUTH_CUTOVER_ENABLED === "true") return response({ error: "staff_password_login_required" }, 410);
       await limit("admin-login", 5, 600);
       if (
         typeof body.email === "string" &&
@@ -160,13 +161,13 @@ async function handler(
       const current = await authorize(
         body.admin ? undefined : body.applicationId,
       );
-      await db()`delete from preeval.sessions where hash=${current.hash}`;
+      await db()`delete from ${table("preeval.sessions")} where hash=${current.hash}`;
       const res = response({ ok: true });
       res.cookies.set({ ...sessionCookie(""), maxAge: 0 });
       return res;
     }
     if (endpoint === "admin/applications" && !isPost) {
-      await authorize();
+      const current = await authorize();
       const url = new URL(request.url),
         search = (url.searchParams.get("q") || "").slice(0, 100),
         status = url.searchParams.get("status") || "all";
@@ -176,11 +177,12 @@ async function handler(
       );
       const rows =
         await db()`select a.id,a.first_name,a.last_name,a.email,a.status,a.payment_status,a.ai_status,a.created_at,a.updated_at,e.school_name,e.degree_obtained,
-        (select count(*)::int from preeval.files f where f.application_id=a.id and f.state='ready') file_count,
-        (select count(*)::int from preeval.emails m where m.application_id=a.id and m.state='failed') email_failures,
+        (select count(*)::int from ${table("preeval.files")} f where f.application_id=a.id and f.state='ready') file_count,
+        (select count(*)::int from ${table("preeval.emails")} m where m.application_id=a.id and m.state='failed') email_failures,
         count(*) over()::int total
-        from preeval.applications a join preeval.educations e on e.application_id=a.id
-        where (${status}='all' or a.status=${status} or a.payment_status=${status} or a.ai_status=${status})
+        from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id
+        where (${!current.offices} or (a.office=any(${current.offices || []}::text[]) or (a.office is null and ${Boolean(current.include_unassigned)})))
+        and (${status}='all' or a.status=${status} or a.payment_status=${status} or a.ai_status=${status})
         and (a.first_name||' '||a.last_name||' '||a.email||' '||a.id::text||' '||e.school_name) ilike ${"%" + search + "%"}
         order by a.created_at desc limit 20 offset ${(page - 1) * 20}`;
       return response({ rows, total: rows[0]?.total || 0, page });
@@ -227,7 +229,7 @@ async function handler(
     if (path[0] === "files" && path[1] && !isPost) {
       const id = uuid(path[1]);
       const [file] =
-        await db()`select * from preeval.files where id=${id} and state='ready'`;
+        await db()`select * from ${table("preeval.files")} where id=${id} and state='ready'`;
       if (!file) throw new AppError("not_found", 404);
       await authorize(file.application_id);
       const content = await downloadFile(file.dropbox_path);

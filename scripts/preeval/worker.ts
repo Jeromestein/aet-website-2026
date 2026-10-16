@@ -1,3 +1,4 @@
+import { configuration } from "../../lib/preeval/config";
 import { processAI } from "../../lib/preeval/ai";
 import { flushEmails } from "../../lib/preeval/email";
 import { db } from "../../lib/preeval/db";
@@ -11,6 +12,7 @@ process.on("SIGINT", () => {
   stop = true;
 });
 async function main() {
+  if (configuration().cloudPreview) throw new Error("Cloud preview workers are disabled.");
   console.log(
     "AET local worker started (Codex account authentication, Resend test recipient).",
   );

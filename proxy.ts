@@ -1,4 +1,5 @@
 import createMiddleware from "next-intl/middleware";
+import { refreshStaff } from "./lib/staff/proxy";
 import { routing } from "./i18n/routing";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -19,7 +20,7 @@ const englishLegalMiddleware = createMiddleware({
   alternateLinks: false,
 });
 
-export default function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const staffPath = pathname.replace(/^\/(en|zh|es)(?=\/admin(?:\/|$))/, "");
   if (/^\/admin(?:\/|$)/.test(staffPath)) {
@@ -30,7 +31,8 @@ export default function proxy(request: NextRequest) {
       url.pathname = canonicalPath;
       return NextResponse.redirect(url, 308);
     }
-    return staffMiddleware(request);
+    const finish = await refreshStaff(request);
+    return finish(staffMiddleware(request));
   }
 
   // Legal documents are English-only, without changing the saved site language.

@@ -1,6 +1,7 @@
-import { required } from "./config";
+import { required, requireExternalServices } from "./config";
 let cache: { token: string; expires: number } | undefined;
 async function headers() {
+  requireExternalServices();
   if (!cache || cache.expires < Date.now()) {
     const response = await fetch("https://api.dropbox.com/oauth2/token", {
       method: "POST",

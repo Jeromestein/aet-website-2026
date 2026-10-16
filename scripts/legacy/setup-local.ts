@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { db } from '../../lib/preeval/db';
 import { configuration } from '../../lib/preeval/config';
 async function main() {
-configuration(); // Rejects remote hosts before any DDL can execute.
+if (configuration().cloudPreview) throw new Error("Use scripts/staff/setup-cloud-business.mts for cloud preview.");
 const sql = db();
 try {
   await sql.begin(async tx => {

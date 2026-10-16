@@ -2,8 +2,8 @@ import { spawn } from "node:child_process";
 import { mkdtemp, writeFile, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { db } from "./db";
-import { required } from "./config";
+import { table, db } from "./db";
+import { required, configuration } from "./config";
 import { resultSchema } from "./domain";
 import { downloadFile } from "./dropbox";
 import { publishIfReady } from "./payments";
@@ -59,15 +59,16 @@ function run(
   });
 }
 export async function processAI() {
-  await db()`update preeval.applications set ai_status='failed',ai_error='interrupted',ai_locked_at=null where ai_status='running' and ai_locked_at<now()-interval '8 minutes'`;
+  if (configuration().cloudPreview) return false;
+  await db()`update ${table("preeval.applications")} set ai_status='failed',ai_error='interrupted',ai_locked_at=null where ai_status='running' and ai_locked_at<now()-interval '8 minutes'`;
   const [app] =
-    await db()`update preeval.applications set ai_status='running',ai_locked_at=now(),ai_attempts=ai_attempts+1,status='processing'
-    where id=(select id from preeval.applications where ai_status='queued' and status not in ('cancelled','needs_information') order by created_at limit 1 for update skip locked) returning *`;
+    await db()`update ${table("preeval.applications")} set ai_status='running',ai_locked_at=now(),ai_attempts=ai_attempts+1,status='processing'
+    where id=(select id from ${table("preeval.applications")} where ai_status='queued' and status not in ('cancelled','needs_information') order by created_at limit 1 for update skip locked) returning *`;
   if (!app) return false;
   const [education] =
-    await db()`select * from preeval.educations where application_id=${app.id}`;
+    await db()`select * from ${table("preeval.educations")} where application_id=${app.id}`;
   const files =
-    await db()`select * from preeval.files where application_id=${app.id} and state='ready' order by created_at`;
+    await db()`select * from ${table("preeval.files")} where application_id=${app.id} and state='ready' order by created_at`;
   // Names, email addresses, payment details and access tokens are not included in the AI prompt.
   const input = {
     school: education.school_name,
@@ -78,7 +79,7 @@ export async function processAI() {
     files: files.map((f) => ({ id: f.id, mime: f.mime_type })),
   };
   const [record] =
-    await db()`insert into preeval.ai_runs(application_id,input_version,input) values (${app.id},${app.input_version},${db().json(input)}) returning id`;
+    await db()`insert into ${table("preeval.ai_runs")}(application_id,input_version,input) values (${app.id},${app.input_version},${db().json(input)}) returning id`;
   const temp = await mkdtemp(path.join(tmpdir(), "aet-evaluation-"));
   try {
     const images: string[] = [];
@@ -170,11 +171,11 @@ export async function processAI() {
     );
     await db().begin(async (tx) => {
       const current =
-        await tx`update preeval.applications set result=${tx.json(result)},result_version=result_version+1,result_source='codex-local',ai_status='completed',ai_error=null,ai_locked_at=null,updated_at=now()
+        await tx`update ${table("preeval.applications")} set result=${tx.json(result)},result_version=result_version+1,result_source='codex-local',ai_status='completed',ai_error=null,ai_locked_at=null,updated_at=now()
         where id=${app.id} and input_version=${app.input_version} and status<>'cancelled' returning id`;
-      await tx`update preeval.ai_runs set output=${tx.json(result)},state=${current.length ? "completed" : "superseded"},completed_at=now() where id=${record.id}`;
+      await tx`update ${table("preeval.ai_runs")} set output=${tx.json(result)},state=${current.length ? "completed" : "superseded"},completed_at=now() where id=${record.id}`;
       if (current.length)
-        await tx`insert into preeval.audit(application_id,actor,action) values (${app.id},'ai','result.generated')`;
+        await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${app.id},'ai','result.generated')`;
     });
     await publishIfReady(app.id);
   } catch (error) {
@@ -182,8 +183,8 @@ export async function processAI() {
       error instanceof Error
         ? error.message.slice(0, 120)
         : "ai_generation_failed";
-    await db()`update preeval.applications set ai_status='failed',ai_error=${code},ai_locked_at=null,updated_at=now() where id=${app.id} and input_version=${app.input_version} and status<>'cancelled'`;
-    await db()`update preeval.ai_runs set state='failed',error=${code},completed_at=now() where id=${record.id}`;
+    await db()`update ${table("preeval.applications")} set ai_status='failed',ai_error=${code},ai_locked_at=null,updated_at=now() where id=${app.id} and input_version=${app.input_version} and status<>'cancelled'`;
+    await db()`update ${table("preeval.ai_runs")} set state='failed',error=${code},completed_at=now() where id=${record.id}`;
   } finally {
     await rm(temp, { recursive: true, force: true });
   }

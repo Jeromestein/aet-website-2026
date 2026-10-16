@@ -111,7 +111,7 @@ export default function PreEvaluationWorkspace() {
         <button
           className={s.secondary}
           onClick={async () => {
-            await api("logout", { admin: true });
+            await fetch("/api/staff-auth/logout", { method: "POST" }); await fetch("/api/pre-evaluation/logout", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({admin:true}) });
             location.assign("/admin/login");
           }}
         >

@@ -403,3 +403,19 @@
   .date { display: none; }
   .focusStrip > div > span { display: block; margin-top: 3px; }
 }
+
+/* Connected workspace: retain the original shell and protect long live values. */
+.liveFieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.liveFieldset .helperText { margin: 10px 0; overflow-wrap: anywhere; }
+.workspace .modalIntro { font-size: 14px; color: var(--crm-muted); margin: 10px 0 20px; }
+.profile > div { min-width: 0; flex: 1; }
+.profile small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 125px; }
+.profile > span:first-child, .profile > button { flex-shrink: 0; }
+.clientCell > span:last-child { min-width: 0; }
+.clientCell small { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detailIdentity > div { min-width: 0; }
+.detailIdentity p, .detailIdentity h2 { overflow-wrap: anywhere; }
+.detailDocument > div { min-width: 0; overflow-wrap: anywhere; }
+.detailDocument > a, .detailDocument > button { flex-shrink: 0; }
+.liveFieldset .form { margin-top: 14px; }
+.liveFieldset .educationHeading { flex-wrap: wrap; }
