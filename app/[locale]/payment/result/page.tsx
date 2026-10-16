@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { contactPath } from '@/lib/contact';
 import styles from './result.module.css';
+import { Navigation } from '@/components/navigation';
+import { SiteFooter } from '@/components/site-footer';
 
 export const metadata = { robots: { index: false, follow: false } };
 
@@ -38,15 +40,18 @@ export default async function PaymentResult({ params, searchParams }: Props) {
   const { state } = await searchParams;
   const content = copy[locale];
   const prefix = locale === 'en' ? '' : `/${locale}`;
-  return <main className={styles.page}>
-    <div className={styles.card}>
-      <a className={styles.brand} href={prefix || '/'}>AET</a>
-      <h1>{state === 'cancelled' ? content.cancelled : content.returned}</h1>
-      <p>{content.note}</p>
-      <div className={styles.actions}>
-        <a className="button primary" href={`${prefix}/payment`}>{content.back}</a>
-        <a href={contactPath(locale)}>{content.contact}</a>
+  return <>
+    <Navigation />
+    <main id="main-content" className={styles.page}>
+      <div className={styles.card}>
+        <h1>{state === 'cancelled' ? content.cancelled : content.returned}</h1>
+        <p>{content.note}</p>
+        <div className={styles.actions}>
+          <a className="button primary" href={`${prefix}/payment`}>{content.back}</a>
+          <a href={contactPath(locale)}>{content.contact}</a>
+        </div>
       </div>
-    </div>
-  </main>;
+    </main>
+    <SiteFooter />
+  </>;
 }

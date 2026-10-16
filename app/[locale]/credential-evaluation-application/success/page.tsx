@@ -4,5 +4,5 @@ export { generateMetadata } from '../page';
 export default async function Page({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ id?: string }> }) {
   const { locale } = await params;
   const { id } = await searchParams;
-  return <ApplicationShell locale={locale} search={id ? `?id=${encodeURIComponent(id)}` : ''}><ApplicationReceipt locale={locale} id={id ?? ''} /></ApplicationShell>;
+  return <ApplicationShell locale={locale}><ApplicationReceipt locale={locale} id={id ?? ''} /></ApplicationShell>;
 }

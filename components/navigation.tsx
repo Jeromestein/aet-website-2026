@@ -10,7 +10,7 @@ import { contactPath } from '@/lib/contact';
 import { LanguageSwitcher, LanguageOptions } from "./language-switcher";
 import styles from "./navigation.module.css";
 
-export function Navigation() {
+export function Navigation({ allowLanguageSwitch = true }: { allowLanguageSwitch?: boolean } = {}) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const application = getPathname({ locale, href: '/apply' });
@@ -124,7 +124,7 @@ export function Navigation() {
             ))}
           </ul>
         </nav>
-        <LanguageSwitcher onOpen={() => closeMenu(false)} />
+        {allowLanguageSwitch && <LanguageSwitcher onOpen={() => closeMenu(false)} />}
         <a className={`${styles.application} ${styles.desktopApplication}`} href={application}>{t("navigation.apply")}</a>
         <details className={styles.mobileMenu} name="desktop-navigation" ref={menu} onToggle={(event) => {
           setMenuOpen(event.currentTarget.open);
@@ -151,10 +151,10 @@ export function Navigation() {
               </ul>
             </nav>
             <a className={styles.application} href={application} onClick={() => closeMenu()}>{t("navigation.apply")}</a>
-            <div className={styles.mobileLanguages} aria-label={t("languageSwitcher.label")}>
+            {allowLanguageSwitch && <div className={styles.mobileLanguages} aria-label={t("languageSwitcher.label")}>
               <span className={styles.languageLabel}><Globe2 size={17} aria-hidden="true" />{t("languageSwitcher.label")}</span>
               <LanguageOptions onSelect={() => closeMenu()} />
-            </div>
+            </div>}
           </div>
         </details>
       </div>

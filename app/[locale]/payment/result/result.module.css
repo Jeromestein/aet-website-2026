@@ -1,9 +1,9 @@
 .page {
   display: grid;
-  min-height: 100svh;
+  min-height: 60svh;
   place-items: center;
-  padding: 2rem 1rem;
-  background: var(--blue);
+  padding: 4rem 1.25rem;
+  background: var(--paper);
 }
 
 .card {
@@ -15,15 +15,8 @@
   box-shadow: 0 18px 50px rgb(24 51 78 / 8%);
 }
 
-.brand {
-  color: var(--action-blue);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: .12em;
-}
-
 .card h1 {
-  margin: 1.5rem 0 1rem;
+  margin: 0 0 1rem;
   font-size: clamp(2rem, 5vw, 2.8rem);
 }
 

@@ -230,9 +230,14 @@ compact white fee card across the lower edge, with the three steps alongside it.
 On phones, crop the photo around the central graduates, transition to navy behind
 the copy and place the fee card below the hero. Preserve localized descriptive
 alt text and the complete fee breakdown; never place pricing over the photograph.
-Reuse the homepage `Navigation` and `SiteFooter` components on this landing page,
-including the shared language switcher, mobile menu and footer destinations.
-Keep its pre-evaluation application and status actions inside the hero.
+All customer pages reuse the homepage `Navigation` and `SiteFooter`: the
+pre-evaluation landing, form, status, access and result pages; formal application,
+access and receipt pages; and payment-return pages. Keep form-specific styles
+scoped to their main content so shared navigation and footer colors stay intact.
+Preserve query parameters when switching language. Formal token-exchange pages
+retain their existing disabled language switching while the private link is held
+in memory. Staff pages retain their separate English-only workspace shell.
+Keep pre-evaluation application and status actions inside the landing hero.
 
 Customers use a complete Application ID or the reusable link in the confirmation
 email. Do not add customer registration, a password or an extra email-verification

@@ -2,6 +2,29 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Shared homepage navigation across customer workflows — October 16, 2026
+
+- Extended the homepage Navigation and SiteFooter to pre-evaluation application,
+  status, result and legacy access pages; formal evaluation application, receipt
+  and access pages; and the payment-return page. Staff retains its separate
+  English-only workspace. This supersedes the landing-only scope below.
+- Scoped formal form styles to the main content, kept its skip link and print
+  layout, and offset the sticky fee summary below the shared header. Formal
+  private-link exchange still disables language switching while handling a token.
+- TypeScript, all 466 translation keys per locale, and diff whitespace checks
+  passed. Verified both application forms at 1440px desktop and 390px mobile on
+  the owner's existing localhost:3022 server, with no horizontal overflow.
+  Checked shared footer colors/columns, mobile menu opening and Escape close,
+  and Chinese-to-English status-page switching retaining a synthetic ID query.
+- Verified shared navigation/footer on status, no-ID result/receipt, no-token
+  access and cancelled-payment return states. Staff login redirected to the
+  existing English CRM workspace. No applications or payments were submitted;
+  this pass verifies presentation, not a new end-to-end transaction.
+- Screenshots: `output/playwright/customer-shared-{desktop,mobile}-2026-10-16.png`
+  and `output/playwright/customer-shared-formal-footer-2026-10-16.png`.
+  Restored the browser viewport and left the pre-evaluation application preview
+  open. No build, server restart, commit, push or deployment in this pass.
+
 ### Pre-evaluation photographic hero — October 16, 2026
 
 - Expanded the existing graduates photograph into the landing-page background,
