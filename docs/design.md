@@ -207,6 +207,19 @@ The following presentation rules apply to the connected CRM workspace:
   hover and keyboard focus, label the destination, and open the matching drawer
   section. Use independent touch targets on mobile; missing education stays
   plain, non-interactive text.
+- Use one neutral information-card style throughout the case drawer: white
+  surface, shared light border, 8px radius, 20px padding (16px on mobile).
+  Client, education, service and payment cards share this treatment. Field labels
+  use 13px muted text and values use 14px navy text. Reserve tinted colors for
+  semantic badges and interactive states rather than different content sections.
+- Keep Education History and Service Details inside the existing right-hand
+  case drawer, retaining its width, identity, tabs and open/close interaction.
+  Education uses a bordered card per record: School Name / Country of Study,
+  then Degree Obtained / Study Period, stacking on mobile. Display country names
+  and month/year dates. Service uses the legacy Selected Services reading order:
+  purpose, notes, service turnaround/fees, delivery, extras, total and fee note.
+  Prefer saved quote snapshots and recorded amounts over historical display rates;
+  do not infer an unknown price or change the stored business record.
 - Use Evaluee Name consistently in CRM lists, drawer titles, search/sort and
   exports: stored pronouns (Mr./Ms./Mx.), first, optional middle and last name.
   Do not substitute the application contact name or infer a missing title.

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { staffCookieName } from "./config";
 import { staffClient } from "./client";
 import { staffDb } from "./db";
+import { readStaffMembership } from "./read-retry";
 import { table, db } from "../preeval/db";
 import { AppError } from "../preeval/domain";
 export interface StaffSession {
@@ -39,8 +40,8 @@ export async function staffSession(): Promise<StaffSession | null> {
   } = await (await staffClient()).auth.getUser();
   if (error || !user) return null;
   const [row] =
-    await staffDb()`select auth_user_id as id,email,role as "staffRole",offices,include_unassigned
-    from aet_private.staff_accounts where auth_user_id=${user.id} and active`;
+    await readStaffMembership(() => staffDb()`select auth_user_id as id,email,role as "staffRole",offices,include_unassigned
+    from aet_private.staff_accounts where auth_user_id=${user.id} and active`);
   return row ? ({ ...row, role: "admin" } as StaffSession) : null;
 }
 export async function requireStaff() {

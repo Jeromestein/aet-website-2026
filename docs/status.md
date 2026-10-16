@@ -2,6 +2,24 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Staff connection recovery — October 16, 2026
+
+- Investigated a reported ENOTFOUND for the Supabase pooler. DNS resolution and
+  a read-only database connectivity check both succeeded during investigation;
+  the underlying intermittent DNS cause has not been established.
+- Added one bounded retry for transient failures of the staff membership read.
+  Persistent connection failures become a sanitized service-unavailable error;
+  permission/query errors are not retried and no stale permission is reused.
+- Login and CRM entry pages now show an explicit connection-recovery screen with
+  Try again for this expected failure, without bypassing staff authorization or
+  treating it as an incorrect password. Employee login configuration is unchanged.
+- All 28 focused session/API/retry/page tests passed. Outage branches were simulated
+  in tests, without disrupting the cloud database. TypeScript and whitespace checks
+  passed. On the existing localhost:3022 server, an authenticated visit to login
+  redirected to CRM and loaded 1,184 business records without a visible error.
+- Screenshot: `output/playwright/crm-connection-recovered-2026-10-16.png`.
+  No build, server restart, production data writes, push or deployment.
+
 ### Shared homepage navigation across customer workflows — October 16, 2026
 
 - Extended the homepage Navigation and SiteFooter to pre-evaluation application,
@@ -52,6 +70,34 @@ Progress and verification evidence only. The design baseline lives in [design.md
   `output/playwright/preeval-site-footer-{desktop,mobile}-2026-10-16.png`.
   No service configuration, server restart, production build, push or deployment
   in this pass. Concurrent CRM edits remain outside this change.
+
+### Consistent case drawer cards — October 16, 2026
+
+- Unified client, education, service and payment information cards to white
+  surfaces, the shared light border, 8px corners and consistent desktop/mobile
+  padding. Standardized field-label and value typography; preserved field order,
+  drawer interaction and semantic status/office badge colors.
+- Verified Overview, Education, Service and Payment in the localhost:3022 in-app
+  browser, plus Education/Service at 390px. No horizontal overflow observed in
+  the mobile service drawer. CSS-only change; diff whitespace checks passed.
+  Screenshot: `output/playwright/crm-unified-cards-2026-10-16.png`.
+- No business records, authentication, commit, push or deployment changes.
+
+### Legacy detail content within the case drawer — October 16, 2026
+
+- Saved the preceding CRM integration and presentation baseline on dev in commit
+  `0bb9422`, excluding unrelated pre-evaluation landing changes. No push.
+- Retained the right-hand drawer, its dimensions, identity header, tabs and list
+  entry points. Changed only live Education/Service contents: four education
+  fields with country labels and month/year dates; original Selected Services
+  ordering with notes, turnaround/price, delivery, extras, total and fee note.
+- Saved quote snapshots remain authoritative; zero due amounts and unknown prices
+  are handled explicitly. No business rows or login configuration were changed.
+- TypeScript and 31 focused tests passed. In-app browser on localhost:3022 verified
+  both tabs at desktop and 390px mobile, internal scrolling to the total/footnote,
+  no horizontal overflow, and reopening Service from the application list.
+  Screenshots: `output/playwright/crm-drawer-education-2026-10-16.png` and
+  `output/playwright/crm-drawer-service-2026-10-16.png`.
 
 ### Education/service presentation rollback — October 16, 2026
 

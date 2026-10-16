@@ -405,3 +405,49 @@
 .detailDocument > a, .detailDocument > button { flex-shrink: 0; }
 .liveFieldset .form { margin-top: 14px; }
 .liveFieldset .educationHeading { flex-wrap: wrap; }
+
+/* Legacy field ordering inside the existing case drawer. */
+.recordSectionTitle { margin: 0; font-weight: 600; }
+.educationHistory { display: grid; gap: 16px; }
+.educationHistoryCard { border: 1px solid var(--crm-border); border-radius: 6px; padding: 18px; }
+.educationHistoryCard dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 22px 20px; margin: 0; }
+.educationHistoryCard dt, .selectedServices dt { font-weight: 600; }
+.educationHistoryCard dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+.selectedServices { border: 1px solid #dfe3e8; border-radius: 6px; background: #f5f5f7; padding: 20px; }
+.detailContent .selectedServices > h3 { margin: 0 0 24px; font-size: 21px; font-weight: 600; line-height: 1.4; }
+.selectedServices dl { display: grid; gap: 24px; margin: 0; }
+.selectedServices dd { margin: 4px 0 0 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.serviceTotal { border-top: 1px solid #dfe3e8; margin-top: 26px; padding-top: 18px; }
+.serviceTotal strong { font-weight: 500; }
+.serviceTotal p { color: #64748b; font-size: 12px; line-height: 1.65; margin: 4px 0 0; }
+@media (max-width: 600px) {
+  .educationHistoryCard dl { grid-template-columns: 1fr; gap: 18px; }
+  .selectedServices { padding: 18px; }
+  .selectedServices dd { margin-left: 10px; }
+}
+
+/* One neutral information-card treatment across the case drawer tabs. */
+.drawer :is(.detailGrid, .educationHistoryCard, .selectedServices, .educationRecord, .serviceSummary, .paymentSummary) {
+  background: #fff;
+  border: 1px solid var(--crm-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+.drawer :is(.detailGrid, .educationHistoryCard dl, .selectedServices dl) { gap: 20px; }
+.drawer :is(.detailGrid, .educationHistoryCard, .selectedServices) dt {
+  color: #61788a;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.drawer :is(.detailGrid, .educationHistoryCard, .selectedServices) dd {
+  color: #36536c;
+  font-size: 14px;
+  font-weight: 500;
+}
+.drawer .educationRecord .detailGrid { padding: 0; border: 0; border-radius: 0; }
+.drawer .serviceTotal { border-color: var(--crm-border); }
+@media (max-width: 600px) {
+  .drawer :is(.detailGrid, .educationHistoryCard, .selectedServices, .educationRecord, .serviceSummary, .paymentSummary) { padding: 16px; }
+  .drawer .educationRecord .detailGrid { padding: 0; }
+}
