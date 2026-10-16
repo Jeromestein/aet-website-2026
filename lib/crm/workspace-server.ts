@@ -25,7 +25,11 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
   const pageSize = query.export ? 5000 : 7;
   const [result] = await sql`
     with records as (
-      select 'formal'::text kind,a.id,coalesce(l.name,a.data->'client'->>'name') name,
+      select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
+        case lower(rtrim(coalesce(l.pronouns,a.data->'evaluee'->>'title'),'.')) when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else nullif(trim(coalesce(l.pronouns,a.data->'evaluee'->>'title')),'') end,
+        nullif(trim(coalesce(l.first_name,a.data->'evaluee'->>'first')),''),
+        nullif(trim(coalesce(l.middle_name,a.data->'evaluee'->>'middle')),''),
+        nullif(trim(coalesce(l.last_name,a.data->'evaluee'->>'last')),''))),''),'Name not recorded') name,
         coalesce(l.email,a.data->'client'->>'email') email,
         case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end office,
         a.status,a.payment_status,a.created_at,a.updated_at,
@@ -43,7 +47,7 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
         coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('evaluation.payments')} p where p.application_id=a.id),'[]'::jsonb) payments
       from ${table('evaluation.applications')} a left join ${table('public.fce_applications')} l on l.id=a.id
       union all
-      select 'preeval',a.id,concat_ws(' ',coalesce(l.first_name,a.first_name),coalesce(l.last_name,a.last_name)),coalesce(l.email,a.email),a.office,
+      select 'preeval',a.id,concat_ws(' ',coalesce(l.first_name,a.first_name),nullif(trim(coalesce(l.middle_name,a.middle_name)),''),coalesce(l.last_name,a.last_name)),coalesce(l.email,a.email),a.office,
         a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,${TOTAL_CENTS},'Pre-Evaluation',
         coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',p.start_date,'end',p.end_date) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind','document','name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('preeval.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb),

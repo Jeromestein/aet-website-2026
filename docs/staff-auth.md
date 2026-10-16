@@ -1,6 +1,6 @@
 # Staff authentication and Payload migration
 
-Updated October 15, 2026. This is the implementation and rollout record for
+Updated October 16, 2026. This is the implementation and rollout record for
 `/Users/plusone/Desktop/Code/aet-website-2026-dev`, previewed at
 `http://localhost:3022`. The older `aet-app` checkout is a legacy reference only.
 
@@ -19,10 +19,11 @@ individual exception: verify the current password, then ask for a replacement.
 
 Cloud authentication is connected directly to the existing Supabase project
 `qrxztgdemfodemlcabcq` (`jhaccounting.org & AET`). It does not need Docker.
-Business workflows now use a restricted cloud `PREEVAL_DATABASE_URL` and
-private preview schemas in that same project. The frontend remains local on
-3022; this is an isolated integration environment, not a production cutover.
-No existing customer records were copied into it.
+The original CRM now uses a separate restricted `CRM_DATABASE_URL` to read and
+edit the shared live business tables. Customer intake and auxiliary workflows
+still use the isolated `PREEVAL_DATABASE_URL` preview schemas. The frontend
+remains local on 3022; employee authentication and production hosting have not
+been cut over. No customer records were copied between environments.
 
 Both `.env.local` switches remain **false**:
 
@@ -36,6 +37,65 @@ Do not enable employee migration in a local preview while the employee still
 needs the production Payload login. Already mapped, active Supabase staff can
 sign in while migration is disabled. Unmapped employees receive a temporary
 unavailability message; their existing credentials are not changed.
+
+## Shared live business records
+
+The owner authorized editing real records in the existing Supabase project from
+`aet-website-2026-dev` on port 3022. `CRM_DATA_SOURCE=live` selects a separate
+server-only adapter over the six original `public.fce_*` / `public.aet_core_*`
+tables. The original sidebar, overview cards, filters, tables, mobile cards and
+detail drawer are retained. The database contains 997 formal applications, one
+imported order, 186 preliminary applications and 120 standalone payments at this
+verification; linked payments remain visible inside preliminary details.
+
+Supported edits are application status, formal/imported office assignment,
+unpaid submitted formal amount due, original record notes and editable preliminary
+assessment text. Formal notes use `purpose_other` and can be applicant-visible;
+the UI labels this explicitly. Historical amounts and service speeds are preserved.
+Saved edits use the same rows read by the old system, without a copy/sync job.
+Refresh either workspace manually to see edits made elsewhere. Returning to the
+new dashboard does not reload its list. Saving here still updates the list.
+
+Every API request verifies an active Supabase staff membership. Office scope is
+applied before counts, search, export, detail access and changes. Preliminary and
+standalone payment tables lack office columns, so they require the explicit
+unassigned grant. The `aet_crm_runtime` connection has select access to six tables
+and update access only to allowed columns; no employee/Auth access, inserts,
+deletes, payment-status edits or audit deletion. Setup added policies only for
+this new role and a private `aet_crm.audit` table. Original policies, triggers,
+constraints and employee credentials were not replaced.
+
+Updates lock the record, compare the loaded revision and save a private audit
+entry in the same transaction. A stale new-dashboard edit receives 409 and must
+be refreshed. This protects writes made through the new adapter; it does not add
+revision checks to the old editor, which can still overwrite a later change if
+an old screen is saved. Avoid concurrent editing of the same record in both UIs.
+
+Documents, provider charges/refunds/payment links, imports, customer messaging,
+report delivery and new live intake remain in the previous workspace. The new
+customer forms still target the isolated preview, so live CRM does not link to
+them as a real intake workflow. Status saves do not send email or trigger charges.
+
+Both employee migration/cutover flags remain false. Credentials stay only in the
+ignored `.env.local`. `scripts/staff/setup-live-crm.mts` provisions the approved
+restricted connection; rerun only for the same approved database scope.
+
+Run the repeatable acceptance with the configured cloud connections:
+
+```sh
+node --conditions=react-server --env-file=.env.local --import tsx \
+  scripts/staff/verify-live-crm.mts
+```
+
+This checks live totals and permission denials, runs write logic on fictional
+records in one rolled-back administrative transaction, and separately checks the
+actual runtime connection's column permissions and row locks using empty result
+sets. It does not grant or switch database roles. Test rows and audit entries are
+rolled back. Before/after hashes verify all six business tables and the employee
+table; concurrent legitimate employee edits can cause the hash comparison to
+fail and must be investigated, never overwritten. An optional
+`CRM_ACCEPTANCE_BASELINE` path compares against a previously captured baseline.
+It is not a browser save against a real customer's record.
 
 ## Independent administrators without employee migration
 

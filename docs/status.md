@@ -2,6 +2,94 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Education/service presentation rollback — October 16, 2026
+
+- Reverted the centered education/service dialogs at the owner's request and
+  restored the preceding live case drawer sections. Removed only the related
+  presentation helpers, styles and tests; retained other CRM changes.
+- TypeScript passed. Verified Education and Service tabs on localhost:3022 in
+  the in-app browser at desktop and 390px mobile widths. No business data,
+  authentication, push or deployment changes were made.
+
+### Consistent evaluee identity — October 16, 2026
+
+- Replaced contact-name display with Evaluee Name in the shared CRM list, drawer
+  title, search/sort source and CSV export. Uses the stored Mr./Ms./Mx. title and
+  first, optional middle and last names, matching the original system. Missing
+  titles are not inferred; missing evaluee names never fall back to a contact.
+  Updated both live and isolated-preview mappings without writing business rows.
+- TypeScript, 26 focused CRM tests and the preview read query passed. In-app
+  browser matched all six names in the owner's reference, verified full-name
+  search and the matching drawer title, and checked desktop/390px mobile display
+  without horizontal page overflow. Screenshot:
+  `output/playwright/crm-evaluee-name-2026-10-16.png`.
+
+### CRM row numbering and date order — October 16, 2026
+
+- Moved Updated At to the left of client/application information and added a
+  continuous row number. Numbering follows the current filtered result across
+  pages; the mobile cards show the same number and update date at the top.
+  Both live and preview overview drawers retain Created At alongside Updated At.
+  Existing creation-date sorting and business values are unchanged.
+- TypeScript and diff checks passed. In-app browser verified left-hand column
+  order, page two numbering 8–14, both detail timestamps, 1440px desktop columns,
+  and 390px mobile cards without page-level horizontal overflow.
+  Screenshots: `output/playwright/crm-numbered-{desktop,mobile}-2026-10-16.png`.
+
+### Compact CRM heading — October 16, 2026
+
+- Removed the redundant breadcrumb/status/date/avatar top bar requested by the
+  owner. The main content starts with its existing heading; mobile navigation
+  now sits beside the eyebrow above the title. Sidebar account and refresh
+  controls remain available.
+- TypeScript and diff checks passed. In-app browser verified Formal evaluations
+  on desktop and at 390px, including mobile menu open/Escape close and no
+  page-level horizontal overflow. Screenshots:
+  `output/playwright/crm-no-topbar-{desktop,mobile}-2026-10-16.png`.
+
+### Manual CRM refresh — October 16, 2026
+
+- Removed the window-focus refresh listener at the owner's request. Returning
+  from another tab/window keeps the current list; staff use Refresh workspace
+  to retrieve changes made elsewhere. Search, filters, pagination and successful
+  saves retain their normal data loading behavior.
+- Verified in the existing 3022 in-app browser: returning from a separate website
+  tab left the list visible with no loading state; manual refresh entered loading
+  and returned the live list. No database or authentication changes.
+  Screenshot: `output/playwright/crm-manual-refresh-2026-10-16.png`.
+
+### Shared live CRM records — October 16, 2026
+
+- Connected the original `/admin/CRM` on the owner's restarted 3022 server in
+  `aet-website-2026-dev` to the existing production business tables. The authorized
+  owner account reads 1,184 applications: 997 formal, one imported order and 186
+  preliminary applications. The payment view also includes 120 standalone records.
+- Added a restricted server connection and private audit. Supports status, office,
+  unpaid submitted formal amount due, shared original notes and editable preliminary
+  result corrections. Writes target the exact original rows; the old system sees
+  them after refresh. Office permissions apply before every read and write.
+- Preserved the original dashboard presentation and detail drawer. Historical
+  dates now normalize database Date values; missing historical amounts display
+  as unrecorded, and status changes require an explicit selection. New live intake,
+  documents, imports, messaging and provider payment operations remain in the old
+  workspace; customer forms still use the isolated cloud preview.
+- Passed TypeScript, 196 unit tests and 33 cloud checks. Cloud write logic used
+  fictional records inside a rolled-back administrative transaction; the actual
+  restricted connection was separately checked for allowed update columns, row
+  locks and forbidden credential/payment/delete operations using empty result sets.
+  No runtime role grant/switch or browser save to a real customer was performed.
+- The full employee table and six business-table fingerprints match the original
+  baseline after rollback. Existing public policies and timestamp triggers are
+  unchanged; six policies apply only to the new runtime role. Both employee
+  migration/cutover flags remain false. No passwords or invitations were changed.
+- In-app browser verified live counts, Miami search/filter, formal contact/payment
+  detail and amount controls, preliminary result controls, payment list, and the
+  original desktop/mobile layout. The 390px list and drawer have no page-level
+  horizontal overflow. Screenshot: `output/playwright/crm-live-desktop-2026-10-16.png`.
+- The new editor rejects stale snapshots; the old editor still lacks revision
+  checks. See [live scope and acceptance](staff-auth.md#shared-live-business-records).
+  No Docker, production build, commit, push or deployment in this integration pass.
+
 ### Application URL compatibility audit — October 16, 2026
 
 - Recorded the October 15 legacy-source comparison and 23 GET checks on the

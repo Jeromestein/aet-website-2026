@@ -1,0 +1,30 @@
+import {describe,it,expect,vi,beforeEach} from 'vitest';
+vi.mock('server-only',()=>({}));
+const mocks=vi.hoisted(()=>({requireStaff:vi.fn(),liveEnabled:vi.fn(()=>true),liveDetail:vi.fn(),liveUpdate:vi.fn()}));
+vi.mock('../lib/staff/session',()=>({requireStaff:mocks.requireStaff}));
+vi.mock('../lib/preeval/auth',()=>({sameOrigin:(r:Request)=>{if(r.headers.get('origin')!=='http://localhost:3022')throw new Error('origin');}}));
+vi.mock('../lib/crm/live-db',()=>({liveEnabled:mocks.liveEnabled}));
+vi.mock('../lib/crm/live-server',()=>({liveDetail:mocks.liveDetail,liveUpdate:mocks.liveUpdate}));
+import {liveChange,statusAllowed,cents,services,preferredPayment,timestamp} from '../lib/crm/live-domain';
+import {GET,POST} from '../app/api/staff-records/[kind]/[id]/route';
+import {AppError} from '../lib/preeval/domain';
+const context={params:Promise.resolve({kind:'formal',id:'5fc66715-609a-4c47-ac69-4e82d25b625b'})};
+beforeEach(()=>{vi.clearAllMocks();mocks.liveEnabled.mockReturnValue(true);mocks.requireStaff.mockResolvedValue({email:'fixture@example.invalid'});mocks.liveDetail.mockResolvedValue({id:'fixture'});mocks.liveUpdate.mockResolvedValue({ok:true});});
+describe('shared legacy business rules',()=>{
+ it.each([['submitted','paid','processing',true],['submitted','pending','processing',false],['processing','paid','completed',true],['submitted','paid','completed',false],['processing','refunded','completed',false],['submitted','paid','cancelled',true],['processing','paid','cancelled',false],['completed','paid','processing',false]])('transition %s/%s -> %s',(from,pay,to,allowed)=>expect(statusAllowed(from as string,pay as string,to as string)).toBe(allowed));
+ it('normalizes database timestamps and compares payment dates chronologically',()=>{expect(timestamp(new Date('2026-10-01T00:00:00Z'))).toBe('2026-10-01T00:00:00.000Z');expect(timestamp(null)).toBe('');expect(preferredPayment([{id:'a',paid_at:new Date('2026-09-01')},{id:'b',paid_at:new Date('2026-10-01')}])?.id).toBe('b');});
+ it('preserves historical amounts and missing values',()=>{expect(cents('19.88')).toBe(1988);expect(cents('0')).toBe(0);expect(cents(null)).toBe(null);expect(cents('bad')).toBe(null);});
+ it('does not drop historical service speeds',()=>expect(services({professionalExperience:{speed:'7day'},translation:{required:true}})).toBe('Expert Opinion Letter, Translation'));
+ it('does not let an abandoned payment link hide a settled attempt',()=>expect(preferredPayment([{id:'b',payment_status:'pending'},{id:'a',payment_status:'paid'}])?.id).toBe('a'));
+ it('does not invent a payment for an unpaid or unlinked case',()=>expect(preferredPayment([])).toBeUndefined());
+ it('rejects mass assignment and unrestricted status/payment changes',()=>{expect(liveChange.safeParse({version:'a'.repeat(64),action:'notes',notes:'x',role:'admin'}).success).toBe(false);expect(liveChange.safeParse({version:'a'.repeat(64),action:'payment',payment_status:'paid'}).success).toBe(false);});
+ it('requires a revision and bounds amounts to the existing decimal column',()=>{expect(liveChange.safeParse({action:'amount',amount:100}).success).toBe(false);expect(liveChange.safeParse({version:'a'.repeat(64),action:'amount',amount:1000000}).success).toBe(false);});
+});
+describe('live staff endpoint',()=>{
+ it('requires a current Supabase staff membership before reading',async()=>{mocks.requireStaff.mockRejectedValue(new AppError('access_denied',401));expect((await GET(new Request('http://localhost:3022/api/staff-records/formal/a'),context)).status).toBe(401);expect(mocks.liveDetail).not.toHaveBeenCalled();});
+ it('does not serve records when live mode is off',async()=>{mocks.liveEnabled.mockReturnValue(false);expect((await GET(new Request('http://localhost:3022'),context)).status).toBe(404);expect(mocks.liveDetail).not.toHaveBeenCalled();});
+ it('rejects a cross-origin mutation before saving',async()=>{await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'https://other.invalid'},body:'{}'}),context);expect(mocks.liveUpdate).not.toHaveBeenCalled();});
+ it('limits mutation size',async()=>{expect((await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'http://localhost:3022'},body:'x'.repeat(33000)}),context)).status).toBe(413);expect(mocks.liveUpdate).not.toHaveBeenCalled();});
+ it('returns conflicts without leaking provider details',async()=>{mocks.liveUpdate.mockRejectedValue(new AppError('stale_version',409));const r=await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'http://localhost:3022'},body:'{}'}),context);expect(r.status).toBe(409);expect(await r.json()).toEqual({error:'stale_version'});});
+ it('disables caching on authenticated records',async()=>{const r=await GET(new Request('http://localhost:3022'),context);expect(r.headers.get('cache-control')).toBe('private, no-store');});
+});

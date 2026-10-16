@@ -60,11 +60,12 @@ without creating a legacy employee or sending an invitation. See
 
 See [the dependency inventory and rollout plan](docs/staff-auth.md) for the
 approved roster, server-only configuration, test results and remaining production
-work. Authentication uses `STAFF_AUTH_DATABASE_URL`. The 3022 business preview
-now connects directly to the same cloud project through a restricted
-`PREEVAL_DATABASE_URL`, using private preview schemas and synthetic records.
-No Docker is needed. Existing employee login and production business records
-remain in the old application. See [cloud preview boundaries](docs/staff-auth.md#cloud-business-preview).
+work. Authentication uses `STAFF_AUTH_DATABASE_URL`. The original 3022 CRM now
+reads and edits the shared production business tables through a separate restricted
+`CRM_DATABASE_URL` with `CRM_DATA_SOURCE=live`. Changes appear in the old workspace
+after refresh; employee authentication remains unchanged. Customer intake and its
+auxiliary workflows still use the isolated `PREEVAL_DATABASE_URL` cloud preview.
+No Docker is needed. See [live CRM scope](docs/staff-auth.md#shared-live-business-records).
 
 ## Validation and deployment
 

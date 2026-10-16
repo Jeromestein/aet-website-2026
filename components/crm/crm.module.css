@@ -42,22 +42,14 @@
 .previewCard button { display: flex; align-items: center; gap: 6px; color: #426c8c; font-size: 13px; padding: 0; }
 .websiteLink { display: flex; justify-content: space-between; align-items: center; padding: 23px 10px; color: #6b7c8a; font-size: 14px; }
 .profile { border-top: 1px solid var(--crm-border); padding: 18px 1px; display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; }
-.profile > span:first-child, .topAvatar { display: grid; place-items: center; width: 33px; height: 33px; background: #e8eef2; border: 3px solid #fff; outline: 1px solid #e4e9ed; border-radius: 50%; color: #547086; font-size: 13px; font-weight: 600; }
+.profile > span:first-child { display: grid; place-items: center; width: 33px; height: 33px; background: #e8eef2; border: 3px solid #fff; outline: 1px solid #e4e9ed; border-radius: 50%; color: #547086; font-size: 13px; font-weight: 600; }
 .profile small { display: block; font-size: 12px; font-weight: 500; color: #80909b; margin-top: 1px; }
 .profile .badge { margin-left: auto; font-size: 12px; }
 .mainShell { margin-left: 232px; min-width: 0; }
-.topbar { height: 74px; border-bottom: 1px solid var(--crm-border); padding: 0 36px; display: flex; align-items: center; justify-content: space-between; background: #fff; }
-.breadcrumb { display: flex; align-items: center; gap: 13px; font-size: 14px; }
-.breadcrumb > span { color: #8a96a1; }
-.breadcrumb > svg { color: #a3aeb6; }
-.breadcrumb strong { font-weight: 600; }
-.topbarRight { display: flex; align-items: center; gap: 22px; }
-.previewPill { display: inline-flex; align-items: center; gap: 6px; color: #698075; font-size: 13px; background: #f1f6f2; padding: 5px 9px; border-radius: 5px; white-space: nowrap; }
-.previewPill > span { display: inline-block; width: 5px; height: 5px; background: #7a9a87; border-radius: 50%; }
-.date { color: #82909a; font-size: 13px; }
 .main { max-width: 1700px; padding: 28px 30px 20px; margin: auto; }
 .pageHeading { display: flex; align-items: center; justify-content: space-between; gap: 22px; margin-bottom: 23px; }
-.eyebrow { font-size: 12px; letter-spacing: 1.7px; color: #7e909f; font-weight: 600; margin-bottom: 7px; }
+.headingIntro { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.eyebrow { font-size: 12px; letter-spacing: 1.7px; color: #7e909f; font-weight: 600; }
 .workspace h1 { font-size: 34px; font-weight: 600; letter-spacing: -1.35px; line-height: 1.25; margin: 0 0 8px; }
 .headingDot { color: #c7471d; }
 .pageHeading p { color: #617685; font-size: 14px; }
@@ -107,22 +99,25 @@
 .selectWrap { display: flex; align-items: center; gap: 5px; height: 37px; padding: 0 10px; border: 1px solid var(--crm-border); border-radius: 6px; color: #657a8c; }
 .selectWrap select { padding: 0 3px; border: 0; appearance: none; background: transparent; color: inherit; font-size: 13px; height: 100%; cursor: pointer; max-width: 145px; }
 .tableWrap { overflow-x: auto; }
-.table { width: 100%; min-width: 960px; table-layout: fixed; border-collapse: collapse; text-align: left; }
-.table th:nth-child(1) { width: 24%; }
-.table th:nth-child(2) { width: 16%; }
-.table th:nth-child(3) { width: 19%; }
-.table th:nth-child(4) { width: 17%; }
-.table th:nth-child(5) { width: 10%; }
-.table th:nth-child(6) { width: 11%; }
-.table th:nth-child(7) { width: 3%; }
+.table { width: 100%; min-width: 1100px; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.table th:nth-child(1) { width: 6%; }
+.table th:nth-child(2) { width: 11%; }
+.table th:nth-child(3) { width: 22%; }
+.table th:nth-child(4) { width: 15%; }
+.table th:nth-child(5) { width: 16%; }
+.table th:nth-child(6) { width: 15%; }
+.table th:nth-child(7) { width: 12%; }
+.table th:nth-child(8) { width: 3%; }
+.rowNumber { color: #6e8190; font-variant-numeric: tabular-nums; }
+.mobileRecordMeta { display: flex; justify-content: space-between; gap: 12px; color: #61788a; font-size: 12px; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
 .table th { background: #f9fafc; color: #6b7e8d; font-weight: 600; letter-spacing: .7px; font-size: 12px; padding: 14px 10px; border-block: 1px solid #edf1f5; }
 .table th:first-child, .table td:first-child { padding-left: 18px; }
 .table th:last-child, .table td:last-child { padding-left: 0; padding-right: 8px; }
 .table td { padding: 20px 10px; border-bottom: 1px solid #eef1f4; font-size: 14px; }
 .table tbody tr:last-child td { border-bottom: 0; }
 .table tbody tr:hover { background: #fafcfe; }
-.clientCell { display: flex; align-items: center; gap: 11px; text-align: left; padding: 0; }
-.clientCell strong { font-size: 15px; font-weight: 600; color: #28465f; }
+.clientCell { width: 100%; min-width: 0; display: flex; align-items: center; gap: 11px; text-align: left; padding: 0; }
+.clientCell strong { overflow-wrap: anywhere; font-size: 15px; font-weight: 600; color: #28465f; }
 .clientCell small { display: block; font-size: 12px; color: #6e8190; margin-top: 4px; letter-spacing: .3px; }
 .officeBadge { display: grid; place-items: center; width: 42px; height: 42px; background: #edf1f8; color: #45658b; border: 1px solid #dce5f1; border-radius: 11px; font-size: 12px; font-weight: 600; letter-spacing: .3px; flex-shrink: 0; }
 .officeBadge[data-office="MIA"] { background: #fcf2e8; border-color: #f0e1ce; color: #93602b; }
@@ -273,7 +268,6 @@
   .sidebar { width: 205px; padding-inline: 13px; }
   .mainShell { margin-left: 205px; }
   .main { padding-inline: 24px; }
-  .topbar { padding-inline: 24px; }
   .pageHeading { align-items: flex-start; flex-direction: column; gap: 13px; }
   .headingActions { padding-top: 0; }
   .stats { gap: 10px; }
@@ -286,7 +280,6 @@
 }
 @media (max-width: 1000px) {
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .date { display: none; }
   .filters { flex-wrap: wrap; }
   .search { max-width: none; }
   .panelHeader { flex-wrap: wrap; padding-top: 3px; }
@@ -297,13 +290,8 @@
   .sidebar { display: none; width: 245px; box-shadow: 14px 0 50px #233c5130; }
   .sidebarOpen { display: flex; }
   .workspace .menuBackdrop { display: block !important; position: fixed; inset: 0; background: #18334e66; z-index: 19; }
-  .mobileMenu { display: inline-grid !important; }
+  .mobileMenu { display: inline-grid !important; flex-shrink: 0; min-width: 40px; min-height: 40px; }
   .mainShell { margin-left: 0; }
-  .topbar { padding: 0 17px; height: 63px; }
-  .topbarRight { gap: 10px; }
-  .topAvatar { display: none; }
-  .breadcrumb { gap: 8px; font-size: 13px; }
-  .breadcrumb > span, .breadcrumb > svg { display: none; }
   .main { padding: 27px 17px 20px; }
   .workspace h1 { font-size: 31px; }
   .pageHeading { margin-bottom: 22px; }
@@ -344,7 +332,6 @@
   .mobileDetails > div { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; }
   .mobileDetails dt { font-size: 12px; color: #647b8d; padding-top: 8px; }
   .mobileDetails dd { font-size: 14px; color: #36536c; margin: 0; }
-  .mobileUpdated { display: flex; justify-content: space-between; gap: 10px; padding-top: 13px; margin-top: 13px; border-top: 1px solid #eef2f5; font-size: 12px; color: #61788a; }
   .mobileUpdated time { color: #435f74; font-size: 13px; font-variant-numeric: tabular-nums; }
   .mobileCard footer { display: flex; justify-content: space-between; align-items: center; }
   .mobileCard footer > span:last-child { color: #6c8496; font-size: 13px; }
@@ -400,7 +387,6 @@
 }
 
 @media (min-width: 761px) and (max-width: 1400px) {
-  .date { display: none; }
   .focusStrip > div > span { display: block; margin-top: 3px; }
 }
 
@@ -412,7 +398,7 @@
 .profile small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 125px; }
 .profile > span:first-child, .profile > button { flex-shrink: 0; }
 .clientCell > span:last-child { min-width: 0; }
-.clientCell small { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clientCell small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detailIdentity > div { min-width: 0; }
 .detailIdentity p, .detailIdentity h2 { overflow-wrap: anywhere; }
 .detailDocument > div { min-width: 0; overflow-wrap: anywhere; }

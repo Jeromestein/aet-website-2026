@@ -189,6 +189,10 @@ background portrait and content have breathing room without a fixed section heig
 
 The following presentation rules apply to the connected CRM workspace:
 
+- Start the main area directly with the page heading. Omit the redundant top
+  breadcrumb, live-data badge, date and avatar bar. Keep mobile navigation in
+  the heading area; retain account controls and manual refresh in the sidebar.
+
 - Use Poppins 500 for body text and 600 for names, headings and emphasized
   values. Keep primary table text at 14–15px and secondary labels at least 12px;
   use 16px client names on mobile cards.
@@ -203,7 +207,13 @@ The following presentation rules apply to the connected CRM workspace:
   hover and keyboard focus, label the destination, and open the matching drawer
   section. Use independent touch targets on mobile; missing education stays
   plain, non-interactive text.
-- Display Updated as `YYYY-MM-DD`, without a time, on both desktop and mobile.
+- Use Evaluee Name consistently in CRM lists, drawer titles, search/sort and
+  exports: stored pronouns (Mr./Ms./Mx.), first, optional middle and last name.
+  Do not substitute the application contact name or infer a missing title.
+- Lead application tables with a continuous row number and Updated At, followed
+  by client/application information. Number across pages of the current filtered
+  result. Keep Created At in the overview drawer alongside Updated At.
+- Display Updated At as `YYYY-MM-DD`, without a time, on both desktop and mobile.
   Preserve all table columns on narrower desktops with local table scrolling;
   mobile cards retain education, service and the updated date.
 
