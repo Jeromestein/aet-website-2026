@@ -2,6 +2,46 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Unified application preview — October 16, 2026
+
+- Added `/application`, `/zh/application` and `/es/application` with the owner's
+  three-step flow: client/organization name, email, phone, service and office;
+  conditional service requirements; then review with editable sections.
+- Added preliminary/formal evaluation and translation branches, service query
+  preselection, service-dependent offices, accessible field errors, month/year
+  selectors, tab-scoped draft restoration and clear-draft confirmation. Changing
+  service retains compatible answers and clears offices outside its allowed list.
+- Evaluation/pre-evaluation use Miami, Los Angeles and San Francisco. Translation
+  uses Miami, Boston, Los Angeles, San Francisco and New York. Removed Beijing
+  from this application per the owner's updated scope, including its localized
+  labels. Restoring a draft clears removed offices while preserving other answers.
+- Replaced office cards with a service-filtered dropdown and added required
+  asterisks to client/organization name, email and phone. Verified evaluation's
+  three offices, selection summary updates and
+  incompatible-office reset in the in-app browser. Inspected desktop (1440px)
+  and mobile (390px) with no horizontal overflow; TypeScript passed again.
+- Rechecked the five-office translation dropdown on desktop and mobile after
+  removing Beijing. All eight focused tests and TypeScript passed, including
+  rejection and restoration of a previously saved Beijing selection.
+- Submission remains disabled and explicitly labeled as unavailable. Review
+  describes the intended confirmation email followed by a separate upload page;
+  this iteration creates no applications, sends no mail and has no upload control.
+  Existing customer intake, database tables, CRM and navigation destinations are
+  not changed by this feature.
+- Verified all three branches, required-office validation, incompatible-office
+  reset, review/edit and refresh restoration in the in-app browser on the owner's
+  existing localhost:3022 server. Inspected Chinese desktop at 1440px and mobile
+  review at 390px, plus English desktop and Spanish mobile layouts; no horizontal
+  overflow was observed. Replaced native month inputs after an in-app browser
+  input compatibility issue and reverified the evaluation review flow.
+- Eight focused tests, TypeScript (`--incremental false`) and all 466 shared
+  translation keys per locale passed. The new typed copy has its own three-locale
+  completeness check in the focused tests. No build, server restart, push,
+  deployment or production data writes.
+- Screenshots: `output/playwright/aet-application-desktop.png` and
+  `output/playwright/aet-application-review-mobile.png`. Concurrent CRM and staff
+  recovery edits are outside this change.
+
 ### Staff connection recovery — October 16, 2026
 
 - Investigated a reported ENOTFOUND for the Supabase pooler. DNS resolution and

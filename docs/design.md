@@ -230,6 +230,28 @@ The following presentation rules apply to the connected CRM workspace:
   Preserve all table columns on narrower desktops with local table scrolling;
   mobile cards retain education, service and the updated date.
 
+### General application preview
+
+- Use localized `/application` as the unified intake preview, with optional
+  `service=pre-evaluation`, `service=evaluation`, or `service=translation` query
+  parameters. Keep existing intake destinations until submission is connected.
+- Follow exactly three steps: contact/service/office, service-specific details,
+  and review. Step one collects client or organization name, email and phone,
+  then service and its eligible offices. Keep the evaluee identity in step two.
+- Mark all three contact fields with visible required asterisks. Use a native
+  office dropdown filtered by service; disable it until a service is selected.
+- Initial owner-approved office scope: pre-evaluation and evaluation use Miami,
+  Los Angeles and San Francisco; translation uses Miami, Boston, Los Angeles,
+  San Francisco and New York. This application excludes Beijing. Clear invalid
+  office selections when changing services or restoring drafts, retaining other answers.
+- After a real submission, the intended flow sends a confirmation email and
+  continues to a separate document-upload page. Do not include an upload step
+  within the first three steps. The preview must clearly identify submission
+  and email as unavailable, without simulated success or database writes.
+- Reuse the shared website header/footer, readable labels, a three-step progress
+  indicator and a service/office summary. Preserve draft answers within the same
+  browser tab for up to 24 hours; provide an explicit clear-draft action.
+
 ### Pre-evaluation customer journey
 
 Preserve the legacy three steps: applicant, education, review. Required fields,
