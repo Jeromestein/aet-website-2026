@@ -32,6 +32,35 @@
 - Screenshots: `output/playwright/apply-now-{desktop,mobile}-2026-10-15.png`.
   Used the existing local server; no build, commit, push, or deployment.
 
+## 2026-10-15 — Production payment verification
+
+- Checked the deployed `https://www.americantranslationservice.com` website.
+  English, Chinese and Spanish Payment routes return HTTP 200 in live mode.
+  All four office choices offer customer-facing Stripe payment copy.
+- Submitted synthetic $0.50 verification requests to the production payment
+  endpoint for Boston, NYC, California and Miami. Each returned a live Checkout
+  session readable with its expected account credential, with the correct USD
+  amount and office metadata. All four remained unpaid and were then expired.
+- Verified production unpaid-result pages, mismatched-office rejection, amount
+  minimum, missing agreement and stale-test-form guards. An identical Boston
+  retry reused the same session. PayPal handoffs for all four offices return
+  HTTP 200 and their merchant values match local configuration; no PayPal
+  transaction was submitted.
+- In-app browser verified both accounts' Checkout branding, the Chinese desktop
+  form and 390px form/cancel page without horizontal overflow, and California's
+  Checkout cancel link back to the production result page. Boston's cancel click
+  encountered one in-app timeout; the same destination returned HTTP 200 in
+  393ms and opened correctly in a fresh browser tab. No payment-page console
+  errors were observed. Browser viewport was reset after the checks.
+- Screenshots: `output/playwright/stripe-online-{desktop,mobile,cancel-mobile,bos-checkout,ca-checkout}-2026-10-15.png`.
+  No code, credentials, hosting configuration or payment settings were changed.
+  Actual card charges, emailed receipts and bank payouts remain untested in this
+  verification; manual office reconciliation remains the intended workflow.
+- Content follow-up: the retained Visa/Mastercard-only notice does not match
+  the additional card brands displayed in both live Checkout pages. The retained
+  $250 and $500 transfer guidance also needs a consistent owner-approved policy.
+  These business rules were recorded, not silently changed during inspection.
+
 ## 2026-10-15 — Live Stripe Checkout preparation
 
 - Added explicit test/live modes with no credential fallback. Boston and NYC use
