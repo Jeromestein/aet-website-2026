@@ -207,6 +207,15 @@ The following presentation rules apply to the connected CRM workspace:
   hover and keyboard focus, label the destination, and open the matching drawer
   section. Use independent touch targets on mobile; missing education stays
   plain, non-interactive text.
+- Put estimated processing timing below the Status badge, replacing the shared-record
+  hint without adding a column. Use a 6px bar, days remaining/overdue, and a muted
+  estimated completion date. Green means more than two calendar days remaining;
+  amber means zero to two; red means overdue. Mobile cards use the same component.
+  The bar represents elapsed time from payment to the estimated deadline, not work
+  completed. Use the legacy Eastern 1pm cutoff and weekday calculation, preferring
+  saved turnaround snapshots. Do not invent dates for unknown services, missing
+  payment timestamps, completed/cancelled cases, or unsupported record types.
+  Read deadlines with the existing authorized snapshot; retain manual refresh.
 - Use one neutral information-card style throughout the case drawer: white
   surface, shared light border, 8px radius, 20px padding (16px on mobile).
   Client, education, service and payment cards share this treatment. Field labels
@@ -223,6 +232,8 @@ The following presentation rules apply to the connected CRM workspace:
 - Use Evaluee Name consistently in CRM lists, drawer titles, search/sort and
   exports: stored pronouns (Mr./Ms./Mx.), first, optional middle and last name.
   Do not substitute the application contact name or infer a missing title.
+- Show 20 applications per page on desktop and mobile; retain continuous row
+  numbering across pages and the filtered total.
 - Lead application tables with a continuous row number and Updated At, followed
   by client/application information. Number across pages of the current filtered
   result. Keep Created At in the overview drawer alongside Updated At.

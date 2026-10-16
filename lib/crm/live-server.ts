@@ -1,4 +1,5 @@
 import 'server-only';
+import {completionFor} from './completion';
 import type postgres from 'postgres';
 import {createHash} from 'node:crypto';
 import {liveDb} from './live-db';
@@ -6,7 +7,7 @@ import {cents,services,timestamp,preferredPayment,statusAllowed,liveChange,liveR
 import {workspaceQuery} from './workspace-server';
 import {canAccessOffice,type StaffSession} from '../staff/session';
 import {AppError} from '../preeval/domain';
-import {evalueeName,type WorkspaceSnapshot,type WorkspaceRow} from './contracts';
+import {WORKSPACE_PAGE_SIZE,evalueeName,type WorkspaceSnapshot,type WorkspaceRow} from './contracts';
 type Row=Record<string,any>;
 const tables={formal:'public.fce_applications',preeval:'public.aet_core_applications',external:'public.fce_external_orders',payment:'public.aet_core_payments'};
 type Tx=postgres.TransactionSql<{}>;
@@ -15,7 +16,7 @@ function scoped(staff:StaffSession,office:string|null){if(!canAccessOffice(staff
 export function liveRow(kind:LiveKind,r:Row,educations:Row[]=[],payments:Row[]=[]):WorkspaceRow {
  const p=kind==='preeval'?preferredPayment(payments):r;
  const payment=p?.payment_status||'unknown';
- return {kind,id:r.id,name:kind==='payment'?(r.source||'Standalone payment'):evalueeName({pronouns:r.pronouns,first:r.first_name,middle:r.middle_name,last:r.last_name}),email:r.email||'',office:r.office||null,
+ return {completion:completionFor(kind,r),kind,id:r.id,name:kind==='payment'?(r.source||'Standalone payment'):evalueeName({pronouns:r.pronouns,first:r.first_name,middle:r.middle_name,last:r.last_name}),email:r.email||'',office:r.office||null,
  service:kind==='formal'?services(r.service_type):kind==='preeval'?'Pre-Evaluation':kind==='external'?'Imported order':'Standalone payment',purpose:r.purpose||'',country:r.country||'',status:kind==='payment'?'payment_record':r.status,payment_status:payment,amount:cents(p?.due_amount),created_at:timestamp(r.created_at||r.paid_at),updated_at:timestamp(r.updated_at||r.paid_at),
  educations:educations.map(e=>({degree:e.degree_obtained,school:e.school_name,country:e.country_of_study,start:[e.study_start_date?.year,e.study_start_date?.month].filter(Boolean).join('-'),end:[e.study_end_date?.year,e.study_end_date?.month].filter(Boolean).join('-')})),
  files:[],payments:payments.map(p=>({id:p.id,session_id:p.payment_id,amount_cents:cents(p.due_amount)!,status:p.payment_status,created_at:timestamp(p.paid_at)})),attention:kind!=='payment'&&r.status!=='completed'&&r.status!=='cancelled'&&(r.status==='submitted'||payment!=='paid')};
@@ -40,7 +41,7 @@ export async function liveSnapshot(raw:Record<string,string>,staff:StaffSession)
  const counts=count(rows);
  const q=query.q.toLowerCase();rows=rows.filter(r=>(query.filter==='all'||query.filter==='attention'&&r.attention||query.filter==='processing'&&r.status==='processing'||query.filter==='completed'&&r.status==='completed')&&[r.name,r.email,r.id,r.office,r.service,JSON.stringify(r.educations)].join(' ').toLowerCase().includes(q));
  rows.sort((a,b)=>(query.sort==='name'?a.name.localeCompare(b.name):query.sort==='oldest'?a.created_at.localeCompare(b.created_at):b.created_at.localeCompare(a.created_at))||a.kind.localeCompare(b.kind)||a.id.localeCompare(b.id));
- const total=rows.length,pageSize=query.export?5000:7,page=Math.min(query.page,Math.max(1,Math.ceil(total/pageSize)));
+ const total=rows.length,pageSize=query.export?5000:WORKSPACE_PAGE_SIZE,page=Math.min(query.page,Math.max(1,Math.ceil(total/pageSize)));
  if(query.export&&total>pageSize)throw new AppError('export_too_large',413);
  return {rows:rows.slice((page-1)*pageSize,page*pageSize),total,page,pageSize,counts,stats,staff:{email:staff.email,offices:staff.offices,includeUnassigned:staff.include_unassigned},cloudPreview:false,liveData:true};
  });

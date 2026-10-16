@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { db, table, type Row } from '../preeval/db';
 import { configuration } from '../preeval/config';
 import { AppError, TOTAL_CENTS } from '../preeval/domain';
-import type { WorkspaceSnapshot } from './contracts';
+import { WORKSPACE_PAGE_SIZE, type WorkspaceSnapshot } from './contracts';
 
 const officeNames = ['Boston','New York','Miami','San Francisco','Los Angeles'];
 export const workspaceQuery = z.object({
@@ -22,7 +22,7 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
   const includeUnassigned = staff.offices ? Boolean(staff.include_unassigned) : true;
   if (query.office !== 'all' && !(query.office === 'unassigned' ? includeUnassigned : allowedOffices.includes(query.office))) throw new AppError('access_denied',403);
   const pattern = '%' + query.q.replace(/[\\%_]/g,'\\$&') + '%';
-  const pageSize = query.export ? 5000 : 7;
+  const pageSize = query.export ? 5000 : WORKSPACE_PAGE_SIZE;
   const [result] = await sql`
     with records as (
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',

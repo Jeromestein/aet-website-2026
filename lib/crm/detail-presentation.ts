@@ -52,7 +52,7 @@ const quoteNames: Record<string, string> = {
   domesticExpress:delivery.usps_express_domestic[0], internationalFirst:delivery.usps_first_class_international[0],
   internationalExpress:delivery.usps_express_international[0], internationalFedex:delivery.fedex_express_international[0],
 };
-const quoteSchema = z.object({
+export const quoteSchema = z.object({
   version:z.literal(1), currency:z.literal('USD'), min:z.number().int().nonnegative(), max:z.number().int().nonnegative(), needsQuote:z.boolean(),
   lines:z.array(z.object({id:z.string(),quantity:z.number().int().positive(),min:z.number().int().nonnegative(),max:z.number().int().nonnegative(),
     turnaround:z.union([z.object({kind:z.literal('businessDays'),value:z.number().int().positive()}),z.object({kind:z.literal('hours'),value:z.number().int().positive()}),z.object({kind:z.literal('sameDay')})]).optional(),

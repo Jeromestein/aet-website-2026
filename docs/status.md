@@ -2,6 +2,37 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Twenty-record workspace pages — October 16, 2026
+
+- Unified live/preview page sizes and the UI fallback at 20 records. Retained
+  the CSV export limit and existing permission, filtering and sorting behavior.
+- On localhost:3022, verified 20 desktop rows numbered 1–20, then 21–40 on page
+  two with the matching pagination range. Verified 20 mobile cards at 390px
+  without horizontal overflow. Restored page one and the default viewport.
+- TypeScript and whitespace checks passed. Screenshot:
+  `output/playwright/crm-page-size-20.png`. No business writes, restart or deployment.
+
+### Status-column completion timeline — October 16, 2026
+
+- Replaced Shared business record beneath live status badges with a compact
+  processing timeline, estimated completion date and remaining/overdue days.
+  Preserved columns, drawer behavior, mobile cards and manual-refresh behavior.
+- The read-only projection uses existing paid_at and service_type data, legacy
+  Eastern 1pm cutoff and inclusive weekdays (weekends skipped; no holiday calendar),
+  plus validated saved turnaround snapshots. Missing/unknown inputs and completed,
+  cancelled, preliminary, imported or standalone payment records have no timeline.
+- Count remaining calendar days in Eastern time, including the full due date.
+  Unlike the old fixed 14-day graphic, the fill uses the actual payment-to-deadline
+  window and is explicitly labeled as elapsed time, not completed evaluation work.
+- All 36 focused completion/detail/live tests and TypeScript passed. Tests cover
+  cutoff, weekend/winter timezone, same-day/24-hour, due-today/overdue, amber threshold,
+  saved snapshots, missing inputs and the live row projection.
+- On the owner's localhost:3022 server, inspected real green and red timelines in
+  the 1440px desktop list and 390px mobile cards; mobile width stayed at 390px.
+  Screenshots: `output/playwright/crm-progress-desktop.png` and
+  `output/playwright/crm-progress-mobile.png`. No business data or employee login
+  changes, new polling, server restart, build, push or deployment.
+
 ### Unified application preview — October 16, 2026
 
 - Removed parenthesized English from the Chinese name labels and inset all

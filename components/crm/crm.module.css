@@ -451,3 +451,16 @@
   .drawer :is(.detailGrid, .educationHistoryCard, .selectedServices, .educationRecord, .serviceSummary, .paymentSummary) { padding: 16px; }
   .drawer .educationRecord .detailGrid { padding: 0; }
 }
+
+/* Deadline timing sits below the status badge; it is not work completion. */
+.completion { display: grid; gap: 5px; margin-top: 10px; font-size: 12px; line-height: 1.45; color: #39784c; }
+.completion[data-tone="amber"] { color: #986415; }
+.completion[data-tone="red"] { color: #b3413b; }
+.completionWarning { font-weight: 600; }
+.completionTrack { height: 6px; border-radius: 999px; background: #e7ecf0; overflow: hidden; }
+.completionTrack > span { display: block; height: 100%; background: #67ad7a; border-radius: inherit; }
+.completion[data-tone="amber"] .completionTrack > span { background: #dbb432; }
+.completion[data-tone="red"] .completionTrack > span { background: #d16a61; }
+.completionDate { color: #617586; }
+.completionDate time { display: block; font-variant-numeric: tabular-nums; }
+.mobileCard > .completion { margin-top: 14px; }

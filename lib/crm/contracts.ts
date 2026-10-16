@@ -1,3 +1,4 @@
+import type {Completion} from './completion';
 /** Display the evaluee identity, never substitute the application contact name. */
 export function evalueeName(value: { pronouns?: string | null; first?: string | null; middle?: string | null; last?: string | null }): string {
   const title = value.pronouns?.trim() || '';
@@ -5,6 +6,8 @@ export function evalueeName(value: { pronouns?: string | null; first?: string | 
   const name = [value.first, value.middle, value.last].map(part => part?.trim()).filter(Boolean).join(' ');
   return name ? [honorific, name].filter(Boolean).join(' ') : 'Name not recorded';
 }
+
+export const WORKSPACE_PAGE_SIZE = 20;
 
 export type WorkspaceView = 'applications' | 'formal' | 'equivalency' | 'payments' | 'documents';
 export type WorkspaceFilter = 'all' | 'attention' | 'processing' | 'completed';
@@ -18,6 +21,7 @@ export type WorkspaceRow = CaseReference & {
   country: string; educations: Education[]; status: string; payment_status: string;
   amount: number | null; created_at: string; updated_at: string;
   files: WorkspaceFile[]; payments: WorkspacePayment[]; attention: boolean;
+  completion?: Completion | null;
 };
 export type WorkspaceCounts = { total: number; attention: number; processing: number; completed: number };
 export type WorkspaceSnapshot = {
