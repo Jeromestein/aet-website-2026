@@ -223,6 +223,16 @@ Preserve the legacy three steps: applicant, education, review. Required fields,
 optional supporting documents and the USD 19.88 total follow the old AET App.
 Use the website's pale-blue background, navy type, white cards and orange main
 actions. Preserve progress within the browser tab and provide Start over.
+The pre-evaluation landing page uses the existing `public/images/graduates.jpg`
+as a wide photographic hero with a navy gradient behind white copy and orange
+application action. Keep central/right graduates visible on desktop. Position a
+compact white fee card across the lower edge, with the three steps alongside it.
+On phones, crop the photo around the central graduates, transition to navy behind
+the copy and place the fee card below the hero. Preserve localized descriptive
+alt text and the complete fee breakdown; never place pricing over the photograph.
+Reuse the homepage `Navigation` and `SiteFooter` components on this landing page,
+including the shared language switcher, mobile menu and footer destinations.
+Keep its pre-evaluation application and status actions inside the hero.
 
 Customers use a complete Application ID or the reusable link in the confirmation
 email. Do not add customer registration, a password or an extra email-verification

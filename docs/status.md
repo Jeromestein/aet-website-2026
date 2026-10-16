@@ -2,6 +2,34 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Pre-evaluation photographic hero — October 16, 2026
+
+- Expanded the existing graduates photograph into the landing-page background,
+  with white copy over a navy gradient and the orange application action. The
+  compact white fee card overlaps the lower edge on desktop; the three steps
+  sit alongside it. On phones, the photo is reframed above the copy and the fee
+  card follows below. This supersedes the earlier photo-above-price-card layout.
+- Kept the USD 19.00 service fee, USD 0.88 processing fee, existing destinations,
+  localized content and original image file. Styles are isolated to the landing
+  page. The landing page directly reuses the homepage Navigation and SiteFooter;
+  shared application/staff shells remain unchanged.
+- TypeScript and diff whitespace checks passed. In-app browser verification on
+  the owner's 3022 server passed Chinese, English and Spanish at 1440px desktop
+  and 390px mobile, with no observed horizontal overflow. Checked mobile fees,
+  steps and footer, and followed both Chinese application/status actions to their
+  existing pages without submitting data. The default viewport was restored.
+- Follow-up verification of the shared homepage header/footer passed at 1440px
+  desktop and 390px mobile: Chinese/English page rendering, desktop language
+  selection retaining the pre-evaluation route, mobile menu opening/Escape close,
+  complete footer columns/legal links and no horizontal overflow. TypeScript,
+  all 466 locale keys in each language and diff whitespace checks passed.
+- Initial hero screenshots: `output/playwright/preeval-hero-{desktop,mobile}-2026-10-16.png`.
+  Shared navigation/footer screenshots:
+  `output/playwright/preeval-site-chrome-{desktop,mobile}-2026-10-16.png` and
+  `output/playwright/preeval-site-footer-{desktop,mobile}-2026-10-16.png`.
+  No service configuration, server restart, production build, push or deployment
+  in this pass. Concurrent CRM edits remain outside this change.
+
 ### Education/service presentation rollback — October 16, 2026
 
 - Reverted the centered education/service dialogs at the owner's request and
