@@ -37,8 +37,17 @@ superseded by that document; the old staff entry is retained only for transition
 - Legacy price: USD 19.00 plus the rounded legacy Stripe gross-up fee of 0.88;
   checkout total is **USD 19.88**, calculated on the server. Card and Alipay are
   enabled; acceptance exercised card payment.
-- Status lookup accepts an Application ID and sends a single-use, 24-hour link
-  to the registered email. The ID alone grants no access. Sessions last 24 hours.
+- Status lookup opens the application directly from its complete Application ID,
+  matching the legacy app. Confirmation emails include the ID, education summary,
+  exact fee and a reusable application URL. No customer account, password or extra
+  email-verification step is required. The ID is an access credential and should
+  remain private. Internal HTTP-only sessions last 24 hours; the same ID/link
+  transparently restores access after expiry. Result emails include the paid
+  equivalency and assessment basis.
+- The three-step form saves its fields and current step in the browser tab, with
+  a Start over action. Refreshing restores the draft; optional files must be
+  reselected and the terms must be accepted again. Successful submission clears
+  the saved draft.
 - One staff administrator and one test recipient: `tech@meiyugroup.org`.
   All pilot email and Stripe customer email are redirected there. Legacy CC/BCC
   recipients are not used. The `office` field is retained but the operational
@@ -52,7 +61,7 @@ Use the dev worktree at `/Users/plusone/Desktop/Code/aet-website-2026-dev`.
 Its current preview and local application origins use port 3022:
 
 - Customer start: <http://localhost:3022/degree-equivalency-tool>
-- Application recovery: <http://localhost:3022/status-check>
+- Application status: <http://localhost:3022/status-check>
 - Staff sign-in: <http://localhost:3022/admin/login>
 - Staff records: <http://localhost:3022/admin/CRM>
 - Previous fictional CRM preview: `/admin/CRM/preview`, behind the same staff
@@ -62,8 +71,8 @@ Staff login, email-link confirmation and dashboard pages are English-only.
 New staff links open `/admin/access`; `/en/admin/*`, `/zh/admin/*`, `/es/admin/*`
 and lowercase `/admin/crm` redirect to canonical unprefixed staff URLs. Staff
 pages have no language selector and do not overwrite the saved website language.
-Email-link authentication remains in place; no password or local-login bypass
-was added. The intended production dashboard remains
+Staff authentication is maintained independently; see [staff authentication](staff-auth.md).
+The intended production dashboard remains
 `https://app.americantranslationservice.com/admin/CRM`. Hostname routing and
 deployment remain pending; see [the deployment proposal](../README.md#application-domains-and-staff-urls).
 
@@ -73,6 +82,16 @@ local pre-evaluation destination only when `PREEVAL_ENV=local`; other deployment
 configurations retain the existing portal link. All new workflow pages are
 noindex and excluded from the public sitemap.
 
+## Legacy URL compatibility
+
+The three pre-evaluation paths (start, application and success) are retained,
+including the `applicationId` query parameter through language redirects. This
+does not establish complete AET App URL parity: the old formal `/status` route,
+checkout routes and four standalone staff-tool URLs still return 404. The new
+`/status-check` is pre-evaluation-only. See the
+[October 15 route audit](app-url-compatibility.md) for the mapping and follow-up
+work; existing production email links and app-domain routing need separate checks.
+
 ## Local setup and processes
 
 Use `.env.example` as the variable reference; secrets belong only in the ignored
@@ -80,9 +99,13 @@ Use `.env.example` as the variable reference; secrets belong only in the ignored
 `http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `PREEVAL_TEST_EMAIL` both use
 `tech@meiyugroup.org`. `PREEVAL_CODEX_BIN` points to the dev worktree's installed
 Codex executable. Reuse the configured local database and test services without
-copying secrets into documentation. The pilot rejects remote database URLs,
-remote origins, live Stripe keys/events, and Dropbox roots outside the named
-test folder.
+copying secrets into documentation. This guide and its service acceptance require
+`PREEVAL_DATABASE_MODE=local` and the isolated local database on port 55422.
+A separately configured `cloud-preview` mode disables external services and uses
+different business tables; do not run these local fixture scripts against it.
+Do not overwrite another session's environment to switch modes. The local service
+pilot rejects remote database URLs, remote origins, live Stripe keys/events and
+Dropbox roots outside the named test folder.
 
 Prerequisites: Node 20.9+, pnpm, Docker, Stripe CLI, the bundled project Codex CLI
 with an existing ChatGPT login, and Poppler (`pdfinfo` and `pdftoppm`). The current
@@ -141,9 +164,14 @@ No column was added to the original tables. See
 [the field mapping and compatibility boundary](legacy-form-compatibility.md). A random request
 ID and payload hash prevent duplicate retries or conflicting reuse. Customer
 sessions are scoped to one application; staff permissions are checked on every
-protected API operation. Access tokens are hashed, single-use and exchanged by
-POST from the URL fragment, which is removed from browser history. Cross-origin
-mutations are rejected; submission, token, email and payment actions are limited.
+protected API operation. The customer lookup endpoint validates a complete UUID,
+limits request size and request frequency, sets a private session cookie and
+returns a localized application URL. It neither sends email nor grants staff
+access. Customer responses explicitly project education fields: legacy `ai_output`
+must never bypass the unpaid/refunded result gate. Previously issued single-use
+links remain compatible; new customer messages use the reusable ID URL.
+Cross-origin mutations are rejected; submission, lookup, token, email and payment
+actions are limited.
 
 Files are private Dropbox objects under
 `/Team Files/WebsitesDev/AET-PreEvaluation-Test`. Downloads pass through the
@@ -173,9 +201,54 @@ idempotency keys prevent duplicate sends during automatic retries; result messag
 are deduplicated by application/result version. Failed sends retry up to five
 attempts and have a staff retry control. Workspace `sent` means accepted by
 Resend, not necessarily inbox delivery; acceptance separately checked Resend's
-`delivered` status. Expired access links can always be requested again.
+`delivered` status. Customers can always reopen their application using its ID
+or the reusable link in the confirmation email.
 
-## Acceptance evidence
+## Customer-flow acceptance — October 15, 2026
+
+This pass supersedes the earlier customer email-link recovery requirement below.
+It preserves legacy required fields, optional files, USD 19.88 pricing and automatic
+paid results while using the new pale-blue, navy and orange website theme.
+
+- 44 focused unit tests passed (pre-evaluation, customer lookup/email and legacy
+  application fields); TypeScript and the 466-key locale check passed.
+- 31 customer integration assertions passed: direct and repeated ID lookup,
+  normalization, invalid/unknown IDs, expired-session recovery, no extra email,
+  cross-application/staff denial, bounded requests and unpaid/refunded result
+  protection, including legacy education output. The disposable fixtures were
+  removed. `scripts/preeval/customer-integration.ts` refuses cloud-preview mode.
+- The existing 21 integration assertions passed again, including real Stripe
+  sandbox checkout, USD 19.88, checkout reuse, cancellation and session expiry.
+- In-app browser verified three-step submission, draft restoration after refresh,
+  Start over, invalid-ID feedback, direct status lookup, language switching,
+  optional PDF upload, sandbox card payment and automatic paid result display.
+  Desktop and 390px mobile form/status/result views passed visual inspection;
+  mobile page width and scroll width were both 390px.
+- A fictional one-page PDF completed a byte-identical 745-byte Dropbox upload and
+  download. The local Codex account generated a real assessment and correctly
+  returned `Unable to determine` for the explicitly synthetic qualification.
+  This proves the workflow, not real-world assessment accuracy.
+- Resend reported `delivered` for both confirmation and result messages to
+  `tech@meiyugroup.org`. Both contained the full ID, education and reusable link;
+  the result message also contained the equivalency and reasoning.
+- The owner-managed 3022 environment changed to cloud preview during payment
+  acceptance. Its configuration was preserved. Payment reconciliation and the
+  remaining checks ran against an isolated temporary source snapshot on 3023
+  with the existing local database. The temporary server was stopped afterward;
+  no persistent worker was left running. A local browser fixture cannot be looked
+  up in the separate cloud-preview database.
+- Evidence: `output/playwright/preeval-customer-{form-mobile,result-mobile,result-desktop}-2026-10-15.jpg`.
+  Private regression reports remain in `.local/`. No build, deployment, bulk
+  migration, commit or push was performed by this pass. Staff-login changes and
+  production rollout are separate work.
+
+Run the customer regression only with a matching local server/database:
+
+```sh
+node --env-file=.env.local --import tsx scripts/preeval/customer-integration.ts
+```
+
+## Earlier acceptance evidence
 
 The service/payment/email checks below describe the earlier pilot milestone.
 The later form-compatibility pass used 98 unit tests, 13 rollback-only database

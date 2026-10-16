@@ -10,6 +10,8 @@ import {
   LockKeyhole,
 } from "lucide-react";
 import { copy, errorText, stateLabel } from "@/lib/preeval/copy";
+import { lookupApplication } from "@/lib/preeval/customer-access";
+import ApplicationLookup from "./application-lookup";
 import {
   BASE_CENTS,
   FEE_CENTS,
@@ -82,13 +84,36 @@ export function ApplicationForm({ locale }: { locale: string }) {
   });
   const [terms, setTerms] = useState(false);
   const [documents, setDocuments] = useState<File[]>([]);
+  const [restored, setRestored] = useState(false);
   const requestId = useRef("");
   useEffect(() => {
-    requestId.current =
-      sessionStorage.getItem("aet-pre-evaluation-request") ||
-      crypto.randomUUID();
-    sessionStorage.setItem("aet-pre-evaluation-request", requestId.current);
+    requestId.current = crypto.randomUUID();
+    try {
+      requestId.current = sessionStorage.getItem("aet-pre-evaluation-request") || requestId.current;
+      sessionStorage.setItem("aet-pre-evaluation-request", requestId.current);
+      const saved = JSON.parse(sessionStorage.getItem("aet-pre-evaluation-draft") || "null");
+      if (saved?.values && typeof saved.values === "object") {
+        setValues(previous => Object.fromEntries(Object.keys(previous).map(key => [key, typeof saved.values[key] === "string" ? saved.values[key] : ""])));
+        setStep([0, 1, 2].includes(saved.step) ? saved.step : 0);
+      }
+    } catch { /* The form remains usable when browser storage is unavailable. */ }
+    setRestored(true);
   }, []);
+  useEffect(() => {
+    if (!restored) return;
+    try { sessionStorage.setItem("aet-pre-evaluation-draft", JSON.stringify({ values, step })); }
+    catch { /* Saving a draft is optional. */ }
+  }, [values, step, restored]);
+  function reset() {
+    if (!confirm(t.resetPrompt)) return;
+    setValues(previous => Object.fromEntries(Object.keys(previous).map(key => [key, ""])));
+    setStep(0); setTerms(false); setDocuments([]); setError("");
+    requestId.current = crypto.randomUUID();
+    try {
+      sessionStorage.removeItem("aet-pre-evaluation-draft");
+      sessionStorage.setItem("aet-pre-evaluation-request", requestId.current);
+    } catch { /* The form remains usable without storage. */ }
+  }
   const fields =
     step === 0
       ? ["firstName", "middleName", "lastName", "email", "country"]
@@ -131,7 +156,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
         terms,
         requestId: requestId.current,
       });
-      sessionStorage.removeItem("aet-pre-evaluation-request");
+      try {
+        sessionStorage.removeItem("aet-pre-evaluation-request");
+        sessionStorage.removeItem("aet-pre-evaluation-draft");
+      } catch { /* Submission already succeeded. */ }
       let uploadFailed = false;
       for (const document of documents) {
         const body = new FormData(); body.set('file', document);
@@ -149,6 +177,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
       <p className={s.eyebrow}>{t.eyebrow}</p>
       <h1 className={s.title}>{t.start}</h1>
       <p className={s.helper}>{t.required}</p>
+      <p className={s.helper}>{t.draftHint}</p>
       <ol className={s.steps}>
         {[t.step1, t.step2, t.step3].map((label, index) => (
           <li
@@ -279,7 +308,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
             )}
             <button
               className={s.button + " " + s.primary}
-              disabled={busy}
+              disabled={busy || !restored}
               type="submit"
             >
               {busy ? (
@@ -289,6 +318,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
               )}{" "}
               {busy ? t.loading : step === 2 ? t.submit : t.next}
             </button>
+            <button className={s.secondary} type="button" onClick={reset} disabled={busy}>{t.reset}</button>
           </div>
         </div>
       </form>
@@ -296,7 +326,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
     </>
   );
 }
-export function AccessForm({
+export function AccessForm(props: { locale: string; admin?: boolean; initialId?: string }) {
+  return props.admin ? <StaffAccessForm {...props} /> : <ApplicationLookup locale={props.locale} initialId={props.initialId} />;
+}
+function StaffAccessForm({
   locale,
   admin = false,
   initialId = "",
@@ -423,6 +456,7 @@ export function ApplicationResult({
 }) {
   const t = copy(locale),
     [app, setApp] = useState<any>(null),
+    [loadError, setLoadError] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(""),
     [notice, setNotice] = useState(""),
@@ -430,24 +464,37 @@ export function ApplicationResult({
     fileInput = useRef<HTMLInputElement>(null);
   async function load() {
     try {
-      setApp(await api("applications/" + id));
+      let result;
+      try { result = await api("applications/" + id); }
+      catch (error) {
+        if ((error as Error).message !== "access_denied") throw error;
+        await lookupApplication(id, locale);
+        result = await api("applications/" + id);
+      }
+      setApp(result);
+      setLoadError("");
+      return true;
     } catch (e) {
-      setError(errorText(t, (e as Error).message));
+      setLoadError(errorText(t, (e as Error).message));
+      return false;
     }
   }
   useEffect(() => {
-    load();
+    let active = true;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    void load().then(async loaded => {
+      if (loaded && active) timer = setInterval(() => { if (document.visibilityState === "visible") void load(); }, 10000);
+      if (loaded && active && new URLSearchParams(location.search).get("checkout") === "success") {
+        try { await api("applications/" + id + "/reconcile", {}); if (active) await load(); }
+        catch { if (active) setError(t.service_unavailable); }
+      }
+    });
     if (new URLSearchParams(location.search).get('upload') === 'retry') setError(t.documentRetry);
     setCancelled(
       new URLSearchParams(location.search).get("checkout") === "cancelled",
     );
-    if (new URLSearchParams(location.search).get("checkout") === "success")
-      api("applications/" + id + "/reconcile", {})
-        .then(load)
-        .catch(() => setError(t.service_unavailable));
-    const timer = setInterval(load, 5000);
-    return () => clearInterval(timer);
-  }, [id]);
+    return () => { active = false; clearInterval(timer); };
+  }, [id, locale]);
   async function action(name: string) {
     setBusy(name);
     setError("");
@@ -488,10 +535,10 @@ export function ApplicationResult({
     return (
       <>
         <h1 className={s.title}>{t.resultTitle}</h1>
-        {error ? (
+        {(error || loadError) ? (
           <>
             <p className={s.error} role="alert">
-              {error}
+              {error || loadError}
             </p>
             <AccessForm locale={locale} initialId={id} />
           </>
@@ -511,6 +558,7 @@ export function ApplicationResult({
       <p className={s.id}>
         {t.id}: {app.id}
       </p>
+      <p className={s.helper}>{t.savedHint}</p>
       <div className={s.statusbar}>
         <span className={s.badge} data-state={app.status}>
           {label(app.status)}
@@ -523,9 +571,9 @@ export function ApplicationResult({
         </span>
       </div>
       {cancelled && <p className={s.notice}>{t.cancelledCheckout}</p>}
-      {error && (
+      {(error || loadError) && (
         <p role="alert" className={s.error}>
-          {error}
+          {error || loadError}
         </p>
       )}
       {notice && (
@@ -546,7 +594,7 @@ export function ApplicationResult({
             [t.email, app.email],
             [t.schoolName, app.education.school_name],
             [t.degreeObtained, app.education.degree_obtained],
-            [t.countryOfStudy, app.education.country_of_study],
+            [t.countryOfStudy, countryLabel(app.education.country_of_study, locale)],
             [
               t.step2,
               app.education.start_date + " – " + app.education.end_date,
@@ -578,7 +626,11 @@ export function ApplicationResult({
           <>
             <LockKeyhole size={26} />
             <p>
-              {app.payment_status !== "paid"
+              {app.status === "cancelled"
+                ? t.application_cancelled
+                : ["refunded", "partially_refunded"].includes(app.payment_status)
+                  ? t.refundNotice
+                  : app.payment_status !== "paid"
                 ? t.locked
                 : app.ai_status === "failed"
                   ? t.failed
@@ -646,13 +698,7 @@ export function ApplicationResult({
         >
           {t.refresh}
         </button>
-        <button
-          className={s.secondary}
-          onClick={() => action("logout")}
-          disabled={!!busy}
-        >
-          {t.logout}
-        </button>
+        <a className={s.secondary} href={pathFor(locale, "/status-check")}>{t.checkAnother}</a>
         {!["paid", "partially_refunded"].includes(app.payment_status) &&
           app.status !== "cancelled" && (
             <button

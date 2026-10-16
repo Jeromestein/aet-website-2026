@@ -2,6 +2,27 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Application URL compatibility audit — October 16, 2026
+
+- Recorded the October 15 legacy-source comparison and 23 GET checks on the
+  owner's existing 3022 server: 15 application routes, three public-website
+  aliases and five Chinese-cookie cases. No submissions or external service
+  operations were performed during the URL audit.
+- The three pre-evaluation URLs, formal intake and staff login/CRM entries are
+  retained. Chinese pre-evaluation redirects preserve `applicationId`; staff
+  URLs remain unprefixed. All three sampled public-site aliases redirect with 308.
+- Legacy formal `/status`, three checkout paths and four standalone CRM tool
+  paths return 404. The new `/status-check` is pre-evaluation-only, so a blanket
+  redirect would not restore formal application lookup. No compatibility fix
+  was made in this documentation pass.
+- Pre-commit verification on October 16 passed all 44 focused pre-evaluation/legacy
+  tests, TypeScript without output and the 466-key English/Chinese/Spanish locale
+  check. The October 15 browser and service acceptance remains the evidence for
+  those flows; no external-service acceptance was repeated for this commit.
+- Added [the complete route mapping](app-url-compatibility.md), source references
+  and remaining cutover checks. Route responses do not establish historical data
+  availability, authenticated feature acceptance or production hostname readiness.
+
 ### Independent new-website administrator — October 15, 2026
 
 - Provisioned the owner-approved `errplusone@gmail.com` membership as an active
@@ -63,6 +84,39 @@ Progress and verification evidence only. The design baseline lives in [design.md
   No Docker, server restart, production build, deployment, commit or push.
 - Screenshots (synthetic records, since cleaned up):
   `output/playwright/crm-connected-{desktop,mobile,mobile-drawer}-2026-10-15.png`.
+
+### Pre-evaluation customer-flow completion — October 15, 2026
+
+- Restored direct Application ID and reusable email-link lookup without customer
+  registration/login or a second email. Internal cookies remain application-scoped.
+- Added three-step draft restoration and Start over; preserved legacy fields,
+  optional files, USD 19.88 pricing and the new website theme. Confirmation mail
+  now includes education/fees; result mail includes the paid assessment/reasoning.
+- Fixed an unpaid-result exposure through legacy education `ai_output`; the
+  customer response now includes only permitted education fields. Transient load
+  errors clear after recovery, and unknown IDs do not trigger repeated polling.
+- Passed 44 focused unit tests, TypeScript, the 466-key locale check, 31 customer
+  API checks and 21 existing service API checks. Coverage includes duplicate and
+  conflicting submission, checkout reuse/cancellation/expiry, direct/repeated ID
+  access, session expiry, isolation, malformed inputs and unpaid/refund gating.
+- In-app browser passed submission, refresh/draft restoration, Start over,
+  invalid-ID feedback, direct lookup and locale switching. Desktop and 390px
+  mobile form/status/result views passed; mobile had no horizontal overflow.
+- Real service acceptance passed with fictional data: Stripe sandbox card payment,
+  a 745-byte exact Dropbox upload/download, local Codex assessment and automatic
+  paid result display. AI identified the synthetic document and declined to
+  assign a degree. Resend confirmed both confirmation and result mail delivered
+  to `tech@meiyugroup.org`, with the intended ID/link/education/result content.
+- 3022 changed to a separate cloud-preview database during this pass. Its
+  configuration was preserved; remaining local checks used a temporary source
+  snapshot on 3023. That server was stopped after acceptance; no worker remains
+  running. The local test application is not present in the cloud preview.
+- Screenshots: `output/playwright/preeval-customer-form-mobile-2026-10-15.jpg`,
+  `preeval-customer-result-mobile-2026-10-15.jpg` and
+  `preeval-customer-result-desktop-2026-10-15.jpg`. See
+  [detailed acceptance](pre-evaluation-local.md#customer-flow-acceptance--october-15-2026).
+  No build, deployment, bulk migration, commit or push by this pass. Concurrent
+  staff-auth work was preserved and is not included in these acceptance claims.
 
 ### Cloud business database and office permissions — October 15, 2026
 

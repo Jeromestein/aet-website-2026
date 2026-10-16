@@ -1,16 +1,8 @@
 import { Resend } from "resend";
 import { table, db, type Row } from "./db";
 import { configuration, required } from "./config";
-import { makeLink } from "./auth";
+import { customerEmail, escapeHtml as escape } from "./email-template";
 
-const escape = (s: string) =>
-  s.replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ]!,
-  );
 export async function enqueueEmail({
   applicationId,
   kind,
@@ -42,31 +34,18 @@ export async function applicationEmail(
     (await db()`select id from ${table("preeval.emails")} where dedupe_key=${key}`).length
   )
     return;
-  const link = await makeLink(app.id, "customer", app.email, app.locale);
-  const title = {
-    confirmation: "AET Degree Equivalency Application Confirmation",
-    result: "AET Degree Equivalency Results",
-    access: "AET Application Access Link",
-    information: "AET Degree Equivalency — Additional Information",
-  }[kind];
-  const intro =
-    kind === "confirmation"
-      ? "Thank you for submitting your degree equivalency application."
-      : kind === "result"
-        ? "Your preliminary degree equivalency result is ready."
-        : kind === "information"
-          ? "Please review the following request for additional information."
-          : "Use the secure link below to access your application.";
-  const html = `<div style="font-family:Arial,sans-serif;color:#18334e;max-width:600px;margin:auto;padding:28px"><h1 style="font-size:24px">${title}</h1><p>Dear ${escape(app.first_name)} ${escape(app.last_name)},</p><p>${intro}</p><p><strong>Application ID:</strong> ${escape(app.id)}</p>${message ? `<p>${escape(message).replace(/\n/g, "<br>")}</p>` : ""}<p><a href="${escape(link)}" style="display:inline-block;background:#284f75;color:white;padding:14px 22px;border-radius:8px;text-decoration:none">View your application</a></p><p>This link can be used once within 24 hours. Request another link on the application status page whenever you need it.</p><p>Any degree equivalency shown is based on the information you provided. It is not derived from verified documents and cannot be used as proof of attendance or degree completion. AET may update this provisional result after document verification and analysis.</p><hr><p>American Education and Translation Services, CORP (AET)</p></div>`;
+  const [education] = await db()`select school_name,degree_obtained,country_of_study,start_date,end_date from ${table("preeval.educations")} where application_id=${app.id} order by id limit 1`;
+  const { subject, html } = customerEmail(app as Parameters<typeof customerEmail>[0], education as Parameters<typeof customerEmail>[1], kind, configuration().origin, message);
   await enqueueEmail({
     applicationId: app.id,
     kind,
     key,
-    subject: title,
+    subject,
     html,
   });
 }
 export async function administratorEmail() {
+  const { makeLink } = await import("./auth");
   const link = await makeLink(null, "admin", configuration().admin, "en");
   await enqueueEmail({
     kind: "admin_access",

@@ -6,6 +6,38 @@ Sources: the local legacy website, sibling AET App implementation, and the 2026
 design, navigation and page code. App replacement is tracked separately from
 the original public-page migration counts.
 
+## Application URL compatibility review — October 16, 2026
+
+- [x] Record the October 15 comparison with the legacy AET App and 23 local GET
+  checks. The three pre-evaluation URLs retain their paths and Application ID;
+  Chinese customer redirects preserve the query. Staff URLs remain unprefixed.
+- [x] Separate application compatibility from the public website's 448-path
+  inventory. See [the route mapping and evidence boundaries](app-url-compatibility.md).
+- [ ] Restore legacy `/status?applicationId=...` for formal applications. The new
+  `/status-check` handles pre-evaluation only and is not an equivalent destination.
+- [ ] Preserve `/checkout`, `/checkout/return` and `/checkout/success`, including
+  their application/payment parameters and intended behavior.
+- [ ] Map the four legacy standalone CRM tool URLs, which currently return 404.
+  An integrated CRM feature does not by itself preserve its old entry URL.
+- [ ] Verify old email links against representative records, integration callbacks
+  and actual app/public host routing before an authorized cutover.
+
+## Pre-evaluation customer experience — October 15, 2026
+
+- [x] Restore the legacy account-free flow: confirmation email with Application ID
+  and reusable link; direct ID lookup without another email or registration.
+- [x] Retain the three form steps, required fields, optional documents and USD
+  19.88 total. Add tab-local draft restoration and Start over using the new theme.
+- [x] Include education/fees in confirmation and the paid result/reasoning in
+  result mail. Prevent legacy education output from exposing an unpaid result.
+- [x] Verify 44 focused unit tests, 31 customer API assertions, 21 service API
+  assertions, TypeScript, locale completeness, desktop/390px views, real sandbox
+  payment, Dropbox byte round-trip, Codex processing and Resend delivery.
+  The shared 3022 configuration changed during acceptance; remaining local checks
+  used a temporary 3023 snapshot, now stopped. See [acceptance details](pre-evaluation-local.md#customer-flow-acceptance--october-15-2026).
+- [ ] Production configuration, hosted AI/queues, live-payment/email routing and
+  data/domain cutover remain outside local acceptance.
+
 ## Staff routing and local worktree checkpoint — October 15, 2026
 
 - [x] Keep staff login, access confirmation and dashboards English-only, without
@@ -213,21 +245,23 @@ but do not partition or identify offices in this workflow's frontend.
 - [x] Prepare isolated local Supabase and private Dropbox test storage; reuse
   existing Stripe test and Resend services without Payload. Restrict staff/test
   email to `tech@meiyugroup.org`.
-- [x] Build shared English/Chinese/Spanish submission, result, status-recovery and
-  access pages. Persist validated application, education and file records;
-  authorize customer access independently of Application ID.
+- [x] Build shared English/Chinese/Spanish submission, result and status pages.
+  Persist validated application, education and file records. Following the
+  October 15 clarification, the complete Application ID opens the customer
+  application directly through a scoped session; no customer account is needed.
 - [x] Implement staff email-link login and backend permissions, and connect
   `/admin/CRM` to durable records, notes, documents, results and audit activity.
 - [x] Verify Stripe test checkout, server-derived pricing, signed callbacks,
   duplicate handling, reconciliation, unpaid cancellation and checkout expiry.
-- [x] Deliver confirmation/result/recovery mail to the approved inbox through
-  Resend; record attempts and verify failed-send retry and result deduplication.
+- [x] Deliver confirmation/result mail to the approved inbox through Resend;
+  record attempts and verify failed-send retry and result deduplication. New
+  customer mail includes a reusable ID URL; lookup sends no additional message.
 - [x] Generate preliminary results automatically through the existing local
   Codex ChatGPT account. Read PDF pages/images directly, record inputs/output,
   reject stale results, expose failures/retry and allow staff correction.
 - [x] Pass the complete local journey: form → saved application/education →
   confirmation → optional Dropbox PDF → direct AI → real Stripe sandbox card
-  payment → automatic result → result email → secure recovery → staff handling.
+  payment → automatic result → result email → ID/link lookup → staff handling.
 - [x] Verify denied/cross-application access, expired/reused tokens and sessions,
   duplicate submissions/uploads/callbacks, interrupted-upload recovery, invalid
   signatures/amounts/ownership, email retry and logout. Constructed refund and

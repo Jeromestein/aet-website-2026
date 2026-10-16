@@ -207,6 +207,22 @@ The following presentation rules apply to the connected CRM workspace:
   Preserve all table columns on narrower desktops with local table scrolling;
   mobile cards retain education, service and the updated date.
 
+### Pre-evaluation customer journey
+
+Preserve the legacy three steps: applicant, education, review. Required fields,
+optional supporting documents and the USD 19.88 total follow the old AET App.
+Use the website's pale-blue background, navy type, white cards and orange main
+actions. Preserve progress within the browser tab and provide Start over.
+
+Customers use a complete Application ID or the reusable link in the confirmation
+email. Do not add customer registration, a password or an extra email-verification
+step. Label this flow as checking application status, not account recovery. Keep
+the ID and education summary visible, show payment/assessment progress, and reveal
+the preliminary result automatically after confirmed payment. Staff correction
+remains possible. Confirmation includes education and fees; result mail includes
+the paid equivalency and reasoning. Customer UI remains multilingual; assessment
+text and mail remain English like the legacy experience. Staff login is separate.
+
 ## 4. Homepage Composition
 
 | Order | Section | Core requirement |

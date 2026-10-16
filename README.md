@@ -234,8 +234,10 @@ pages or change the separate application portal.
 ## Pre-evaluation workflow and CRM
 
 The local pre-evaluation pilot is implemented at `/degree-equivalency-tool` with
-English, Chinese and Spanish customer pages. `/status-check` sends an access link
-by Application ID; `/admin/login` is the separate staff authentication entry.
+English, Chinese and Spanish customer pages. `/status-check` opens an application
+directly from its complete Application ID; confirmation emails include that ID
+and a reusable application link. Customers do not register, sign in, or wait for
+another email. `/admin/login` is the separate staff authentication entry.
 Staff pages use English-only, unprefixed `/admin/*` URLs, including the legacy
 `/admin/CRM` address. Old language-prefixed staff links redirect to these URLs;
 the website language preference is preserved. Administrator email links open
@@ -259,11 +261,17 @@ explanations. New application opens the existing intake forms; GPA remains a loc
 calculator. No action displays a successful save unless its API has succeeded.
 Historical local-pilot setup is retained in [local workflow notes](docs/pre-evaluation-local.md).
 
+Application URLs are not yet fully compatible with the old portal. The three
+pre-evaluation paths are retained; legacy formal `/status`, checkout and four
+standalone CRM tool URLs remain open work. See the
+[dated URL comparison](docs/app-url-compatibility.md) before app-domain cutover.
+
 ## Documentation
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Form/database compatibility](docs/legacy-form-compatibility.md): original field mappings, website price snapshots, local setup and cutover limits.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
+- [App URL compatibility](docs/app-url-compatibility.md): legacy/current route mapping, query and language behavior, and remaining cutover gaps.
 - [Migration checklist](docs/migration-checklist.md): legacy page scope, CRM replacement milestones on `dev`, language coverage, blog inventory, and launch dependencies.
 - [SEO checklist](docs/seo-checklist.md): ordered work and acceptance checks for redirects, indexing, metadata, and structured data.
 - [Agent guidance](AGENTS.md): reading order and project working rules.

@@ -1,7 +1,7 @@
 import { copy } from "@/lib/preeval/copy";
 import type { Metadata } from "next";
 import PreEvaluationShell from "@/components/preeval/shell";
-import { AccessForm } from "@/components/preeval/customer";
+import ApplicationLookup from "@/components/preeval/application-lookup";
 export async function generateMetadata({
   params,
 }: {
@@ -25,7 +25,7 @@ export default async function Page({
     { applicationId } = await searchParams;
   return (
     <PreEvaluationShell locale={locale} narrow>
-      <AccessForm locale={locale} initialId={applicationId} />
+      <ApplicationLookup locale={locale} initialId={applicationId} autoOpen />
     </PreEvaluationShell>
   );
 }
