@@ -240,6 +240,9 @@ The following presentation rules apply to the connected CRM workspace:
   then service and its eligible offices. Keep the evaluee identity in step two.
 - Mark all three contact fields with visible required asterisks. Use a native
   office dropdown filtered by service; disable it until a service is selected.
+- Keep Chinese name labels Chinese-only, with the optional marker beside the
+  middle name. Align the three desktop inputs. Use a consistent dropdown chevron
+  inset 14px from the right edge, with enough text padding to avoid overlap.
 - Initial owner-approved office scope: pre-evaluation and evaluation use Miami,
   Los Angeles and San Francisco; translation uses Miami, Boston, Los Angeles,
   San Francisco and New York. This application excludes Beijing. Clear invalid

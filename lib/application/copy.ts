@@ -63,7 +63,7 @@ const zh: ApplicationCopy = {
   officeHeading: '选择服务办公室', officeHint: '以下为所选服务对应的办公室。', officeEmpty: '选择服务后，这里会显示可选办公室。', officeChanged: '此前选择的办公室不提供该服务，请重新选择。',
   miami: '迈阿密', boston: '波士顿', la: '洛杉矶', sf: '旧金山', nyc: '纽约',
   personHeading: '被评估人信息', personHint: '请填写学历材料上的姓名，可以与上方联系人不同。',
-  firstName: '名（First name）', middleName: '中间名（Middle name）', lastName: '姓（Last name）',
+  firstName: '名', middleName: '中间名', lastName: '姓',
   educationHeading: '学历信息', educationHint: '填写您希望评估的学历。', school: '学校／大学名称', studyCountry: '就读国家或地区', degree: '学位／学历名称',
   schoolPlaceholder: '请输入学校完整名称', degreePlaceholder: '例如：理学学士', start: '入学年月', end: '毕业年月', year: '年', month: '月', addEducation: '添加另一条学历', remove: '移除',
   purpose: '使用用途', purposeSelect: '请选择用途', purposeUscis: 'USCIS／移民', purposeEducation: '升学／入学申请', purposeEmployment: '就业', purposeOther: '其他',

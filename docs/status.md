@@ -4,6 +4,11 @@ Progress and verification evidence only. The design baseline lives in [design.md
 
 ### Unified application preview — October 16, 2026
 
+- Removed parenthesized English from the Chinese name labels and inset all
+  application dropdown chevrons by 14px. Verified equal name-input top positions
+  on a 1024px desktop, stacked fields and office spacing on a 390px phone,
+  office selection and TypeScript. Screenshot:
+  `output/playwright/aet-application-labels-selects.png`.
 - Added `/application`, `/zh/application` and `/es/application` with the owner's
   three-step flow: client/organization name, email, phone, service and office;
   conditional service requirements; then review with editable sections.

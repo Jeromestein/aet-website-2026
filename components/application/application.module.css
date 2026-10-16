@@ -40,8 +40,15 @@ fieldset > .sectionHint { margin-top: 0; }
 .field label > span { font-size: 12px; font-weight: 400; color: var(--muted); }
 .field label > .requiredMark { color: #ba3b27; font-size: 14px; font-weight: 600; }
 .field input, .field select, .field textarea { display: block; width: 100%; min-width: 0; min-height: 48px; border: 1px solid #c6d6e3; border-radius: 8px; background: #fff; color: var(--ink); font: inherit; font-size: 16px; line-height: 1.5; padding: 11px 13px; transition: border-color .15s, box-shadow .15s; }
-.field select { padding-right: 26px; }
-.field select:disabled { background: var(--paper); color: var(--muted); cursor: not-allowed; }
+.field select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23576f83' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+}
+.field select:disabled { background-color: var(--paper); color: var(--muted); cursor: not-allowed; }
 .field textarea { resize: vertical; min-height: 122px; }
 .field input::placeholder, .field textarea::placeholder { color: #8291a0; font-size: 14px; font-weight: 400; }
 .field input:hover, .field select:hover, .field textarea:hover { border-color: #91aabd; }
