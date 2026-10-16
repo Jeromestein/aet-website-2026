@@ -48,8 +48,14 @@ The website's rates and available tiers override outdated legacy form constants:
 
 - Expert Opinion Letters: $620 / 21 business days, $700 / 14 business days,
   $800 / 8 business days.
-- International USPS Express: $88. Removed legacy UPS and Course-by-Course
-  same-day options are not offered because they are absent from the website.
+- International USPS Express: $88. Removed legacy UPS options are not offered
+  because they are absent from the website.
+- Course-by-Course same-day service: $450, confirmed by the owner on October 16,
+  2026 and restored to the shared catalog. For both document and course 24-hour
+  and same-day services, payment and complete documents must be received by 13:00
+  in the handling office's local time. Public tables and intake notes show this
+  office-local rule; the historical CRM deadline projection remains a separate
+  legacy calculation.
 - Additional degrees: $40 for Document-by-Document and $60 for Course-by-Course,
   carried over from the legacy form and added to the shared website catalog.
 - PDF-only report: $10; PDF with one paper copy: $20, from the legacy form,

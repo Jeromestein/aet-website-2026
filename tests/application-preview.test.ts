@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { applicationCopy } from '../lib/application/copy';
 import { initialDraft, restoreDraft, selectService, serviceFromQuery, serviceOffices, validateStep } from '../lib/application/model';
+import { emptyEvaluationRequest, selectEvaluationService } from '../lib/application/evaluation';
+import { evaluationCopy } from '../lib/application/evaluation-copy';
 
 const contact = () => ({ ...initialDraft('translation'), contactName: 'Example Organization', email: 'preview@example.com', phone: '+1 (202) 555-0148', office: 'boston' });
 
@@ -32,10 +34,33 @@ describe('general application preview', () => {
     expect(validateStep({ ...draft, targetLanguage: ' chinese ' }, 1)).toHaveProperty('targetLanguage', 'languages');
   });
   it('validates active education records and chronological dates', () => {
-    const draft = { ...initialDraft('pre-evaluation'), firstName: 'Test', lastName: 'Applicant', educations: [{ school: 'Example University', country: 'CN', degree: 'Bachelor', start: '2018-09', end: '2022-06' }, { school: '', country: '', degree: '', start: '', end: '' }] };
+    const draft = { ...initialDraft('pre-evaluation'), pronouns: 'mx', firstName: 'Test', lastName: 'Applicant', educations: [{ school: 'Example University', country: 'CN', degree: 'Bachelor', start: '2018-09', end: '2022-06' }, { school: '', country: '', degree: '', start: '', end: '' }] };
     expect(validateStep(draft, 1)).toEqual({});
     expect(validateStep({ ...draft, service: 'evaluation' }, 1)).toHaveProperty('education.1.school');
     expect(validateStep({ ...draft, educations: [{ ...draft.educations[0], end: '2017-06' }] }, 1)).toHaveProperty('education.0.end', 'dateOrder');
+  });
+  it('requires pronouns, first/last names and education for evaluation services', () => {
+    for (const service of ['pre-evaluation', 'evaluation'] as const) {
+      const draft = initialDraft(service);
+      expect(validateStep(draft, 1)).toMatchObject({ pronouns: 'required', firstName: 'required', lastName: 'required', 'education.0.school': 'required', 'education.0.country': 'required', 'education.0.degree': 'required', 'education.0.start': 'required', 'education.0.end': 'required' });
+      expect(validateStep(draft, 1)).not.toHaveProperty('middleName');
+      expect(validateStep(draft, 1)).not.toHaveProperty('dateOfBirth');
+      expect(validateStep({ ...draft, pronouns: 'unknown' }, 1)).toHaveProperty('pronouns', 'pronouns');
+    }
+  });
+  it('validates an optional birthday as a real non-future date', () => {
+    const draft = initialDraft('evaluation');
+    expect(validateStep({ ...draft, dateOfBirth: '2000-02-29' }, 1)).not.toHaveProperty('dateOfBirth');
+    for (const dateOfBirth of ['2001-02-29', '2000-02-30', '9999-01-01', '2000-13-01', 'not-a-date']) {
+      expect(validateStep({ ...draft, dateOfBirth }, 1)).toHaveProperty('dateOfBirth', 'birthDate');
+    }
+  });
+  it('preserves older drafts while requesting the new required pronouns', () => {
+    const now = Date.now();
+    const data = { ...contact(), service: 'evaluation', office: 'la', firstName: 'Test', lastName: 'Applicant', evaluationRequest: selectEvaluationService(emptyEvaluationRequest(), 'document', 1), purpose: 'education', educations: [{ school: 'Example University', country: 'CN', degree: 'Bachelor', start: '2018-09', end: '2022-06' }] };
+    const legacyData = Object.fromEntries(Object.entries(data).filter(([key]) => !['pronouns', 'dateOfBirth'].includes(key)));
+    expect(restoreDraft(JSON.stringify({ version: 1, updatedAt: now, step: 2, data: legacyData }), now)).toMatchObject({ step: 1, data: { email: data.email, firstName: 'Test', pronouns: '', dateOfBirth: '', educations: data.educations } });
+    expect(restoreDraft(JSON.stringify({ version: 1, updatedAt: now, step: 2, data: { ...data, pronouns: 'ms', dateOfBirth: '2000-02-29' } }), now)).toMatchObject({ step: 2, data: { pronouns: 'ms', dateOfBirth: '2000-02-29' } });
   });
   it('restores only current, structurally valid drafts and checks earlier steps', () => {
     const now = Date.now();
@@ -56,6 +81,10 @@ describe('general application preview', () => {
   it('provides complete nonempty copy in all website languages', () => {
     for (const copy of Object.values(applicationCopy)) {
       expect(Object.keys(copy).sort()).toEqual(Object.keys(applicationCopy.en).sort());
+      expect(Object.values(copy).every(value => value.trim().length > 0)).toBe(true);
+    }
+    for (const copy of Object.values(evaluationCopy)) {
+      expect(Object.keys(copy).sort()).toEqual(Object.keys(evaluationCopy.en).sort());
       expect(Object.values(copy).every(value => value.trim().length > 0)).toBe(true);
     }
   });

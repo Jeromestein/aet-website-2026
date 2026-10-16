@@ -35,6 +35,93 @@ Progress and verification evidence only. The design baseline lives in [design.md
 
 ### Unified application preview — October 16, 2026
 
+- Added asterisks to existing 24-hour/same-day tiers and a highlighted receipt
+  cutoff note below the processing selector. Selected expedited tiers retain
+  the asterisk and reminder in sidebar fees and review. Passed 31 focused tests
+  and TypeScript; checked Chinese desktop (1440px), mobile (390px) and review
+  in the in-app browser on 3022.
+- Owner confirmed course same-day at USD 450 and a 13:00 cutoff in each handling
+  office's local time. Restored that tier to the shared 2026 catalog and updated
+  English/Chinese/Spanish intake and public Pricing/Evaluation notes. Public
+  tables now mark both 24-hour and same-day tiers with asterisks.
+- Passed 88 application/shared-catalog tests, TypeScript and the three-language
+  message check. In-app browser verification on 3022 covered Pricing at 1440px/
+  390px, the mobile Evaluation fee table, application service selection at both
+  widths, and mobile review/refresh restoration. Course same-day is USD 450;
+  PDF-only adds USD 10 for a USD 460 subtotal. No horizontal overflow on checked
+  mobile pages. Evidence: `output/playwright/aet-local-cutoff-pricing-{desktop,mobile}.png`,
+  `output/playwright/aet-local-cutoff-application-{desktop,mobile}.png`, and
+  `output/playwright/aet-local-cutoff-review-mobile.png`.
+- Added Report & delivery below evaluation services: PDF-only or PDF plus a mailed
+  paper copy, with optional extra copies. Mailing exposes recipient/address fields
+  and country-filtered shipping; required address fields block review. U.S. state
+  and ZIP validation is separate from international address entry. Switching to PDF
+  removes mailing/extra-copy fees while retaining the address for reuse.
+- Sidebar and review now include report and postage from the 2026 catalog; additional
+  copies retain the catalog's USD 40–60 range. Review includes the full destination,
+  report email, shipping method and copy count. Payment processing remains excluded.
+- Passed 31 focused application tests and TypeScript. In-app browser checks on 3022
+  verified missing-address errors, domestic/international shipping filtering,
+  PDF-only fee reset, complete mailing review and draft restoration after refresh.
+  Inspected Chinese desktop (1440px) and mobile (390px) delivery and review layouts
+  with no horizontal overflow. Evidence: `output/playwright/aet-report-delivery-desktop.png`,
+  `output/playwright/aet-report-delivery-mobile.png`, and
+  `output/playwright/aet-report-delivery-review-mobile.png`.
+- Simplified evaluation selection to document/course radio cards, with exactly
+  one required; removed help choosing and hid expert/position services from this
+  intake. Moved each PDF sample link beside its service, outside the radio label.
+  Switching retains qualification associations and replaces the quoted fee.
+  Old drafts drop retired choices and require reselection if both types were selected.
+- Passed 22 focused application tests and TypeScript. In-app browser checks on
+  3022 passed required-choice feedback, keyboard/mobile mutual exclusion, independent
+  sample links, and review showing only the current service plus pending translation.
+  Inspected Chinese cards/review at 1440px desktop and 390px mobile with no overflow.
+  Evidence: `output/playwright/aet-evaluation-exclusive-{desktop,mobile}.png`
+  and `output/playwright/aet-evaluation-exclusive-review-mobile.png`.
+- Earlier iteration (superseded by the two-choice selection above): replaced
+  the single formal-evaluation dropdown with four multi-select service
+  cards below education. Processing tiers, prices and additional-degree charges
+  come from the existing 2026 catalog. Document/course services link to selected
+  education records; removing a record preserves other associations and updates fees.
+- Added optional translation and help choosing, with required guidance notes and
+  explicit pending quotes. Sidebar/review share a fee calculation and show selected
+  services, tiers and qualifications; review breaks out base/additional fees.
+  Report delivery and payment remain outside this service-only preview.
+- Passed 20 focused application tests and TypeScript, covering current catalog
+  rates, combinations, stale tiers, invalid education references, unchecking,
+  record removal, guidance-only quotes and old/new draft restoration.
+- In-app browser passed service-required/guidance-required feedback, multi-service
+  pricing, qualification deselection, review/edit and refresh restoration on 3022.
+  Checked Chinese 1440px desktop/390px mobile cards and review, Spanish 390px long
+  labels and English 1024px cards without horizontal overflow. Verified the shared
+  same-day cutoff note. Evidence: `output/playwright/aet-application-service-cards-{desktop,mobile}.png`
+  and `output/playwright/aet-application-services-review-{desktop,mobile}.png`.
+- Added required pronouns (Mr./Ms./Mx.) before the name fields and optional date
+  of birth for both evaluation services. First/last names and education fields
+  now have required asterisks. School and study country share a desktop row;
+  the degree name spans the entire row. New identity fields appear in review
+  and draft restoration; older drafts retain their answers.
+- Passed 11 application tests and TypeScript. In-app browser checks passed for
+  required-field errors, date entry, review and refresh restoration. Inspected
+  Chinese identity/education layouts at 1280px desktop and 390px mobile without
+  horizontal overflow. Screenshots: `output/playwright/aet-application-identity-desktop.png`
+  and `output/playwright/aet-application-education-required-{desktop,mobile}.png`.
+- Removed the duplicate first-step footer counter and kept Continue right-aligned.
+  Forward actions are green; Back uses a black background and white text. Checked
+  the Chinese first/second-step action bars at 1024px desktop and 390px mobile,
+  returning to step one and confirming no mobile overflow. TypeScript and
+  whitespace checks passed. Screenshot:
+  `output/playwright/aet-application-navigation-buttons.png`.
+- Added the legacy evaluation-notes example, guidance, sample-report links and
+  complete acceptance notice below Additional requirements for formal evaluation.
+  Reused all three languages from AET App's serviceNotes copy and existing local
+  PDF assets. Sample links open in separate tabs; both return HTTP 200 as PDFs.
+- Restyled Start over with red text, a reset icon and no underline. Verified
+  confirmation and cancellation without clearing the current draft. Inspected
+  the English evaluation notes, stacked sample cards, notice and reset control
+  at 1440px desktop and 390px mobile; no mobile horizontal overflow. TypeScript,
+  all eight application tests and whitespace checks passed. Screenshot:
+  `output/playwright/aet-application-evaluation-notes-desktop.png`.
 - Removed parenthesized English from the Chinese name labels and inset all
   application dropdown chevrons by 14px. Verified equal name-input top positions
   on a 1024px desktop, stacked fields and office spacing on a 390px phone,

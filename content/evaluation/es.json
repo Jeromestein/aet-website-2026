@@ -114,7 +114,7 @@
         "html": "Pre-Evaluación"
       }
     ],
-    "noteHtml": "<p> <strong>NOTA: </strong>Para obtener el servicio de evaluación el mismo día, el pago y los documentos deben ser enviados antes de la {{cutoff}}. </p>"
+    "noteHtml": "<p>* Para las evaluaciones de 24 horas y del mismo día, el pago y los documentos completos deben recibirse antes de las {{cutoff}}, hora local de la oficina que tramita su solicitud.</p>"
   },
   "shipping": {
     "title": "OPCIONES DE ENVIO:",

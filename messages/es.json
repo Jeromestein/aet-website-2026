@@ -299,7 +299,7 @@
     },
     "notes": {
       "translationQuote": "Los precios son estimados. La cotización exacta se proporciona tras revisar el documento. Contacte a nuestras oficinas de Miami o Boston.",
-      "cutoff": "Para evaluaciones en el mismo día, el pago y los documentos deben recibirse antes de las {time}.",
+      "cutoff": "* Para las evaluaciones de 24 horas y del mismo día, el pago y los documentos completos deben recibirse antes de las {time}, hora local de la oficina que tramita su solicitud.",
       "onSite": "Más gastos de transporte por tiempo de ida y vuelta, vehículo y estacionamiento. Para entrevistas de inmigración, asuntos judiciales, exposiciones, negocios, educación, ciencia y otros.",
       "simultaneous": "Tarifa compartida por dos intérpretes, más transporte. Para conferencias y charlas; mínimo de {simultaneousMinimumHours} horas.",
       "telephone": "Mínimo de {telephoneMinimumHours} hora.",

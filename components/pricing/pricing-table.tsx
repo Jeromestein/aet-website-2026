@@ -1,6 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { formatPrice, formatTurnaround } from '@/lib/pricing-format';
-import { pricingPolicy, type Rate } from '@/lib/pricing';
+import { hasEvaluationCutoff, pricingPolicy, type Rate } from '@/lib/pricing';
 import styles from './pricing.module.css';
 
 /** Reusable on Pricing and service pages; accepts shared catalog records. */
@@ -22,7 +22,7 @@ export function PricingTable({ rates, caption, showService = true, showTime = tr
       <tbody>{rates.map(rate => <tr key={rate.id}>
         {showService && <th scope="row">{t(`services.${rate.label}`)}</th>}
         <td className={styles.price} data-label={t('columns.price')}>{formatPrice(rate.price, locale, t)}</td>
-        {showTime && <td data-label={t(showTracking ? 'columns.shippingTime' : 'columns.time')}>{rate.turnaround ? formatTurnaround(rate.turnaround, t) : t('format.notApplicable')}</td>}
+        {showTime && <td data-label={t(showTracking ? 'columns.shippingTime' : 'columns.time')}>{rate.turnaround ? formatTurnaround(rate.turnaround, t) + (hasEvaluationCutoff(rate) ? '*' : '') : t('format.notApplicable')}</td>}
         {showNotes && <td className={styles.rateNote} data-label={t('columns.notes')}>{rate.note && t(`notes.${rate.note}`, {
           simultaneousMinimumHours: pricingPolicy.simultaneousMinimumHours,
           telephoneMinimumHours: pricingPolicy.telephoneMinimumHours,

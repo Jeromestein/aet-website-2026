@@ -16,8 +16,8 @@ export function PricingSection({ section }: { section: PricingSectionId }) {
       {evaluationGroups.map(({ id, rates }) => <div key={id} className={styles.tierGroup}>
         <h3>{t(`services.${id}`)}</h3>
         <PricingTable rates={rates} caption={t(`services.${id}`)} showService={false} />
+        {id === 'course' && <p className={styles.note}>{t('notes.cutoff', { time: pricingPolicy.sameDayCutoff })}</p>}
       </div>)}
-      <p className={styles.note}>{t('notes.cutoff', { time: pricingPolicy.sameDayCutoff })}</p>
       <PricingTable rates={evaluationAddOns} caption={title} showTime={false} />
     </>}
     {section === 'expert' && <PricingTable rates={expertOpinion} caption={title} showService={false} />}

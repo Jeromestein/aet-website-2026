@@ -3,14 +3,20 @@
 import { useEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, ClipboardCheck, FileCheck2, GraduationCap, Info, Languages, Mail, MessageCircle, Pencil, Plus, RotateCcw, Save, Upload, UserRound } from 'lucide-react';
 import { applicationCopy } from '@/lib/application/copy';
-import { DRAFT_KEY, emptyEducation, initialDraft, restoreDraft, selectService, serviceIds, serviceOffices, validateStep, type ApplicationDraft, type EducationDraft, type FormErrors, type ServiceId } from '@/lib/application/model';
+import { evaluationCopy } from '@/lib/application/evaluation-copy';
+import { removeEvaluationEducation, type EvaluationRequest } from '@/lib/application/evaluation';
+import { EvaluationServices, EvaluationFees } from './evaluation-services';
+import { ReportDeliveryFields, DeliveryReview } from './report-delivery';
+import { deliveryCopy } from '@/lib/application/delivery-copy';
+import type { ReportDelivery } from '@/lib/application/delivery';
+import { DRAFT_KEY, emptyEducation, initialDraft, pronounIds, restoreDraft, selectService, serviceIds, serviceOffices, validateStep, type ApplicationDraft, type EducationDraft, type FormErrors, type ServiceId } from '@/lib/application/model';
 import { countryLabel, countryOptions } from '@/lib/legacy-application/countries';
 import type { Locale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import s from './application.module.css';
 
-function Field({ id, label, requiredMark, optional, hint, error, children }: { id: string; label: string; requiredMark?: boolean; optional?: string; hint?: string; error?: string; children: ReactNode }) {
-  return <div className={s.field}>
+function Field({ id, label, requiredMark, fullWidth, optional, hint, error, children }: { id: string; label: string; requiredMark?: boolean; fullWidth?: boolean; optional?: string; hint?: string; error?: string; children: ReactNode }) {
+  return <div className={s.field + (fullWidth ? ' ' + s.fullWidth : '')}>
     <label htmlFor={id}>{label}{requiredMark && <span className={s.requiredMark} aria-hidden="true">*</span>}{optional && <span>{optional}</span>}</label>
     {children}
     {hint && <p className={s.hint} id={id + '-hint'}>{hint}</p>}
@@ -20,6 +26,8 @@ function Field({ id, label, requiredMark, optional, hint, error, children }: { i
 
 export function GeneralApplication({ locale, initialService }: { locale: Locale; initialService: ServiceId | '' }) {
   const c = applicationCopy[locale];
+  const ec = evaluationCopy[locale];
+  const dc = deliveryCopy[locale];
   const [data, setData] = useState<ApplicationDraft>(() => initialDraft(initialService));
   const [step, setStep] = useState(0);
   const [ready, setReady] = useState(false);
@@ -43,10 +51,10 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
     translation: { title: c.translation, description: c.translationDescription, icon: Languages },
   };
   const officeNames: Record<string, string> = { miami: c.miami, boston: c.boston, la: c.la, sf: c.sf, nyc: c.nyc };
+  const pronounNames: Record<string, string> = { mr: c.pronounsMr, ms: c.pronounsMs, mx: c.pronounsMx };
   const purposes = [{ value: 'uscis', label: c.purposeUscis }, { value: 'education', label: c.purposeEducation }, { value: 'employment', label: c.purposeEmployment }, { value: 'other', label: c.purposeOther }];
-  const reports = [{ value: 'document', label: c.document }, { value: 'course', label: c.course }, { value: 'expert', label: c.expert }, { value: 'unsure', label: c.unsure }];
   const translations = [{ value: 'certified', label: c.certified }, { value: 'general', label: c.general }, { value: 'technical', label: c.technical }, { value: 'unsure', label: c.unsure }];
-  const errorText = { required: c.required, email: c.invalidEmail, phone: c.invalidPhone, date: c.invalidDate, dateOrder: c.invalidOrder, country: c.invalidCountry, languages: c.invalidLanguages, office: c.invalidOffice };
+  const errorText = { required: c.required, email: c.invalidEmail, phone: c.invalidPhone, date: c.invalidDate, dateOrder: c.invalidOrder, country: c.invalidCountry, languages: c.invalidLanguages, office: c.invalidOffice, pronouns: c.invalidPronouns, birthDate: c.invalidBirthDate, evaluationSelection: ec.selectionError, evaluationTier: ec.tierError, evaluationEducation: ec.educationError, shipping: dc.shippingError, postal: dc.postalError, copies: dc.copiesError };
 
   useEffect(() => {
     try {
@@ -84,6 +92,14 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
     const url = new URL(window.location.href); url.searchParams.set('service', service);
     window.history.replaceState(window.history.state, '', url);
   }
+  function updateEvaluation(value: EvaluationRequest) {
+    setData(current => ({ ...current, evaluationRequest: value }));
+    setErrors(current => Object.fromEntries(Object.entries(current).filter(([key]) => !key.startsWith('evaluationRequest'))));
+  }
+  function updateDelivery(value: ReportDelivery) {
+    setData(current => ({ ...current, evaluationDelivery: value }));
+    setErrors(current => Object.fromEntries(Object.entries(current).filter(([key]) => !key.startsWith('evaluationDelivery'))));
+  }
   function navigate(target: number) {
     if (target < 0 || target > 2) return;
     if (target > step) {
@@ -114,7 +130,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
       <input {...props} {...accessibility(key, hint)} required={!optional} maxLength={300} value={data[key] as string} onChange={event => update(key, event.target.value)} />
     </Field>;
   };
-  const select = (key: 'purpose' | 'evaluationType' | 'translationType', label: string, placeholder: string, options: { value: string; label: string }[]) => <Field id={key} label={label} error={errors[key] && errorText[errors[key]]}>
+  const select = (key: 'purpose' | 'translationType', label: string, placeholder: string, options: { value: string; label: string }[]) => <Field id={key} label={label} requiredMark error={errors[key] && errorText[errors[key]]}>
     <select {...accessibility(key)} value={data[key]} required onChange={event => update(key, event.target.value)}><option value="">{placeholder}</option>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select>
   </Field>;
   const reviewRow = (label: string, value: string) => <div><dt>{label}</dt><dd>{value || '—'}</dd></div>;
@@ -164,16 +180,23 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
               <div className={s.grid}>{input('sourceLanguage', c.sourceLanguage, { placeholder: c.sourcePlaceholder })}{input('targetLanguage', c.targetLanguage, { placeholder: c.targetPlaceholder })}</div>
               {select('translationType', c.translationType, c.translationSelect, translations)}
             </section> : <>
-              <section className={s.section}><h3>{c.personHeading}</h3><p className={s.sectionHint}>{c.personHint}</p><div className={s.nameGrid}>
-                {input('firstName', c.firstName, { autoComplete: 'off' })}{input('middleName', c.middleName, { optional: true, autoComplete: 'off' })}{input('lastName', c.lastName, { autoComplete: 'off' })}
-              </div></section>
-              {data.service === 'evaluation' && <div className={s.grid}>{select('evaluationType', c.reportType, c.reportSelect, reports)}{select('purpose', c.purpose, c.purposeSelect, purposes)}</div>}
+              <section className={s.section}><h3>{c.personHeading}</h3><p className={s.sectionHint}>{c.personHint}</p>
+                <div className={s.grid}>
+                  <Field id="pronouns" label={c.pronouns} requiredMark error={errors.pronouns && errorText[errors.pronouns]}>
+                    <select {...accessibility('pronouns')} required value={data.pronouns} onChange={event => update('pronouns', event.target.value)}><option value="">{c.pronounsSelect}</option>{pronounIds.map(value => <option key={value} value={value}>{pronounNames[value]}</option>)}</select>
+                  </Field>
+                  {input('dateOfBirth', c.dateOfBirth, { type: 'date', optional: true, autoComplete: 'off', max: new Date().toISOString().slice(0, 10) })}
+                </div>
+                <div className={s.nameGrid}>
+                  {input('firstName', c.firstName, { requiredMark: true, autoComplete: 'off' })}{input('middleName', c.middleName, { optional: true, autoComplete: 'off' })}{input('lastName', c.lastName, { requiredMark: true, autoComplete: 'off' })}
+                </div>
+              </section>
               <section className={s.section}><h3>{c.educationHeading}</h3><p className={s.sectionHint}>{c.educationHint}</p>
                 {activeEducations.map((education, index) => <fieldset className={s.education} key={index}><legend>{c.educationRecord} {index + 1}</legend>
                   <div className={s.grid}>{(['school', 'country', 'degree', 'start', 'end'] as const).map(key => {
                     const id = 'education.' + index + '.' + key;
                     const label = { school: c.school, country: c.studyCountry, degree: c.degree, start: c.start, end: c.end }[key];
-                    return <Field key={key} id={id} label={label} error={errors[id] && errorText[errors[id]]}>{key === 'country' ?
+                    return <Field key={key} id={id} label={label} requiredMark fullWidth={key === 'degree'} error={errors[id] && errorText[errors[id]]}>{key === 'country' ?
                       <select {...accessibility(id)} required value={education[key]} onChange={event => updateEducation(index, key, event.target.value)}><option value="">{c.select}</option>{countries.map(country => <option key={country.value} value={country.value}>{country.label}</option>)}</select> :
                       key === 'start' || key === 'end' ? <div className={s.monthSelect}>
                         <select {...accessibility(id)} aria-label={label + ' · ' + c.year} required value={education[key].split('-')[0] || ''} onChange={event => updateEducation(index, key, event.target.value + '-' + (education[key].split('-')[1] || ''))}><option value="">{c.year}</option>{years.map(year => <option key={year} value={year}>{year}</option>)}</select>
@@ -181,13 +204,24 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
                       </div> : <input {...accessibility(id)} required maxLength={300} placeholder={key === 'school' ? c.schoolPlaceholder : c.degreePlaceholder} value={education[key]} onChange={event => updateEducation(index, key, event.target.value)} />}
                     </Field>;
                   })}</div>
-                  {index > 0 && <button type="button" className={s.textButton} onClick={() => { setData(current => ({ ...current, educations: current.educations.filter((_, i) => i !== index) })); setErrors({}); }}>{c.remove} {c.educationRecord} {index + 1}</button>}
+                  {index > 0 && <button type="button" className={s.textButton} onClick={() => { setData(current => ({ ...current, educations: current.educations.filter((_, i) => i !== index), evaluationRequest: removeEvaluationEducation(current.evaluationRequest, index) })); setErrors({}); }}>{c.remove} {c.educationRecord} {index + 1}</button>}
                 </fieldset>)}
                 {data.service === 'evaluation' && <button className={s.secondary} type="button" disabled={data.educations.length >= 10} onClick={() => setData(current => ({ ...current, educations: [...current.educations, emptyEducation()] }))}><Plus size={17} aria-hidden="true" />{c.addEducation}</button>}
               </section>
+              {data.service === 'evaluation' && <>
+                <EvaluationServices locale={locale} value={data.evaluationRequest} educations={data.educations} errors={errors} onChange={updateEvaluation} />
+                <ReportDeliveryFields locale={locale} value={data.evaluationDelivery} errors={errors} onChange={updateDelivery} />
+                {select('purpose', c.purpose, c.purposeSelect, purposes)}
+              </>}
               {data.service === 'pre-evaluation' && <p className={s.inlineNote}><Info size={17} aria-hidden="true" />{c.preevalNote}</p>}
             </>}
-            <Field id="notes" label={c.notes} optional={c.optional}><textarea id="notes" name="notes" rows={4} maxLength={3000} placeholder={c.notesPlaceholder} value={data.notes} onChange={event => update('notes', event.target.value)} /></Field>
+            <Field id="notes" label={c.notes} optional={c.optional}>
+              <textarea id="notes" name="notes" rows={4} maxLength={3000} placeholder={data.service === 'evaluation' ? c.evaluationNotesPlaceholder : c.notesPlaceholder} aria-describedby={data.service === 'evaluation' ? 'evaluation-notes-help' : undefined} value={data.notes} onChange={event => update('notes', event.target.value)} />
+              {data.service === 'evaluation' && <div id="evaluation-notes-help" className={s.notesHelp}><p>{c.evaluationNotesDescription}</p><p>{c.evaluationNotesHint}</p></div>}
+            </Field>
+            {data.service === 'evaluation' && <>
+              <section className={s.acceptanceNotice} aria-labelledby="before-apply-title"><div><Info size={18} aria-hidden="true" /><h3 id="before-apply-title">{c.beforeApply}</h3></div><p>{c.beforeApplyDescription}</p></section>
+            </>}
             <div className={s.uploadLater}><Upload size={19} aria-hidden="true" /><div><strong>{c.documentsNotice}</strong><p>{c.uploadLater}</p></div></div>
           </>}
           {step === 2 && <>
@@ -197,27 +231,40 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
             <section className={s.reviewSection}><div className={s.reviewHeading}><h3>{c.detailsLabel}</h3><button type="button" onClick={() => navigate(1)} aria-label={c.edit + ' · ' + c.detailsLabel}>{c.edit}<Pencil size={14} aria-hidden="true" /></button></div>
               <dl className={s.reviewGrid}>{reviewRow(c.serviceLabel, data.service ? services[data.service].title : '')}
                 {data.service === 'translation' ? <>{reviewRow(c.translationType, translations.find(item => item.value === data.translationType)?.label || '')}{reviewRow(c.sourceLanguage, data.sourceLanguage)}{reviewRow(c.targetLanguage, data.targetLanguage)}</> : <>
+                  {reviewRow(c.pronouns, pronounNames[data.pronouns])}
                   {reviewRow(c.personHeading, [data.firstName, data.middleName, data.lastName].filter(Boolean).join(' '))}
-                  {data.service === 'evaluation' && <>{reviewRow(c.reportType, reports.find(item => item.value === data.evaluationType)?.label || '')}{reviewRow(c.purpose, purposes.find(item => item.value === data.purpose)?.label || '')}</>}
+                  {reviewRow(c.dateOfBirth, data.dateOfBirth)}
+                  {data.service === 'evaluation' && reviewRow(c.purpose, purposes.find(item => item.value === data.purpose)?.label || '')}
                 </>}
               </dl>
               {data.service !== 'translation' && activeEducations.map((education, index) => <div key={index} className={s.reviewEducation}><GraduationCap size={22} aria-hidden="true" /><div><strong>{education.degree}</strong><p>{education.school} · {countryLabel(education.country, locale)}</p><small>{education.start} — {education.end}</small></div></div>)}
               {data.notes.trim() && <dl className={s.notesReview}>{reviewRow(c.notes, data.notes)}</dl>}
             </section>
+            {data.service === 'evaluation' && <>
+              <section className={s.reviewSection}>
+                <div className={s.reviewHeading}><h3>{dc.title}</h3><button type="button" onClick={() => navigate(1)} aria-label={c.edit + ' · ' + dc.title}>{c.edit}<Pencil size={14} aria-hidden="true" /></button></div>
+                <DeliveryReview locale={locale} value={data.evaluationDelivery} email={data.email} />
+              </section>
+              <section className={s.reviewSection}>
+              <div className={s.reviewHeading}><h3>{ec.reviewTitle}</h3><button type="button" onClick={() => navigate(1)} aria-label={c.edit + ' · ' + ec.reviewTitle}>{c.edit}<Pencil size={14} aria-hidden="true" /></button></div>
+              <EvaluationFees locale={locale} value={data.evaluationRequest} delivery={data.evaluationDelivery} educations={data.educations} />
+              </section>
+            </>}
             <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></div>
           </>}
         </fieldset>
         <div className={s.actions}>
-          {step > 0 ? <button type="button" className={s.back} onClick={() => navigate(step - 1)}><ArrowLeft size={17} aria-hidden="true" />{c.back}</button> : <span className={s.stepCounter}>{c.stepOf} 1 {c.of} 3</span>}
+          {step > 0 && <button type="button" className={s.back} onClick={() => navigate(step - 1)}><ArrowLeft size={17} aria-hidden="true" />{c.back}</button>}
           <button className={s.primary} type="submit" disabled={!ready || step === 2} aria-describedby={step === 2 ? 'submission-note' : undefined}>{step === 2 ? c.submit : step === 1 ? c.review : c.next}<ArrowRight size={18} aria-hidden="true" /></button>
         </div>
         {step === 2 && <p className={s.submissionNote} id="submission-note">{c.notConnected}</p>}
-        <div className={s.draftBar}><span><Save size={14} aria-hidden="true" />{saved ? c.saved : c.notSaved}</span><button ref={clearButton} type="button" disabled={!ready} onClick={() => setClearing(true)}>{c.clear}</button></div>
-        {clearing && <div className={s.clearPanel} role="group" aria-label={c.clearQuestion}><p>{c.clearQuestion}</p><button ref={clearConfirm} type="button" className={s.secondary} onClick={reset}>{c.clearConfirm}</button><button type="button" className={s.textButton} onClick={() => { setClearing(false); clearButton.current?.focus(); }}>{c.cancel}</button></div>}
+        <div className={s.draftBar}><span><Save size={14} aria-hidden="true" />{saved ? c.saved : c.notSaved}</span><button ref={clearButton} type="button" disabled={!ready} aria-expanded={clearing} aria-controls="clear-draft-panel" onClick={() => setClearing(true)}><RotateCcw size={16} aria-hidden="true" />{c.clear}</button></div>
+        {clearing && <div id="clear-draft-panel" className={s.clearPanel} role="group" aria-label={c.clearQuestion}><p>{c.clearQuestion}</p><button ref={clearConfirm} type="button" className={s.secondary} onClick={reset}>{c.clearConfirm}</button><button type="button" className={s.textButton} onClick={() => { setClearing(false); clearButton.current?.focus(); }}>{c.cancel}</button></div>}
       </form>
       <aside className={s.aside}>
         <section className={s.summary}><div className={s.summaryHeading}><ClipboardCheck size={22} strokeWidth={1.6} aria-hidden="true" /><h2>{c.summary}</h2></div>
           <dl>{reviewRow(c.serviceLabel, data.service ? services[data.service].title : c.notSelected)}{reviewRow(c.officeLabel, data.office ? officeNames[data.office] : c.notSelected)}{reviewRow(c.contactLabel, data.contactName.trim() || c.notEntered)}</dl>
+          {data.service === 'evaluation' && step > 0 && <EvaluationFees locale={locale} value={data.evaluationRequest} delivery={data.evaluationDelivery} educations={data.educations} compact />}
           <p className={s.summaryNote}>{c.summaryNote}</p>
           <ol className={s.miniSteps}>{labels.map((label, index) => <li key={label} className={index <= step ? s.miniActive : ''}><span>{index < step ? <Check size={13} aria-hidden="true" /> : index + 1}</span>{label}</li>)}</ol>
         </section>

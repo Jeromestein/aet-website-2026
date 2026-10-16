@@ -91,9 +91,9 @@ export default async function EvaluationPage({ params }: Props) {
               return <div className={styles.rateGroup} key={group.id}>
                 <h3 dangerouslySetInnerHTML={{ __html: localizeContentLinks(label.html, locale) }} />
                 <PricingTable rates={group.rates} caption={pricing(`services.${group.id}`)} showService={false} />
+                {group.id === 'course' && <Copy html={copy(c.fees.noteHtml)} />}
               </div>;
             })}
-            <Copy html={copy(c.fees.noteHtml)} />
             <PricingTable rates={evaluationAddOns} caption={t('evaluationApplication.deliveryHeading')} showTime={false} />
             <a className="button" href={getPathname({ locale, href: '/pricing' })}>{pricing('title')}</a>
           </section>

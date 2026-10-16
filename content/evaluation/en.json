@@ -110,7 +110,7 @@
         "html": "Pre-Evaluation"
       }
     ],
-    "noteHtml": "<p> <strong>NOTE: </strong>To get the same day evaluation service, payment and documents must be submitted by {{cutoff}}. </p>"
+    "noteHtml": "<p>* For 24-hour and same-day evaluation, payment and complete documents must be received by {{cutoff}} local time at the office handling your application.</p>"
   },
   "shipping": {
     "title": "Click to See Shipping Options",

@@ -1,4 +1,5 @@
 /** Business facts from the owner-updated e-fee.php, September 29, 2026.
+ * Course same-day pricing and office-local cutoff confirmed October 16, 2026.
  * Amounts are USD. Website language does not change the document-language scope.
  * Keep prices and turnaround together; localized messages contain presentation only.
  */
@@ -53,7 +54,10 @@ export const documentEvaluation: readonly Rate[] = [
 export const courseEvaluation: readonly Rate[] = [
   tier('standard', 'course', 180, days(8)), tier('rush', 'course', 210, days(5)),
   tier('express', 'course', 280, days(3)), tier('nextDay', 'course', 350, { kind: 'hours', value: 24 }),
+  tier('sameDay', 'course', 450, { kind: 'sameDay' }),
 ];
+/** Expedited evaluation requires payment and complete documents before the local cutoff. */
+export const hasEvaluationCutoff = (rate?: Rate) => Boolean(rate && ['document', 'course'].includes(rate.label) && (rate.turnaround?.kind === 'sameDay' || (rate.turnaround?.kind === 'hours' && rate.turnaround.value === 24)));
 export const expertOpinion: readonly Rate[] = [
   tier('standard', 'expert', 620, days(21)), tier('rush', 'expert', 700, days(14)), tier('express', 'expert', 800, days(8)),
 ];
@@ -89,7 +93,8 @@ export const shipping: readonly Rate[] = [
   { id: 'internationalExpress', label: 'internationalExpress', price: fixed(88), turnaround: { kind: 'businessDayRange', min: 3, max: 5 }, tracking: true },
   { id: 'internationalFedex', label: 'internationalFedex', price: fixed(93), turnaround: { kind: 'businessDayRange', min: 1, max: 3 }, tracking: true },
 ];
-export const pricingPolicy = { sameDayCutoff: '1:00pm EST', simultaneousMinimumHours: 3, telephoneMinimumHours: 0.5, proofreadingDiscountMinimumPages: 10 } as const;
+/** The 24-hour/same-day cutoff uses the handling office's local time. */
+export const pricingPolicy = { sameDayCutoff: '13:00', simultaneousMinimumHours: 3, telephoneMinimumHours: 0.5, proofreadingDiscountMinimumPages: 10 } as const;
 export const pricingSections = ['translation', 'evaluation', 'expert', 'interpretation', 'general', 'shipping'] as const;
 export type PricingSectionId = typeof pricingSections[number];
 

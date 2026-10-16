@@ -254,6 +254,48 @@ The following presentation rules apply to the connected CRM workspace:
 - Keep Chinese name labels Chinese-only, with the optional marker beside the
   middle name. Align the three desktop inputs. Use a consistent dropdown chevron
   inset 14px from the right edge, with enough text padding to avoid overlap.
+- For evaluation and pre-evaluation, place a required Mr./Ms./Mx. pronoun dropdown
+  before the name fields and include an optional date of birth. Mark pronouns,
+  first name, last name and every education field as required. Show school and
+  study country side by side on desktop, with the degree name spanning a full row;
+  stack fields on phones. Include the new identity fields in review and drafts,
+  retaining old answers while requesting missing required pronouns.
+- Place formal evaluation service cards directly below education. Offer document
+  and course evaluation as mutually exclusive radio choices; omit expert/position
+  services and the help-choosing option from this intake. Each card has its own
+  sample-report link, available before selection and opening separately without
+  changing the selected service. Use processing tiers from the shared 2026 catalog.
+  Charge only selected qualifications, with the first included and later ones
+  using the catalog's additional rates. Preserve education associations on switching.
+- Mark 24-hour and same-day processing tiers with an asterisk. Keep the payment
+  and complete-document cutoff beside the processing selector, with the same
+  reminder in fee summaries and review when an expedited tier is selected.
+  The cutoff is 13:00 in the handling office's local time. Public Pricing and
+  Evaluation tables use the same rule and include course same-day service at $450.
+- Keep translation as a separate optional service awaiting a quote. Use the same
+  service-fee estimate in the sidebar and review, showing only the chosen evaluation.
+  Include report and selected shipping charges; exclude payment-processing fees.
+  Preserve old single-service draft choices, but request a current tier before review.
+  Remove retired choices from restored drafts; conflicting document/course choices
+  require reselection while preserving contact and education details.
+- Place Report & delivery below evaluation services. Default to PDF-only; offer
+  PDF plus one mailed paper report with an optional additional-copy count. Use the
+  shared 2026 report/shipping catalog, preserving ranges for additional-copy fees.
+  Paper delivery requires recipient, country, street and city; U.S. destinations
+  also require a valid state and ZIP code. Apartment/suite is optional; non-U.S.
+  state/province and postal code are entered where applicable. Filter shipping by
+  destination and clear incompatible methods on country changes. Switching to PDF
+  clears mailing charges while retaining the draft address. Show report format,
+  full address, shipping and copy count in review; persist them with the draft.
+- For formal credential evaluation, retain the legacy service-notes example,
+  request guidance and complete acceptance notice under Additional requirements,
+  using a restrained amber notice. Keep the PDF sample links beside their service
+  cards. Do not show evaluation guidance for other services.
+- Style Start over with error-red text and a reset icon, without an underline.
+  Keep its clear-draft confirmation and cancel action before removing answers.
+- Omit the duplicate step counter in the first-step action bar; keep the forward
+  action right-aligned. Use green forward buttons and black, white-text Back
+  buttons throughout this form, preserving the disabled submission state.
 - Initial owner-approved office scope: pre-evaluation and evaluation use Miami,
   Los Angeles and San Francisco; translation uses Miami, Boston, Los Angeles,
   San Francisco and New York. This application excludes Beijing. Clear invalid

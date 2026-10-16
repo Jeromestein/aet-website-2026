@@ -299,7 +299,7 @@
     },
     "notes": {
       "translationQuote": "Prices are estimates. An exact quote is provided after reviewing the actual document. Contact our Miami or Boston office for details.",
-      "cutoff": "For same-day evaluation, payment and documents must be submitted by {time}.",
+      "cutoff": "* For 24-hour and same-day evaluation, payment and complete documents must be received by {time} local time at the office handling your application.",
       "onSite": "Plus transportation fees covering round-trip travel time, vehicle costs, and parking. Used for immigration interviews, courts/legal matters, exhibitions, business, education, science, and more.",
       "simultaneous": "Rate shared by two interpreters, plus transportation fees. For conferences and lectures; minimum {simultaneousMinimumHours} hours.",
       "telephone": "Minimum {telephoneMinimumHours} hour.",
