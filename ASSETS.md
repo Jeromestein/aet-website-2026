@@ -1,5 +1,15 @@
 # Asset and content provenance
 
+## AET Eval — October 17, 2026
+
+`lib/eval/assets/` retains the seal, watermark, and ten existing signature images
+from `/Users/plusone/Desktop/Code/html-editor/public/`. These are existing AET
+materials, not generated signatures. They are served only by the guarded local
+Eval API, never copied into the public website assets. The workspace and report
+header reuse the 2026 website’s `public/brand/aet-icon-48.png` and
+`aet-icon-512.png`. Report template prose is retained from HTML Editor; this
+integration does not independently verify historical company or evaluator claims.
+
 ## CSLB institution logo — October 10, 2026
 
 `public/images/institutions/directory/CSLB.png` is an unchanged copy of the

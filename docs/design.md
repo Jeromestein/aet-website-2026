@@ -385,3 +385,27 @@ An explicit language URL wins over saved preferences. Otherwise use the saved
 language, browser preference, then English. Preserve the current page, query, and
 fragment when switching. Missing translations fall back to English and are flagged
 by development checks. New localized pages reuse the same route and message structure.
+
+## AET Eval workspace
+
+- `/admin/eval` uses the shared 2026 color tokens and Poppins typeface with a
+  compact navy/blue workspace and orange primary actions. Public website layouts
+  remain separate from the admin root.
+- Desktop navigation uses a sidebar; mobile navigation flows above the content.
+  Course tables and paper previews scroll inside their panels rather than widening
+  the page. Editing fields remain readable and touch-sized on small screens.
+- Opening a report defaults to the editable HTML document, with subtle field
+  hover/focus states. Fields, AI, and History occupy a collapsible right panel;
+  on narrow screens the expanded tools sit above the report. One draft drives
+  both document and form fields. Keep the document mounted when panels change
+  and retain unsent AI messages when the panel is collapsed.
+- Keep course page membership stable during typing. Reflow when focus leaves
+  the document or when entering print preview. Report pages and wide tables
+  scroll inside their own containers. Print preview is explicitly read-only.
+- Use explicit save, visible unsaved state, and recoverable archive. History and AI
+  changes are applied to a draft first. AI suggestions require review and must not
+  set human-verification flags.
+- Printed reports retain the established Letter-size HTML Editor template and
+  Arial typography; application chrome is omitted when printing. Long content
+  remains visible instead of being clipped. Word exports show the same converted
+  US grades/credits as the preview.

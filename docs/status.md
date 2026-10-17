@@ -1,5 +1,126 @@
 # AET Implementation Status
 
+## 2026-10-17 — AET Eval inline report editing
+
+- Reports now open directly in the editable HTML document. Applicant, credential,
+  equivalence, course, document, notes, reference, and signature fields use the
+  inherited report components. The 2026 shell remains around the formal report.
+- Fields, AI, and History are collapsible right-side tools sharing the same draft.
+  On phones the open panel sits above the report. Closing panels preserves the
+  draft and unsent AI input. Print preview removes report editing controls.
+- Kept course page membership stable during typing, replaced title-dependent
+  document keys, and retained multi-line course names in both editors. Course
+  title edits preserve reviewed totals; grade/credit changes recalculate them.
+  Batched evaluator-name/signature changes no longer overwrite one another.
+- In-app browser verification passed at 1440px, 390px, and 320px: report-to-form
+  and form-to-report sync, multi-line input with focus retained, GPA updates,
+  adding a document, explicit save/reload, history restore, panel collapse,
+  unsent AI input retention, and repeat print-preview switching. Report preview
+  contains zero editable textboxes. No document-level horizontal overflow or
+  browser console errors were found; Letter paper scrolls within its canvas.
+- Used only the existing archived synthetic integration fixture for saved edits.
+  No original report was edited, no new QA report was created, and no schema or
+  authentication changes were made. The earlier Gemini billing limitation still
+  applies; this pass did not submit new AI or PDF requests. Actual printer output
+  and saved browser PDF remain unverified.
+- `pnpm typecheck`, `node scripts/check-eval.cjs` (11 checks), `pnpm check:i18n`,
+  and `git diff --check` passed. Screenshots:
+  `output/playwright/aet-eval-inline-desktop.png` and
+  `output/playwright/aet-eval-inline-mobile.png`.
+- Restarted the stopped isolated preview with `pnpm dev:eval` on localhost:3023
+  for verification. It remains running. Work remains uncommitted in `x/aet-eval`;
+  no production build, push, or deployment was performed.
+
+## 2026-10-17 — AET Eval local application integration
+
+- Implemented in `/Users/plusone/Desktop/Code/aet-website-2026-eval`, branch
+  `x/aet-eval`, from local `main` at `902657b`. The main checkout is clean.
+  `/admin/eval` and `/admin/eval/[id]` use the 2026 palette, Poppins, responsive
+  workspace navigation, and the migrated `jhaccounting.org & AET` dataset.
+- Added report search/sort, new/edit/save, credentials/courses and GPA, documents,
+  notes/signatures, read-only grade reference, history restore, reversible archive,
+  private image uploads/delivery, HTML preview/print entry, and Word export.
+  Saves and revision insertion are atomic, with timestamp conflict checks.
+  Restoring a revision first changes the draft, then requires an explicit save.
+- Applied `20261017203004_add_aet_eval_operations.sql` for service-role-only save
+  and archive operations. No permanent-delete endpoint/function was added. The
+  security advisor reports only the expected no-client-policy INFO notices for
+  Eval tables; unrelated existing project findings remain outside this change.
+- Employee login is deliberately deferred. Both UI and API reject production,
+  disabled mode, and non-loopback hosts. Mutation requests must be same-origin;
+  public analytics are excluded. Server credentials were absent from generated
+  browser bundles. The isolated `pnpm dev:eval` server uses localhost:3023;
+  localhost binding also avoids Next's loopback-IP rewrite redirect loop.
+- AI assistant proposals, selected image context, and two-stage PDF extraction
+  are implemented with explicit review-before-apply. No suggestions auto-save or
+  assign human-verification flags. Actual Gemini requests with synthetic text and
+  a synthetic PDF returned provider billing error 402 (prepayment depleted).
+  The UI preserves drafts/messages and shows the actionable billing error. A
+  successful live AI reply, chat insertion, and PDF extraction/apply still require
+  a funded/replacement API key; they are not reported as passing.
+- Verified original contents of all 17 reports, 193 history records, 16 chat
+  records, and all 7 attachment hashes. All 17 reports pass the editor schema,
+  including a legacy report missing original course grade/credit/level fields;
+  missing values default to blank only when explicitly saved/exported. No original
+  report contents were changed. Two clearly labeled synthetic QA reports remain
+  archived after automatic approval rejected irreversible cleanup. Their history
+  is retained; the temporary synthetic image was removed. The active list has 17
+  original reports and 17 conversion rules.
+- Live API checks passed for create/update, version retrieval, archive/restore,
+  stale-save/archive conflicts (409), request/schema/path guards, private attachment
+  upload/download, and DOCX generation. Word package/text checks confirm converted
+  US credits and grades match the preview, including the legacy report export.
+- Codex in-app browser passed desktop 1440px and mobile 390/320px checks of the
+  workspace, editing, courses/GPA, new report save/address, history restore,
+  preview, and AI/PDF failure recovery. No document-level horizontal overflow;
+  wide course tables and paper previews scroll within their panels. The original
+  long report preview rendered eight Letter-sized sections without clipped page
+  containers. Actual printer output and a saved browser PDF were not verified.
+  The public Chinese homepage was also checked at desktop and 390px after sharing
+  theme tokens; English root and localized routes returned HTTP 200.
+- `node scripts/check-eval.cjs` (9 checks), `pnpm typecheck`, `pnpm check:i18n`,
+  and `git diff --check` passed. Screenshots: `output/playwright/aet-eval-desktop.png`
+  and `output/playwright/aet-eval-mobile.png`. No production build, commit, push,
+  or deployment was performed. Deployment and staff authentication remain deferred.
+
+## 2026-10-17 — HTML Editor Supabase data migration
+
+- Copied the HTML Editor dataset from `dsmihkfffzlhcbjwvdvo` (Jeromestein)
+  into `qrxztgdemfodemlcabcq` (`jhaccounting.org & AET`, Meiyu Group), the
+  same project used by the development branch. Source SQL Editor counts matched
+  the exported API counts: 17 reports, 193 revisions, 16 chat records, 17 grade
+  conversion rules, and 7 storage objects totaling 1,114,382 bytes.
+  The source has no Auth users or additional custom schemas.
+- Applied `supabase/migrations/20261017200719_create_aet_eval_tables.sql`.
+  Only four new evaluation tables, their indexes, and their update trigger were
+  added. The importer preserves IDs, timestamps, JSON content, and associations;
+  the four tables are imported in one transaction. Existing differing rows or
+  files cause an abort instead of being overwritten.
+- Copied all attachment bytes to the private `aet-eval-attachments` bucket and
+  replaced seven old URL occurrences with target authenticated storage URLs.
+  The immutable original snapshot, SHA-256 manifest, URL mapping, and verification
+  results are under `.local/eval-migration/2026-10-17-source/` (Git-ignored,
+  directories mode 700 and files mode 600). The backup contains private records
+  and must not be committed. Credentials are read from environment files and are
+  not included in the backup or migration.
+- Verified every target row against the transformed backup and every object
+  against its SHA-256 digest. Source data and storage metadata were unchanged;
+  neither revision nor chat records have orphan report references. Anonymous
+  table reads and public/authenticated attachment downloads were blocked.
+  Authorized downloads from the stored target URLs succeeded; a second import
+  left all counts and hashes unchanged. All four tables
+  have RLS enabled with no client-role grants/policies; the server service role
+  is the intended access path. The advisor's `rls_enabled_no_policy` notices
+  for these four tables are intentional. Existing unrelated project warnings
+  were left unchanged; this is not a whole-project security clearance.
+- `scripts/migrate-eval.py` supports export, import, and read-only verification.
+  Run `--help` for arguments. Source and target project IDs are pinned, and it
+  rejects incomplete exports, altered backups, and unexpected target contents.
+  The source account/project remains intact. This completed the data-migration phase; application integration and private
+  attachment delivery are recorded above. Deployment remains pending. Employee login remains deferred by request.
+  No frontend files were edited for this migration, so no frontend visual check
+  was required. No production build, push, or deployment was run.
+
 ## 2026-10-15 — Hero service-specific actions
 
 - Changed the Hero evaluation action to Apply for Credential Evaluation

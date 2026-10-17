@@ -11,6 +11,9 @@ const englishLegalMiddleware = createMiddleware({
 });
 
 export default function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname === "/admin" || request.nextUrl.pathname.startsWith("/admin/")) {
+    return;
+  }
   // Legal documents are English-only, without changing the saved site language.
   return /^\/(?:en\/)?(?:privacy|terms)\/?$/.test(request.nextUrl.pathname)
     ? englishLegalMiddleware(request)

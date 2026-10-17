@@ -13,6 +13,51 @@ pnpm dev
 
 Open http://localhost:3021. The development port is configured in `package.json`.
 
+## AET Eval (local workspace)
+
+AET Eval runs at `/admin/eval` in the `x/aet-eval` worktree. Set the server-only
+`EVAL_*` values from `.env.example` in `.env.local`, then run `pnpm dev:eval` and
+open `http://localhost:3023/admin/eval`. The separate port avoids the website's
+normal development server. Restart after changing environment values.
+
+The workspace uses project `qrxztgdemfodemlcabcq` (`jhaccounting.org & AET`),
+including the migrated reports, versions, conversations, conversion rules, and
+private `aet-eval-attachments` bucket. Schema changes are in `supabase/migrations`.
+Existing remote migrations are already applied; do not re-import the original
+snapshot after editing live reports. The migration verifier compares the original
+exported columns and intentionally fails if original data has since changed.
+
+Reports open as directly editable HTML documents. Click a report field to change
+it in place. Fields, AI assistant, and History are collapsible tools beside the
+report (above it on phones). The canvas and field panel share one unsaved draft;
+closing a panel also preserves the unsent AI message. Print preview switches the
+report to clean, read-only pages. Use Save report to persist edits.
+
+Features include report search, applicant/credential/course editing, GPA totals,
+document notes and signatures, history restore, reversible archive, private image
+attachments, paginated preview/printing, Word export, and reviewable AI proposals.
+PDF import prepares a draft for review before applying. Neither PDF import nor AI
+suggestions save the report automatically. Conversion rules are read-only reference
+material; the inherited HTML Editor GPA scale includes A+=4.35. Existing report
+totals are preserved until grades/credits or course membership are changed, or
+explicitly recalculated. Editing course titles does not replace reviewed totals.
+
+Employee login is deferred. Both pages and APIs require development mode,
+`EVAL_LOCAL_ENABLED=true`, and a loopback host; `dev:eval` binds to localhost.
+Production mode always rejects access. The admin layout excludes public analytics.
+Credentials stay server-side. Do not remove these gates before staff access is
+implemented. The private bucket and evaluation tables have no client-role access.
+
+AI requires a funded Gemini project. PDF contents, current report context,
+messages, and selected images are sent to Gemini only when the user invokes the
+corresponding action. The initial model is `gemini-3-flash-preview`, configurable
+with `EVAL_GEMINI_MODEL`. The inherited API key currently returns billing error
+402 (credits depleted); successful live parsing and AI replies must be rechecked
+after its billing is restored or a replacement key is configured.
+
+Run `node scripts/check-eval.cjs` for synthetic checks of GPA, allowed AI changes,
+legacy field compatibility, validation, signature restrictions, and access gates.
+
 ## Validation and deployment
 
 ```sh
@@ -34,7 +79,7 @@ copy and requires an HTTPS `PAYMENT_SITE_URL`. Local development remains in test
 mode. Production defaults to disabled unless its mode is explicitly configured.
 See [payment integration notes](content/payment/README.md) for setup, verification
 and the manual reconciliation boundary. Git pushes do not upload `.env.local`.
-Other pages need no API keys or database.
+Other public pages need no API keys or database.
 Deployment is intentionally left to the owner.
 
 ## Analytics
