@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { ArrowUpRight, BookOpen, FileCheck2, Languages } from 'lucide-react';
+import { getPathname } from '@/i18n/navigation';
+import { ArrowUpRight, BookOpen, CircleHelp, FileCheck2, FileText, Languages } from 'lucide-react';
 import { evaluationAdditionalDegree, hasEvaluationCutoff, pricingPolicy } from '@/lib/pricing';
 import { formatMoney, formatPrice, formatTurnaround } from '@/lib/pricing-format';
 import { applicationCopy } from '@/lib/application/copy';
@@ -23,7 +24,12 @@ export function EvaluationServices({ locale, value, educations, errors, onChange
   const icons = { document: FileCheck2, course: BookOpen };
   const quote = quoteEvaluation(value, educations.length);
   return <section className={s.section} aria-labelledby="evaluation-services-title">
-    <h3 id="evaluation-services-title">{c.title} <span className={s.requiredMark} aria-hidden="true">*</span></h3>
+    <div className={s.evaluationHeading}>
+      <h3 id="evaluation-services-title">{c.title} <span className={s.requiredMark} aria-hidden="true">*</span></h3>
+      <a className={s.evaluationHelp} href={getPathname({ locale, href: '/evaluation' }) + '#service'} target="_blank" rel="noopener noreferrer" title={c.compareServices + ' · ' + common.sampleNewTab} aria-label={c.compareServices + ' · ' + common.sampleNewTab}>
+        <CircleHelp size={21} aria-hidden="true" />
+      </a>
+    </div>
     <p className={s.sectionHint} id="evaluation-services-hint">{c.hint}</p>
     {errors.evaluationRequest && <p className={s.fieldError} id="evaluation-services-error">{c.selectionError}</p>}
     <div className={s.evaluationCards} role="radiogroup" aria-required="true" aria-labelledby="evaluation-services-title" aria-describedby={errors.evaluationRequest ? 'evaluation-services-error' : 'evaluation-services-hint'}>
@@ -44,8 +50,8 @@ export function EvaluationServices({ locale, value, educations, errors, onChange
             </label>
             <div className={s.evaluationCardMeta}>
               <span className={s.evaluationPrice}>{p('format.from', { amount: formatPrice(group.rates[0].price, locale, p) })}</span>
-              <a className={s.sampleReportLink} href={group.id === 'document' ? '/evaluation_report.pdf' : '/cbcevaluation_report.pdf'} target="_blank" rel="noopener noreferrer" aria-label={(group.id === 'document' ? common.degreeSample : common.courseSample) + ' · PDF · ' + common.sampleNewTab}>
-                {c.sampleReport}<ArrowUpRight size={15} aria-hidden="true" />
+              <a className={s.sampleReportLink} href={group.id === 'document' ? '/evaluation_report.pdf' : '/cbcevaluation_report.pdf'} target="_blank" rel="noopener noreferrer" aria-label={c.sampleReport + ' · ' + (group.id === 'document' ? common.degreeSample : common.courseSample) + ' · PDF · ' + common.sampleNewTab}>
+                <FileText size={18} aria-hidden="true" />{c.sampleReport}<ArrowUpRight size={15} aria-hidden="true" />
               </a>
             </div>
           </div>

@@ -95,9 +95,15 @@ fieldset > .sectionHint { margin-top: 0; }
 .evaluationToggle { display: grid; grid-template-columns: 20px 42px minmax(0, 1fr); gap: 14px; align-items: center; cursor: pointer; }
 .evaluationSelected .evaluationCardHeader { background: #eff6fc; }
 .evaluationCardMeta { display: grid; justify-items: end; gap: 8px; }
-.sampleReportLink { display: inline-flex; align-items: center; gap: 4px; color: var(--action-blue); font-size: 12px; font-weight: 500; line-height: 1.8; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
-.sampleReportLink:hover { color: var(--ink); }
-.sampleReportLink:focus-visible { outline: 2px solid var(--action-blue); outline-offset: 4px; border-radius: 2px; }
+.evaluationHeading { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.evaluationHeading h3 { margin: 0; }
+.evaluationHelp { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px; border: 1px solid #c6d6e3; border-radius: 50%; background: #eff6fc; color: var(--action-blue); }
+.evaluationHelp:hover { background: #dcecf8; border-color: var(--action-blue); }
+.evaluationHelp:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 3px; }
+.sampleReportLink { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--accent); border-radius: 8px; background: var(--blue); color: var(--action-blue); font-size: 13px; font-weight: 600; line-height: 1.5; text-decoration: none; text-align: center; max-width: 100%; }
+.sampleReportLink svg { flex-shrink: 0; }
+.sampleReportLink:hover { background: var(--action-blue); border-color: var(--action-blue); color: var(--surface); }
+.sampleReportLink:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 3px; }
 .evaluationToggle input, .qualificationChoices input, .extraChoice input { width: 19px; height: 19px; margin: 0; accent-color: var(--action-blue); flex-shrink: 0; cursor: pointer; }
 .evaluationToggle input:focus-visible, .qualificationChoices input:focus-visible, .extraChoice input:focus-visible { outline: 3px solid var(--action-blue); outline-offset: 4px; }
 .evaluationIcon { display: grid; place-items: center; width: 42px; height: 42px; color: var(--action-blue); border: 1px solid #dae7f1; border-radius: 10px; background: var(--paper); }
@@ -297,7 +303,7 @@ fieldset > .sectionHint { margin-top: 0; }
   .education { padding: 16px 13px 0; }
   .evaluationCardHeader { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 10px; }
   .evaluationToggle { grid-template-columns: 19px minmax(0, 1fr); gap: 12px; }
-  .evaluationCardMeta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-left: 31px; }
+  .evaluationCardMeta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-left: 31px; }
   .evaluationTitle strong { font-size: 15px; }
   .evaluationDetails { padding: 18px 14px 0; }
   .evaluationExtras { padding: 16px; }

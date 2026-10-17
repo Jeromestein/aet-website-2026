@@ -1,7 +1,8 @@
 import type { Locale } from '@/i18n/routing';
 
 const en = {
-  title: 'Choose your evaluation service', hint: 'Choose one evaluation service, then select a processing time.', sampleReport: 'Sample report',
+  title: 'Choose your evaluation service', hint: 'Choose one evaluation service, then select a processing time.', sampleReport: 'View Evaluation Sample',
+  compareServices: 'Compare document-by-document and course-by-course evaluations',
   turnaround: 'Processing time', selectTier: 'Choose a processing time', qualifications: 'Qualifications to evaluate',
   qualificationHint: 'Select from the education records above.', included: 'One qualification is included in the base fee.',
   additional: 'Each additional qualification: {amount}', count: '{count} qualification(s)',
@@ -16,7 +17,8 @@ const en = {
 };
 type EvaluationCopy = { [Key in keyof typeof en]: string };
 const zh: EvaluationCopy = {
-  title: '选择评估服务', hint: '选择一种评估服务，再选择办理时效。', sampleReport: '示例报告',
+  title: '选择评估服务', hint: '选择一种评估服务，再选择办理时效。', sampleReport: '查看评估示例',
+  compareServices: '了解逐份文件评估与逐门课程评估的区别',
   turnaround: '办理时效', selectTier: '请选择办理时效', qualifications: '需要评估的学历',
   qualificationHint: '从上方填写的学历中选择。', included: '基础费用包含一项学历。', additional: '每项附加学历：{amount}', count: '{count} 项学历',
   translation: '同时需要文件翻译', translationHint: '翻译费用将在审阅文件后单独报价。',
@@ -27,7 +29,8 @@ const zh: EvaluationCopy = {
   baseFee: '基础服务费', additionalFees: '附加学历费', serviceTotal: '本项服务小计', linkedEducation: '评估学历', reviewTitle: '服务与费用',
 };
 const es: EvaluationCopy = {
-  title: 'Elija el servicio de evaluación', hint: 'Elija un servicio de evaluación y seleccione un plazo de tramitación.', sampleReport: 'Ver ejemplo',
+  title: 'Elija el servicio de evaluación', hint: 'Elija un servicio de evaluación y seleccione un plazo de tramitación.', sampleReport: 'Ver ejemplo de evaluación',
+  compareServices: 'Comparar las evaluaciones documento por documento y curso por curso',
   turnaround: 'Plazo de tramitación', selectTier: 'Seleccione un plazo', qualifications: 'Titulaciones que desea evaluar',
   qualificationHint: 'Seleccione entre los registros académicos anteriores.', included: 'La tarifa base incluye una titulación.', additional: 'Cada titulación adicional: {amount}', count: '{count} titulación(es)',
   translation: 'También necesito traducción de documentos', translationHint: 'La traducción se cotiza por separado tras revisar los documentos.',

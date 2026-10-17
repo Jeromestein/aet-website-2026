@@ -310,6 +310,13 @@ The following presentation rules apply to the connected CRM workspace:
   indicator and a service/office summary. Preserve draft answers within the same
   browser tab for up to 24 hours; provide an explicit clear-draft action.
 
+- Highlight evaluation sample-report links with theme pale blue, a navy label, a
+  document icon and an external-link indicator. Use “View Evaluation Sample”
+  for the English label and localized equivalents. Keep each PDF link separate
+  from the service radio label. Place a question-mark link beside the evaluation
+  service heading, opening the localized `/evaluation#service` explanation in
+  a new tab. Provide descriptive localized accessible names for these links.
+
 ### Pre-evaluation customer journey
 
 Preserve the legacy three steps: applicant, education, review. Required fields,

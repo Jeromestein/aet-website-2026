@@ -1,5 +1,29 @@
 # AET Implementation Status
 
+## 2026-10-17 — Evaluation samples and service guidance
+
+- Highlighted both evaluation sample-report links with a theme-blue button,
+  document icon and external-link arrow. Added a question-mark link beside the
+  service heading to the localized `/evaluation#service` explanation, with
+  descriptive English, Chinese and Spanish accessible labels. All three links
+  use a separate tab and preserve the existing form state.
+- TypeScript, i18n (500 messages per locale) and whitespace checks passed.
+  In-app browser inspected the current form and English desktop/mobile states
+  at 1440px/390px; mobile width matched the viewport without horizontal overflow.
+  Both PDF destinations returned HTTP 200. Verified rendered link targets and
+  separately opened the explanation destination to confirm its anchor/content.
+  The in-app browser did not expose a new tab after clicking the help link, so
+  automatic popup behavior remains unconfirmed in this browser.
+- Owner follow-up: renamed the English action to “View Evaluation Sample”,
+  with matching Chinese/Spanish labels. Replaced warm colors with shared pale
+  blue, navy text/border and a navy/white hover state. Rechecked English desktop
+  (1440px) and mobile (390px); the longer label fits without horizontal overflow.
+  Follow-up screenshots: `output/playwright/evaluation-sample-blue-{desktop,mobile}-2026-10-17.png`.
+- Screenshots: `output/playwright/evaluation-service-help-{desktop,mobile}-2026-10-17.png`.
+  Preserved draft fields and selection, restored viewport; no form submission,
+  server restart, production build, commit, push or deployment.
+
+
 ## 2026-10-17 — Integrate latest main into dev
 
 - Merge main through `902657b`, which includes the fetched GitHub main and one
