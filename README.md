@@ -263,8 +263,9 @@ calculator. No action displays a successful save unless its API has succeeded.
 Historical local-pilot setup is retained in [local workflow notes](docs/pre-evaluation-local.md).
 
 Application URLs are not yet fully compatible with the old portal. The three
-pre-evaluation paths are retained; legacy formal `/status`, checkout and four
-standalone CRM tool URLs remain open work. See the
+pre-evaluation paths are retained; formal `/status?applicationId=ID` now supports
+localized customer lookup locally (uploads/payment continue in the old portal).
+Legacy checkout and four standalone CRM tool URLs remain open work. See the
 [dated URL comparison](docs/app-url-compatibility.md) before app-domain cutover.
 
 ## Documentation

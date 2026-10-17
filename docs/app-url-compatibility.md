@@ -2,8 +2,9 @@
 
 Recorded October 16, 2026 from the October 15 source comparison and local HTTP
 checks. **The 2026 application does not yet preserve every legacy URL.** The
-three public pre-evaluation URLs are retained; formal status, checkout and four
-standalone staff-tool URLs still need compatibility work.
+three public pre-evaluation URLs are retained, and formal status lookup is now
+restored locally. Checkout and four standalone staff-tool URLs still need
+compatibility work; production hostname behavior remains unverified.
 
 ## Scope and evidence
 
@@ -34,7 +35,7 @@ unauthenticated request; it does not verify the authenticated dashboard.
 | `/degree-equivalency-tool/application` | 200 at the same path | Pre-evaluation form retained |
 | `/degree-equivalency-tool/application/success?applicationId=ID` | 200; query preserved | Pre-evaluation result entry retained |
 | `/credential-evaluation-application` | 200 at the same path | Formal application entry retained |
-| `/status?applicationId=ID` | 404 | Legacy formal status entry missing |
+| `/status?applicationId=ID` | 200 on October 16 | Formal status lookup restored; production cutover remains open |
 | `/status-check?applicationId=ID` (2026 comparison route) | 200 | New pre-evaluation lookup; not a replacement for legacy formal status |
 | `/checkout?applicationId=ID` | 404 | Legacy checkout entry missing |
 | `/checkout/return?session_id=SESSION` | 404 | Legacy payment-return entry missing |
@@ -50,7 +51,18 @@ A missing standalone tool URL does not prove the feature is entirely absent.
 For example, GPA is available inside the new CRM. Each old URL needs an explicit
 mapping to the relevant workspace state or a documented replacement workflow.
 
-## Formal status is a separate compatibility gap
+## Formal status implementation update — October 16, 2026
+
+The localized `/status` page now queries formal records directly, including the
+configured live source on the approved local 3022 preview. It displays a limited
+customer status projection, with the existing website header and footer. Uploads
+and payment still link to the old portal. It does not grant receipt, file or staff
+access. The owner-provided reference ID, automatic loading, invalid IDs and missing
+records were checked locally. Production domain cutover remains unverified.
+
+The comparison below describes the earlier audit, before this implementation.
+
+## Original formal status compatibility gap
 
 The legacy formal application form navigates to `/status?applicationId=ID`, and
 its confirmation email includes that address. The old status component looks up
@@ -102,7 +114,7 @@ configured Stripe webhooks, email callbacks or other integration endpoints.
 
 ## Remaining work before app-domain cutover
 
-- [ ] Restore `/status?applicationId=ID` with correct formal-application handling.
+- [x] Restore `/status?applicationId=ID` with correct formal-application handling locally. Verified the owner-provided existing formal ID on October 16; production hostname/cutover remains open.
 - [ ] Map all three legacy checkout paths and preserve their query context.
 - [ ] Map the four standalone staff-tool URLs to their intended destinations.
 - [ ] Test reusable old email URLs with representative authorized records and

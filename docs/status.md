@@ -2,6 +2,87 @@
 
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
+### Dev checklist and scoped commit verification — October 17, 2026
+
+- Reconciled the migration checklist with the unified application preview,
+  evaluation pricing/delivery, live CRM, staff permissions and customer status.
+  Kept actual submission, disconnected integrations and production cutover open.
+- Separated customer-status API/model/tests, localized customer UI, and progress
+  documentation into scoped commits. No feature behavior changed during this pass.
+- Reran the customer-status and CRM completion suites: 14 tests passed. TypeScript
+  without incremental output, locale validation (466 messages per locale) and
+  whitespace checks passed. Vitest required permission to write its temporary
+  cache in the sibling dev worktree.
+- Browser checks were not repeated in this commit-only pass; the October 16
+  desktop/mobile and interaction evidence below remains the visual baseline.
+  No production build, server restart, remote push or deployment was performed.
+
+### Status customer details connected — October 16, 2026
+
+- With explicit owner authorization, expanded the existing UUID-scoped customer
+  lookup to select the legacy client/evaluee fields from fce_applications and
+  education fields from fce_educations joined by application_id. Both live and
+  isolated-preview branches use explicit field lists; no staff notes, internal
+  assessment output or unreleased reports are returned.
+- Connected all three information sections to the response, removed preview-only
+  badges, localized countries/purpose and rendered each linked education record.
+  Empty fields show Not provided; no education rows show an explicit empty state.
+  Date-only birth values remain date-only, avoiding timezone changes.
+- Verified the owner-provided application against the earlier legacy reference
+  and inspected real customer/evaluee/education fields in the in-app browser.
+  Desktop and 390px mobile checks passed without horizontal overflow. Captured
+  layout evidence with personal field values masked:
+  `output/playwright/aet-status-connected-desktop.png` and
+  `output/playwright/aet-status-connected-mobile.png`.
+- TypeScript, all six focused status/projection tests and whitespace checks pass.
+  Tests cover field mappings, missing fields, education dates and exclusion of
+  internal fields. No business records changed; no build, restart or deployment.
+
+### Status page section parity — October 16, 2026
+
+- Compared legacy StatusCheck, SelectedServicesCard, ClientInfoCard,
+  EvalueeInfoCard and PaymentOptions. Restored the missing customer sections in
+  legacy order: document requirements/file list/upload, service details/payment,
+  client information, evaluee information and education.
+- Frontend-only placeholders clearly identify disconnected data and actions.
+  Service summary and saved amount continue using the existing status response.
+  Personal fields and detailed delivery/service breakdowns remain unconnected;
+  no customer API projection, database access or permissions were expanded.
+- Added local-only file selection/drop/removal with extension/size validation;
+  upload remains disabled. Added Zelle/online radio selection, Zelle instruction
+  preview/back and existing-portal links. No recipient details or success states
+  are fabricated. The file-list placeholder does not claim no files were received.
+- TypeScript and whitespace checks passed. In-app browser inspected the restored
+  sections and Zelle expand/back behavior. Supplemental browser checks verified
+  payment switching, synthetic file selection/removal, disabled upload and 390px
+  mobile width without horizontal overflow. Screenshots:
+  `output/playwright/aet-status-sections-desktop.png`,
+  `output/playwright/aet-status-sections-mobile.png`,
+  `output/playwright/aet-status-sections-detail.png`.
+- No file transmission, payment, business-record mutation, build or deployment.
+
+### Formal customer Status page — October 16, 2026
+
+- Added localized `/status?applicationId=ID` pages with the shared website
+  Navigation/SiteFooter, manual lookup and automatic loading from old email URLs.
+- Reads the existing formal record by complete UUID through the configured live
+  connection on 3022, or isolated legacy tables in preview mode. Returns only
+  status, timestamps, office, service labels, saved amount and completion estimate;
+  excludes contact details, staff notes and unreleased reports. The endpoint uses
+  same-origin checks, bounded requests, rate limits and no-store/noindex headers.
+- Shows the legacy 48-hour payment window only for unpaid submitted applications.
+  Completion estimates reuse the existing validated turnaround projection.
+- Upload and payment actions explicitly open the existing portal; no new file or
+  payment integration is enabled. `/status-check` remains pre-evaluation-only.
+- Verified the owner's reference ID against the old portal and the new page,
+  automatic reload, invalid ID and missing-record feedback in the in-app browser.
+  Inspected desktop and supplemental 390px mobile screenshots with website header
+  and footer. TypeScript (without incremental cache) and all 12 focused status /
+  completion tests passed. No build, business-record write, restart or deployment.
+- Evidence: `output/playwright/aet-status-desktop.png` and
+  `output/playwright/aet-status-mobile.png`. Production app-host cutover remains
+  unverified; this local endpoint retains the configured localhost boundary.
+
 ### Twenty-record workspace pages — October 16, 2026
 
 - Unified live/preview page sizes and the UI fallback at 20 records. Retained

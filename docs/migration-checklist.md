@@ -1,10 +1,63 @@
 # AET 2026 Website and App Migration Checklist
 
-Initial inventory: September 28, 2026. Status reconciled October 1, 2026
+Initial inventory: September 28, 2026. Current dev checkpoint reconciled October 17, 2026
 against the current working tree, Git history and recorded local verification.
 Sources: the local legacy website, sibling AET App implementation, and the 2026
 design, navigation and page code. App replacement is tracked separately from
 the original public-page migration counts.
+
+## Current dev integration checkpoint — October 17, 2026
+
+This checkpoint supersedes earlier preview-only descriptions. Checked items
+indicate the stated implementation or recorded test milestone, not production
+readiness. Historical acceptance evidence remains in [status.md](status.md).
+
+### Unified application and evaluation selection
+
+- [x] Build the localized three-step `/application` preview: client/service/office,
+  service details, and review, with draft recovery and conditional validation.
+- [x] Add required pronouns/name/education, optional birth date and wider degree
+  fields; limit evaluation offices to Miami, Los Angeles and San Francisco,
+  and translation to the five US offices.
+- [x] Make document/course evaluation mutually exclusive, hide uncommon services,
+  place sample reports beside the choices and use shared 2026 prices.
+- [x] Include starred 24-hour/same-day choices, USD 450 course same-day pricing,
+  and each handling office's local 1 pm payment/document cutoff.
+- [x] Add report delivery, paper copies, conditional required mailing address,
+  shipping fees and the corresponding review summary.
+- [ ] Connect this new entry to persisted applications, confirmation emails and
+  the upload handoff. Its final submission remains disabled.
+- [ ] Finalize the unified application data model and its CRM mapping. Existing
+  pilots currently retain legacy-compatible business tables plus workflow tables.
+
+### CRM, staff and customer status
+
+- [x] Connect CRM to shared live records with office-scoped staff authorization,
+  restricted edits, audit entries, detail drawers and 20-record pagination.
+- [x] Add completion estimates and canonical English-only staff routes.
+- [x] Restore localized formal `/status?applicationId=ID` lookup, including client,
+  evaluee and linked education fields, without exposing internal notes or reports.
+- [x] Add status-page document selection and payment-method previews with explicit
+  disconnected states and links to the existing portal.
+- [ ] Connect customer-status file lists/uploads, detailed service/delivery data
+  and payment execution. Current file selection stays on the customer's device.
+- [ ] Complete new live intake, document/payment operations, customer messaging
+  and report delivery in the new CRM before retiring the previous workspace.
+
+### Business integration and release
+
+- [x] Retain recorded end-to-end pre-evaluation sandbox acceptance and the formal
+  evaluation local pilot; these are separate from the new unified form.
+- [ ] Enable and validate production integrations. Current cloud-preview mode
+  blocks external mail delivery, Stripe, Dropbox and AI; staff cutover is off.
+- [ ] Complete automated formal notifications, paper dispatch and the translation
+  order workflow.
+- [ ] Integrate main's newer payment, navigation and public-site changes into dev
+  and verify the combined behavior. Neither branch currently contains the other.
+- [ ] Verify the unified pre-evaluation journey from submission through files,
+  payment, email records, CRM handling and customer results before expansion.
+- [ ] Complete legacy URL compatibility, domain/callback configuration, production
+  acceptance and rollback preparation before replacing AET App.
 
 ## Application URL compatibility review — October 16, 2026
 
@@ -13,8 +66,8 @@ the original public-page migration counts.
   Chinese customer redirects preserve the query. Staff URLs remain unprefixed.
 - [x] Separate application compatibility from the public website's 448-path
   inventory. See [the route mapping and evidence boundaries](app-url-compatibility.md).
-- [ ] Restore legacy `/status?applicationId=...` for formal applications. The new
-  `/status-check` handles pre-evaluation only and is not an equivalent destination.
+- [x] Restore legacy `/status?applicationId=...` for formal applications locally.
+  `/status-check` remains pre-evaluation-only; production host cutover is pending.
 - [ ] Preserve `/checkout`, `/checkout/return` and `/checkout/success`, including
   their application/payment parameters and intended behavior.
 - [ ] Map the four legacy standalone CRM tool URLs, which currently return 404.
