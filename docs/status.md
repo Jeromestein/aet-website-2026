@@ -1,5 +1,299 @@
 # AET Implementation Status
 
+## 2026-10-17 — Integrate latest main into dev
+
+- Merge main through `902657b`, which includes the fetched GitHub main and one
+  additional local documentation commit. Preserve the dev application, CRM and
+  customer-status work alongside main's Stripe, navigation and public-site updates.
+- Resolve shared pricing and translation conflicts while retaining USD 450
+  course same-day evaluation and the handling office's local 13:00 cutoff.
+- Typecheck, all 266 tests across 21 test files, i18n validation (500 messages
+  per locale), mocked payment/contact checks and whitespace checks pass.
+- In-app browser smoke checks pass for the Chinese application first step,
+  Stripe cancelled-result page with shared navigation/footer, and evaluation
+  pricing. Mobile layouts and live transactions were not re-tested in this merge.
+- Reuse the existing local server; do not change secrets, run a production
+  build, submit applications, send emails or perform real payments.
+
+## 2026-10-15 — Hero service-specific actions
+
+- Changed the Hero evaluation action to Apply for Credential Evaluation
+  (学历评估申请) and linked it to the homepage `#process` section. Added dedicated
+  Hero contact copy for translation and other services in all three languages;
+  other Contact Us labels are unchanged. The contact action uses theme navy
+  with white text and retains the localized Contact destination.
+- Allowed long action labels to wrap while retaining fixed icon sizes. In-app
+  browser verified English/Chinese desktop layouts at 1440px, English mobile
+  at 390px, and Chinese/Spanish at 320px without horizontal overflow. Verified
+  the Chinese evaluation action lands below the header on desktop and mobile,
+  and the English contact action opens `/contact`.
+- Typecheck, i18n validation, and whitespace checks passed. Screenshots are
+  `output/playwright/hero-actions-*-2026-10-15.png`. Reused the existing preview;
+  no build, commit, push, or deployment.
+
+## 2026-10-15 — Apply Now navigation and online application labels
+
+- Renamed the desktop/mobile header action to Apply Now and linked it to the
+  active language's homepage `#process` section. Renamed the shared process
+  actions to Start Online Application, retaining their application-portal URL.
+  Updated English, Chinese, and Spanish labels.
+- Corrected initial hash alignment after hydration expands the preceding
+  homepage scroll story; the process section now lands below the sticky header.
+- Typecheck, i18n validation, and whitespace checks passed. In-app browser
+  verified cross-page navigation in all three languages, English at 1440px
+  desktop and 390px mobile, and Spanish at 320px. Mobile menus close on selection;
+  same-page navigation reaches the section, and checked phones have no horizontal
+  overflow. The online action still targets the existing application portal.
+- Screenshots: `output/playwright/apply-now-{desktop,mobile}-2026-10-15.png`.
+  Used the existing local server; no build, commit, push, or deployment.
+
+## 2026-10-15 — Production payment verification
+
+- Checked the deployed `https://www.americantranslationservice.com` website.
+  English, Chinese and Spanish Payment routes return HTTP 200 in live mode.
+  All four office choices offer customer-facing Stripe payment copy.
+- Submitted synthetic $0.50 verification requests to the production payment
+  endpoint for Boston, NYC, California and Miami. Each returned a live Checkout
+  session readable with its expected account credential, with the correct USD
+  amount and office metadata. All four remained unpaid and were then expired.
+- Verified production unpaid-result pages, mismatched-office rejection, amount
+  minimum, missing agreement and stale-test-form guards. An identical Boston
+  retry reused the same session. PayPal handoffs for all four offices return
+  HTTP 200 and their merchant values match local configuration; no PayPal
+  transaction was submitted.
+- In-app browser verified both accounts' Checkout branding, the Chinese desktop
+  form and 390px form/cancel page without horizontal overflow, and California's
+  Checkout cancel link back to the production result page. Boston's cancel click
+  encountered one in-app timeout; the same destination returned HTTP 200 in
+  393ms and opened correctly in a fresh browser tab. No payment-page console
+  errors were observed. Browser viewport was reset after the checks.
+- Screenshots: `output/playwright/stripe-online-{desktop,mobile,cancel-mobile,bos-checkout,ca-checkout}-2026-10-15.png`.
+  No code, credentials, hosting configuration or payment settings were changed.
+  Actual card charges, emailed receipts and bank payouts remain untested in this
+  verification; manual office reconciliation remains the intended workflow.
+- Content follow-up: the retained Visa/Mastercard-only notice does not match
+  the additional card brands displayed in both live Checkout pages. The retained
+  $250 and $500 transfer guidance also needs a consistent owner-approved policy.
+  These business rules were recorded, not silently changed during inspection.
+
+## 2026-10-15 — Live Stripe Checkout preparation
+
+- Added explicit test/live modes with no credential fallback. Boston and NYC use
+  the Boston account; California and Miami use the original account in each mode.
+  Production leaves Stripe disabled unless a mode is explicitly configured.
+- Reused the original account's existing live credential from the application
+  project after confirming that its test/live keys identify the same account.
+  That account reports charges and payouts enabled. Both account groups now have
+  local test/live credentials; `.env.local` remains ignored and uses test mode.
+- The form asks for an office before offering Stripe. Live-mode form, Checkout,
+  and result text omit test wording in all three languages. Test mode keeps its
+  explicit labels. Stale forms cannot silently switch between test and live.
+- Added retry idempotency, office/mode/source verification, a required public
+  HTTPS return origin for live payments, and customer/service metadata for manual
+  reconciliation. This standalone flow does not create an application/order or
+  automate fulfillment and email; see `content/payment/README.md` for deployment.
+- Created one unpaid $0.50 live Checkout session for each office and verified the
+  amount, live mode, office metadata, and unpaid result. Visually checked both
+  accounts' hosted Checkout branding, then expired all four unpaid sessions.
+  No card details were entered and no real payment was made in these checks.
+- Passed typecheck, i18n validation, whitespace checks, and the expanded isolated
+  payment checks for routing, mode guards, idempotency, response verification,
+  malformed inputs, and the existing PayPal paths.
+- In-app browser checks passed for English, Chinese, and Spanish live form
+  choices, all four offices, and Chinese desktop/390px form and cancellation
+  result states. Mobile had no horizontal overflow. Screenshots are in
+  `output/playwright/stripe-live-{form-desktop,form-mobile,result-mobile}-2026-10-15.png`
+  and `stripe-{bos,original}-live-checkout-2026-10-15.png`.
+- Reused the owner's test server on port 3021. A temporary isolated live-copy
+  preview on port 3029 used fixture keys and was stopped after verification.
+  No production build or deployment was run. Hosted production variables and
+  deployment remain pending; Git does not upload `.env.local`. Customer release
+  still requires the deployed return flow and operational reconciliation check.
+
+## 2026-10-15 — Boston / NYC Stripe account routing
+
+- Boston and NYC now select `STRIPE_TEST_SECRET_KEY_BOS`; California and Miami
+  retain the original test key. Missing Boston credentials cannot fall back to
+  the original account. Return verification uses the same office account and
+  rejects mismatched office metadata, even between Boston and NYC.
+- Created dedicated test/live restricted keys in the Boston/NYC Stripe account,
+  each with Checkout Sessions write/read permission only. Saved both secrets
+  and the corresponding publishable keys to ignored `.env.local` (mode 600),
+  preserving the original entries. `.env.example` contains blank placeholders.
+  The payment integration accepts test credentials only and never reads the
+  reserved live credential; no live API request or payment was made.
+- Pinned requests to API version `2026-09-30.endive` and replaced the removed
+  static payment-method parameter with the supported card eligibility filter.
+  This resolves the new account's rejected Checkout request without expanding
+  key permissions. The original account also passed test-session creation.
+- Passed typecheck, i18n validation, whitespace checks and the expanded isolated
+  `node scripts/check-payment.cjs` checks for all office routes, restricted test
+  keys, account isolation, tampered inputs and the existing PayPal paths.
+- Submitted the Boston form without a configured Boston key and verified its
+  localized unavailable result in the in-app browser on desktop and at 390px,
+  with no horizontal overflow. Screenshots:
+  `output/playwright/stripe-bos-unavailable-{desktop,mobile}-2026-10-15.png`.
+- After the owner completed Stripe verification, used the in-app browser to
+  submit Boston and NYC forms to the Boston/NYC account's branded sandbox
+  Checkout. Completed one Boston $0.50 test-card payment and verified the
+  website's success page; NYC Checkout and its cancel return also passed.
+  Retrieved both sessions with the restricted test key and confirmed test mode,
+  50 USD cents and their respective office metadata. No real money was charged.
+  Desktop screenshots: `output/playwright/stripe-bos-success-2026-10-15.png`,
+  `output/playwright/stripe-nyc-checkout-2026-10-15.png` and
+  `output/playwright/stripe-nyc-cancel-2026-10-15.png`.
+- Reused port 3021 and reset the viewport. No build, commit, push or deployment.
+
+## 2026-10-15 — Stripe test Checkout
+
+- Added an optional Stripe test choice to the existing Payment form in English,
+  Chinese and Spanish, preserving PayPal as the default. The selected amount
+  opens hosted Checkout in a new tab; the original form remains available.
+- Only a server-side test key enables Stripe. Amounts use integer USD cents;
+  live keys and unexpected Checkout destinations are rejected. Return pages
+  verify the session with Stripe before displaying test success and explain
+  cancelled, incomplete, unverified and unavailable outcomes.
+- Completed a $0.50 sandbox card payment from the Chinese form through Stripe
+  to the verified success page, using synthetic customer details and the official
+  test card. Also checked Stripe's return link reaches the cancelled result.
+  No real money was charged and no service order was created.
+- Passed typecheck, i18n validation, whitespace checks, three-locale rendered-page
+  checks and `node scripts/check-payment.cjs`. The isolated script checks amount
+  boundaries, test/live credentials, redirects, result verification, failures and
+  all four existing PayPal merchant paths without external requests.
+- In-app browser verified the desktop form and success/cancel states, plus the
+  Stripe option at 390px with no horizontal overflow. Screenshots are saved as
+  `output/playwright/stripe-{form-desktop,form-mobile,checkout-test,success,cancel}-2026-10-15.jpg`.
+- This initial test used the original configured Stripe account; the subsequent
+  Boston/NYC routing change is recorded above. Order persistence, webhooks and
+  application/email workflows remain future work. See `content/payment/README.md`.
+  Reused port 3021 and reset the viewport. Changes are on `main`; no build,
+  commit, push or deployment.
+
+## 2026-10-14 — ATA membership links
+
+- Linked the homepage ATA fact heading, About timeline reference, and Certified
+  Translation certificate image and ATA text to AET's official ATA member-directory
+  profile in English, Chinese, and Spanish.
+- Removed the membership-ID sentence from all three Certified Translation locales
+  and added the missing space after ATA in the Chinese certificate caption.
+  A full source/content/text-asset scan found no remaining ID references; the ATA
+  logo and certificate images were visually checked and do not display the ID.
+- Passed typecheck, whitespace checks, and rendered-link checks across all nine
+  localized pages. The in-app browser verified the Chinese homepage on desktop
+  and at 390px, the mobile certificate section, and the About timeline. Clicking
+  the homepage member link reached AET's official ATA company profile; the mobile
+  homepage had no page-level horizontal overflow.
+- Screenshots: `output/playwright/ata-member-{desktop,mobile}-2026-10-14.png`.
+  The corrected Chinese certificate copy also passed desktop and 390px in-app
+  visual checks, with no page overflow; all three rendered service pages omit
+  the ID. Screenshots: `output/playwright/ata-copy-{desktop,mobile}-2026-10-14.png`.
+  Reused port 3021 and reset the viewport. No build, commit, push, or deployment.
+
+## 2026-10-10 — Blog contact event
+
+- Connected the owner's `contact_us` event to authored Blog phone and Contact-page
+  buttons in all three locales, with article, locale, method and placement.
+  Existing article queues remain; application and AI clicks do not send this event.
+- Same-tab web links wait for Google's callback or an independent two-second
+  fallback, guarded against duplicate navigation. Phone, modified and new-tab
+  actions remain native; missing or failing analytics does not block navigation.
+- Passed typecheck, whitespace checks and `node scripts/check-blog-contact.cjs`:
+  localized events, callback/timeout races, absent/throwing analytics, cancellation,
+  native link behavior and event scope. Tests use fakes and send no analytics data.
+- In-app browser verified the English intro CTA on desktop and Chinese closing
+  CTA at 390px reach their localized `/contact#la` destinations. Screenshots:
+  `output/playwright/contact-event-{desktop,mobile}-2026-10-10.jpg`.
+  No console errors on the checked desktop route or mobile horizontal overflow.
+- Reused port 3021 and reset the viewport. No build, commit, push or deployment.
+  GA4 receipt, key-event settings and Google Ads import remain unverified.
+
+## 2026-10-10 — GA4 Google tag
+
+- Added Google tag `G-7SF10M7GBE` to the shared locale layout with
+  `next/script` after hydration, covering English, Chinese and Spanish pages
+  while preserving the existing `dataLayer` queue.
+- Passed typecheck, whitespace checks and HTTP checks for all three homepages
+  and CSLB articles. In-app browser navigation from the homepage through Blog
+  to the CSLB article retained exactly one initializer and one loader.
+- Visually checked the homepage and CSLB article at the default desktop viewport,
+  plus the article at 390px with no horizontal overflow. Screenshots:
+  `output/playwright/ga4-cslb-{desktop,mobile}-2026-10-10.jpg`.
+- GA4 receipt and enhanced-measurement settings are not verified. Custom blog
+  click events and Google Ads conversions still need separate configuration.
+  Reused the existing dev server; no build, commit, push or deployment.
+
+## 2026-10-10 — CSLB institution entry
+
+- Replaced the CSLB initials placeholder with the unchanged 392 × 99 logo from
+  CSLB's official website header. Updated only the CSLB record in English,
+  Chinese and Spanish using the authored Blog guide: education credit, practical
+  experience, evaluation/translation and provider/report confirmation. Added a
+  localized article link; other institution records and the total of 28 remain.
+- Passed typecheck, existing i18n checks, whitespace checks and focused three-locale
+  HTTP/source comparisons for record scope, logo, complete notes and article URLs.
+  The logo response and SHA-256 digest match the downloaded official artwork.
+- In-app browser verified the Chinese desktop card at 1440px and mobile at 390px,
+  CSLB search, keyboard disclosure expansion, natural logo dimensions, no mobile
+  horizontal overflow, and navigation to the Chinese Blog article. Screenshots:
+  `output/playwright/institutions-cslb-desktop.png` and `institutions-cslb-mobile.png`.
+- The existing 3021 process served stale compiled directory content after reload,
+  although the new static logo was available. Verification used a temporary source
+  copy with `WATCHPACK_POLLING=true pnpm exec next dev --webpack --port 3034`.
+  That process was stopped after verification and the viewport override was reset.
+  At the owner's request, stopped the stale 3021 process; it required SIGKILL
+  after SIGTERM left the development lock held. Verified the lock could be
+  acquired and released. After the owner restarted it, final HTTP checks confirmed
+  the updated logo and copy on 3021. No production build or manual deployment.
+
+## 2026-10-10 — Translation navigation group
+
+- Added Translation between Evaluation and Other Services in the shared desktop
+  and mobile navigation. Moved Certified Translation, Technical Translation,
+  Interpretation, and General Translation into it, preserving their destinations.
+  Renamed Services to Other Services across English, Chinese, and Spanish.
+- Tightened compact desktop spacing through 1392px after finding the English
+  application button crowded the right edge at narrower desktop widths.
+- Passed typecheck, i18n validation, and whitespace checks. In-app browser checks
+  covered English desktop at 1201px and 1440px, Spanish desktop navigation, and
+  Chinese mobile at 390px and 320px. Verified both dropdown contents, desktop
+  exclusivity and Escape, mobile scrolling, and General Translation navigation
+  with automatic menu closure. Checked narrow English and Chinese layouts have
+  no horizontal overflow. Screenshots: `output/playwright/header-translation-*.png`.
+- Restarted the preview with the owner's explicit authorization using
+  `WATCHPACK_POLLING=true pnpm dev` at `http://localhost:3021`; it remains running.
+  No production build, commit, push, or deployment.
+
+## 2026-10-10 — Visa Service and shared pricing
+
+- Restored `/visa-service` and `/zh/visa-service` from the English/Chinese legacy
+  PHP body files, using the shared service-page layout. Spanish shows a labeled
+  English body fallback with noindex. Added Services menu/footer links, sitemap
+  entries, English/Chinese sharing images, Service offers and four legacy redirects.
+- Preserved all nine source sections in both languages, including their office
+  literals, qualifications and processing times. The photo-promotion image is
+  transcribed as accessible text. The dedicated China-details page remains an
+  external legacy destination. See `content/visa-service/README.md` for exceptions.
+- Added one Visa fee catalog in `lib/pricing.ts`. Source-body interpolation, the
+  service pricing summary, global Pricing and structured offers share its values.
+  The 21 table rows separate service, external and photo fees; Canada's combined
+  charge is derived. The introductory China fee and Q2/L starting fee remain
+  separate source claims. Undefined consular charges are marked as variable.
+- Passed `pnpm typecheck`, `pnpm check:i18n`, `git diff --check` and
+  `python3 scripts/check-visa.py`. The latter compares all source sections,
+  rendered pricing parity in all three locales, anchors, metadata, JSON-LD and
+  the four legacy main-page entry points.
+- Codex in-app browser: English service page and Pricing Visa section inspected
+  at 1440px desktop and 390px mobile; Chinese service page at 320px. Section-index
+  jumps work, tables stack on phones, and checked pages have no horizontal overflow.
+  Corrected the Visa table's desktop qualification-column width. Screenshots are
+  under `output/playwright/visa-*.png`.
+- Started the previously unavailable preview with `WATCHPACK_POLLING=true pnpm dev`
+  at `http://localhost:3021`; restarted the agent-owned process after observing
+  stale development modules. Preview remains running for owner review.
+- No production build, commit, push or deployment.
+
+
 Progress and verification evidence only. The design baseline lives in [design.md](design.md).
 
 ### Dev checklist and scoped commit verification — October 17, 2026
@@ -926,6 +1220,173 @@ Progress and verification evidence only. The design baseline lives in [design.md
 - Screenshots: `output/playwright/crm-preview-{desktop,mobile,detail}-2026-10-01.jpg`.
   Reused the owner's running development server on port 3021 and left the preview
   open. No local production build, deployment, commit or push was performed.
+### CSLB Blog publication date — October 8, 2026
+
+- Set the new guide's publication date to October 8, 2026. Its previous null value
+  put it after dated articles; the existing newest-first sort now places it first.
+  The separate Boston featured recommendation remains an editorial selection.
+- Updated the date guidance and schema checker for authored articles. Typecheck,
+  whitespace, and HTTP checks passed: all three Blog lists show CSLB first among
+  29 evaluation articles, preserve the full date order, and expose the matching
+  article publication date. Browser policy still blocks rendered visual checks.
+
+### CSLB Blog CTA destinations — October 8, 2026
+
+- Replaced email CTAs and drafts in all three languages with the California
+  phone number, localized Contact page, and existing evaluation application.
+  Introductory and process CTAs now go directly to Contact. Updated the short
+  Blog guide and click methods to match; earlier email-related notes are superseded.
+- Typecheck, i18n, whitespace, and HTTP checks passed for all three articles and
+  Contact destinations, including the office anchor and absence of mailto links.
+  The application URL matches the existing site entry; no form was submitted.
+- Browser policy still blocks rendered desktop/mobile verification. Reused the
+  existing server without restarting; no build, commit, push, or deployment.
+
+### CSLB Blog translations — October 8, 2026
+
+- Added complete Chinese and Spanish versions of the CSLB guide at the owner's
+  request. Titles, body, contents, image descriptions/captions, AI prompts, inquiry
+  controls, and email drafts now follow the selected language. The 80 retained
+  articles remain English-only; the earlier CSLB language scope below is superseded.
+- Each version has a self-referencing canonical URL, matching language alternates,
+  BlogPosting language, and localized sharing card. The sitemap contains 83 article
+  URLs for 81 articles. Blog cards/search use translated titles; queued click events
+  include the article locale. Updated the existing SEO/schema checkers accordingly.
+- Passed typecheck, i18n, checker syntax, whitespace, and focused HTTP checks for
+  all three article/index/parent pages, translated figures/contact/AI URLs, metadata,
+  JSON-LD, sharing images, sitemap alternates, and query-preserving 308 redirects.
+  Six pilot/imported article routes retained their previous indexing rules.
+- Visually inspected both new sharing cards and fixed Chinese punctuation wrapping.
+  The prior browser policy denial still prevents rendered desktop/mobile and live
+  copy/language-switch verification. Reused the running port-3021 server; no build,
+  commit, push, or deployment.
+
+### CSLB Blog imagery — October 8, 2026
+
+- Added a generated construction-planning illustration near the article beginning
+  and reused the licensed document-consultation photograph after the materials
+  section. Visible captions identify illustrative use; alt text describes the
+  contents. Image provenance and the generation prompt are recorded in ASSETS.md.
+- Added optional figures to authored articles, with responsive Next Image sources,
+  fixed aspect ratios, and lazy loading. The lead asset also supplies BlogPosting
+  imagery; the schema checker now recognizes optimized image URLs.
+- Inspected both source images. Typecheck, whitespace, and checker syntax passed.
+  HTTP checks passed all three article interfaces, captions, image dimensions,
+  optimized image loading, and the English article image schema. Responsive WebP
+  responses at 384px and 828px were about 11–46 KB.
+- The previous in-app browser policy denial remains a visual-verification blocker;
+  no alternate browser bypass was attempted. Desktop/mobile rendered appearance
+  has not been verified. Reused the existing port-3021 server without restarting;
+  no build, commit, push, deployment, or advertising action.
+
+### CSLB Blog conversion — October 8, 2026
+
+- Created `/blog/cslb-foreign-credential-evaluation` with the approved title,
+  direct introduction, first-person questions, official source links, and California
+  email/phone inquiry actions. The shared Blog layout retains English prose across
+  all three interfaces. A requirements-review date is shown; no publication date
+  or author is invented before launch.
+- Added five AI destinations near the beginning and a copyable question containing
+  the public canonical URL. Claude and Grok use entry-page links. Click intent is
+  queued in `dataLayer`; no analytics tag, lead reporting, or ad campaign is active.
+- New authored content has its own catalog/registry outside the legacy importer.
+  Blog search includes slugs so “CSLB” finds the approved question title. There are
+  now 81 articles, including 29 evaluation articles. Evaluation links directly to
+  the guide; all three former service routes return 308 with query values retained.
+- Removed the superseded translated service drafts, their sharing images, and
+  unused service-shell additions. Added one 1200 × 630 Blog sharing card and
+  updated sitemap coverage without modifying the 80 imported article sources.
+- Passed typecheck, i18n, whitespace, all three article/parent/index HTTP checks,
+  TOC IDs, contact targets, encoded AI URLs, canonical/noindex/BlogPosting rules,
+  sharing-image dimensions, 308 query preservation, and sitemap membership.
+  The existing 79-body static checker and representative pilot/imported HTTP
+  regressions passed. Inspected the generated sharing card visually.
+- Browser security policy rejected the in-app local-page operation. Desktop/mobile
+  visual checks and copy/prefill interactions were not run; no alternate browser
+  bypass was attempted. External AI fetching could reach Claude/Grok entry pages
+  but could not verify ChatGPT/Perplexity/Google query behavior. Copyable text is
+  available as the fallback. See [authored content notes](../content/blog/authored/README.md).
+- Port 3021 was initially down. Sandboxed `pnpm dev` hit file-watcher errors and
+  was stopped; the approved sandbox-external `pnpm dev` is running at
+  `http://localhost:3021`. No production build, commit, push, deployment, inquiry,
+  or advertising purchase was performed.
+
+### Short Blog article guide — October 8, 2026
+
+- Reviewed the existing 80-article collection and related guidance, then narrowed
+  `docs/blog-requirements.md` at the owner's request to six writing rules and an
+  example outline: search-focused titles, direct answers, first-person questions,
+  AI links after the introduction, scannable content, and a relevant closing action.
+- Updated documentation entry points to match the narrower scope. Existing
+  language, design, migration, and verification guidance remains in its own files.
+- Local references and whitespace checked. Documentation only: no page edits,
+  new AI links, analytics changes, browser run, or build at that stage. The later
+  owner-approved CSLB conversion is recorded above.
+
+### CSLB evaluation subpage — October 8, 2026
+
+- Historical draft, superseded by the Blog conversion above.
+- Added `/evaluation/cslb` with English, Chinese, and Spanish content and a
+  localized entry on each Evaluation page. The guide covers education credit,
+  documents, sealed official transcripts, next steps, fees, FAQs, and contact.
+  Official CSLB sources and content boundaries are recorded in
+  `content/blog/authored/README.md` (moved during the Blog conversion).
+- Reused the service-page shell with an optional introduction and parent
+  breadcrumb. Added localized metadata, three-level breadcrumb structured data,
+  sitemap entries, and three 1200 x 630 sharing images. The existing image
+  generator can now limit generation to explicitly selected sitemap paths.
+- Inquiry actions use the California contact catalog and a localized email
+  template; no new backend or application-portal purpose was added. No AICE
+  reference, CSLB endorsement, guaranteed acceptance, or credit outcome appears
+  in the new copy. AET eligibility and the report type still require CSLB
+  confirmation before a customer orders.
+- Typecheck, existing i18n checks, new locale-content structure checks, and
+  whitespace checks passed. Served HTML checks passed all three routes, parent
+  links, canonicals, language alternates, sharing images, breadcrumbs, five FAQs,
+  section anchors, pricing/contact destinations, and email/phone targets.
+- Codex in-app browser verified English and Chinese desktop at 1440px, all three
+  languages at 390px, and Chinese/Spanish at 320px without horizontal page
+  overflow. Checked the main contact action, English/Chinese FAQ disclosure,
+  all three mobile process cards and disabled final Next control, language
+  switching with the route/fragment retained, and the Chinese Evaluation entry
+  link. Mail and phone destinations were inspected without sending or calling.
+  Screenshots: `output/playwright/cslb-{en-desktop,zh-desktop,zh-mobile,es-contact-mobile}-2026-10-08.png`.
+- Reused the existing server on port 3021. No production build, commit, push,
+  deployment, advertising campaign, or external submission was performed.
+
+### Four contact methods — October 8, 2026
+
+- Updated the shared Contact instructions to Phone, Email, WeChat, Visit in that
+  order, with matching icons and English, Chinese, and Spanish copy. The four
+  office detail pages reuse these instructions. Retained the one-office guidance
+  and San Francisco reservation exception; office contact values remain centralized.
+- Typecheck, i18n validation, and whitespace checks passed. Local HTTP checks
+  verified method ordering across all 15 localized Contact and office detail pages.
+- Codex in-app browser passed English desktop (1440px), all three Contact locales
+  on mobile (390px), and the Spanish Boston office instructions on mobile. English
+  mobile controls reached each of the four cards and disabled Next on the last;
+  mobile pages had no horizontal page overflow. Desktop evidence:
+  `output/playwright/contact-four-methods-desktop.jpg`.
+- Reused the existing server on port 3021 without restarting it. No build, commit,
+  push, or deployment was performed.
+
+### Payment Zelle priority — October 8, 2026
+
+- Kept Card Payment first and moved Zelle instructions, all six steps, the office
+  selector and Zelle note ahead of the retained Deposit / Check details. Renamed
+  the alternatives heading to list Zelle first and the bank panel to Zelle Bank
+  Information, with equivalent Chinese and Spanish copy. Added a Deposit / Check
+  subheading to distinguish the later bank/check details.
+- Aligned the processing table with Card, Zelle, Bank Transfer/Deposit, Check.
+  Verified all other localized payment copy is preserved; recipients, amounts,
+  payment validation and handoff behavior were not changed.
+- Typecheck, i18n and whitespace checks passed. Codex in-app browser verified
+  English desktop at 1440px (including Boston office switching), and Chinese
+  and Spanish mobile at 390px with no horizontal page overflow. Screenshots:
+  `output/playwright/payment-zelle-{desktop,zh-mobile,es-mobile}-2026-10-08.png`.
+- Port 3021 was not running. Started `pnpm dev`; sandbox file-watcher failures
+  required restarting that process outside the sandbox. The preview server
+  remains running at `http://localhost:3021`. No build, payment, push or deployment.
 
 ### San Francisco visit policy and Evaluation promise — October 1, 2026
 
@@ -2364,3 +2825,16 @@ implementation and checks, not production deployment or accessibility certificat
       their targets; it does not submit forms or validate external workflows.
 - [ ] Owner-managed deployment and production checks. No commit, push, or deployment
       was performed as part of this design pass.
+
+## 2026-10-08 — Boston address update
+
+- Updated the shared Boston postal address to `6 Pleasant Street, #419, Malden, MA 02148`.
+  Office cards, directions, structured data, payment recipient addresses, and mapped
+  legacy article references derive their current address from this catalog.
+- Verified rendered HTML for the English, Chinese, and Spanish Boston office pages,
+  Contact, Payment, and the Boston translation-company article: each includes the new
+  address and excludes the former suite number.
+- Codex in-app browser checks passed for the Chinese Boston contact section at desktop
+  and 390px mobile widths; the address wraps correctly and the directions URL uses #419.
+- Used a temporary local preview on port 3021 with Watchpack polling because native
+  file watching exceeded the environment limit. No production build or deployment.

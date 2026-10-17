@@ -16,6 +16,7 @@ export function SiteFooter() {
   const services = [
     [t("navigation.certified"), "/certified-translation"],
     [t("navigation.interpretation"), "/interpretation"],
+    [t("navigation.visa"), "/visa-service"],
   ];
   const popular = [
     [t("pricing.title"), "/pricing"],

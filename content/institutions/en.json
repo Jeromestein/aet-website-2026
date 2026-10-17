@@ -192,9 +192,13 @@
         {
           "id": "licensing-government-1",
           "name": "Contractors State License Board (CSLB)",
-          "description": "California's licensing board for contractors, overseeing license applications, exams, regulation, and consumer protection.",
-          "note": "CSLB exams are managed by PSI computer-based testing centers and are generally appointment-based, with no fixed annual exam date.",
-          "initials": "CSLB"
+          "description": "California’s licensing board for contractors. Foreign education may support a request for education credit toward its experience requirements; CSLB determines the credit and licensing outcome.",
+          "note": "Qualifying education or training may count for up to three of the four required years of experience, with at least one year of practical experience still required. Foreign degrees submitted for education credit need evaluation, and non-English credentials need English translation. Prepare your degree, transcripts and intended license classification. Before ordering, confirm with CSLB whether AET and the proposed report meet your requirements; an evaluation does not guarantee approval.",
+          "logo": "/images/institutions/directory/CSLB.png",
+          "article": {
+            "href": "/blog/cslb-foreign-credential-evaluation",
+            "label": "Read the CSLB evaluation guide"
+          }
         },
         {
           "id": "licensing-government-2",

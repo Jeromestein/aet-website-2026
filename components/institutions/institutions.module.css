@@ -45,6 +45,8 @@
 .card h3 { font-size: 20px; line-height: 1.45; letter-spacing: -.02em; margin: 0 0 14px; }
 .card > p { font-size: 15px; line-height: 1.8; color: var(--muted); margin: 0 0 28px; }
 .notes { margin-top: auto; border-top: 1px solid var(--line); padding-top: 10px; }
+.articleLink { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: -12px 0 16px; color: var(--action-blue); font-size: 14px; font-weight: 500; text-decoration: underline; text-underline-offset: 4px; }
+.articleLink svg { flex-shrink: 0; }
 .notes summary { cursor: pointer; font-size: 13px; line-height: 1.6; font-weight: 500; padding: 12px 0; min-height: 44px; color: var(--action-blue); }
 .notes p { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.85; }
 .empty { padding: 68px 24px; text-align: center; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); margin: 30px 0; }

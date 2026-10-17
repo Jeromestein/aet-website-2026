@@ -6,7 +6,7 @@ export function formatMoney(amount: number, locale: string) {
   }).format(amount);
 }
 export function formatPrice(price: Price, locale: string, t: Translate): string {
-  if (price.kind === 'quote') return t('format.quote');
+  if (price.kind === 'quote' || price.kind === 'variable') return t(`format.${price.kind}`);
   const amount = price.kind === 'range'
     ? `${formatMoney(price.min, locale)}–${formatMoney(price.max, locale)}`
     : formatMoney(price.amount, locale);

@@ -1,4 +1,5 @@
 import { paymentOffices } from '@/lib/payment';
+import { createStripeCheckout, stripeAmount, stripePaymentMode } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
 
@@ -27,20 +28,43 @@ export async function POST(request: Request) {
     return errorResponse('Invalid form submission.', 415);
   }
 
-  const form = await request.formData();
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return errorResponse('Invalid form submission.', 400);
+  }
   const value = (key: string) => typeof form.get(key) === 'string' ? String(form.get(key)).trim() : '';
   const office = value('office');
   const service = value('service');
   const amount = value('amount');
   const name = value('custname');
   const email = value('email');
+  const provider = value('provider') || 'paypal';
   const locale = ['en', 'zh', 'es'].includes(value('locale')) ? value('locale') : 'en';
 
-  if (!paymentOffices.some(entry => entry === office) || !services.has(service) ||
+  if (!['paypal', 'stripe'].includes(provider) || !paymentOffices.some(entry => entry === office) || !services.has(service) ||
       !/^\d{1,7}(?:\.\d{1,2})?$/.test(amount) || Number(amount) <= 0 ||
       name.length < 1 || name.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
       email.length > 254 || value('terms') !== '1') {
     return errorResponse('Please check the required payment fields and try again.', 400);
+  }
+
+  if (provider === 'stripe') {
+    const prefix = locale === 'en' ? '' : `/${locale}`;
+    const result = `${prefix}/payment/result?provider=stripe`;
+    const redirect = (location: string) => new Response(null, {
+      status: 303,
+      headers: { Location: location, 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' },
+    });
+    if (value('payment_mode') !== stripePaymentMode() || value('service2').length > 500) return redirect(`${result}&state=unavailable`);
+    if (stripeAmount(amount) === null) return redirect(`${result}&state=invalid-amount`);
+    try {
+      const url = await createStripeCheckout({ amount, email, name, serviceDetails: value('service2'), office, service, locale, requestUrl: request.url, token: value('checkout_token') });
+      return redirect(url);
+    } catch {
+      return redirect(`${result}&state=unavailable`);
+    }
   }
 
   const business = process.env[envByOffice[office as keyof typeof envByOffice]];

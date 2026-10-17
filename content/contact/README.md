@@ -34,3 +34,13 @@
   text in imported articles/services. The HTML renderer resolves them against the
   catalog and escapes the result; article prose and historical image assets stay
   in their original checked-in sources. This does not change payment identities.
+
+## Contact methods — October 8, 2026
+
+- At the owner's request, the shared introduction now offers Phone, Email,
+  WeChat, and Visit, in that order, across all three locales and office pages.
+  The new phone/WeChat instructions point readers to the existing office details;
+  they do not introduce new phone numbers, account IDs, or service commitments.
+- Removed the old two-option numbering and unnecessary-phone-call sentence.
+  Retained emailed scans, no-originals guidance, and the San Francisco reservation
+  exception from the existing instructions.

@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--base-url', default='http://localhost:3021')
 parser.add_argument('--font', default='/System/Library/Fonts/Supplemental/Arial Bold.ttf')
 parser.add_argument('--cjk-font', default='/Library/Fonts/Arial Unicode.ttf')
+parser.add_argument('--path', action='append', help='Render only these localized paths from the sitemap; repeat as needed')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 origin = 'https://www.americantranslationservice.com'
@@ -33,6 +34,10 @@ class Metadata(HTMLParser):
 logo = Image.open(root / 'public/brand/aet-logo-header.png').convert('RGBA')
 logo.thumbnail((460, 110), Image.Resampling.LANCZOS)
 urls = [n.text for n in ET.fromstring(fetch('/sitemap.xml')).findall('{*}url/{*}loc')]
+if args.path:
+    selected = set(args.path)
+    urls = [url for url in urls if (url.removeprefix(origin) or '/') in selected]
+    assert len(urls) == len(selected), 'Requested path missing from sitemap'
 for url in urls:
     path = url.removeprefix(origin) or '/'
     match = re.match(r'^/(zh|es)(/|$)', path)
@@ -51,6 +56,9 @@ for url in urls:
             candidate = (lines[-1] + separator + token).strip()
             if draw.textlength(candidate, font=face) > 1050 and lines[-1]: lines.append(token)
             else: lines[-1] = candidate
+        # Keep Chinese closing punctuation with the preceding text.
+        if locale == 'zh' and any(line.startswith(tuple('，。！？；：、）》】」』')) for line in lines):
+            continue
         if len(lines) * (size + 12) <= 275 and all(draw.textlength(line, font=face) <= 1050 for line in lines): break
     else: raise ValueError(f'Title does not fit: {path}')
     for i, line in enumerate(lines): draw.text((70, 240 + i*(size+12)), line, font=face, fill='#18334E')

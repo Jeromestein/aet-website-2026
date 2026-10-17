@@ -50,7 +50,7 @@ export const offices: readonly Office[] = [
   defineOffice({
     id: 'boston', slug: 'boston', footerKey: 'boston', hours: { weekdays: ['09:00', '17:30'], saturday: ['09:30', '12:30'], zone: 'EST' }, phones: ['+1 781-712-0258', '+1 781-605-1970'],
     emails: ['boston@aet21.com', 'boston@americantranslationservice.com'],
-    postalAddress: { streetAddress: '6 Pleasant Street, #418', addressLocality: 'Malden', addressRegion: 'MA', postalCode: '02148', addressCountry: 'US' }, wechat: 'jennifertjchang',
+    postalAddress: { streetAddress: '6 Pleasant Street, #419', addressLocality: 'Malden', addressRegion: 'MA', postalCode: '02148', addressCountry: 'US' }, wechat: 'jennifertjchang',
   }),
   defineOffice({
     id: 'la', slug: 'los-angeles', footerKey: 'losAngeles', hours: { weekdays: ['08:30', '17:00'], zone: 'PST' }, phones: ['+1 949-954-7996'], emails: ['ca2@aet21.com'],

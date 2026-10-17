@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowUp, Search, X } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, Search, X } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import type { DirectoryCopy, DirectorySection } from '@/lib/institution-directory';
 import styles from './institutions.module.css';
 
@@ -72,6 +73,7 @@ export function InstitutionDirectory({ sections, copy }: { sections: DirectorySe
                 {entry.logo ? <img src={entry.logo} alt="" width={180} height={80} loading="lazy" decoding="async" /> : <span>{entry.initials}</span>}
               </div>
               <h3 lang="en">{entry.name}</h3><p>{entry.description}</p>
+              {entry.article && <Link className={styles.articleLink} href={entry.article.href}>{entry.article.label}<ArrowUpRight size={16} aria-hidden="true" /></Link>}
               <details className={styles.notes}><summary>{copy.notes}</summary><p>{entry.note}</p></details>
             </article>
           </li>)}

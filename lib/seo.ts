@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { routing, type Locale } from '@/i18n/routing';
 import { getOtherServiceContent, serviceSlugs, type ServiceSlug } from '@/lib/other-services';
+import authoredArticles from '@/content/blog/authored/articles.json';
 
 /** Production origin confirmed by the owner on September 30, 2026. */
 export const siteOrigin = 'https://www.americantranslationservice.com';
@@ -18,7 +19,12 @@ export function localizedPath(path: string, locale: Locale) {
 
 /** Only real translations participate in indexing and alternate-language links. */
 export function indexableLocales(path: string): readonly Locale[] {
-  if (path.startsWith('/blog/') || ['/career', '/privacy', '/terms'].includes(path)) return ['en'];
+  if (path.startsWith('/blog/')) {
+    const article = authoredArticles.find(article => article.path === path);
+    const titles: Partial<Record<Locale, string>> | undefined = article?.titles;
+    return routing.locales.filter(locale => locale === 'en' || Boolean(titles?.[locale]));
+  }
+  if (['/career', '/privacy', '/terms'].includes(path)) return ['en'];
   const service = path.slice(1) as ServiceSlug;
   if (serviceSlugs.includes(service)) {
     return routing.locales.filter(locale => getOtherServiceContent(service, locale).hasLocaleContent);

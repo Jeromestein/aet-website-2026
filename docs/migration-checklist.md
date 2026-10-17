@@ -52,8 +52,9 @@ readiness. Historical acceptance evidence remains in [status.md](status.md).
   blocks external mail delivery, Stripe, Dropbox and AI; staff cutover is off.
 - [ ] Complete automated formal notifications, paper dispatch and the translation
   order workflow.
-- [ ] Integrate main's newer payment, navigation and public-site changes into dev
-  and verify the combined behavior. Neither branch currently contains the other.
+- [x] Integrate main through `902657b`, including its newer payment, navigation
+  and public-site changes, into dev. Verify type safety, 266 tests, localized
+  messages, mocked payment/contact checks and local browser smoke checks.
 - [ ] Verify the unified pre-evaluation journey from submission through files,
   payment, email records, CRM handling and customer results before expansion.
 - [ ] Complete legacy URL compatibility, domain/callback configuration, production
@@ -469,7 +470,7 @@ one shared page and its i18n content, not three independently implemented pages.
 - [x] **Service Fee** — `/e-fee.php` → localized `/pricing` page, implemented
   September 29, 2026 from the owner-updated legacy fee page. Fees, turnaround,
   shipping and expert-opinion rates use shared records and reusable tables.
-  China Visa is excluded; proofreading and English writing are included in
+  Visa fees were added on October 10, 2026; proofreading and English writing are included in
   Other Services with shared pricing and localized notes. Local verification is recorded in `status.md`; production
   deployment and remaining service-page migrations are still open.
 - [x] **About AET** — `/e-aboutus.php` → localized `/about`, `/zh/about`, and
@@ -709,12 +710,15 @@ locales. These completed aliases do not close the remaining sitewide redirect au
 
 ## Deferred legacy page backlog — not a current release gate
 
-- [ ] **Visa Services** — keep out of the rebuilt navigation/cards/footer.
-  Decide how to handle `/e-visaservice.php`, `/e-visaservice-zh.php`, older
-  `e_visaservice.html`, `c_visaservice.html`, `e_chinavisaservice.html`,
+- [x] **Visa Services main page** — restored October 10, 2026 at `/visa-service`
+  and `/zh/visa-service`, with English content fallback at `/es/visa-service`.
+  The four PHP/HTML main-page entry points redirect locally. Shared pricing,
+  Services navigation and footer entry are included.
+- [ ] **Additional Visa material** — dedicated `e_chinavisaservice.html`,
   `c_chinavisaservice.html`, `/c-schengen-visa-article.html`,
-  `/new-york-visa-application-process-services.html`, and the Boston visa article
-  identified in the article checklist.
+  `/new-york-visa-application-process-services.html` and Boston Visa articles
+  remain separate migration decisions. The main page retains its source's
+  China-details link to the legacy site.
 - [ ] **Editing/Proofreading** — keep out of the rebuilt service scope.
   Resolve `/e-writing.php`, `/e-writing-zh.php`, their older HTML aliases, and
   `/c_paper.html`.

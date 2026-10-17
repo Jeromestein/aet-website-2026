@@ -83,5 +83,10 @@
     "source": "/images/ca-BarberCosmo.jpg",
     "local": "/images/institutions/directory/ca-BarberCosmo.jpg",
     "sha256": "6e42f69db84e1af6cb76e14749a8e045a62a71eb372448215b13886ee3dde965"
+  },
+  {
+    "source": "https://www.cslb.ca.gov/images/header_organization.png",
+    "local": "/images/institutions/directory/CSLB.png",
+    "sha256": "55e1784df74a0215765a4dbf216dec50ce202afe430e32df891b27b9876590ea"
   }
 ]

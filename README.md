@@ -72,6 +72,8 @@ No Docker is needed. See [live CRM scope](docs/staff-auth.md#shared-live-busines
 ```sh
 pnpm check:i18n
 pnpm typecheck
+node scripts/check-blog-contact.cjs
+node scripts/check-payment.cjs
 ```
 
 Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
@@ -125,6 +127,29 @@ rollback. The current pilot deliberately rejects non-local origins/databases;
 binding a domain does not make it production-ready. Keep the existing AET App
 operational until the separately authorized cutover. No deployment or DNS change
 was made as part of the English-only staff update.
+### Stripe Checkout
+
+Stripe Checkout uses `STRIPE_PAYMENT_MODE`
+(`test` or `live`) and separate server-side credentials for each account/mode.
+California/Miami use `STRIPE_{TEST,LIVE}_SECRET_KEY`; Boston/NYC use the same
+names with `_BOS`. No credential fallback is allowed. Live mode removes test
+copy and requires an HTTPS `PAYMENT_SITE_URL`. Local development remains in test
+mode. Production defaults to disabled unless its mode is explicitly configured.
+See [payment integration notes](content/payment/README.md) for setup, verification
+and the manual reconciliation boundary. Git pushes do not upload `.env.local`.
+Deployment is intentionally left to the owner.
+
+## Analytics
+
+The shared locale layout loads Google tag `G-7SF10M7GBE` with `next/script`
+after hydration on all English, Chinese, and Spanish pages. Keep a single
+installation. GA4 enhanced measurement must include browser-history page changes
+to track client-side navigation. Authored Blog phone and Contact-page buttons
+also send `contact_us` with article, locale, method and placement. Same-tab web
+links wait for the event callback or a separate two-second fallback; telephone
+and new-tab actions retain native behavior. Other Blog click objects remain in
+`dataLayer`. These events measure contact intent, not completed inquiries.
+GA4 receipt, key-event settings and Google Ads import still need account verification.
 
 ## Scope
 
@@ -163,17 +188,19 @@ local pilot (`PREEVAL_ENV=local`), the homepage pre-evaluation button opens the 
 local workflow; other environments retain the existing portal destination. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
 English, Chinese and Spanish variants. The localized Contact page is implemented. A localized Payment page is available
-at `/payment`; its form uses a local PayPal HTML-form handoff. The header and
-footer link to the localized page, and `/e-pay.php` redirects there. Merchant
-accounts and payment reconciliation still need live review before launch.
+at `/payment`; its form supports the existing PayPal HTML-form handoff and an
+optional Stripe Checkout. The header and
+footer link to the localized page, and `/e-pay.php` redirects there. Production environment configuration, deployed return routes and office payment
+reconciliation must be verified before client use.
 
 The Blog index is available at `/blog`, `/zh/blog`, and `/es/blog`, with 80
-retained articles and search. Credential evaluation is the primary topic:
-its 28 articles appear by default, with other topics in a secondary selector.
-All 80 English article bodies are local at `/blog/[slug]`; 157 legacy PHP/HTML
-article URLs redirect to them. Article bodies remain English-only across locales,
-without language-availability notices. Shared navigation and index controls stay
-localized. Cards and page titles use each source body's heading; the original
+retained articles and one new CSLB guide. Credential evaluation is the primary topic:
+its 29 articles appear by default, with other topics in a secondary selector.
+All 81 articles are local at `/blog/[slug]`; 157 legacy PHP/HTML article URLs
+redirect to them. The 80 retained bodies remain English-only across locales,
+without language-availability notices. The CSLB guide has complete English,
+Chinese, and Spanish versions with localized titles and search metadata.
+Shared navigation and index controls stay localized. Cards and page titles use each source body's heading; the original
 metadata titles remain in the source catalog for provenance. `/blog/` and
 `/blog/index.php` redirect to `/blog`. Local migration is complete; publication
 review of dated claims and production cutover remain open. See
@@ -188,6 +215,12 @@ It preserves legacy prose and reuses Pricing's table component and shared rates.
 The homepage/header/footer use these routes, and the three legacy evaluation PHP
 URLs redirect to them. Original form and sample PDFs are served locally.
 See [content provenance](content/evaluation/README.md) for source details.
+
+The CSLB guide is a Blog article at `/blog/cslb-foreign-credential-evaluation`,
+in English, Chinese, and Spanish, with an entry on each Evaluation page. The former `/evaluation/cslb` paths
+redirect to the article in the same interface language and preserve query strings.
+It covers education credit, document requirements, AI reading links, and contact
+before ordering. See [authored content notes](content/blog/authored/README.md).
 
 Certified Translation is implemented at `/certified-translation`,
 `/zh/certified-translation`, and `/es/certified-translation`. It uses the shared
@@ -214,7 +247,7 @@ for verification and remaining launch work.
 
 ## Service scope
 
-As requested by the owner on September 28, 2026, the Services menu retains only:
+The Services menu retains the following services (Visa restored by owner request on October 10, 2026):
 
 - Certified Translation
 - Technical Translation
@@ -222,8 +255,9 @@ As requested by the owner on September 28, 2026, the Services menu retains only:
 - Expert Opinion Letters
 - General Translation
 - Notarization
+- Visa Services
 
-Visa Services, Editing/Proofreading, and China Consular Authentication are removed
+Editing/Proofreading and China Consular Authentication are removed
 from the rebuilt website's desktop/mobile navigation, homepage service cards,
 and footer wherever previously listed. Do not reintroduce their labels or links
 when copying content from the legacy website. Foreign Credential Evaluation,
@@ -272,6 +306,7 @@ Legacy checkout and four standalone CRM tool URLs remain open work. See the
 
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Form/database compatibility](docs/legacy-form-compatibility.md): original field mappings, website price snapshots, local setup and cutover limits.
+- [Blog article structure](docs/blog-requirements.md): search-focused titles, reader questions, direct answers, and AI links near the top.
 - [Implementation status](docs/status.md): completed checks, partial work, and pending acceptance items.
 - [App URL compatibility](docs/app-url-compatibility.md): legacy/current route mapping, query and language behavior, and remaining cutover gaps.
 - [Migration checklist](docs/migration-checklist.md): legacy page scope, CRM replacement milestones on `dev`, language coverage, blog inventory, and launch dependencies.
@@ -363,7 +398,12 @@ time display; `messages/*.json` contains wording, not fee or turnaround values.
 Example: `<PricingSection section="translation" />` or
 `<PricingTable rates={expertOpinion} caption={localizedTitle} showService={false} />`.
 
-China Visa is excluded. Other Services includes translation, proofreading, and
+Visa fees are now included from the legacy Visa Service pages, as requested on
+October 10, 2026. `visaFees` supplies the source prose, service tables, Pricing
+page and structured offers. The introductory China starting fee and Q2/L starting
+fee remain distinct. Consular/application charges are separate from AET fees;
+Canada's application-plus-shipping total is derived. See
+[Visa provenance](content/visa-service/README.md). Other Services includes translation, proofreading, and
 English writing, as confirmed by the owner. Their rates and the proofreading
 discount threshold share the pricing catalog.
 No application-form-only add-ons have been imported. Existing old-site service

@@ -26,8 +26,8 @@
 .price { min-width: 160px; font-weight: 600; color: var(--action-blue); }
 .rateNote { font-size: 13px; color: var(--muted); }
 .note { color: var(--muted); font-size: 14px; line-height: 1.8; margin: 20px 0 0; }
-.tierGroup { margin-top: 28px; }
-.tierGroup h3 { font-size: 18px; font-weight: 500; line-height: 1.5; margin: 0 0 12px; }
+.tierGroup, .visaGroup { margin-top: 28px; }
+.tierGroup h3, .visaGroup h3 { font-size: 18px; font-weight: 500; line-height: 1.5; margin: 0 0 12px; }
 .tierGroup td, .section[id='expert-opinion'] td { width: 50%; }
 .closing { padding: 32px 0 0; border-top: 1px solid var(--line); }
 .closing p { line-height: 1.8; color: var(--muted); margin-bottom: 24px; }
@@ -56,4 +56,12 @@
   .table .rateNote { display: block; text-align: left; padding-top: 8px; }
   .table .rateNote::before { display: none; }
   .tierGroup td, .section[id='expert-opinion'] td { width: auto; }
+}
+
+/* Visa has separate service, price and qualification columns. */
+.section[id='visa'] { scroll-margin-top: 110px; }
+@media (min-width: 601px) {
+  .visaGroup .table { table-layout: fixed; }
+  .visaGroup .table tbody th { width: 40%; }
+  .visaGroup .price { width: 25%; min-width: 0; }
 }

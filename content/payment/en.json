@@ -1,15 +1,15 @@
 {
   "title": "Payment",
   "eyebrow": "Pay for AET Services",
-  "description": "Complete the form for your quoted service and continue to PayPal to pay.",
+  "description": "Complete the form for your quoted service and choose a payment method.",
   "sections": {
     "card": "Card Payment",
-    "alternatives": "Deposit/Check/Zelle Transfer",
+    "alternatives": "Zelle Transfer / Deposit / Check",
     "security": "Payment Security & Processing",
     "shipping": "Shipping Options"
   },
   "form": {
-    "intro": "Enter the amount quoted by your AET office. After you submit, PayPal opens in a new tab to complete the payment.",
+    "intro": "Select the office handling your service, then choose a payment method.",
     "name": "Your Name",
     "email": "Your Email",
     "phone": "Your Phone Number",
@@ -28,7 +28,17 @@
     "termsLink": "Service Terms",
     "privacyLink": "Privacy Notice",
     "submit": "Start Online Payment",
-    "newTab": "PayPal opens in a new tab"
+    "newTab": "PayPal opens in a new tab",
+    "provider": "Payment method",
+    "paypalDescription": "Pay for your quoted service.",
+    "stripe": "Stripe · Test payment",
+    "stripeDescription": "Try the card checkout with no real charge.",
+    "stripeNotice": "Test only — no money will be charged and no service order will be placed. Use a Stripe test card, not a real card.",
+    "stripeAmountHelp": "Test amount in USD, minimum $0.50. No real charge.",
+    "stripeSubmit": "Continue to Stripe test",
+    "stripeNewTab": "Stripe test checkout opens in a new tab",
+    "stripeTerms": "I understand this is a test with no real charge or service order.",
+    "stripeOfficeUnavailable": "Stripe is not currently available for this office. Please use PayPal or another payment method below."
   },
   "services": {
     "certified": "Certified Translation",
@@ -57,7 +67,7 @@
       "Enter the transfer amount → select \"Continue\".",
       "Select \"Confirm\" to complete the payment."
     ],
-    "bankTitle": "Our Bank Information",
+    "bankTitle": "Zelle Bank Information",
     "selectOffice": "Select Office:",
     "offices": {
       "miami": "Miami",
@@ -80,7 +90,8 @@
     "zelleEmail": "Zelle Email:",
     "noteLabel": "Note:",
     "note": "For a list of Zelle participating banks, visit:",
-    "navLabel": "Zelle/Bank Transfer"
+    "navLabel": "Zelle/Bank Transfer",
+    "depositCheckTitle": "Deposit / Check"
   },
   "security": {
     "columns": [
@@ -103,6 +114,19 @@
         ]
       },
       {
+        "method": "Zelle Transfer",
+        "details": [
+          [
+            "Real-time processing",
+            "Bank-secured digital transfer"
+          ],
+          [
+            "Instant notification",
+            "Encrypted email transfer"
+          ]
+        ]
+      },
+      {
         "method": "Bank Transfer/Deposit",
         "details": [
           [
@@ -116,19 +140,6 @@
           [
             "Manual verification required",
             "Bank statement verification"
-          ]
-        ]
-      },
-      {
-        "method": "Zelle Transfer",
-        "details": [
-          [
-            "Real-time processing",
-            "Bank-secured digital transfer"
-          ],
-          [
-            "Instant notification",
-            "Encrypted email transfer"
           ]
         ]
       },
@@ -172,5 +183,14 @@
   "card": {
     "restriction": "We accept Visa and MasterCard ONLY. Zelle or Venmo if over $250.",
     "description": "Secure and convenient online payments for AET services. Invest in education and translation with trusted payment options. Start your secure payment today!"
+  },
+  "stripeLive": {
+    "stripe": "Stripe · Card payment",
+    "stripeDescription": "Pay securely by card through Stripe.",
+    "stripeNotice": "Pay the amount agreed with your AET office. Your office will match the payment to your service request.",
+    "stripeAmountHelp": "Enter the exact USD amount on your quote or invoice. Minimum $0.50.",
+    "stripeSubmit": "Continue to Stripe",
+    "stripeNewTab": "Stripe checkout opens in a new tab",
+    "stripeTerms": "I've read and agree to the Service Terms and Privacy Notice."
   }
 }

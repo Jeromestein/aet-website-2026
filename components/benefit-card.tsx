@@ -1,8 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import styles from './benefit-card.module.css';
 
-type Props = HTMLAttributes<HTMLElement> & {
-  title: string;
+type Props = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
+  title: ReactNode;
   visual: ReactNode;
   value?: string;
   variant?: 'story' | 'compact';

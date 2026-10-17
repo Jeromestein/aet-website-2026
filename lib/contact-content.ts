@@ -11,7 +11,7 @@ export type ContactContent = {
   findOffice: string;
   sections: { how: string; offices: string; other: string };
   introHeading: string;
-  options: { title: string; body: string }[];
+  options: { id: string; title: string; body: string }[];
   priority?: string;
   labels: Record<'phone' | 'email' | 'address' | 'hours' | 'whatsapp' | 'wechat' | 'tollFreeChina' | 'fax' | 'qq' | 'more' | 'directions' | 'officeDetails', string>;
   offices: Record<OfficeId, { name: string; title: string; visitNote?: string; phoneNotes?: string[] }>;

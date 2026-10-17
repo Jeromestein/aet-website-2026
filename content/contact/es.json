@@ -9,15 +9,27 @@
     "offices": "Nuestras Oficinas",
     "other": "Otros Contactos"
   },
-  "introHeading": "Por favor CONTACTE SOLO UNA OFICINA a continuación para evitar demoras. Tiene dos opciones:",
+  "introHeading": "Para evitar demoras, contacte solo una oficina. Puede elegir entre estas cuatro opciones:",
   "options": [
     {
-      "title": "Email",
-      "body": "Opción 1. Email: Envíe una copia escaneada de su documento a una de nuestras oficinas por email. Le responderemos con la cotización y el tiempo lo antes posible. Los documentos originales no son necesarios para traducción certificada y evaluación de credenciales extranjeras. No es necesaria una llamada telefónica."
+      "id": "phone",
+      "title": "Teléfono",
+      "body": "Llame a una de nuestras oficinas usando los números indicados en sus datos de contacto. Consulte el horario de atención antes de llamar."
     },
     {
+      "id": "email",
+      "title": "Email",
+      "body": "Envíe una copia escaneada de su documento a una de nuestras oficinas por email. Le responderemos con la cotización y el plazo lo antes posible. No se necesitan documentos originales para la traducción certificada ni la evaluación de credenciales extranjeras."
+    },
+    {
+      "id": "wechat",
+      "title": "WeChat",
+      "body": "Si la oficina dispone de un ID de WeChat, agréguelo en WeChat para consultar sobre nuestros servicios. Encontrará el ID en “Más formas de contacto”, dentro de los datos de la oficina."
+    },
+    {
+      "id": "visit",
       "title": "Visita",
-      "body": "Opción 2. Visite nuestra oficina con su documento. Se requiere cita previa para la oficina de San Francisco; las demás oficinas no requieren cita."
+      "body": "Visite nuestra oficina con su documento. Se requiere cita previa para la oficina de San Francisco; las demás oficinas no requieren cita."
     }
   ],
   "priority": "PRIORIDAD PARA HABLA HISPANA",

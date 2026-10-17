@@ -1,15 +1,15 @@
 {
   "title": "Pago",
   "eyebrow": "Pague los servicios de AET",
-  "description": "Complete el formulario de su servicio y continúe a PayPal para pagar.",
+  "description": "Complete los datos del servicio cotizado y elija un método de pago.",
   "sections": {
     "card": "Pago con tarjeta",
-    "alternatives": "Depósito/Cheque/Transferencia por Zelle",
+    "alternatives": "Transferencia por Zelle / Depósito / Cheque",
     "security": "Seguridad y procesamiento de pagos",
     "shipping": "Opciones de envío"
   },
   "form": {
-    "intro": "Ingrese el importe cotizado por su oficina de AET. Al enviar el formulario, PayPal se abrirá en una pestaña nueva para completar el pago.",
+    "intro": "Seleccione la oficina que atiende su servicio y luego el método de pago.",
     "name": "Su nombre",
     "email": "Su correo electrónico",
     "phone": "Su número de teléfono",
@@ -28,7 +28,17 @@
     "termsLink": "Términos del servicio",
     "privacyLink": "Aviso de privacidad",
     "submit": "Iniciar pago en línea",
-    "newTab": "PayPal se abrirá en una pestaña nueva"
+    "newTab": "PayPal se abrirá en una pestaña nueva",
+    "provider": "Método de pago",
+    "paypalDescription": "Pague el importe de su servicio cotizado.",
+    "stripe": "Stripe · Pago de prueba",
+    "stripeDescription": "Pruebe el pago con tarjeta sin un cargo real.",
+    "stripeNotice": "Solo para pruebas: no se cobrará dinero ni se creará un pedido de servicio. Use una tarjeta de prueba de Stripe, no una tarjeta real.",
+    "stripeAmountHelp": "Importe de prueba en USD, mínimo $0.50. Sin cargo real.",
+    "stripeSubmit": "Continuar a Stripe de prueba",
+    "stripeNewTab": "El pago de prueba de Stripe se abre en una pestaña nueva",
+    "stripeTerms": "Entiendo que es una prueba sin cargos reales ni pedidos de servicio.",
+    "stripeOfficeUnavailable": "Stripe no está disponible para esta oficina. Use PayPal u otro método de pago que aparece abajo."
   },
   "services": {
     "certified": "Traducción certificada",
@@ -57,7 +67,7 @@
       "Ingrese el importe de la transferencia → seleccione “Continue”.",
       "Seleccione “Confirm” para completar el pago."
     ],
-    "bankTitle": "Nuestra información bancaria",
+    "bankTitle": "Información bancaria para Zelle",
     "selectOffice": "Seleccione una oficina:",
     "offices": {
       "miami": "Miami",
@@ -80,7 +90,8 @@
     "zelleEmail": "Correo de Zelle:",
     "noteLabel": "Nota:",
     "note": "Para consultar la lista de bancos participantes en Zelle, visite:",
-    "navLabel": "Zelle/Transferencia bancaria"
+    "navLabel": "Zelle/Transferencia bancaria",
+    "depositCheckTitle": "Depósito / Cheque"
   },
   "security": {
     "columns": [
@@ -103,6 +114,19 @@
         ]
       },
       {
+        "method": "Transferencia por Zelle",
+        "details": [
+          [
+            "Procesamiento en tiempo real",
+            "Transferencia digital protegida por el banco"
+          ],
+          [
+            "Notificación instantánea",
+            "Transferencia por correo electrónico cifrada"
+          ]
+        ]
+      },
+      {
         "method": "Transferencia/Depósito bancario",
         "details": [
           [
@@ -116,19 +140,6 @@
           [
             "Se requiere verificación manual",
             "Verificación del estado de cuenta bancario"
-          ]
-        ]
-      },
-      {
-        "method": "Transferencia por Zelle",
-        "details": [
-          [
-            "Procesamiento en tiempo real",
-            "Transferencia digital protegida por el banco"
-          ],
-          [
-            "Notificación instantánea",
-            "Transferencia por correo electrónico cifrada"
           ]
         ]
       },
@@ -172,5 +183,14 @@
   "card": {
     "restriction": "Aceptamos ÚNICAMENTE Visa y MasterCard. Para importes superiores a $250, utilice Zelle o Venmo.",
     "description": "Pagos en línea seguros y convenientes para los servicios de AET. Invierta en educación y traducción con opciones de pago confiables. ¡Comience hoy su pago seguro!"
+  },
+  "stripeLive": {
+    "stripe": "Stripe · Pago con tarjeta",
+    "stripeDescription": "Pague su servicio de forma segura con Stripe.",
+    "stripeNotice": "Pague el importe acordado con su oficina de AET. La oficina verificará el pago y lo asociará a su solicitud de servicio.",
+    "stripeAmountHelp": "Ingrese el importe exacto en USD de su cotización o factura. Mínimo $0.50.",
+    "stripeSubmit": "Continuar a Stripe",
+    "stripeNewTab": "Stripe se abre en una pestaña nueva",
+    "stripeTerms": "He leído y acepto los Términos del servicio y el Aviso de privacidad."
   }
 }

@@ -31,6 +31,21 @@ The source institution names and prose are otherwise unchanged.
 
 ## Publication review
 
+### CSLB update — October 10, 2026
+
+The CSLB entry in all three locales now summarizes the owner's
+[CSLB Blog guide](https://www.americantranslationservice.com/blog/cslb-foreign-credential-evaluation)
+and links to its matching localized route. This supersedes that entry's legacy
+exam-scheduling description. It covers education credit, practical experience,
+evaluation/translation and confirmation of AET/report eligibility before ordering.
+The key credit limits were checked against
+[CSLB's official experience guidance](https://www.cslb.ca.gov/Contractors/Applicants/Contractors_License/Exam_Application/Experience_For_Exam.aspx).
+All other directory entries remain unchanged.
+
+Added the unmodified official CSLB header logo (392 × 99 PNG), replacing the text
+placeholder. The catalog now has 18 logo assets; the original 17 remain unchanged.
+The new asset's source URL and SHA-256 digest are in `assets.json`.
+
 This is a complete migration of AET's reference page, not an independently
 verified directory of current acceptance policies or formal partnerships. Keep
 the source qualifications and the explicit requirement to confirm the report type

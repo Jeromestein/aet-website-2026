@@ -14,6 +14,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   It defines the design targets; it does not imply that every target is implemented.
 - Read [docs/status.md](docs/status.md) to identify outstanding work. Update only
   affected items after implementation or verification, recording what was actually checked.
+- Before writing or editing Blog articles, read [docs/blog-requirements.md](docs/blog-requirements.md)
+  for article structure, question headings, and AI links.
 - Use [README.md](README.md) for setup, routing scope, and delivery instructions;
   use [ASSETS.md](ASSETS.md) for asset sources and licenses.
 - Keep stable design decisions in the design guide and completion evidence in the

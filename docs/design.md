@@ -15,6 +15,8 @@ Preserve existing AET wording, named services, testimonials, and factual claims.
 Do not substitute aspirational slogans, invent metrics, or change fees, processing
 times, membership dates, ratings, or acceptance statements during visual work.
 Distinguish a preliminary assessment from a formal credential evaluation.
+Do not publish AET's ATA membership ID in website copy, metadata, or image alt text.
+Use the official ATA company profile link for membership verification.
 
 **Hero heading:** Professional Translation & Evaluation Services
 
@@ -37,7 +39,7 @@ and government agencies nationwide. Keep this sentence with **Explore all instit
 Use the existing service names: Foreign Credential Evaluation; Document by Document
 Evaluation; Course by Course Evaluation; Expert Opinion Letters; Pre-Evaluation
 Services; Certified Translation; Interpretation; Technical Translation;
-General Translation; Notarization. Exclude Visa Services, Editing/Proofreading,
+General Translation; Notarization; Visa Services. Exclude Editing/Proofreading,
 and China Consular Authentication from navigation, service cards, and footer
 links, following the service scope in README.md.
 Retain original supporting headings such as Why Choose Us, Other Services, and
@@ -347,11 +349,17 @@ text and mail remain English like the legacy experience. Staff login is separate
 | 2 | Services | Foreign Credential Evaluation introduction, benefits, evaluation types, and other services immediately after Hero |
 | 3 | AET at a glance | Fraunces heading, five organic fact panels for experience, language coverage, ATA membership, BBB A+, and five-star Google reviews |
 | 4 | Institutions | Two logo rows after Why Choose Us, pale-blue background, supporting sentence and link |
-| 5 | Process | Four numbered steps: select purpose, complete the application, choose evaluation type in Services, upload documents on the application status page; prominent orange Start Application action below the introduction |
+| 5 | Process | Four numbered steps: select purpose, complete the application, choose evaluation type in Services, upload documents on the application status page; prominent orange Start Online Application action below the introduction linking to the existing application portal |
 | 6 | Pre-evaluation | Graduation image, preliminary-assessment explanation and action |
 | 7 | Questions | Native expandable questions and contact action |
 | 8 | Client feedback | Five original testimonials and avatars in a manual carousel immediately after Questions and before the footer |
 | 9 | Footer | Practical navigation and legal links |
+
+The Hero's orange evaluation action reads Apply for Credential Evaluation
+(学历评估申请 in Chinese) and links to `#process`. The second action reads
+Contact for Translation & Other services, uses a theme navy background with white
+text, and links to the localized Contact page. Localize both labels and allow
+the buttons and their text to wrap on narrow screens.
 
 Omit the standalone closing Start Application panel. Finish the service cards with
 a compact trust row: transparent BBB A+ artwork on the left and Contact Us on the
@@ -360,11 +368,14 @@ wrapping only when needed. Do not restore the generic “Translation and evaluat
 services.” sentence or add a separate badge card.
 
 **Header:** full AET logo, a translucent cool-white/blue sticky bar, centered desktop
-navigation, a separate language selector, and an orange Online Application button
-at the far right linking to the existing credential-evaluation application.
-Keep the legacy labels and order:
-Home, Evaluation, Services, Contact, Payment, Blog. Services contains the six
-retained service links listed in README.md; languages are English, 简体中文, and Español.
+navigation, a separate language selector, and an orange Apply Now button
+at the far right linking to the current language's homepage `#process` section
+(Steps for Credential Evaluation).
+Use this navigation order: Home, Evaluation, Translation, Other Services, Contact,
+Payment, Blog. Translation contains Certified Translation, Technical Translation,
+Interpretation, and General Translation, in that order. Other Services contains
+Expert Opinion Letters, Notarization, Visa Services, and Pricing. Use the same
+localized groups on desktop and mobile; languages are English, 简体中文, and Español.
 The selector displays EN, 中文, or ES with a globe icon and marks the selected language.
 Formal application links use the localized `/apply` bridge: the local pilot opens
 the new form, while other environments retain the existing portal. The application
@@ -376,14 +387,16 @@ payments. Keep staff-only notes and unreleased reports out of customer views.
 The formal staff workspace uses separate education/service columns and mobile
 case cards, with an explicit final-report release action.
 Home and logo links stay on the active localized homepage; other destinations retain
-the legacy paths.
+the legacy paths. Use compact desktop spacing between 1201px and 1392px so both
+service groups and the application button retain room within the header.
 
 At 1200px and below, show the logo, a compact language selector, and one circular
 two-line menu button. Allow the logo to shrink proportionally on narrow phones
 while retaining 44px control targets.
 Open a navy panel filling the viewport below the 76px header, with numbered
-navigation rows, an expandable Services list, an Online Application button below
-the navigation, and language choices at the bottom.
+navigation rows, expandable Translation and Other Services lists, an Apply Now
+button linking to the same homepage section below the navigation, and language
+choices at the bottom.
 The panel scrolls when content exceeds the viewport. With JavaScript, lock background
 scrolling and focus while open; close on selection or Escape, restore trigger focus,
 and clear open menus when crossing the desktop breakpoint. Native disclosures
@@ -432,6 +445,12 @@ shapes belong mainly to facts. Keep decorative artwork out of the reading path.
 
 ## Blog editorial priority
 
+Use [Blog article structure](blog-requirements.md) for the short writing format.
+Specific uses, countries, licensing scenarios, and explanatory guides
+belong in Blog by default; retain service pages for core offerings with distinct
+delivery needs. Link relevant articles from service pages instead of adding a
+service subpage for every use case.
+
 Credential evaluation is the primary Blog topic. Use it in the page headline,
 introductory copy, featured guide and default article list. Translation,
 interpretation and expert opinion letters remain available through a quieter
@@ -441,9 +460,11 @@ Do not change the sitewide service scope to accomplish this Blog-specific hierar
 
 Use a readable article column, semantic sections, desktop contents navigation and
 a native mobile contents disclosure. Preserve original article prose, authorship
-and dates where supplied. Blog article bodies are intentionally English-only; do
-not show language-availability notices or plan translations. Shared navigation and
-index controls remain localized. Source images must
+and dates where supplied. Retained legacy article bodies remain English-only,
+without language-availability notices. The owner-approved CSLB guide has complete
+English, Chinese, and Spanish versions; index only languages with translated
+article content, using matching canonical URLs, alternates, and structured data.
+Shared navigation and index controls remain localized. Source images must
 be described by their actual contents. Historical report/review images must not
 be presented as current contact details or current ratings.
 
