@@ -243,7 +243,7 @@ The following presentation rules apply to the connected CRM workspace:
   Preserve all table columns on narrower desktops with local table scrolling;
   mobile cards retain education, service and the updated date.
 
-### General application preview
+### General application intake
 
 - Use localized `/application` as the unified intake preview, with optional
   `service=pre-evaluation`, `service=evaluation`, or `service=translation` query
@@ -297,15 +297,25 @@ The following presentation rules apply to the connected CRM workspace:
   Keep its clear-draft confirmation and cancel action before removing answers.
 - Omit the duplicate step counter in the first-step action bar; keep the forward
   action right-aligned. Use green forward buttons and black, white-text Back
-  buttons throughout this form, preserving the disabled submission state.
+  buttons throughout this form. Enable submission only for the authorized credential-evaluation pilot.
 - Initial owner-approved office scope: pre-evaluation and evaluation use Miami,
   Los Angeles and San Francisco; translation uses Miami, Boston, Los Angeles,
   San Francisco and New York. This application excludes Beijing. Clear invalid
   office selections when changing services or restoring drafts, retaining other answers.
-- After a real submission, the intended flow sends a confirmation email and
-  continues to a separate document-upload page. Do not include an upload step
-  within the first three steps. The preview must clearly identify submission
-  and email as unavailable, without simulated success or database writes.
+- Credential evaluation now saves to the isolated preview database, assigns one
+  Application ID per submission attempt and queues its confirmation atomically.
+  Disable controls while saving; preserve the request ID across retries/reloads,
+  show the saved ID and link, and never report an unsaved application as successful.
+- Customers open the saved application using their ID or confirmation link; no
+  customer account is introduced. Show the saved service, qualification associations,
+  fee snapshot and delivery details. Keep mail failure separate from application
+  persistence and provide a retry action. Do not expose staff-only fields.
+- This milestone excludes document upload and payment. Other service selections
+  remain previews. Label local test submissions clearly; confirmation mail for this
+  credential-intake workflow goes only to `errplusone@gmail.com`.
+- Keep CRM live records as the default. An explicit `source=preview` view displays
+  isolated test records under the existing staff sign-in and office permissions.
+  New intake snapshots are read-only in CRM for this milestone.
 - Reuse the shared website header/footer, readable labels, a three-step progress
   indicator and a service/office summary. Preserve draft answers within the same
   browser tab for up to 24 hours; provide an explicit clear-draft action.
@@ -388,6 +398,14 @@ Formal application links use the localized `/apply` bridge: the local pilot open
 the new form, while other environments retain the existing portal. The application
 has four steps (client, evaluee/education, services/delivery, review), a shared
 price summary, and a compact total before mobile continuation/submission controls.
+Use one customer status page and one normalized customer data contract for live
+and isolated test applications. Select only the data source with `source=preview`;
+do not introduce a separate test receipt or simplified status layout. Show a small
+test-source label. Render available saved service, education, quote, delivery and
+mail details inside the shared cards. Gate operations by connected capabilities:
+isolated IDs must not link to the production payment portal or receive invented
+payment deadlines. Missing historical details remain explicitly unavailable.
+
 After submission, keep the customer status page organized into application status,
 supporting documents, payment, and report delivery. Clearly identify local test
 payments. Keep staff-only notes and unreleased reports out of customer views.

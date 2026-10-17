@@ -14,6 +14,8 @@ import { countryLabel, countryOptions } from '@/lib/legacy-application/countries
 import type { Locale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import s from './application.module.css';
+import { statusPath } from '@/lib/application/intake';
+import { intakeCopy } from '@/lib/application/intake-copy';
 
 function Field({ id, label, requiredMark, fullWidth, optional, hint, error, children }: { id: string; label: string; requiredMark?: boolean; fullWidth?: boolean; optional?: string; hint?: string; error?: string; children: ReactNode }) {
   return <div className={s.field + (fullWidth ? ' ' + s.fullWidth : '')}>
@@ -26,6 +28,12 @@ function Field({ id, label, requiredMark, fullWidth, optional, hint, error, chil
 
 export function GeneralApplication({ locale, initialService }: { locale: Locale; initialService: ServiceId | '' }) {
   const c = applicationCopy[locale];
+  const ic = intakeCopy[locale];
+  const [submitting,setSubmitting]=useState(false),[submitError,setSubmitError]=useState('');
+  const [submitted,setSubmitted]=useState<{id:string;statusPath:string}|null>(null);
+  const submitLock=useRef(false);
+  const attempt=useRef<{requestId:string;payload:string;result?:{id:string;statusPath:string}}|null>(null);
+  const attemptKey=DRAFT_KEY+'-submission';
   const ec = evaluationCopy[locale];
   const dc = deliveryCopy[locale];
   const [data, setData] = useState<ApplicationDraft>(() => initialDraft(initialService));
@@ -58,6 +66,14 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
 
   useEffect(() => {
     try {
+      const storedAttempt=sessionStorage.getItem(attemptKey);
+      if(storedAttempt){try{
+        const value=JSON.parse(storedAttempt),uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
+        if(uuid.test(value.requestId)&&typeof value.payload==='string'){
+          attempt.current={requestId:value.requestId,payload:value.payload};
+          if(uuid.test(value.result?.id)){attempt.current.result={id:value.result.id,statusPath:statusPath(value.result.id,locale)};if(!initialService||initialService==='evaluation')setSubmitted(attempt.current.result);}
+        }
+      }catch{/* Ignore an invalid local attempt. */}}
       const draft = restoreDraft(sessionStorage.getItem(DRAFT_KEY) || '');
       if (draft) {
         const changed = initialService && initialService !== draft.data.service;
@@ -68,14 +84,14 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
     setReady(true);
   }, [initialService]);
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || submitted) return;
     try {
       if (!data.contactName && !data.email && !data.phone && !data.service) {
         sessionStorage.removeItem(DRAFT_KEY); setSaved(false); return;
       }
       sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ version: 1, updatedAt: Date.now(), data, step })); setSaved(true);
     } catch { setSaved(false); }
-  }, [data, step, ready]);
+  }, [data, step, ready, submitted]);
   useEffect(() => { if (clearing) clearConfirm.current?.focus(); }, [clearing]);
 
   function update(key: keyof ApplicationDraft, value: string) {
@@ -114,7 +130,27 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
     setErrors({}); setStep(target); setRestored(false);
     requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); heading.current?.scrollIntoView({ block: 'start', behavior: 'instant' }); });
   }
+  async function submitApplication(){
+    if(submitLock.current||submitted||data.service!=='evaluation')return;
+    const validation={...validateStep(data,0),...validateStep(data,1)};
+    if(Object.keys(validation).length){setErrors(validation);setStep(Object.keys(validateStep(data,0)).length?0:1);return;}
+    submitLock.current=true;setSubmitting(true);setSubmitError('');
+    try{
+      const payload=JSON.stringify({locale,data});
+      // Keep the same ID even if answers change after an uncertain response. The server rejects a conflicting replay instead of creating a duplicate.
+      if(!attempt.current)attempt.current={requestId:crypto.randomUUID(),payload};
+      else attempt.current.payload=payload;
+      try{sessionStorage.setItem(attemptKey,JSON.stringify(attempt.current));}catch{/* The in-memory key still prevents double clicks. */}
+      const response=await fetch('/api/application-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:attempt.current.requestId,locale,data}),signal:AbortSignal.timeout(30000)});
+      const result=await response.json();
+      if(!response.ok)throw new Error(result.error);
+      attempt.current.result={id:result.id,statusPath:result.statusPath};setSubmitted(attempt.current.result);
+      try{sessionStorage.setItem(attemptKey,JSON.stringify(attempt.current));sessionStorage.removeItem(DRAFT_KEY);}catch{/* Saving the server result does not depend on browser storage. */}
+    }catch(error){setSubmitError(error instanceof Error&&error.message==='idempotency_conflict'?ic.conflict:ic.failed);}
+    finally{submitLock.current=false;setSubmitting(false);}
+  }
   function reset() {
+    attempt.current=null;setSubmitted(null);setSubmitError('');try{sessionStorage.removeItem(attemptKey);}catch{}
     setData(initialDraft()); setStep(0); setErrors({}); setClearing(false); setRestored(false); setOfficeChanged(false);
     const url = new URL(window.location.href); url.searchParams.delete('service');
     window.history.replaceState(window.history.state, '', url);
@@ -136,18 +172,19 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
   const reviewRow = (label: string, value: string) => <div><dt>{label}</dt><dd>{value || '—'}</dd></div>;
   const activeEducations = data.service === 'pre-evaluation' ? data.educations.slice(0, 1) : data.educations;
 
+  if(submitted)return <div className={s.shell}><section className={s.receipt}><p className={s.eyebrow}>{ic.test}</p><h1>{ic.saved}</h1><p>{ic.id}: <strong>{submitted.id}</strong></p><p>{ic.note}</p><p>{ic.pilotNote}</p><a className={s.primary} href={submitted.statusPath}>{ic.open}<ArrowRight size={18}/></a><p>{ic.next}</p><button className={s.secondary} onClick={reset}>{ic.newApplication}</button></section></div>;
   return <div className={s.shell}>
     <div className={s.introduction}><p className={s.eyebrow}>{c.eyebrow}</p><h1>{c.title}</h1><p>{c.intro}</p></div>
-    <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{c.preview}</strong><span>{c.previewNote}</span></p></div>
+    <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{data.service==='evaluation'?ic.pilot:c.preview}</strong><span>{data.service==='evaluation'?ic.pilotNote:c.previewNote}</span></p></div>
     <nav className={s.steps} aria-label={c.progress}><ol>{labels.map((label, index) => <li key={label} className={index === step ? s.currentStep : index < step ? s.completedStep : ''}>
-      <button type="button" onClick={() => navigate(index)} aria-current={index === step ? 'step' : undefined} disabled={!ready}>
+      <button type="button" onClick={() => navigate(index)} aria-current={index === step ? 'step' : undefined} disabled={!ready || submitting}>
         <span className={s.stepNumber}>{index < step ? <Check size={19} aria-hidden="true" /> : index + 1}</span><span>{label}</span>
       </button>
     </li>)}</ol></nav>
     <div className={s.layout}>
-      <form className={s.form} noValidate onSubmit={event => { event.preventDefault(); if (step < 2) navigate(step + 1); }}>
+      <form className={s.form} noValidate onSubmit={event => { event.preventDefault(); if (step < 2) navigate(step + 1); else void submitApplication(); }}>
         <div className={s.formHeading}><div><p className={s.stepCaption}>{c.stepOf} {step + 1} {c.of} 3</p><h2 ref={heading} tabIndex={-1}>{titles[step]}</h2><p>{intros[step]}</p></div><span className={s.headingIcon}>{step === 0 ? <UserRound aria-hidden="true" /> : step === 1 ? <Pencil aria-hidden="true" /> : <ClipboardCheck aria-hidden="true" />}</span></div>
-        <fieldset className={s.fields} disabled={!ready}>
+        <fieldset className={s.fields} disabled={!ready || submitting}>
           <legend className={s.srOnly}>{labels[step]}</legend>
           {Object.keys(errors).length > 0 && <div ref={errorBox} tabIndex={-1} className={s.errorBox} role="alert">{c.errorIntro}</div>}
           {restored && <p className={s.restored} role="status"><RotateCcw size={15} aria-hidden="true" />{c.restored}</p>}
@@ -222,7 +259,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
             {data.service === 'evaluation' && <>
               <section className={s.acceptanceNotice} aria-labelledby="before-apply-title"><div><Info size={18} aria-hidden="true" /><h3 id="before-apply-title">{c.beforeApply}</h3></div><p>{c.beforeApplyDescription}</p></section>
             </>}
-            <div className={s.uploadLater}><Upload size={19} aria-hidden="true" /><div><strong>{c.documentsNotice}</strong><p>{c.uploadLater}</p></div></div>
+            <div className={s.uploadLater}><Upload size={19} aria-hidden="true" /><div><strong>{c.documentsNotice}</strong><p>{data.service==='evaluation'?ic.before:c.uploadLater}</p></div></div>
           </>}
           {step === 2 && <>
             <section className={s.reviewSection}><div className={s.reviewHeading}><h3>{c.contactHeading}</h3><button type="button" onClick={() => navigate(0)} aria-label={c.edit + ' · ' + c.contactHeading}>{c.edit}<Pencil size={14} aria-hidden="true" /></button></div><dl className={s.reviewGrid}>
@@ -250,15 +287,15 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
               <EvaluationFees locale={locale} value={data.evaluationRequest} delivery={data.evaluationDelivery} educations={data.educations} />
               </section>
             </>}
-            <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></div>
+            <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3>{data.service==='evaluation'?<p><Mail size={19}/>{ic.before}</p>:<><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></>}</div>
           </>}
         </fieldset>
         <div className={s.actions}>
-          {step > 0 && <button type="button" className={s.back} onClick={() => navigate(step - 1)}><ArrowLeft size={17} aria-hidden="true" />{c.back}</button>}
-          <button className={s.primary} type="submit" disabled={!ready || step === 2} aria-describedby={step === 2 ? 'submission-note' : undefined}>{step === 2 ? c.submit : step === 1 ? c.review : c.next}<ArrowRight size={18} aria-hidden="true" /></button>
+          {step > 0 && <button type="button" className={s.back} disabled={submitting} onClick={() => navigate(step - 1)}><ArrowLeft size={17} aria-hidden="true" />{c.back}</button>}
+          <button className={s.primary} type="submit" disabled={!ready || submitting || (step === 2 && data.service !== 'evaluation')} aria-describedby={step === 2 ? 'submission-note' : undefined}>{step === 2 ? (submitting?ic.sending:data.service==='evaluation'?ic.submit:c.submit) : step === 1 ? c.review : c.next}<ArrowRight size={18} aria-hidden="true" /></button>
         </div>
-        {step === 2 && <p className={s.submissionNote} id="submission-note">{c.notConnected}</p>}
-        <div className={s.draftBar}><span><Save size={14} aria-hidden="true" />{saved ? c.saved : c.notSaved}</span><button ref={clearButton} type="button" disabled={!ready} aria-expanded={clearing} aria-controls="clear-draft-panel" onClick={() => setClearing(true)}><RotateCcw size={16} aria-hidden="true" />{c.clear}</button></div>
+        {step === 2 && <p className={s.submissionNote} id="submission-note">{data.service==='evaluation'?ic.note:c.notConnected}</p>}{submitError&&<p className={s.errorBox} role="alert">{submitError}</p>}
+        <div className={s.draftBar}><span><Save size={14} aria-hidden="true" />{saved ? c.saved : c.notSaved}</span><button ref={clearButton} type="button" disabled={!ready || submitting} aria-expanded={clearing} aria-controls="clear-draft-panel" onClick={() => setClearing(true)}><RotateCcw size={16} aria-hidden="true" />{c.clear}</button></div>
         {clearing && <div id="clear-draft-panel" className={s.clearPanel} role="group" aria-label={c.clearQuestion}><p>{c.clearQuestion}</p><button ref={clearConfirm} type="button" className={s.secondary} onClick={reset}>{c.clearConfirm}</button><button type="button" className={s.textButton} onClick={() => { setClearing(false); clearButton.current?.focus(); }}>{c.cancel}</button></div>}
       </form>
       <aside className={s.aside}>

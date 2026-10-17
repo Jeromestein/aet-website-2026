@@ -21,3 +21,36 @@ describe('authorized customer details projection',()=>{
   expect(result.client.email).toBe('');expect(result.evaluee.birth).toBe('1990-02-03');expect(result.educations).toEqual([]);
  });
 });
+
+import {projectIntakeStatus} from '@/lib/customer-status/model';
+import {initialDraft} from '@/lib/application/model';
+import {selectEvaluationService} from '@/lib/application/evaluation';
+import {intakeQuote,type IntakeReceipt} from '@/lib/application/intake';
+const intakeFixture=():IntakeReceipt=>{
+ const data={...initialDraft('evaluation'),contactName:'Synthetic Client',office:'miami',purpose:'education',firstName:'Test',lastName:'Person',email:'test@example.com',notes:'Customer note',educations:[{degree:'Bachelor',school:'Synthetic University',country:'GB',start:'2014-09',end:'2018-06'}]};
+ data.evaluationRequest=selectEvaluationService(data.evaluationRequest,'document',1);
+ return {id:'11111111-1111-4111-8111-111111111111',locale:'en',status:'submitted',createdAt:'2026-10-17T12:00:00Z',data,quote:intakeQuote(data),email:{state:'failed',attempts:1,recipient:'errplusone@gmail.com'},statusPath:'/status?source=preview'};
+};
+describe('shared status source adapters',()=>{
+ it('projects saved intake into the common customer sections',()=>{
+  const receipt=intakeFixture(),result=projectIntakeStatus(receipt);
+  expect(result).toMatchObject({id:receipt.id,source:'preview',status:'submitted',office:'Miami',services:'Document by Document',amount:11000,client:{name:'Synthetic Client',purpose:'evaluation-education',notes:'Customer note'},evaluee:{first:'Test',last:'Person'},educations:[{degree:'Bachelor',school:'Synthetic University'}],email:{state:'failed'}});
+  expect(result).not.toHaveProperty('data');expect(result).not.toHaveProperty('intake');
+ });
+ it('preserves frozen prices, delivery and qualification selection without repricing',()=>{
+  const receipt=intakeFixture();receipt.quote={...receipt.quote,min:12345,max:15000,needsQuote:true};
+  receipt.data.evaluationDelivery={report:'paper',extraCopies:2,shipping:'internationalFirst',address:{name:'Different Recipient',country:'GB',street:'1 Test Road',street2:'',city:'Test City',region:'',postal:'TEST'}};
+  const result=projectIntakeStatus(receipt);
+  expect(result.amount).toBeNull();expect(result.details?.quote.min).toBe(12345);expect(result.details?.quote.max).toBe(15000);
+  expect(result.details?.delivery.address.name).toBe('Different Recipient');expect(result.client.street).toBe('');
+  expect(result.details?.request.services.document.educationIndexes).toEqual([0]);
+ });
+ it('never sends isolated IDs to the live portal or invents payment deadlines',()=>{
+  const result=projectIntakeStatus(intakeFixture());expect(result.portalUrl).toBeNull();expect(result.deadline).toBeNull();expect(result.completion).toBeNull();
+  const legacy=projectStatus({id:result.id,status:'submitted',created_at:'2026-10-17T12:00:00Z',service_type:{}},[],'preview');expect(legacy.portalUrl).toBeNull();expect(legacy.deadline).toBeNull();
+ });
+ it('does not expose extra receipt or internal email metadata',()=>{
+  const receipt={...intakeFixture(),access_hash:'secret',staff_notes:'secret'};Object.assign(receipt.email,{providerId:'private'});
+  expect(JSON.stringify(projectIntakeStatus(receipt))).not.toMatch(/secret|private|providerId|access_hash|staff_notes/);
+ });
+});

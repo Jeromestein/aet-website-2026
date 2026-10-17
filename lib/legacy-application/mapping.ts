@@ -5,7 +5,7 @@ export const serviceKeys = { document: 'foreignCredentialEvaluation', course: 'c
 // Codes express actual turnaround. Never encode website 14/8 days as legacy 7/3 days.
 export const speeds: Record<string, Record<string, string>> = {
   document: { standard: '7day', rush: '3day', nextDay: '24hour', sameDay: 'sameday' },
-  course: { standard: '8day', rush: '5day', express: '3day', nextDay: '24hour' },
+  course: { standard: '8day', rush: '5day', express: '3day', nextDay: '24hour', sameDay: 'sameday' },
   expert: { standard: '21day', rush: '14day', express: '8day' },
   position: { standard: '10day', rush: '5day', express: '3day', priority: '2day' },
 };
@@ -26,7 +26,12 @@ export function toLegacyPreeval(input: ApplicationInput) {
     education: toLegacyEducation({ school: input.schoolName, country: input.countryOfStudy, degree: input.degreeObtained, start: input.startDate, end: input.endDate }),
   };
 }
-export function toLegacyFormal(data: ApplicationData, quote: Quote) {
+export type LegacyFormalProjection = Omit<ApplicationData, 'client' | 'evaluee' | 'delivery'> & {
+  client: Omit<ApplicationData['client'], 'office' | 'purpose'> & {office:string;purpose:string};
+  evaluee: Omit<ApplicationData['evaluee'], 'title'> & {title:string};
+  delivery: Omit<ApplicationData['delivery'], 'sameAddress'> & {sameAddress:boolean};
+};
+export function toLegacyFormal(data: LegacyFormalProjection, quote: Quote) {
   const service_type: Record<string, unknown> = { customizedService: { required: data.services.customized }, translation: { required: data.services.translation } };
   for (const [key, legacyKey] of Object.entries(serviceKeys)) {
     const choice = data.services[key as keyof typeof serviceKeys];

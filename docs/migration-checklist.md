@@ -1,5 +1,20 @@
 # AET 2026 Website and App Migration Checklist
 
+## Credential intake acceptance update — 2026-10-17
+
+- [x] Connect unified credential-evaluation submission, unique ID/deduplication,
+  transactional persistence, confirmation outbox and retry.
+- [x] Verify ID/link status lookup and the same services in authenticated CRM's
+  explicit isolated test-data view.
+- [x] Test success, concurrency, failure/retry, permissions and source isolation;
+  confirm two real Resend deliveries to `errplusone@gmail.com`.
+- This recipient supersedes older `tech@meiyugroup.org` test-recipient notes for
+  this credential-intake milestone only; it does not change staff authentication.
+- Storage is the existing Supabase project's `aet_preview_evaluation` and
+  `aet_preview_legacy` schemas. See [credential-intake-testing.md](credential-intake-testing.md).
+- [ ] Production cutover and subsequent upload/payment/staff-processing milestones.
+
+
 Initial inventory: September 28, 2026. Current dev checkpoint reconciled October 17, 2026
 against the current working tree, Git history and recorded local verification.
 Sources: the local legacy website, sibling AET App implementation, and the 2026

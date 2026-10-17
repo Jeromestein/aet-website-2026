@@ -5,8 +5,9 @@ import type { Locale } from '@/i18n/routing';
 import { statusCopy } from '@/lib/customer-status/copy';
 import { statusLookup, type CustomerStatus } from '@/lib/customer-status/model';
 import s from './status.module.css';
+import { intakeCopy } from '@/lib/application/intake-copy';
 import { StatusSections } from './sections';
-export function StatusPage({locale, initialId}: {locale: Locale; initialId: string}) {
+export function StatusPage({locale, initialId,preview=false}: {locale: Locale; initialId: string;preview?:boolean}) {
  const t = statusCopy[locale]; const [id,setId] = useState(initialId); const [record,setRecord] = useState<CustomerStatus|null>(null);
  const [busy,setBusy] = useState(false); const [error,setError] = useState(''); const [now,setNow] = useState(0);
  const active = useRef<AbortController|null>(null); const prefix = locale === 'en' ? '' : '/' + locale;
@@ -17,14 +18,14 @@ export function StatusPage({locale, initialId}: {locale: Locale; initialId: stri
   const controller = new AbortController(); active.current = controller; setBusy(true);
   if(updateUrl) {const url = new URL(location.href);url.searchParams.set('applicationId',parsed.data.applicationId);history.replaceState(null,'',url);}
   try {
-   const response = await fetch('/api/customer-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsed.data),cache:'no-store',signal:controller.signal});
+   const response = await fetch('/api/customer-status'+(preview?'?source=preview':''),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsed.data),cache:'no-store',signal:controller.signal});
    const data = await response.json();
    if(!response.ok) throw new Error(data.error);
    if(!controller.signal.aborted) {setRecord(data);setNow(Date.now());}
   } catch(e) {if(!controller.signal.aborted) {const code=(e as Error).message;setError(code==='not_found'?t.missing:code==='too_many_requests'?t.limited:t.failed);}}
   finally {if(!controller.signal.aborted) setBusy(false);}
  }
- useEffect(()=>{setId(initialId); if(initialId) void check(initialId); return ()=>active.current?.abort();},[initialId,locale]);
+ useEffect(()=>{setId(initialId); if(initialId) void check(initialId); return ()=>active.current?.abort();},[initialId,locale,preview]);
  useEffect(()=>{if(!record?.deadline)return;const timer=setInterval(()=>setNow(Date.now()),1000);return ()=>clearInterval(timer);},[record?.deadline]);
  const date=(value:string)=>{const d=new Date(value);return value&&Number.isFinite(d.getTime())?new Intl.DateTimeFormat(locale==='zh'?'zh-CN':locale,{dateStyle:'medium',timeStyle:'short'}).format(d):t.unknown;};
  const remaining=record?.deadline?Math.max(0,Math.floor((new Date(record.deadline).getTime()-now)/1000)):0;
@@ -41,11 +42,11 @@ export function StatusPage({locale, initialId}: {locale: Locale; initialId: stri
    <div className={s.content}>
     <form className={s.card} onSubmit={submit} aria-busy={busy}><label htmlFor="applicationId">{t.id}</label><div className={s.lookup}><input id="applicationId" name="applicationId" value={id} onChange={e=>{active.current?.abort();setBusy(false);setId(e.target.value);setRecord(null);setError('');}} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" maxLength={64} aria-invalid={!!error} aria-describedby={error?'status-error':undefined}/><button disabled={busy}><Search size={18}/>{busy?t.loading:t.check}</button></div>{error&&<p id="status-error" role="alert" className={s.error}>{error}</p>}{busy&&<p role="status">{t.loading}</p>}</form>
     {record&&<>
-     <section className={s.card} aria-live="polite"><div className={s.sectionHeading}><CircleCheck size={25}/><h2>{t.heading}</h2><span className={s.badge} data-status={record.status}>{label(t.status,record.status)}</span></div>
+     <section className={s.card} aria-live="polite">{record.source==='preview'&&<p className={s.sectionNotice}>{intakeCopy[locale].test}</p>}<div className={s.sectionHeading}><CircleCheck size={25}/><h2>{t.heading}</h2><span className={s.badge} data-status={record.status}>{label(t.status,record.status)}</span></div>
       <dl className={s.facts}><div><dt>{t.payment}</dt><dd className={record.payment==='paid'?s.paid:s.pending}>{label(t.payments,record.payment)}</dd></div><div><dt>{t.submitted}</dt><dd>{date(record.submitted)}</dd></div><div><dt>{t.office}</dt><dd>{record.office||t.unknown}</dd></div><div><dt>{t.paid}</dt><dd>{record.paid?date(record.paid):t.notPaid}</dd></div><div><dt>{t.service}</dt><dd>{record.services}</dd></div>{record.amount!==null&&record.payment!=='paid'&&<div><dt>{t.amount}</dt><dd>{new Intl.NumberFormat(locale,{style:'currency',currency:'USD'}).format(record.amount/100)}</dd></div>}</dl>
       {record.completion&&<div className={s.estimate}><strong>{t.due}: {record.completion.dueDate}</strong><p>{t.estimate}</p></div>}
      </section>
-     <StatusSections key={record.id} record={record} locale={locale} />
+     <StatusSections key={record.source+record.id} record={record} locale={locale} />
     </>}
     <p className={s.preliminary}>{t.preliminary} <a href={prefix+'/status-check'}>{t.preliminaryLink}</a></p>
    </div>

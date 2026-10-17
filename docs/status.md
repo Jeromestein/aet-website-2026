@@ -1,5 +1,40 @@
 # AET Implementation Status
 
+## 2026-10-17 — Unified customer status UI
+
+- Live and isolated credential records now use one `CustomerStatus` contract and
+  the same status/next-steps/documents/services/payment/client/education components.
+  Removed the separate customer intake receipt path; source selection stays explicit.
+- Saved quote ranges, selected qualifications, delivery and confirmation-mail retry
+  appear within the shared cards when available. Test IDs have no production portal
+  links or invented payment deadlines. Existing live records remain read-only here.
+- Verified both sources in the in-app browser at 1440px and 390px; no horizontal
+  overflow. Checked invalid-ID feedback, valid lookup retaining `source=preview`,
+  saved fees/delivery, mail state and disabled unconnected payment controls.
+- 279 tests across 22 files, 26 isolated database/HTTP assertions, TypeScript and
+  locale checks passed. Integration fixtures cleaned up; no additional real mail sent.
+- Evidence: `output/playwright/unified-status-{preview,live}-{desktop,mobile}.png`
+  and `output/playwright/unified-status-mobile-fees.png`.
+- Owner-run port 3022 server reused; no production build, push or deployment.
+
+## 2026-10-17 — Credential intake persistence and confirmation mail
+
+- Connected the unified credential-evaluation form to the isolated Supabase preview
+  schemas, with transactional application/education/quote/outbox persistence and
+  request-ID deduplication. Added customer status receipts and an explicit CRM test
+  view under existing staff permissions. Other intake services remain previews.
+- Confirmation delivery is pinned to `errplusone@gmail.com`; two real test messages
+  returned Resend `delivered`, including a retry after simulated delivery failure.
+  No production business rows, login behavior, payments or file transfers changed.
+- 275 tests across 22 files, 24 database/HTTP integration assertions, TypeScript and
+  i18n checks passed. Browser verified submission, status, reload protection and
+  authenticated CRM on desktop/mobile; corrected mobile price wrapping.
+- See [credential-intake-testing.md](credential-intake-testing.md) for exact tables,
+  guardrails, migration/test commands, retained synthetic IDs and remaining scope.
+  Screenshots: `output/playwright/intake-{crm,status}-{desktop,mobile}-2026-10-17.png`
+  and `output/playwright/intake-status-mobile-fees-2026-10-17.png`.
+- Used the owner-run port 3022 server; no restart, production build, push or deploy.
+
 ## 2026-10-17 — Evaluation samples and service guidance
 
 - Highlighted both evaluation sample-report links with a theme-blue button,

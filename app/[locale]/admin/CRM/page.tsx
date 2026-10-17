@@ -20,5 +20,5 @@ export default async function CRMPage({ searchParams }: { searchParams: Promise<
   const query = await searchParams;
   const view = z.enum(['applications','formal','equivalency','payments','documents']).catch('applications').parse(query.view) as WorkspaceView;
   const target = z.object({ id: z.uuid(), kind: z.enum(['formal','preeval']) }).safeParse({ id: query.application, kind: query.kind });
-  return <CRMWorkspace initialView={view} initialCase={target.success ? target.data as CaseReference : null} />;
+  return <CRMWorkspace preview={query.source==='preview'} initialView={view} initialCase={target.success ? target.data as CaseReference : null} />;
 }

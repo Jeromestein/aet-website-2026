@@ -6,6 +6,7 @@ import { workspaceSnapshot } from '@/lib/crm/workspace-server';
 import { workspaceCsv } from '@/lib/crm/contracts';
 import { liveEnabled } from '@/lib/crm/live-db';
 import { liveSnapshot } from '@/lib/crm/live-server';
+import { requireIntakePreview } from '@/lib/application/intake-server';
 import { requireStaff } from '@/lib/staff/session';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,8 @@ export async function GET(request: Request) {
   try {
     const staff = liveEnabled() ? await requireStaff() : await authorize();
     const query = Object.fromEntries(new URL(request.url).searchParams);
-    const result = liveEnabled() ? await liveSnapshot(query, staff as Awaited<ReturnType<typeof requireStaff>>) : await workspaceSnapshot(query, staff);
+    const preview=query.source==='preview';delete query.source;if(preview)requireIntakePreview();
+    const result = liveEnabled() && !preview ? await liveSnapshot(query, staff as Awaited<ReturnType<typeof requireStaff>>) : await workspaceSnapshot(query, staff);
     if (query.export === 'csv') return new Response(workspaceCsv(result.rows), { headers: { ...headers,'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="aet-applications.csv"','X-Content-Type-Options':'nosniff' } });
     return NextResponse.json(result,{headers});
   } catch(error) {

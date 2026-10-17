@@ -1,9 +1,10 @@
+import { readIntake } from '@/lib/application/intake-server';
 import { NextResponse } from 'next/server';
 import { liveDb, liveEnabled } from '@/lib/crm/live-db';
 import { db, table } from '@/lib/preeval/db';
 import { sameOrigin, limit } from '@/lib/preeval/auth';
 import { AppError } from '@/lib/preeval/domain';
-import { statusLookup, projectStatus } from '@/lib/customer-status/model';
+import { statusLookup, projectStatus, projectIntakeStatus } from '@/lib/customer-status/model';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 const reply = (body: unknown, status = 200) => NextResponse.json(body, { status, headers: {
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
     const parsed = statusLookup.safeParse(raw);
     if (!parsed.success) throw new AppError('invalid_application_id');
     const id = parsed.data.applicationId;
+    if(new URL(request.url).searchParams.get('source')==='preview') return reply(projectIntakeStatus(await readIntake(id)));
     // Match the old formal lookup; do not route formal IDs into pre-evaluation.
     const rows = liveEnabled()
       ? await liveDb()`select id,status,payment_status,created_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from public.fce_applications where id=${id}`
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
     const educations = liveEnabled()
       ? await liveDb()`select id,country_of_study,degree_obtained,school_name,study_start_date,study_end_date from public.fce_educations where application_id=${id} order by id`
       : await db()`select id,country_of_study,degree_obtained,school_name,study_start_date,study_end_date from ${table('public.fce_educations')} where application_id=${id} order by id`;
-    return reply(projectStatus(rows[0], educations));
+    return reply(projectStatus(rows[0], educations, liveEnabled()?'live':'preview'));
   } catch (error) {
     return error instanceof AppError ? reply({ error: error.code }, error.status) : reply({ error: 'service_unavailable' }, 503);
   }
