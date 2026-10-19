@@ -25,14 +25,19 @@ export function PaymentForm({ c, locale, stripeMode, stripeOffices, checkoutToke
   const [provider, setProvider] = useState('paypal');
   const [office, setOffice] = useState('');
   const stripe = provider === 'stripe';
-  const stripeAvailable = stripeOffices.some(entry => entry === office);
+  const stripeAvailable = stripeMode !== 'disabled' && (office
+    ? stripeOffices.some(entry => entry === office)
+    : stripeOffices.length > 0);
   const f = stripeMode === 'live' ? { ...c.form, ...c.stripeLive } : c.form;
   return <form className={styles.form} method="post" action="/api/payment/prepare" target="_blank" rel="noopener noreferrer">
     <p className={styles.formIntro}>{f.intro}</p>
       <div className={`${styles.field} ${styles.officeField}`}><label htmlFor="pay-office">{f.office}<span className={styles.asterisk} aria-hidden="true"> *</span></label>
         <select id="pay-office" name="office" value={office} onChange={event => {
-          setOffice(event.target.value);
-          setProvider('paypal');
+          const nextOffice = event.target.value;
+          setOffice(nextOffice);
+          if (nextOffice && !stripeOffices.some(entry => entry === nextOffice)) {
+            setProvider('paypal');
+          }
         }} required><option value=""></option>
           {paymentOffices.map(office => <option key={office} value={office}>{c.offices[office]}</option>)}
         </select>

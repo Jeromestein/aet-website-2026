@@ -1,5 +1,20 @@
 # AET Implementation Status
 
+## 2026-10-19 — Show Stripe before office selection
+
+- Show Stripe on the initial Payment form whenever Stripe is enabled and at
+  least one office is configured. Keep office selection required and preserve
+  Stripe selection when switching between supported offices or clearing the
+  office; an unsupported office still falls back to PayPal with the existing
+  availability message. No account routing or checkout logic changed.
+- Typecheck, existing mocked payment regression checks and whitespace checks
+  passed. In-app browser verified English initial state at 1440px and 390px,
+  selecting Stripe before an office, and retaining Stripe across all four
+  configured offices. Mobile has no horizontal overflow. No checkout submitted.
+- Screenshots: `output/playwright/stripe-initial-{desktop,mobile}-2026-10-19.png`.
+  Started `pnpm dev` on the previously unused port 3021; the local preview remains
+  running. Local test-mode labels are expected. No build, push or deployment.
+
 ## 2026-10-15 — Hero service-specific actions
 
 - Changed the Hero evaluation action to Apply for Credential Evaluation
