@@ -1,5 +1,80 @@
 # AET Implementation Status
 
+## 2026-10-20 — Fix the three Preview acceptance findings locally
+
+- Test CRM document counts now read all pages from the existing staff-authorized
+  Dropbox endpoint used by Documents, deduplicate file IDs and limit concurrent
+  record lookups to three. Only visible version-2 test intakes use this lookup;
+  live records and older storage flows retain their existing behavior. Failed or
+  incomplete reads show an unavailable state, never a misleading zero. Counts
+  refresh with navigation/manual refresh, without tab-focus polling.
+- Customer saved files, upload queues and CRM Documents share B/KB/MB formatting.
+  The existing 687-byte PDF now displays `687 B`, and the large fixture `6 MB`.
+- Updated English/Chinese/Spanish form and receipt copy to describe Status uploads,
+  disabled test payments and the existing office CC. The confirmation email now
+  points to test-document upload instead of describing a local-only workflow.
+  Recipient routing, previously sent messages and payment behavior are unchanged.
+- Passed 51 focused tests covering pagination, duplicate files, empty/error states,
+  cancellation/concurrency, byte units, office authorization, intake and email
+  routing/assets. TypeScript and all three locale checks passed.
+- In-app browser verification on owner-run localhost:3022 passed: Test desktop and
+  390px mobile counts showed two files for the acceptance record and the older
+  uploaded test record, with zero for the two empty records; manual refresh kept
+  the correct counts. CRM Documents and desktop/mobile customer Status displayed
+  both PDFs with correct units. Form upload/CC instructions and the rendered mobile
+  email template were checked. Mobile CRM/Status had no page-width overflow.
+- Reused existing synthetic records/files; no new application, upload or email was
+  submitted during this fix. No auth, environment, database or Production changes.
+  This entry records local dev verification only; no commit, push or deployment.
+
+## 2026-10-20 — Exercise the hosted application-to-CRM flow
+
+- Tested the stable dev Preview at commit `58da862` using the authenticated
+  Chrome session. The in-app browser requires Vercel sign-in; no protection
+  setting was changed. This pass covered desktop browser behavior.
+- Submitted one clearly fictional Miami application through the public form:
+  `9b41e75f-1ae6-4666-9a26-e03dbc44dda1` (TEST Preview E2E 1020). Required-field
+  validation, two education records, selected qualifications, review, draft
+  restoration after reload and the $150 estimate passed. Read-only SQL checks
+  found one intake row, one Test CRM projection and zero matching live rows.
+- Status automatically opened the saved application, displayed the same details
+  and estimate, rejected malformed IDs and handled a nonexistent valid UUID.
+  The native file picker excluded TXT. Actual uploads saved a 687-byte PDF and
+  a 6,292,854-byte PDF, exercising the small-file and chunked paths. Both remained
+  visible after reload and appeared in CRM Documents. Dropbox rendered the large
+  PDF's synthetic content successfully. No customer document was uploaded.
+- The confirmation outbox recorded one successful attempt. Resend reported
+  `delivered` to the fixed test recipient with the existing Miami office CC.
+  The subject contained the test marker and application ID; both Status links
+  used HTTPS, the stable dev host and `source=preview`. Logo assets used the
+  public website host. Inbox placement/read status was not independently checked.
+- CRM manual refresh found the fourth isolated application. Search, opening a
+  row via its date cell, Copy ID feedback, Education/Service/Payment/Documents
+  tabs, and the localized Status-link destination passed. Filtered CSV export
+  produced exactly one matching application (419 bytes); the browser download
+  event waiter timed out, but the native download UI and saved CSV verified success.
+- A separate deployment-origin session without an app login redirected CRM to
+  login, rejected fictional incorrect credentials and returned `access_denied`
+  from the staff-workspace endpoint. The stable native-admin session continued
+  to work. The owner previously confirmed fresh correct-password sign-in.
+  Live Pre-evaluation and Payment lists loaded; FCE showed 20 rows per page.
+- Open findings: Test list document count remains zero after two Dropbox uploads
+  (`components/crm/workspace.tsx` reads the older `row.files` source). Customer
+  file sizes below 0.01 MB round to `0 MB` (`components/documents/file-manager.tsx`).
+  Intake form/receipt copy still says local testing excludes uploads, and its
+  recipient-only wording omits the existing office CC (`lib/application/intake-copy.ts`).
+  The intake email notice also still describes local-only links/no upload request
+  (`lib/application/intake-template.tsx`). These findings are fixed locally in the follow-up entry above.
+- Current limits: this intake is intentionally read-only in CRM and payment is
+  disabled. Other unified-form service choices are preview-only. This pass did
+  not exercise real-record edits, payment settlement, report release, alternate
+  staff-office roles, upload interruption/retry, email failure/retry, or mobile.
+- Vercel API confirmed dev is READY on `dpl_EAVGBh4Q4soirqVmfethhWtqzHqQ`.
+  Production remained on `dpl_FoFAiaXqdc4UNEzJvbwCuNB8Wc2v`, main commit
+  `71ddcf9`. No employee account, live business record, deployment setting or
+  runtime code was changed. Retained the single marked test application and its
+  two synthetic PDFs for owner review. No build, commit, push or deployment.
+
 ## 2026-10-20 — Verify the hosted dev Preview
 
 - With owner authorization, committed and pushed Preview runtime adaptation
