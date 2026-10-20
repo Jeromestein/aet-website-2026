@@ -3,8 +3,9 @@ import {useEffect,useRef,useState,type FormEvent} from 'react';
 import {ArrowRight,RotateCcw} from 'lucide-react';
 import {date,label,money,type CaseReference,type WorkspaceRow} from '@/lib/crm/contracts';
 import {statusAllowed} from '@/lib/crm/live-domain';
-import {Badge,OfficeBadge,WorkspaceDialog,request,WorkspaceError,errorMessage} from './ui';
+import {Badge,WorkspaceDialog,request,WorkspaceError,errorMessage} from './ui';
 import {EducationHistory,SelectedServices} from './record-details';
+import {CaseDetailHeader} from './case-detail-header';
 import {CaseDocuments} from './documents';
 import s from './crm.module.css';
 
@@ -21,10 +22,7 @@ export default function LiveCaseDrawer({target,initialTab='overview',onClose,onS
  return <WorkspaceDialog open onClose={onClose} title={(summary?.name||'Application')+' application details'} drawer>
   {error&&<p role="alert" className={s.formError}>{error}</p>}
   {!record?<div className={s.empty}>{error?'Record unavailable.':'Loading application…'}</div>:<>
-   <div className={s.detailIdentity}><OfficeBadge office={summary!.office} large/><div><h2>{summary!.name}</h2><p>{r.id}<span> · </span>{summary!.office||'Unassigned'}</p></div></div>
-   <div className={s.detailBadges}><Badge tone="blue">{summary!.service}</Badge><Badge>{label(summary!.status)}</Badge><Badge>{label(summary!.payment_status)}</Badge></div>
-   <p className={s.helperText}>Live business record. Saved changes are shared with the previous workspace.</p>
-   <div className={s.detailTabs} role="group" aria-label="Application detail sections">{tabs.map(value=><button key={value} aria-pressed={tab===value} className={tab===value?s.detailTabActive:''} onClick={()=>setTab(value)}>{label(value)}</button>)}</div>
+   <CaseDetailHeader id={r.id} name={summary!.name} office={summary!.office} service={summary!.service} status={summary!.status} paymentStatus={summary!.payment_status} caption="Live business record. Saved changes are shared with the previous workspace." tabs={tabs} tab={tab} onTab={setTab}/>
    {notice&&<p role="status" className={s.helperText}>{notice}</p>}
    <fieldset className={s.liveFieldset} disabled={busy||stale}>
     {tab==='overview'&&<div className={s.detailContent}>

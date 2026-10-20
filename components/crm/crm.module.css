@@ -29,8 +29,8 @@
 .liveDot { width: 6px; height: 6px; background: #4e917c; border-radius: 50%; margin-left: auto; }
 .workspace .navLabel { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; color: #8794a0; padding: 25px 11px 10px; }
 .nav { display: flex; flex-direction: column; gap: 5px; }
-.nav button { min-height: 43px; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; color: #647484; padding: 10px 12px; border-radius: 7px; font-size: 14px; }
-.nav button:hover { background: #f4f7fa; color: var(--crm-text); }
+.nav button, .nav a { min-height: 43px; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; color: #647484; padding: 10px 12px; border-radius: 7px; font-size: 14px; }
+.nav button:hover, .nav a:hover { background: #f4f7fa; color: var(--crm-text); }
 .nav .navActive { color: #284f75; background: #eaf2f9; font-weight: 600; }
 .nav .navActive svg { color: #396789; }
 .navCount { margin-left: auto; padding: 1px 7px; background: #dbe9f4; border-radius: 5px; font-size: 13px; font-weight: 600; }

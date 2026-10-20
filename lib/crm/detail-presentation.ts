@@ -45,6 +45,7 @@ const extras: Record<string, [string, number]> = {
 };
 const quoteNames: Record<string, string> = {
   document:serviceNames.foreignCredentialEvaluation, course:serviceNames.coursebyCourse,
+  pdf:extras.pdf_only[0], paper:extras.pdf_with_hard_copy[0], extraCopy:extras.extra_copy[0],
   expert:serviceNames.professionalExperience, position:serviceNames.positionEvaluation,
   documentAdditional:'Additional Degrees', courseAdditional:'Additional Degrees',
   reportPdf:extras.pdf_only[0], reportPaper:extras.pdf_with_hard_copy[0], reportExtra:extras.extra_copy[0],

@@ -1,5 +1,22 @@
 # AET Implementation Status
 
+## 2026-10-20 — Align test CRM details and simplify navigation
+
+- Moved Test to the left navigation, ordered Applications / FCE / Pre-evaluation /
+  Payment links / Test. Removed the inline preview switch, workspace Documents
+  entry and document strip. Per-record Documents remains available.
+- Replaced the intake receipt inside the test drawer with the live drawer's shared
+  identity, badges and six tabs. Education and Service reuse the same white cards;
+  saved prices, linked qualifications, notes and confirmation delivery remain
+  visible. Education/Service list actions open their matching section directly.
+- Preserved the original read-only intake endpoint, live write endpoints, office
+  permissions and employee authentication. No database writes, email sends,
+  payments, deployment or push were performed.
+- Verification: owner-run dev server on 3022; in-app browser checked live FCE,
+  test navigation, all six test sections, direct Education entry, 1440px desktop
+  and 390px mobile layouts. Typecheck and 12 focused CRM tests passed.
+
+
 ## 2026-10-20 — Match the legacy Dropbox file table
 
 - CRM Documents uses File Name / Size / Uploaded Time columns. Blue file names

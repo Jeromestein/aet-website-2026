@@ -183,7 +183,7 @@ background portrait and content have breathing room without a fixed section heig
   returning data. Office selectors contain only permitted offices and, when
   authorized, Unassigned. A selector never grants access.
 - Use the original CRM layout as the connected workspace: fixed sidebar, four
-  overview cards, document strip, status tabs, table/mobile cards and a right-hand
+  overview cards, status tabs, table/mobile cards and a right-hand
   detail drawer. Formal and preliminary evaluations share the shell. Education
   and Service open their own drawer sections; edits persist through the existing
   authenticated workflow APIs. Older formal-list/detail URLs open the matching
@@ -198,6 +198,15 @@ background portrait and content have breathing room without a fixed section heig
   preview using the employee's office account. Status and CRM share the legacy
   office/name/application-ID folder rule; the preview flag selects database
   records only. File requests recheck staff application permissions.
+
+- Order the left navigation as Applications, FCE, Pre-evaluation, Payment links,
+  Test. Test is a dedicated link to `source=preview`; the other links return to
+  live data. Omit the workspace-level Documents entry and document strip; keep
+  Documents inside each application drawer.
+- Live and new test-intake drawers share the identity header, service/status badges,
+  six section tabs and white information cards. Never embed the customer-facing
+  "Application saved" receipt in CRM. Keep the existing test read-only boundary;
+  visual consistency does not enable payments, messages or new write operations.
 
 The following presentation rules apply to the connected CRM workspace:
 
