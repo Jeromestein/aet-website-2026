@@ -1,5 +1,15 @@
 # AET 2026 Website and App Migration Checklist
 
+## Dropbox transfer to dev — October 20, 2026
+
+- [x] Back up both working trees and identify the existing dev status/data adapters.
+- [x] Transfer the reusable Dropbox module and preserve unrelated dev changes.
+- [x] Connect the existing status page to server-derived document access for both sources.
+- [x] Preserve legacy folders for live records; isolate preview documents from live archives.
+- [x] Verify small/chunked uploads, access restrictions and desktop/mobile on port 3022.
+- [x] Restore only this task's changes in the main checkout after verifying the transfer.
+
+
 ## Credential intake acceptance update — 2026-10-17
 
 - [x] Connect unified credential-evaluation submission, unique ID/deduplication,
@@ -52,10 +62,10 @@ readiness. Historical acceptance evidence remains in [status.md](status.md).
 - [x] Add completion estimates and canonical English-only staff routes.
 - [x] Restore localized formal `/status?applicationId=ID` lookup, including client,
   evaluee and linked education fields, without exposing internal notes or reports.
-- [x] Add status-page document selection and payment-method previews with explicit
-  disconnected states and links to the existing portal.
-- [ ] Connect customer-status file lists/uploads, detailed service/delivery data
-  and payment execution. Current file selection stays on the customer's device.
+- [x] Connect status-page Dropbox lists/uploads to the current application, including
+  isolated intake previews, 3 MiB chunks and saved service/delivery details.
+- [ ] Connect payment execution. Payment previews retain their explicit unavailable
+  states and existing-portal links where applicable.
 - [ ] Complete new live intake, document/payment operations, customer messaging
   and report delivery in the new CRM before retiring the previous workspace.
 

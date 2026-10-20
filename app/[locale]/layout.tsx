@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from "next/script";
+import { SiteAnalytics } from "@/components/site-analytics";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,8 +13,6 @@ import "../home-design.css";
 import "../i18n.css";
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
-
-const googleAnalyticsId = "G-7SF10M7GBE";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -47,18 +45,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale === "zh" ? "zh-Hans" : locale}>
       <body>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${googleAnalyticsId}');
-          `}
-        </Script>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-          strategy="afterInteractive"
-        />
+        <SiteAnalytics />
       </body>
     </html>
   );

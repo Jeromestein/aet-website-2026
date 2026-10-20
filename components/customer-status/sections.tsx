@@ -1,28 +1,20 @@
 "use client";
-import {useRef,useState,type ChangeEvent,type DragEvent} from 'react';
-import {Upload,FileText,CreditCard,Landmark,UserRound,GraduationCap,ArrowRight,Info,X,CheckCircle2} from 'lucide-react';
+import {useState} from 'react';
+import {useTranslations} from 'next-intl';
+import {FileManager} from '@/components/documents/file-manager';
+import {Upload,FileText,CreditCard,Landmark,UserRound,GraduationCap,ArrowRight,Info,CheckCircle2} from 'lucide-react';
 import type {Locale} from '@/i18n/routing';
 import type {CustomerStatus} from '@/lib/customer-status/model';
 import {sectionsCopy} from '@/lib/customer-status/sections-copy';
 import s from './status.module.css';
 import { SavedServiceDetails, ConfirmationEmail } from './saved-details';
 import countries from '@/lib/legacy-application/countries.json';
-export function StatusSections({record,locale}:{record:CustomerStatus;locale:Locale}) {
+export function StatusSections({record,locale,onBusyChange}:{record:CustomerStatus;locale:Locale;onBusyChange?:(busy:boolean)=>void}) {
  const t=sectionsCopy[locale];
- const [files,setFiles]=useState<File[]>([]),[fileError,setFileError]=useState(''),[dragging,setDragging]=useState(false);
+ const documents=useTranslations('documents');
  const [method,setMethod]=useState('zelle'),[showZelle,setShowZelle]=useState(false);
- const input=useRef<HTMLInputElement>(null);
  const portal=record.portalUrl;
- const locked=['completed','cancelled'].includes(record.status);
  const money=record.amount===null?t.unknown:new Intl.NumberFormat(locale,{style:'currency',currency:'USD'}).format(record.amount/100);
- function addFiles(list:FileList|null) {
-  if(!list)return;
-  const accepted=Array.from(list).filter(f=>/\.(jpe?g|png|pdf|docx?)$/i.test(f.name)&&f.size>0&&f.size<=50*1024*1024);
-  setFileError(accepted.length===list.length?'':t.invalid);
-  setFiles(old=>[...old,...accepted.filter(f=>!old.some(o=>o.name===f.name&&o.size===f.size&&o.lastModified===f.lastModified))]);
- }
- function choose(e:ChangeEvent<HTMLInputElement>){addFiles(e.target.files);e.target.value='';}
- function drop(e:DragEvent){e.preventDefault();setDragging(false);if(!locked)addFiles(e.dataTransfer.files);}
  const openPortal=(label: string=t.portal)=>portal?<a className={s.portal} href={portal} target="_blank" rel="noreferrer">{label}<ArrowRight size={17}/></a>:null;
  const displayFields=(labels:readonly string[],values:string[])=><dl className={s.facts}>{labels.map((label,i)=><div key={label}><dt>{label}</dt><dd style={{whiteSpace:'pre-wrap'}}>{values[i]||missing}</dd></div>)}</dl>;
  const missing={en:'Not provided',zh:'未提供',es:'No proporcionado'}[locale];
@@ -36,18 +28,10 @@ export function StatusSections({record,locale}:{record:CustomerStatus;locale:Loc
    <div className={s.sectionHeading}><Upload size={24}/><h2 id="documents-heading">{t.upload}{record.office&&<> · {record.office}</>}</h2></div>
    <p>{t.intro}</p><div className={s.requirements}><strong>{t.requirements}</strong><ul><li>{t.degrees}</li><li>{t.translations}</li></ul></div>
    <details className={s.licensure}><summary>{t.licensure}</summary><p>{t.licensureNote}</p></details>
-   <div className={s.subheading}><h3>{t.files}</h3><span className={s.previewBadge}>{t.soon}</span></div>
-   <div className={s.fileEmpty}><FileText size={27}/><p>{t.filesNotice}</p>{portal&&<a href={portal} target="_blank" rel="noreferrer">{t.refresh}</a>}</div>
-   {!locked&&<><p className={s.sectionNotice}><Info size={17}/>{t.uploadNotice}</p>
-    <div className={s.dropzone} data-dragging={dragging} onDragOver={e=>{e.preventDefault();setDragging(true);}} onDragLeave={()=>setDragging(false)} onDrop={drop}>
-     <Upload size={30}/><button type="button" className={s.chooseFile} onClick={()=>input.current?.click()}>{t.choose}</button><p>{t.rules}</p>
-     <input ref={input} type="file" aria-label={t.choose} multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" onChange={choose} className={s.fileInput}/>
-    </div>
-    {fileError&&<p role="alert" className={s.error}>{fileError}</p>}
-    {!!files.length&&<div className={s.fileQueue}><h3>{t.selected} ({files.length})</h3><ul>{files.map((f,i)=><li key={f.name+f.lastModified}><FileText size={18}/><span>{f.name}<small>{(f.size/1024/1024).toFixed(2)} MB</small></span><button type="button" aria-label={t.remove+' '+f.name} onClick={()=>setFiles(old=>old.filter((_,index)=>index!==i))}><X size={17}/></button></li>)}</ul></div>}
-    <button type="button" className={s.unavailable} disabled>{t.uploadAction}</button>
-   </>}
-   {openPortal()}
+   {record.documents?.state==='ready'
+    ? <FileManager embedded key={record.documents.token} token={record.documents.token} canUpload={record.documents.canUpload} onBusyChange={onBusyChange}/>
+    : <p className={s.sectionNotice} role="status">{documents('errors.unavailable')}</p>}
+
   </section>
   <section className={s.card} aria-labelledby="services-heading"><div className={s.sectionHeading}><FileText size={24}/><h2 id="services-heading">{t.services}</h2></div>
    {!record.details&&<p className={s.sectionNotice}><Info size={17}/>{t.detailNotice}</p>}

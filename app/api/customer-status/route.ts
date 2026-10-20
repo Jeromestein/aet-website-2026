@@ -1,3 +1,4 @@
+import { withDocuments } from '@/lib/customer-status/documents';
 import { readIntake } from '@/lib/application/intake-server';
 import { NextResponse } from 'next/server';
 import { liveDb, liveEnabled } from '@/lib/crm/live-db';
@@ -30,17 +31,19 @@ export async function POST(request: Request) {
     const parsed = statusLookup.safeParse(raw);
     if (!parsed.success) throw new AppError('invalid_application_id');
     const id = parsed.data.applicationId;
-    if(new URL(request.url).searchParams.get('source')==='preview') return reply(projectIntakeStatus(await readIntake(id)));
+    if(new URL(request.url).searchParams.get('source')==='preview') return reply(withDocuments(projectIntakeStatus(await readIntake(id))));
     // Match the old formal lookup; do not route formal IDs into pre-evaluation.
     const rows = liveEnabled()
-      ? await liveDb()`select id,status,payment_status,created_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from public.fce_applications where id=${id}`
-      : await db()`select id,status,payment_status,created_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from ${table('public.fce_applications')} where id=${id}`;
+      ? await liveDb()`select id,status,payment_status,created_at,submitted_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from public.fce_applications where id=${id}`
+      : await db()`select id,status,payment_status,created_at,submitted_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from ${table('public.fce_applications')} where id=${id}`;
     if (!rows[0]) throw new AppError('not_found', 404);
     // Match the legacy join by application_id; return only customer education fields.
     const educations = liveEnabled()
       ? await liveDb()`select id,country_of_study,degree_obtained,school_name,study_start_date,study_end_date from public.fce_educations where application_id=${id} order by id`
       : await db()`select id,country_of_study,degree_obtained,school_name,study_start_date,study_end_date from ${table('public.fce_educations')} where application_id=${id} order by id`;
-    return reply(projectStatus(rows[0], educations, liveEnabled()?'live':'preview'));
+    const submitted = rows[0].submitted_at || rows[0].created_at;
+    return reply(withDocuments(projectStatus(rows[0], educations, liveEnabled()?'live':'preview'),
+      submitted instanceof Date ? submitted.toISOString() : String(submitted || '')));
   } catch (error) {
     return error instanceof AppError ? reply({ error: error.code }, error.status) : reply({ error: 'service_unavailable' }, 503);
   }

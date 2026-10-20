@@ -51,6 +51,15 @@ A missing standalone tool URL does not prove the feature is entirely absent.
 For example, GPA is available inside the new CRM. Each old URL needs an explicit
 mapping to the relevant workspace state or a documented replacement workflow.
 
+## Formal status Dropbox update — October 20, 2026
+
+The dev worktree's existing status page now lists and uploads Dropbox documents
+without another ID/email form. Live records retain legacy folders; explicit
+preview records use an isolated Dropbox folder and skip live LA archives.
+Port 3022 passed real ordinary and three-chunk browser uploads with synthetic
+files, download/hash verification, and desktop/mobile checks. Payment behavior
+and production cutover are unchanged. See [Dropbox integration](dropbox.md).
+
 ## Formal status implementation update — October 16, 2026
 
 The localized `/status` page now queries formal records directly, including the

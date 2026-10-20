@@ -36,9 +36,15 @@ export default async function proxy(request: NextRequest) {
   }
 
   // Legal documents are English-only, without changing the saved site language.
-  return /^\/(?:en\/)?(?:privacy|terms)\/?$/.test(request.nextUrl.pathname)
+  const response = /^\/(?:en\/)?(?:privacy|terms)\/?$/.test(request.nextUrl.pathname)
     ? englishLegalMiddleware(request)
     : localizedMiddleware(request);
+  if (/^\/(?:(?:en|zh|es)\/)?(?:status|documents)\/?$/.test(request.nextUrl.pathname)) {
+    response.headers.set('Referrer-Policy', 'no-referrer');
+    response.headers.set('Cache-Control', 'private, no-store');
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
+  return response;
 }
 
 export const config = {

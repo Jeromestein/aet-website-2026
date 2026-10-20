@@ -1,5 +1,39 @@
 # AET Implementation Status
 
+## 2026-10-20 — Move Dropbox work to dev and connect the existing status page
+
+- Corrected the checkout mistake: backed up both trees, moved the reusable
+  Dropbox code/configuration/dependency to `aet-website-2026-dev`, and restored
+  the task's tracked/untracked changes, appended local settings and dependency
+  in `aet-website-2026`. Main reports a clean working tree. Unrelated dev CRM,
+  design and email work was preserved; no merge or commit was created.
+- Integrated into the existing `customer-status` endpoint and documents card.
+  It signs access from the selected live/preview record. The current application
+  opens without another ID/email form; service, delivery, payment, education and
+  email sections stay in place. Submitted/processing upload eligibility is
+  enforced by both upload routes. Refresh rechecks the two-hour access snapshot.
+- Live records keep original office folders and LA submission-date archives.
+  Preview records use `{account base}/AET-FormalEvaluation-Test/{office}/{name} - {id}`
+  and never copy into live LA archives. The signed storage source also binds
+  chunk continuation. Existing pre-evaluation storage behavior is unchanged.
+- Reused the owner's running port 3022. In-app browser checked the exact supplied
+  preview URL and connected list/uploader. Playwright CLI additionally uploaded
+  a 1 KiB synthetic PDF and a 6 MiB + 701 byte PDF through the real UI/API/Dropbox
+  flow; both reached saved 100%, with the large file using three 3 MiB chunks.
+  Downloaded bytes matched both local file sizes and full Dropbox content hashes.
+  Only those two exact synthetic file IDs were recoverably deleted afterward.
+- Desktop 1440px and mobile 390px upload states passed visual checks; mobile had
+  no horizontal overflow and no repeat application-ID/email inputs. Fresh status
+  visits had no Google tag script. Evidence: `output/playwright/dropbox-dev-desktop.png`
+  and `output/playwright/dropbox-dev-mobile.png` (captured before test cleanup).
+- TypeScript, i18n (579 messages per locale), 19 customer-status/intake tests,
+  expanded offline Dropbox checks and whitespace checks passed. Added checks for
+  signed preview/live separation, no preview LA copy, read-only statuses and
+  unavailable document configuration preserving the application response.
+- No build, server restart, push or deployment. Hosted limits/configuration and
+  acceptance with a real applicant remain release checks.
+
+
 ## 2026-10-20 — Blue-gradient business email design
 
 - Committed the prior sender/CC/public-asset fixes as `e430289` before starting

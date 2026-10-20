@@ -5,6 +5,7 @@ import { cents, services, timestamp } from '@/lib/crm/live-domain';
 export const statusLookup = z.object({ applicationId: z.string().trim().toLowerCase().pipe(z.uuid()) }).strict();
 export type CustomerStatus = {
  source: 'live' | 'preview';
+ documents?: {state: 'ready'; token: string; canUpload: boolean} | {state: 'unavailable'};
  portalUrl: string | null;
  details?: {request: IntakeReceipt['data']['evaluationRequest']; delivery: IntakeReceipt['data']['evaluationDelivery']; quote: IntakeReceipt['quote']};
  email?: IntakeReceipt['email'];

@@ -78,6 +78,7 @@ pnpm check:i18n
 pnpm typecheck
 node scripts/check-blog-contact.cjs
 node scripts/check-payment.cjs
+node scripts/check-dropbox.cjs
 ```
 
 Local production builds are not run under the project instructions. The owner manages deployment and the hosted production build.
@@ -146,7 +147,8 @@ Deployment is intentionally left to the owner.
 ## Analytics
 
 The shared locale layout loads Google tag `G-7SF10M7GBE` with `next/script`
-after hydration on all English, Chinese, and Spanish pages. Keep a single
+after hydration on public English, Chinese, and Spanish pages. Status/documents
+pages omit the tag on fresh visits and disable it while active. Keep a single
 installation. GA4 enhanced measurement must include browser-history page changes
 to track client-side navigation. Authored Blog phone and Contact-page buttons
 also send `contact_us` with article, locale, method and placement. Same-tab web
@@ -302,7 +304,8 @@ Historical local-pilot setup is retained in [local workflow notes](docs/pre-eval
 
 Application URLs are not yet fully compatible with the old portal. The three
 pre-evaluation paths are retained; formal `/status?applicationId=ID` now supports
-localized customer lookup locally (uploads/payment continue in the old portal).
+localized customer lookup and Dropbox documents locally. Payment remains in the
+existing portal for live applications. See [Dropbox integration](docs/dropbox.md).
 Legacy checkout and four standalone CRM tool URLs remain open work. See the
 [dated URL comparison](docs/app-url-compatibility.md) before app-domain cutover.
 

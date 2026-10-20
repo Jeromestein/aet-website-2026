@@ -21,6 +21,7 @@ export function SiteFooter() {
   const popular = [
     [t("pricing.title"), "/pricing"],
     [t("navigation.payment"), "/payment"],
+    [t("applicationStatus.title"), "/status"],
     [t("home.contact"), "/contact"],
     [t("footer.about"), "/about"],
     [t("footer.career"), "/career"],
