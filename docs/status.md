@@ -1,5 +1,22 @@
 # AET Implementation Status
 
+## 2026-10-20 — Blue-gradient business email design
+
+- Committed the prior sender/CC/public-asset fixes as `e430289` before starting
+  this design. Unrelated CRM changes remain outside that commit.
+- Applied a shared navy/blue gradient hero to all seven business templates, with
+  shorter white headings, one orange pill action at the top, a tighter logo band,
+  compact fee sections and a light footer. HTML text and solid navy fallback remain.
+- Preserved business data, payment states, pending quotes and public asset URLs.
+  No delivery code changed, and no test email was sent for this design exploration.
+- Passed 54 relevant tests, TypeScript and whitespace checks. In-app browser verified
+  intake desktop/mobile, primary action, body and footer. Supplemental checks covered
+  all seven templates at 900px and 390px: logo loaded, no horizontal overflow, one
+  primary button each. Pending quotes still make no payment request.
+- Screenshots: `output/playwright/gradient-{intake,payment,result}-{900,390}.png`.
+  Gmail/Outlook rendering of the new gradient is not yet verified. The owner
+  approved committing this design. No build, restart, push or deployment.
+
 ## 2026-10-20 — Public assets for delivered emails
 
 - Separated email image/font hosting from local application URLs. All seven

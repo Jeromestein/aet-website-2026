@@ -605,19 +605,20 @@ by development checks. New localized pages reuse the same route and message stru
 
 ### Transactional email design
 
-- All transactional business emails use the full transparent header PNG at a proportional
-  286px desktop/254px mobile width, a white 600px letter, pale-blue heading and fee
-  sections, navy typography and one orange primary action. Use the homepage’s locally hosted Poppins (400 body, 600 headings/actions),
-  with Arial/Helvetica fallbacks in email clients that cannot load web fonts.
-  Use Title Case for email headings, subheadings and primary button labels. Use tables and inline styles; responsive padding targets the
-  generated table cells, not their parent tables.
-- Content order: brand, receipt heading, greeting, application reference, service
-  summary, education, estimated fees, application action, next steps, team signoff.
-  Keep IDs subordinate but readable, and preserve quote ranges/pending estimates.
-- A compact navy footer contains company identity and Website, Application status,
-  Contact and Privacy links. Pilot-only disclosures remain outside the main letter.
-- Share the same layout for formal confirmation, payment confirmation, fee updates,
-  pre-evaluation confirmation/results, information requests and customer access.
-  Put the confirmed amount, provisional assessment or requested information in a
-  pale-blue panel. Never invent payment dates, quotes or completion estimates.
-  Promotional and staff authentication emails are outside this template set.
+Business emails use the blue-gradient design approved on 2026-10-20.
+
+- Use the full transparent logo at 286px desktop/254px mobile within a compact
+  white header and a 600px letter. Keep Poppins 400/600/700 and Arial/Helvetica
+  fallbacks. Image/font URLs use the shared public HTTPS asset origin.
+- Lead with a navy-to-blue gradient, subtle light at the top right, a short white
+  Title Case heading, one explanatory sentence and one orange pill-shaped action.
+  Keep a solid navy fallback. Headings/actions remain real HTML text, not artwork.
+- Place the greeting, readable application reference, service/education details,
+  compact ruled amount section, next steps and signoff in the white body. Retain
+  confirmed-payment details, fee ranges, quote-pending states and result caveats.
+- Use a light, quiet footer with company identity and Website, Application status,
+  Contact and Privacy links. Keep pilot disclosures outside the letter.
+- Share this structure across all seven business templates. Use tables and inline
+  styles; responsive padding targets generated table cells. Keep pale-blue panels
+  for assessment results and information requests. Promotional and staff login
+  emails remain excluded. Never invent payment dates or completion estimates.

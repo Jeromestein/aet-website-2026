@@ -1,6 +1,6 @@
 import { Text, render } from "react-email";
 import { BrandedEmailLayout } from "../email/branded-layout";
-import { EmailAction, EmailAmount, EmailContent, EmailDetail, EmailDivider, EmailHeading, EmailHero, EmailPanel, EmailReference, EmailSignoff, label, money, paragraph, privateIdNote } from "../email/parts";
+import { EmailAmount, EmailContent, EmailDetail, EmailDivider, EmailHeading, EmailHero, EmailPanel, EmailReference, EmailSignoff, label, money, paragraph, privateIdNote } from "../email/parts";
 import { BASE_CENTS, FEE_CENTS, TOTAL_CENTS, resultPath } from "./domain";
 import { countryLabel } from "../legacy-application/countries";
 
@@ -19,8 +19,8 @@ const subjects: Record<CustomerEmailKind, string> = {
   information: "AET Degree Equivalency — Additional Information",
 };
 const headlines: Record<CustomerEmailKind, string> = {
-  confirmation: "Your First Step, Complete.", result: "Your Preliminary Result Is Ready.",
-  access: "Your Application, One Click Away.", information: "A Little More Information.",
+  confirmation: "Application Received", result: "Preliminary Result Ready",
+  access: "Your Application", information: "Information Needed",
 };
 const intros: Record<CustomerEmailKind, string> = {
   confirmation: "Thank you for submitting your degree equivalency application. We’ve saved your information. Here’s a summary and what to do next.",
@@ -38,10 +38,15 @@ export function PreEvaluationEmail({ app, education, kind, origin, message = "",
     ["Country", countryLabel(education.country_of_study, "en")],
     ["Study period", `${education.start_date} – ${education.end_date}`],
   ] : [];
-  const headline = kind === "result" && !result ? "Check Your Application Status." : headlines[kind];
+  const headline = kind === "result" && !result ? "Your Application Status" : headlines[kind];
+  const description = kind === "result" ? (result ? "Your preliminary assessment is ready. Review your result and the details below." : "Check your application for the latest update.")
+    : kind === "information" ? "A few more details will help us continue your review. See what’s needed below."
+    : kind === "confirmation" ? "Your education details are saved. Continue your application to take the next step."
+    : "Your details and progress, together in one place. Use the link below to return to your application.";
+  const actionLabel = kind === "information" ? "Review Request & Upload" : kind === "confirmation" ? "Continue Your Application" : "View Your Application";
   return (
     <BrandedEmailLayout origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview={headline} notice={notice}>
-      <EmailHero eyebrow={kind === "access" ? "YOUR AET APPLICATION" : "DEGREE EQUIVALENCY"}>{headline}</EmailHero>
+      <EmailHero eyebrow={kind === "access" ? "YOUR AET APPLICATION" : "DEGREE EQUIVALENCY"} description={description} action={{ href: statusUrl, label: actionLabel }} note={privateIdNote}>{headline}</EmailHero>
       <EmailContent>
         <Text style={{ ...paragraph, color: "#18334E", marginBottom: "8px" }}>Dear {[app.first_name, app.middle_name, app.last_name].filter(Boolean).join(" ")},</Text>
         <Text style={paragraph}>{kind === "result" && !result ? "Open your application for the latest status. A preliminary result is not currently available." : intros[kind]}</Text>
@@ -54,7 +59,7 @@ export function PreEvaluationEmail({ app, education, kind, origin, message = "",
           <EmailHeading>What Happens Next?</EmailHeading><Text style={paragraph}>Complete payment on your application page to view your preliminary result. You can also add supporting documents there.</Text>
         </>}
         {kind === "information" && <><EmailDivider /><EmailHeading>How to Respond</EmailHeading><Text style={paragraph}>Open your application and add the requested documents. If you need help with the request, contact our team using the link below.</Text></>}
-        <EmailAction href={statusUrl} note={privateIdNote}>{kind === "information" ? "Review Request & Upload" : kind === "confirmation" ? "Continue Your Application" : "View Your Application"}</EmailAction>
+
         {kind === "access" && <Text style={paragraph}>You can also enter your Application ID on the status page. No customer account or password is required.</Text>}
         {kind !== "access" && <><EmailDivider /><Text style={{ margin: 0, fontSize: "12px", lineHeight: "20px", color: "#5B6D7E" }}>Any degree equivalency shown is based on the information you provided. It is not derived from verified documents and cannot be used as proof of attendance or degree completion. AET may update this provisional result after document verification and analysis.</Text></>}
         <EmailSignoff />
