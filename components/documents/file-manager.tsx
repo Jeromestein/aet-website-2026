@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, CircleCheck, UploadCloud, Info } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { CHUNK_SIZE, HASH_BLOCK_SIZE, ACCEPTED_FILES, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
+import { CHUNK_SIZE, HASH_BLOCK_SIZE, ACCEPTED_FILES, formatFileSize, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
 import styles from './documents.module.css';
 
 type Status = 'pending' | 'hashing' | 'uploading' | 'saving' | 'success' | 'failed' | 'cancelled';
@@ -211,7 +211,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     update(row.id, { status: 'cancelled' });
   }
   const allSaved = queue.length > 0 && queue.every(row => row.status === 'success');
-  const formatSize = (size: number) => `${(size / 1024 / 1024).toLocaleString(locale, { maximumFractionDigits: 2 })} MB`;
+  const formatSize = (size: number) => formatFileSize(size, locale);
   return <div className={embedded ? `${styles.manager} ${styles.embedded}` : styles.manager} aria-busy={busy}>
     <section aria-labelledby="uploaded-title" className={styles.panel}>
       <div className={styles.headingRow}><h2 id="uploaded-title">{t('files')}</h2>

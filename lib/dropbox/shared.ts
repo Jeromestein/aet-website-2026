@@ -1,6 +1,12 @@
 export const MAX_FILE_SIZE = 50 * 1024 * 1024;
 export const CHUNK_SIZE = 3 * 1024 * 1024;
 export const HASH_BLOCK_SIZE = 4 * 1024 * 1024;
+export function formatFileSize(bytes: number, locale = 'en-US'): string {
+  const unit = bytes < 1024 ? 'B' : bytes < 1024 * 1024 ? 'KB' : 'MB';
+  const value = bytes / (unit === 'B' ? 1 : unit === 'KB' ? 1024 : 1024 * 1024);
+  return `${value.toLocaleString(locale, { maximumFractionDigits: unit === 'B' ? 0 : 2 })} ${unit}`;
+}
+
 export const ACCEPTED_FILES = '.jpg,.jpeg,.png,.pdf,.doc,.docx';
 export const offices = ['Miami', 'Los Angeles', 'San Francisco', 'Boston', 'New York'] as const;
 export type Office = typeof offices[number];

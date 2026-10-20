@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
-import type { FileEntry, FilePage } from '@/lib/dropbox/shared';
+import { formatFileSize, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
 import s from './crm.module.css';
 
 export function CaseDocuments({ kind, id, source = 'live' }: { kind: string; id: string; source?: 'live' | 'preview' }) {
@@ -47,7 +47,7 @@ export function CaseDocuments({ kind, id, source = 'live' }: { kind: string; id:
         <thead><tr><th scope="col">File Name</th><th scope="col">Size</th><th scope="col">Uploaded Time</th></tr></thead>
         <tbody>{files.map(file => <tr key={file.id}>
           <td><a title={file.name} href={`https://www.dropbox.com/preview${file.pathDisplay.split('/').map(encodeURIComponent).join('/')}`} target="_blank" rel="noopener noreferrer">{file.name}</a></td>
-          <td>{file.size < 1024 ? `${file.size} B` : file.size < 1024 * 1024 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1024 / 1024).toFixed(1)} MB`}</td>
+          <td>{formatFileSize(file.size)}</td>
           <td><time dateTime={file.uploadedAt}>{new Date(file.uploadedAt).toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</time></td>
         </tr>)}</tbody>
       </table></div>}
