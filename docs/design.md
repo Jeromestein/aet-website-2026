@@ -191,6 +191,11 @@ background portrait and content have breathing room without a fixed section heig
 
 The following presentation rules apply to the connected CRM workspace:
 
+- Place Payment before Status in the application table. Payment uses the same
+  underlined title, chevron and hover/focus highlight as Education and Service;
+  clicking it opens the Payment drawer tab. Keep the payment state color and
+  show the same shortcut before the status badge on mobile cards.
+
 - Start the main area directly with the page heading. Omit the redundant top
   breadcrumb, live-data badge, date and avatar bar. Keep mobile navigation in
   the heading area; retain account controls and manual refresh in the sidebar.

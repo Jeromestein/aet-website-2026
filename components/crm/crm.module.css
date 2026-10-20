@@ -105,8 +105,8 @@
 .table th:nth-child(3) { width: 22%; }
 .table th:nth-child(4) { width: 15%; }
 .table th:nth-child(5) { width: 16%; }
-.table th:nth-child(6) { width: 15%; }
-.table th:nth-child(7) { width: 12%; }
+.table th:nth-child(6) { width: 12%; }
+.table th:nth-child(7) { width: 15%; }
 .table th:nth-child(8) { width: 3%; }
 .rowNumber { color: #6e8190; font-variant-numeric: tabular-nums; }
 .mobileRecordMeta { display: flex; justify-content: space-between; gap: 12px; color: #61788a; font-size: 12px; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
@@ -334,7 +334,9 @@
   .mobileDetails dd { font-size: 14px; color: #36536c; margin: 0; }
   .mobileUpdated time { color: #435f74; font-size: 13px; font-variant-numeric: tabular-nums; }
   .mobileCard footer { display: flex; justify-content: space-between; align-items: center; }
-  .mobileCard footer > span:last-child { color: #6c8496; font-size: 13px; }
+  .mobileCard footer .paymentTrigger { width: auto; min-width: 140px; margin-right: 20px; }
+  .mobileCard .paymentTrigger .paymentPaid { color: #357a58; }
+  .mobileCard .paymentTrigger .paymentPending { color: #92692e; }
   .mobileCard .badge { font-size: 12px; padding: 4px 7px; }
   .pagination { padding: 14px; font-size: 12px; flex-wrap: wrap; }
   .pagination button { min-width: 34px; min-height: 34px; }

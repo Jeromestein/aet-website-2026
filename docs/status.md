@@ -1,5 +1,16 @@
 # AET Implementation Status
 
+## 2026-10-20 — Add the Payment detail shortcut
+
+- Moved Payment before Status in the shared live/test application table.
+- Added a Payment trigger using the Education/Service hover and focus styling;
+  it opens the Payment drawer tab directly on desktop and mobile.
+- Preserved recorded amounts, quote-needed labels, payment-state colors and
+  existing record permissions. No database or authentication changes.
+- Validation: TypeScript and whitespace checks passed; checked the Test list
+  at localhost:3022 in the in-app browser at desktop and mobile widths, including
+  column order, focus highlight and opening the Payment tab.
+
 ## 2026-10-20 — Move Dropbox work to dev and connect the existing status page
 
 - Corrected the checkout mistake: backed up both trees, moved the reusable
