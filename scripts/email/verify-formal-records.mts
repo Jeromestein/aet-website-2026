@@ -13,7 +13,7 @@ let checks=0;
 function check(value:unknown,message:string){assert.ok(value,message);checks++;console.log("PASS "+message);}
 const before=await sql`select id,state,provider_id,sent_at from ${table("evaluation.intake_emails")} order by id`;
 try {
-  const data=initialData(); data.client.name="Synthetic Email Check"; data.client.email="synthetic@example.invalid";
+  const data=initialData(); data.client.name="Synthetic Email Check"; data.client.office="Miami"; data.client.email="synthetic@example.invalid";
   data.evaluee.first="Synthetic";data.evaluee.last="Applicant";data.services.document.tier="standard";data.services.translation=true;
   await sql`insert into ${table("evaluation.applications")}(id,request_id,request_hash,access_hash,locale,data,quote)
     values(${id},${randomUUID()},${randomUUID()},${randomUUID()},'en',${sql.json(data)},${sql.json(quote(data))})`;
@@ -23,6 +23,7 @@ try {
   data.client.name="Changed before rendering";
   await sql`update ${table("evaluation.applications")} set data=${sql.json(data)} where id=${id}`;
   const first=await renderFormalEmail(fee);
+  check(first.cc.join(",")==="info@americantranslationservice.com","fee notification copies the saved Miami office");
   check(first.html.includes("$160.00")&&first.html.includes("Changed before rendering"),"fee template reads saved amount and current application at send time");
   await staffAction(id,{action:"quote",version:2,base:11000,additional:6000,explanation:"Revised synthetic translation quote"},"synthetic-test");
   await assert.rejects(()=>renderFormalEmail(fee),/fee_update_superseded/);
@@ -44,6 +45,7 @@ try {
   const [confirmed]=await sql`select paid_at,status from ${table("evaluation.payments")} where id=${payment.id}`;
   check(confirmed.paid_at&&confirmed.status==="paid","confirmation time is recorded with the successful payment");
   const content=await renderFormalEmail(receipts[0]);
+  check(content.cc.join(",")==="info@americantranslationservice.com","payment receipt copies the saved Miami office");
   check(content.html.includes("$170.00")&&content.html.includes(payment.id)&&!content.html.includes("Estimated completion"),"receipt contains actual payment details without invented completion date");
   await sql`update ${table("evaluation.payments")} set status='partially_refunded' where id=${payment.id}`;
   await assert.rejects(()=>renderFormalEmail(receipts[0]),/payment_receipt_unavailable/);

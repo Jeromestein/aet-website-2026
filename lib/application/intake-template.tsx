@@ -65,7 +65,7 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
   );
 }
 
-export async function confirmationEmail(id: string, locale: string, data: Props["data"], quote: Props["quote"], origin: string, assetOrigin = origin) {
+export async function confirmationEmail(id: string, locale: string, data: Props["data"], quote: Props["quote"], origin: string, assetOrigin?: string) {
   return {
     subject: `[AET TEST] Application received — ${id}`,
     html: await render(<IntakeConfirmationEmail id={id} locale={locale} data={data} quote={quote} origin={origin} assetOrigin={assetOrigin} />),

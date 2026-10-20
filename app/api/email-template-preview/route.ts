@@ -1,3 +1,4 @@
+import { emailAssetOrigin } from "@/lib/email/assets";
 import { confirmationEmail } from "@/lib/application/intake-template";
 import { initialDraft } from "@/lib/application/model";
 import { selectEvaluationService } from "@/lib/application/evaluation";
@@ -70,7 +71,7 @@ export async function GET(request: Request) {
   const selected = templates.find((item) => item.id === url.searchParams.get("kind")) ?? templates[0];
   const mobile = url.searchParams.get("view") === "mobile";
   const pendingFee = url.searchParams.get("scenario") === "pending";
-  const mail = await sampleEmail(selected.id, url.origin, pendingFee);
+  const mail = await sampleEmail(selected.id, emailAssetOrigin(), pendingFee);
   const headers = { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" };
   if (url.searchParams.get("raw") === "1") return new Response(mail.html, { headers });
   const href = (kind: Kind, narrow = mobile) => `?kind=${kind}&amp;view=${narrow ? "mobile" : "desktop"}${kind === "fee_update" && pendingFee ? "&amp;scenario=pending" : ""}`;

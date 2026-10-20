@@ -1,5 +1,37 @@
 # AET Implementation Status
 
+## 2026-10-20 — Public assets for delivered emails
+
+- Separated email image/font hosting from local application URLs. All seven
+  templates and the dev gallery use `EMAIL_ASSET_ORIGIN`, defaulting to the public
+  website. Removed the intake renderer's fallback to the local application origin.
+- Verified the public PNG and all three Poppins files return HTTP 200 and match
+  local assets byte-for-byte. All seven live preview responses contain public
+  HTTPS image/font URLs. Invalid/local asset-origin configuration is rejected.
+- Passed 54 focused unit tests, TypeScript and whitespace checks. In-app browser
+  verified intake desktop and 390px mobile with the public logo visibly loaded.
+- Resent the existing owner-authorized TEST application confirmation to the same
+  recipient and Miami CC. Retrieved Resend's stored HTML and verified the public
+  image URL; the original delivery record was preserved. No email body stored.
+  The owner confirmed that the image now displays correctly in Gmail.
+- No build, server restart, commit, push or deployment. Local application links
+  remain local; this change only fixes hosted email assets.
+
+## 2026-10-20 — Verified sender domain and office CC
+
+- Updated dev sender configuration to `AET <info@americantranslationservice.com>`;
+  Resend reports the domain verified with sending enabled. Production unchanged.
+- Formal intake, payment and fee notices resolve office CC from saved data, using
+  legacy mailbox mappings. Unknown offices pause delivery; CC changes invalidate
+  retry digests. Pre-evaluation has no office assignment to infer. No body storage.
+- Passed 51 focused unit tests, TypeScript, 14 isolated formal-delivery checks and
+  30 intake/database/HTTP checks. Integration sends used injected transports and
+  removed only their disposable fixtures. Existing TEST application was preserved.
+- Sent one owner-requested TEST confirmation to the approved test recipient with
+  Miami CC using the new sender; Resend reports `delivered`. Kept the original receipt and
+  recorded only metadata for this additional send. Inbox placement is unverified.
+- Reused port 3022; no UI edits, build, server restart, commit, push or deployment.
+
 ## 2026-10-20 — Title Case email headings
 
 - Updated all seven business emails' main headings, subheadings and intake step

@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { configuration, required } from "../preeval/config";
 import { db, table, type Row } from "../preeval/db";
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from "../email/delivery";
+import { officeCc } from "../email/office-routing";
 import { feeUpdateEmail, paymentConfirmationEmail, type PaymentReceipt } from "./email-template";
 
 /** Enqueue in the same transaction as the confirmed business event. */
@@ -23,13 +24,14 @@ export async function renderFormalEmail(row: Row) {
   // Reuse the application's canonical reader, including its legacy-data mapping.
   const { application } = await import("./service");
   const app = await application(row.application_id, false);
+  const cc = officeCc(app.data.client.office, row.recipient);
   const options = { notice: "Test-mode notification · This email belongs to the isolated local workflow. No live payment is requested." };
   if (row.kind === "payment") {
     const [payment] = await db()`select id,amount_cents,paid_at,status from ${table("evaluation.payments")}
       where id=${row.payment_id} and application_id=${app.id}`;
     if (!payment || payment.status !== "paid" || app.payment_status !== "paid" || !payment.paid_at)
       throw new EmailReviewRequired("payment_receipt_unavailable");
-    return paymentConfirmationEmail(app, payment as PaymentReceipt, config.origin, options);
+    return { ...await paymentConfirmationEmail(app, payment as PaymentReceipt, config.origin, options), cc };
   }
   const [event] = await db()`select detail from ${table("evaluation.audit")}
     where id=${row.audit_id} and application_id=${app.id} and action='staff.quote'`;
@@ -37,11 +39,11 @@ export async function renderFormalEmail(row: Row) {
   if (!event || !current || app.status === "cancelled" || app.payment_status !== "unpaid" ||
     current.base !== event.detail.base || current.additional !== event.detail.additional || current.explanation !== event.detail.explanation)
     throw new EmailReviewRequired("fee_update_superseded");
-  return feeUpdateEmail(app, current, config.origin, options);
+  return { ...await feeUpdateEmail(app, current, config.origin, options), cc };
 }
 const resendTransport: EmailTransport = async mail => {
   const { data, error } = await new Resend(required("RESEND_API_KEY")).emails.send({
-    from: mail.from, to: mail.recipient, subject: mail.subject, html: mail.html,
+    from: mail.from, to: mail.recipient, cc: mail.cc, subject: mail.subject, html: mail.html,
   }, { idempotencyKey: mail.id });
   if (error || !data) throw new Error("delivery_failed");
   return data.id;

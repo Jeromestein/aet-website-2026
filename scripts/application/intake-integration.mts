@@ -36,7 +36,7 @@ try{
  const [columns]=await sql`select count(*)::int as count from information_schema.columns where table_schema='aet_preview_evaluation' and table_name='intake_emails' and column_name in ('html','subject')`;
  check(columns.count===0,'delivery records contain no subject or HTML columns');
  let originalMail='';
- await sendIntakeEmail(id,async mail=>{originalMail=mail.html;check(mail.html.includes('Test Master')&&mail.html.includes('$570.00'),'send-time template reads saved education and quote');throw new Error('synthetic outage');});
+ await sendIntakeEmail(id,async mail=>{originalMail=mail.html;check(mail.cc?.join(",")==="info@americantranslationservice.com","intake copies the saved Miami office");check(mail.html.includes('Test Master')&&mail.html.includes('$570.00'),'send-time template reads saved education and quote');throw new Error('synthetic outage');});
  check((await readIntake(id)).email.state==='failed','mail failure retains saved application');
  let calls=0;const transport=async(mail:{recipient:string;id:string;html:string})=>{check(mail.recipient===TEST_RECIPIENT,'recipient pinned to approved test inbox');check(mail.html===originalMail,'unchanged application renders the same retry content');calls++;return 'synthetic-'+mail.id;};
  await sendIntakeEmail(id,transport);check(calls===0,'retry cooldown prevents immediate resend');

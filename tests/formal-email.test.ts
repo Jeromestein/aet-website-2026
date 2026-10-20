@@ -7,7 +7,7 @@ vi.mock("../lib/preeval/db", () => ({ db: () => (parts: TemplateStringsArray, ..
 vi.mock("../lib/evaluation-application/service", () => ({ application: m.application }));
 vi.mock("../lib/preeval/config", () => ({ configuration: () => ({ cloudPreview: m.cloud, recipient: "approved@example.invalid", origin: "http://localhost:3022" }), required: () => "test" }));
 import { flushFormalEmails, renderFormalEmail } from "../lib/evaluation-application/email";
-const data = initialData(); data.client.name = "Current <Applicant>"; data.services.document.tier = "standard";
+const data = initialData(); data.client.name = "Current <Applicant>"; data.client.office = "Miami"; data.services.document.tier = "standard";
 const app = { id: "264b791e-b806-4b52-b79e-5229b7224df0", locale: "en", data, status: "submitted", payment_status: "paid", confirmed_quote: {base:11000, additional:5000, total:16000, explanation:"Translation"} };
 const receipt = { id: "payment-1", status: "paid", amount_cents: 16000, paid_at: "2026-10-20T15:30:00Z" };
 const row = { id: "mail-1", application_id: app.id, kind: "payment", recipient: "approved@example.invalid", payment_id: receipt.id, payload_hash: null };
@@ -56,6 +56,7 @@ describe("formal delivery records", () => {
     m.query.mockImplementation(async (query:string) => query.includes("set state='sending'") ? [row] : query.startsWith("select id,amount_cents") ? [receipt] : query.includes("set payload_hash=") ? [{id:row.id}] : []);
     const send=vi.fn().mockResolvedValue("provider-1"); await flushFormalEmails(send); expect(send).toHaveBeenCalledOnce();
     expect(send.mock.calls[0][0].html).toContain("$160.00");
+    expect(send.mock.calls[0][0].cc).toEqual(["info@americantranslationservice.com"]);
     expect(m.query.mock.calls.filter(([query])=>query.startsWith("update")).every(([query])=>!/\b(html|subject)\s*=/.test(query))).toBe(true);
   });
 });

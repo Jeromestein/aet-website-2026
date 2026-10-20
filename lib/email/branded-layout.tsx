@@ -1,5 +1,6 @@
 import { Body, Container, Font, Head, Html, Img, Link, Preview, Section, Text } from "react-email";
 import type { ReactNode } from "react";
+import { emailAssetOrigin } from "./assets";
 
 export const mailFont = '"Poppins", Arial, Helvetica, sans-serif';
 
@@ -8,7 +9,7 @@ export const mailColors = {
   line: "#D9E5EF", orange: "#C7471D", footer: "#142E45",
 };
 
-export function BrandedEmailLayout({ children, origin, assetOrigin = origin, statusUrl, preview, notice }: {
+export function BrandedEmailLayout({ children, origin, assetOrigin = emailAssetOrigin(), statusUrl, preview, notice }: {
   children: ReactNode; origin: string; assetOrigin?: string; statusUrl: string; preview: string; notice?: string;
 }) {
   const site = origin.replace(/\/$/, "");

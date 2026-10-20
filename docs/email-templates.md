@@ -19,6 +19,47 @@ Legacy templates were checked in `aet-app/src/app/(frontend)/(aet-app)/component
 Thanksgiving/Christmas promotional templates are excluded at the owner's request.
 Staff email-link login and password recovery remain removed.
 
+## Public email assets
+
+All seven templates default to `EMAIL_ASSET_ORIGIN`, independently of application
+and status-link origins. The fallback and example configuration are
+`https://www.americantranslationservice.com`. This public host already serves the
+exact header PNG and Poppins files from this repository. Localhost, HTTP, IP-based
+and malformed asset-origin configuration is rejected before rendering.
+
+The dev gallery uses this same public asset origin, so a local preview no longer
+hides a localhost image URL in outgoing mail. Templates retain an explicit asset
+origin override for controlled rendering, but senders use the shared public default.
+Deployments should keep the logo and font paths publicly accessible without sign-in.
+Changing sender domains does not change image hosting. Previously delivered email
+HTML is immutable; a new send is required to verify the corrected image URL.
+Application/status links remain local in the isolated pilot; this is not a payment
+or application-origin cutover. Web-font support still depends on the mail client.
+
+## Sender and office copies
+
+Use `AET <info@americantranslationservice.com>` through the sender environment
+variables. The dev worktree's local configuration and `.env.example` use these
+values; production configuration has not been changed.
+
+Formal intake confirmations, payment receipts and fee updates resolve CC from
+saved application data at send time, preserving the legacy office mapping:
+
+| Office | CC |
+| --- | --- |
+| Miami | `info@americantranslationservice.com` |
+| Los Angeles | `ca2@aet21.com` |
+| San Francisco | `ca@aet21.com` |
+| Boston | `boston@aet21.com`, `boston@americantranslationservice.com` |
+| New York | `nyc@aet21.com`, `nyc@americantranslationservice.com` |
+
+The current evaluation form offers Miami, Los Angeles and San Francisco. Routing
+supports both saved office IDs and legacy names, excludes duplicate To recipients,
+and blocks unknown offices rather than copying an unrelated team. CC is included
+in the delivery digest, so changed routing requires review before retrying.
+Pre-evaluation records currently have no office field, so no office is inferred
+for those notifications. All email flows share the sender environment settings.
+
 ## Payment and fee delivery
 
 `evaluation.emails` contains the application ID, payment or quote-audit ID,
@@ -44,10 +85,13 @@ local database or the isolated preview schemas.
 
 These additions are connected to the existing optional formal pilot workflow.
 The cloud-preview worker remains paused; the isolated test recipient restriction
-is unchanged. Latest intake-version-2 payment actions remain read-only, and the
+is unchanged for the To recipient; formal emails now also copy the assigned
+office as requested by the owner. Latest intake-version-2 payment actions remain read-only, and the
 live CRM adapter does not send these notifications. Production payment/email
-cutover is separate from this template work. No live sending or payment processing
-was enabled or verified.
+cutover is separate from this template work. Owner-authorized TEST intake
+confirmations verified the new sender, Miami CC and public logo; no live
+payment processing was enabled. The original delivery receipt was preserved and
+the additional send has metadata-only audit history.
 
 For a safe repeatable integration check, run `pnpm test:email:formal` with the
 isolated preview environment. It creates synthetic records, tests quote/payment
@@ -55,4 +99,4 @@ references and replay protection, verifies browser-role denial, and removes its
 fixtures. It does not call Resend or Stripe.
 
 Browser previews verify layout, not Gmail/Outlook inbox rendering. The synthetic
-preview uses local logo assets and deliberately nonfunctional application links.
+preview uses public logo assets and deliberately nonfunctional application links.

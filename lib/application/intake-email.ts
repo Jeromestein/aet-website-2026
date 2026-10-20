@@ -6,19 +6,30 @@ import { requireIntakePreview, readIntake } from "./intake-server";
 import { TEST_RECIPIENT } from "./intake";
 import { confirmationEmail } from "./intake-template";
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from "../email/delivery";
+import { officeCc } from "../email/office-routing";
 
 export type IntakeTransport = EmailTransport;
 const resendTransport: IntakeTransport = async mail => {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${required("RESEND_API_KEY")}`, "Content-Type": "application/json", "Idempotency-Key": mail.id },
-    body: JSON.stringify({ from: mail.from, to: [TEST_RECIPIENT], subject: mail.subject, html: mail.html }),
+    body: JSON.stringify({ from: mail.from, to: [mail.recipient], cc: mail.cc, subject: mail.subject, html: mail.html }),
     signal: AbortSignal.timeout(15000),
   });
   const body = await response.json();
   if (!response.ok || typeof body.id !== "string") throw new Error("delivery_failed");
   return body.id;
 };
+
+/** Read both the letter and its office routing from the saved application. */
+export async function renderIntakeEmail(applicationId: string) {
+  const application = await readIntake(applicationId);
+  return {
+    from: `${required("RESEND_DEFAULT_FROM_NAME")} <${required("RESEND_DEFAULT_FROM_ADDRESS")}>`,
+    cc: officeCc(application.data.office, TEST_RECIPIENT),
+    ...await confirmationEmail(application.id, application.locale, application.data, application.quote, configuration().origin),
+  };
+}
 
 /** Render from saved application data after claiming this delivery record. */
 export async function sendIntakeEmail(applicationId: string, transport: IntakeTransport = resendTransport) {
@@ -32,11 +43,9 @@ export async function sendIntakeEmail(applicationId: string, transport: IntakeTr
     and (first_attempt_at is null or first_attempt_at>now()-interval '23 hours') returning id,recipient,payload_hash`;
   if (!row) return;
   try {
-    const application = await readIntake(applicationId);
-    const content = await confirmationEmail(application.id, application.locale, application.data, application.quote, configuration().origin);
+    const content = await renderIntakeEmail(applicationId);
     const mail = {
       id: row.id, recipient: row.recipient,
-      from: `${required("RESEND_DEFAULT_FROM_NAME")} <${required("RESEND_DEFAULT_FROM_ADDRESS")}>`,
       ...content,
     };
     const digest = deliveryHash(mail, row.payload_hash);
