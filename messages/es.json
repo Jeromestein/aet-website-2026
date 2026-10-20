@@ -594,8 +594,8 @@
     "more": "Mostrar más archivos",
     "uploadTitle": "Añadir documentos",
     "rules": "PDF, JPG, PNG, DOC y DOCX. Hasta 50 MB por archivo y 20 archivos por lote. Los archivos de más de 3 MB se suben en partes.",
-    "drop": "Arrastre sus archivos aquí o selecciónelos a continuación.",
-    "choose": "Seleccionar documentos",
+    "drop": "Arrastre los archivos aquí o selecciónelos",
+    "choose": "Seleccionar archivos",
     "remove": "Quitar",
     "removeNamed": "Quitar {name}",
     "cancel": "Cancelar",
@@ -626,7 +626,14 @@
       "uncertain": "No se pudo confirmar que el archivo se haya guardado. Actualice la lista antes de reintentarlo para evitar duplicados.",
       "integrity": "Se recibió el archivo, pero no pudo verificarse. Contacte a su oficina para revisarlo antes de volver a subirlo.",
       "readOnly": "Solo se pueden añadir documentos a las solicitudes enviadas o en proceso. Puede consultar la lista de archivos. Contacte a su oficina si necesita añadir más documentos."
-    }
+    },
+    "limits": "Hasta 50 MB por archivo · 20 por lote",
+    "chunks": "Más de 3 MB: carga por partes",
+    "retryHelp": "Si la carga falla, inténtelo de nuevo. Si sigue fallando tras varios intentos, contacte con:",
+    "westOffices": "Los Ángeles / San Francisco",
+    "otherOffices": "Otras oficinas",
+    "complete": "Carga completada",
+    "completeDetail": "Se guardaron {count} archivo(s) para su oficina. No es necesario volver a cargarlos."
   },
   "applicationStatus": {
     "title": "Estado de la solicitud",

@@ -594,8 +594,8 @@
     "more": "显示更多文件",
     "uploadTitle": "添加资料",
     "rules": "支持 PDF、JPG、PNG、DOC 和 DOCX。每个文件不超过 50 MB，每批最多 20 个文件。超过 3 MB 的文件将分片上传。",
-    "drop": "将文件拖到此处，或在下方选择文件。",
-    "choose": "选择资料文件",
+    "drop": "拖放文件到这里，或点击选择",
+    "choose": "选择文件",
     "remove": "移除",
     "removeNamed": "移除 {name}",
     "cancel": "取消",
@@ -626,7 +626,14 @@
       "uncertain": "尚未确认文件是否保存成功。请先刷新文件列表，避免重复上传。",
       "integrity": "文件已收到，但未通过完整性校验。请联系办公室确认，暂勿重复上传。",
       "readOnly": "仅“已提交”或“处理中”的申请可以补传资料。您仍可查看文件列表；如需补交，请联系办公室。"
-    }
+    },
+    "limits": "每份 ≤ 50 MB · 每批最多 20 份",
+    "chunks": "超过 3 MB 自动分片",
+    "retryHelp": "上传失败时可稍后重试。多次尝试仍未成功，请联系：",
+    "westOffices": "洛杉矶／旧金山",
+    "otherOffices": "其他办公室",
+    "complete": "上传完成",
+    "completeDetail": "{count} 份文件已保存，办公室可查看，无需重复上传。"
   },
   "applicationStatus": {
     "title": "申请状态",

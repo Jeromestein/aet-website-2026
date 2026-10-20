@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Check, CircleCheck, UploadCloud, Info } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { CHUNK_SIZE, HASH_BLOCK_SIZE, ACCEPTED_FILES, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
 import styles from './documents.module.css';
@@ -65,6 +66,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   const listController = useRef<AbortController | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const mounted = useRef(true);
+  const completionAudio = useRef<AudioContext | null>(null);
 
   async function refresh(cursor?: string) {
     listController.current?.abort();
@@ -82,7 +84,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   useEffect(() => {
     mounted.current = true;
     void refresh();
-    return () => { mounted.current = false; listController.current?.abort(); active.current?.abort(); };
+    return () => { mounted.current = false; listController.current?.abort(); active.current?.abort(); void completionAudio.current?.close().catch(() => {}); };
     // A token change remounts this manager through its parent's key.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -103,9 +105,16 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   }
   async function upload() {
     if (busy || !canUpload) return;
+    // Unlock audio during the upload click; sound failure must never block saving.
+    try {
+      completionAudio.current ??= new AudioContext();
+      void completionAudio.current.resume().catch(() => {});
+    } catch { /* Audio is optional in browsers that block or do not support it. */ }
+    const pending = queue.filter(item => item.status === 'pending' || item.status === 'failed' || item.status === 'cancelled');
+    let saved = 0;
     setBusy(true); onBusyChange?.(true);
     cancelled.current.clear();
-    for (const row of queue.filter(item => item.status === 'pending' || item.status === 'failed' || item.status === 'cancelled')) {
+    for (const row of pending) {
       if (!mounted.current) break;
       if (cancelled.current.has(row.id)) continue;
       const controller = new AbortController();
@@ -157,6 +166,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
           uploadKey = undefined;
         }
         update(row.id, { status: 'success', percent: 100, archiveFailed: result.archive === 'failed' });
+        saved++;
       } catch (error) {
         update(row.id, {
           status: controller.signal.aborted ? 'cancelled' : 'failed',
@@ -174,6 +184,24 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     active.current = null;
     if (mounted.current) {
       setBusy(false); onBusyChange?.(false);
+      if (saved > 0 && saved === pending.length) {
+        const audio = completionAudio.current;
+        if (audio?.state === 'running') {
+          try {
+            const start = audio.currentTime;
+            for (const [frequency, volume] of [[1046.5, .12], [1568, .04]]) {
+              const tone = audio.createOscillator(), gain = audio.createGain();
+              tone.frequency.value = frequency;
+              gain.gain.setValueAtTime(0, start);
+              gain.gain.linearRampToValueAtTime(volume, start + .012);
+              gain.gain.exponentialRampToValueAtTime(.001, start + .65);
+              tone.connect(gain); gain.connect(audio.destination);
+              tone.start(start); tone.stop(start + .7);
+              tone.onended = () => { tone.disconnect(); gain.disconnect(); };
+            }
+          } catch { /* Keep the visual confirmation when audio is unavailable. */ }
+        }
+      }
       await refresh();
     }
   }
@@ -182,6 +210,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     if (row.status === 'hashing' || row.status === 'uploading') active.current?.abort();
     update(row.id, { status: 'cancelled' });
   }
+  const allSaved = queue.length > 0 && queue.every(row => row.status === 'success');
   const formatSize = (size: number) => `${(size / 1024 / 1024).toLocaleString(locale, { maximumFractionDigits: 2 })} MB`;
   return <div className={embedded ? `${styles.manager} ${styles.embedded}` : styles.manager} aria-busy={busy}>
     <section aria-labelledby="uploaded-title" className={styles.panel}>
@@ -191,7 +220,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
       {listError && <p className={styles.error} role="alert">{t(`errors.${listError}`)}</p>}
       {!listBusy && !listError && !files.length && <p>{t('empty')}</p>}
       {!!files.length && <ul className={styles.files}>{files.map(file => <li key={file.id}>
-        <div className={styles.fileName}>{showPreviewLink && file.pathDisplay
+        <div className={`${styles.fileName} ${styles.savedName}`}><CircleCheck size={19} aria-hidden="true"/>{showPreviewLink && file.pathDisplay
           ? <a href={`https://www.dropbox.com/preview${file.pathDisplay.split('/').map(encodeURIComponent).join('/')}`} target="_blank" rel="noopener noreferrer">{file.name}</a>
           : <strong>{file.name}</strong>}</div>
         <div className={styles.fileDetails}><span>{formatSize(file.size)}</span>
@@ -201,29 +230,39 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     </section>
     {canUpload ? <section className={styles.panel} aria-labelledby="upload-title">
       <h2 id="upload-title">{t('uploadTitle')}</h2>
-      <p id="file-rules">{t('rules')}</p>
+      <div id="file-rules" className={styles.rules}><span>PDF · JPG · PNG · DOC(X)</span><span>{t('limits')}</span><span>{t('chunks')}</span></div>
       <div className={`${styles.dropzone} ${dragging ? styles.dragging : ''}`}
         onDragOver={event => { event.preventDefault(); if (!busy) setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={event => { event.preventDefault(); setDragging(false); select(event.dataTransfer.files); }}>
+        <UploadCloud className={styles.uploadIcon} size={32} aria-hidden="true"/>
         <p>{t('drop')}</p>
-        <input id="document-files" ref={input} type="file" multiple accept={ACCEPTED_FILES} disabled={busy}
+        <button type="button" className={styles.chooseButton} disabled={busy} onClick={() => input.current?.click()}>{t('choose')}</button>
+        <input hidden id="document-files" ref={input} type="file" multiple accept={ACCEPTED_FILES} disabled={busy}
           aria-describedby="file-rules" aria-label={t('choose')} onChange={event => select(event.target.files)} />
       </div>
+      <aside className={styles.uploadHelp}>
+        <Info size={17} aria-hidden="true"/>
+        <div><p>{t('retryHelp')}</p><div className={styles.contacts}>
+          <span><b>{t('westOffices')}</b><a href="mailto:ca2@aet21.com">ca2@aet21.com</a></span>
+          <span><b>{t('otherOffices')}</b><a href="mailto:info@americantranslationservice.com">info@americantranslationservice.com</a></span>
+        </div></div>
+      </aside>
+      {allSaved && <div className={styles.successBanner} role="status"><CircleCheck size={26} aria-hidden="true"/><div><strong>{t('complete')}</strong><p>{t('completeDetail', {count: queue.length})}</p></div></div>}
       {selectionError && <p className={styles.error} role="alert">{t(`errors.${selectionError}`)}</p>}
-      {!!queue.length && <ul className={styles.queue}>{queue.map(row => <li key={row.id}>
+      {!!queue.length && <ul className={styles.queue}>{queue.map(row => <li key={row.id} className={row.status === 'success' ? styles.successRow : undefined}>
         <div className={styles.headingRow}><strong className={styles.fileName}>{row.file.name}</strong>
           {!busy ? <button type="button" onClick={() => setQueue(previous => previous.filter(item => item.id !== row.id))} aria-label={t('removeNamed', { name: row.file.name })}>{t('remove')}</button>
             : ['pending', 'hashing', 'uploading'].includes(row.status) && <button type="button" onClick={() => cancel(row)} aria-label={t('cancelNamed', { name: row.file.name })}>{t('cancel')}</button>}</div>
-        <div className={styles.fileDetails}><span>{formatSize(row.file.size)}</span><span role="status">{t(`status.${row.status}`)} {row.percent > 0 && `${row.percent}%`}</span></div>
+        <div className={styles.fileDetails}><span>{formatSize(row.file.size)}</span><span role="status" className={row.status === 'success' ? styles.successBadge : undefined}>{row.status === 'success' && <Check size={15} aria-hidden="true"/>}{t(`status.${row.status}`)} {row.percent > 0 && `${row.percent}%`}</span></div>
         <progress value={row.percent} max={100} aria-label={t('progressNamed', { name: row.file.name })} />
         {row.error && <p className={styles.error} role="alert">{t(`errors.${row.error}`)}</p>}
         {row.archiveFailed && <p className={styles.warning} role="status">{t('archiveFailed')}</p>}
       </li>)}</ul>}
-      <button type="button" className={styles.primary} disabled={busy || !queue.some(row => row.status !== 'success')} onClick={() => void upload()}>
-        {busy ? t('uploading') : t('upload')}
+      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || !queue.some(row => row.status !== 'success')} onClick={() => void upload()}>
+        {allSaved && <Check size={19} aria-hidden="true"/>}{busy ? t('uploading') : allSaved ? t('complete') : t('upload')}
       </button>
-      <p className={styles.note}>{t('keepOpen')}</p>
+      {!allSaved && <p className={styles.note}>{t('keepOpen')}</p>}
     </section> : <p className={styles.panel} role="status">{t('errors.readOnly')}</p>}
   </div>;
 }

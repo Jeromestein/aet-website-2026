@@ -1,5 +1,22 @@
 # AET Implementation Status
 
+## 2026-10-20 — Make upload completion clear
+
+- Customer uploads use an orange picker/action, green saved rows and progress,
+  checkmarks, and a batch-complete message. Completed batches no longer show
+  the keep-open warning. The native file input is replaced by a translated picker.
+- Added compact format/size/chunk limits, retry guidance, and clickable LA/SF
+  and other-office email contacts in English, Chinese and Spanish.
+- A short Web Audio chime plays once after all files in the attempted batch are
+  confirmed saved. Audio is unlocked by the upload click; unavailable audio
+  does not affect saving. Failed or cancelled batches do not play a success tone.
+- Verified a real upload of the existing public header logo on the synthetic
+  Miami status record at localhost:3022, then its green completion state on
+  desktop and 390px mobile. No page overflow or browser warnings/errors.
+  TypeScript and all three locale checks passed. A mocked upload/audio check
+  covered complete success, partial failure, total failure and unavailable audio;
+  speaker output was not independently measured. Dropbox paths/chunks unchanged.
+
 ## 2026-10-20 — Add the Payment detail shortcut
 
 - Moved Payment before Status in the shared live/test application table.

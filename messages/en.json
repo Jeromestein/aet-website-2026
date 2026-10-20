@@ -594,8 +594,8 @@
     "more": "Show more files",
     "uploadTitle": "Add documents",
     "rules": "PDF, JPG, PNG, DOC and DOCX. Up to 50 MB per file and 20 files per batch. Files over 3 MB are uploaded in chunks.",
-    "drop": "Drag your files here, or choose files below.",
-    "choose": "Choose documents",
+    "drop": "Drop files here or choose from your device",
+    "choose": "Choose files",
     "remove": "Remove",
     "removeNamed": "Remove {name}",
     "cancel": "Cancel",
@@ -626,7 +626,14 @@
       "uncertain": "The save could not be confirmed. Refresh the file list before retrying to avoid a duplicate.",
       "integrity": "The file was received but could not be verified. Please contact your office to check it before uploading it again.",
       "readOnly": "Documents can be added only while the application is submitted or processing. You can still view the file list. Contact your office if more documents are needed."
-    }
+    },
+    "limits": "Up to 50 MB each · 20 files per batch",
+    "chunks": "Files over 3 MB upload in chunks",
+    "retryHelp": "If an upload fails, please try again. If it still fails after a few attempts, contact:",
+    "westOffices": "LA / SF",
+    "otherOffices": "Other offices",
+    "complete": "Upload complete",
+    "completeDetail": "{count} file(s) saved and available to your office. No need to upload again."
   },
   "applicationStatus": {
     "title": "Application Status",

@@ -42,3 +42,50 @@
 .embedded > .panel { padding: 0; border: 0; border-radius: 0; margin: 28px 0 0; background: transparent; }
 .embedded .panel h2 { font-size: 20px; }
 .embedded .primary { width: 100%; }
+
+/* Distinct action, saved, and help states for the customer uploader. */
+.savedName { display: flex; align-items: flex-start; gap: 9px; }
+.savedName > svg { flex-shrink: 0; color: #16804a; margin-top: 3px; }
+.rules { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: 0 0 14px; font-size: 12px; color: #626e79; line-height: 1.6; }
+.rules span + span { border-left: 1px solid #d8dde0; padding-left: 12px; }
+.dropzone { padding: 23px; border-color: #e4a68a; background: #fffaf6; }
+.dropzone p { margin: 8px 0 14px; color: var(--ink); font-size: 15px; font-weight: 500; }
+.uploadIcon { color: var(--orange); margin: auto; }
+.dropzone input[hidden] { display: none; }
+.panel .chooseButton, .panel .primary { background: var(--orange); border-color: var(--orange); color: #fff; }
+.panel .chooseButton:hover:not(:disabled), .panel .primary:hover:not(:disabled) { background: var(--orange-hover); border-color: var(--orange-hover); }
+.dragging { border-style: solid; background: #fff0e4; }
+.uploadHelp { display: flex; align-items: flex-start; gap: 9px; margin-top: 13px; padding: 12px 14px; border: 1px solid #e8e5df; border-radius: 10px; background: #fcfbf8; font-size: 12px; color: #626b72; }
+.uploadHelp > svg { flex-shrink: 0; margin-top: 2px; color: #9b7445; }
+.uploadHelp > div { min-width: 0; }
+.uploadHelp p { margin: 0 0 6px; line-height: 1.6; }
+.contacts { display: flex; flex-wrap: wrap; gap: 5px 20px; }
+.contacts span { display: flex; flex-wrap: wrap; gap: 4px 8px; min-width: 0; }
+.contacts b { font-weight: 600; color: #4b5259; }
+.contacts a { color: #245db4; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.successBanner { display: flex; align-items: center; gap: 12px; padding: 16px 18px; margin-top: 18px; border: 1px solid #a5d9b8; border-radius: 12px; background: #edf9f1; color: #166534; }
+.successBanner > svg { flex-shrink: 0; }
+.successBanner strong { font-size: 16px; }
+.successBanner p { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: #33744b; }
+.queue { display: grid; gap: 10px; margin: 16px 0 0; }
+.queue li { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.queue li:first-child { border-top: 1px solid var(--line); }
+.queue .successRow, .queue .successRow:first-child { background: #f3fbf5; border-color: #b9dfc6; }
+.queue .successRow .fileName { color: #185b35; }
+.successBadge { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; color: #167241; }
+.queue .successRow progress { accent-color: #1c9b58; }
+.queue .successRow progress::-webkit-progress-value { background: #1c9b58; }
+.queue .successRow progress::-moz-progress-bar { background: #1c9b58; }
+.queue button { font-size: 12px; min-height: 36px; padding: 5px 10px; border-color: #d0dcd4; color: #55685c; background: transparent; }
+.panel .primary { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.panel .completeButton:disabled { background: #188449; border-color: #188449; opacity: 1; cursor: default; }
+.panel .note { margin-top: 9px; line-height: 1.6; font-size: 12px; }
+@media (max-width: 600px) {
+  .rules { gap: 4px 8px; }
+  .rules span + span { border: 0; padding-left: 0; }
+  .rules span:first-child { width: 100%; }
+  .uploadHelp { padding: 11px; }
+  .contacts { flex-direction: column; }
+  .successBanner { padding: 13px; }
+  .queue li { padding: 12px; }
+}

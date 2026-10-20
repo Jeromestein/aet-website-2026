@@ -54,6 +54,10 @@ as a bold subheading. Use pale blue for the question and an orange, text-only
 Start Your Pre-Evaluation button without an arrow. Keep the wording unchanged
 when adjusting the layout.
 
+Customer document uploads use orange selection/upload actions and green saved
+rows, checkmarks and completion feedback. Keep file limits and office contact
+help compact and readable on mobile; completion audio supplements visible text.
+
 ## 2. Logo and Color
 
 ### Logo
