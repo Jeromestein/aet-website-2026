@@ -22,7 +22,7 @@ export default function LiveCaseDrawer({target,initialTab='overview',onClose,onS
  return <WorkspaceDialog open onClose={onClose} title={(summary?.name||'Application')+' application details'} drawer>
   {error&&<p role="alert" className={s.formError}>{error}</p>}
   {!record?<div className={s.empty}>{error?'Record unavailable.':'Loading application…'}</div>:<>
-   <CaseDetailHeader id={r.id} name={summary!.name} office={summary!.office} service={summary!.service} status={summary!.status} paymentStatus={summary!.payment_status} caption="Live business record. Saved changes are shared with the previous workspace." tabs={tabs} tab={tab} onTab={setTab}/>
+   <CaseDetailHeader statusHref={formal?`/status?applicationId=${encodeURIComponent(r.id)}`:undefined} id={r.id} name={summary!.name} office={summary!.office} service={summary!.service} status={summary!.status} paymentStatus={summary!.payment_status} caption="Live business record. Saved changes are shared with the previous workspace." tabs={tabs} tab={tab} onTab={setTab}/>
    {notice&&<p role="status" className={s.helperText}>{notice}</p>}
    <fieldset className={s.liveFieldset} disabled={busy||stale}>
     {tab==='overview'&&<div className={s.detailContent}>

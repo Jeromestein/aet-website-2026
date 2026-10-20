@@ -194,16 +194,15 @@ background portrait and content have breathing room without a fixed section heig
   live and test CRM views, including the import dialog shortcut. In the isolated cloud
   preview, identify the workspace and retain paused external delivery controls.
 
+- Order the left navigation as Applications, FCE, Pre-evaluation, Payment links,
+  Test. Test is a dedicated link to `source=preview`; the other links return to
+  live data. Omit the workspace-level Documents entry and document strip; keep
+  Documents inside each application drawer.
 - CRM Documents lists the application's Dropbox files in the right drawer with
   names, sizes, update dates and explicit manual refresh. File links open Dropbox
   preview using the employee's office account. Status and CRM share the legacy
   office/name/application-ID folder rule; the preview flag selects database
   records only. File requests recheck staff application permissions.
-
-- Order the left navigation as Applications, FCE, Pre-evaluation, Payment links,
-  Test. Test is a dedicated link to `source=preview`; the other links return to
-  live data. Omit the workspace-level Documents entry and document strip; keep
-  Documents inside each application drawer.
 - Live and new test-intake drawers share the identity header, service/status badges,
   six section tabs and white information cards. Never embed the customer-facing
   "Application saved" receipt in CRM. Keep the existing test read-only boundary;
@@ -211,10 +210,19 @@ background portrait and content have breathing room without a fixed section heig
 
 The following presentation rules apply to the connected CRM workspace:
 
+- Clicking the application row opens its right drawer; omit the redundant final
+  arrow column. Keep Education, Service and Payment triggers independent. Keyboard users
+  can open a focused row with Enter or Space.
 - Place Payment before Status in the application table. Payment uses the same
   underlined title, chevron and hover/focus highlight as Education and Service;
   clicking it opens the Payment drawer tab. Keep the payment state color and
   show the same shortcut before the status badge on mobile cards.
+- Place Copy ID and the customer Status link below the ID in the drawer header.
+  Keep test status links tied to their preview record. Show the status link only
+  for formal evaluations supported by the customer status page.
+- Display a small blue truck in the Service cell for recorded mail delivery,
+  using the legacy delivery-method rule and the stored test delivery selection.
+  Missing delivery or no-delivery selections have no icon.
 
 - Start the main area directly with the page heading. Omit the redundant top
   breadcrumb, live-data badge, date and avatar bar. Keep mobile navigation in

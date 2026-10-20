@@ -3,6 +3,7 @@ import { useEffect,useRef,useState,type FormEvent } from 'react';
 import { ArrowRight,Check,FileText,FolderOpen,Mail,RotateCcw } from 'lucide-react';
 import { caseApi,date,fileUrl,label,money,evalueeName,type CaseReference,type WorkspaceRow,type Education,type WorkspaceFile } from '@/lib/crm/contracts';
 import { Badge,OfficeBadge,WorkspaceDialog,request,errorMessage,WorkspaceError } from './ui';
+import {ApplicationActions} from './application-actions';
 import s from './crm.module.css';
 
 export default function CaseDrawer({ target,initial,initialTab='overview',cloudPreview,onClose,onSaved }: {target:CaseReference|null;initial?:WorkspaceRow;initialTab?:string;cloudPreview:boolean;onClose:()=>void;onSaved:()=>void}) {
@@ -25,7 +26,7 @@ export default function CaseDrawer({ target,initial,initialTab='overview',cloudP
   return <WorkspaceDialog open={!!target} onClose={onClose} title={name+' application details'} drawer>
     {error&&<p role="alert" className={s.formError}>{error}</p>}
     {!record?<div className={s.empty}><p>{error?'Application unavailable.':'Loading application…'}</p>{error&&<button className={s.secondaryButton} onClick={()=>run(async()=>{})}>Try again</button>}</div>:<>
-      <div className={s.detailIdentity}><OfficeBadge office={office} large/><div><h2>{name}</h2><p>{record.id}<span> · </span>{office||'Unassigned'}</p></div></div>
+      <div className={s.detailIdentity}><OfficeBadge office={office} large/><div><h2>{name}</h2><p>{record.id}<span> · </span>{office||'Unassigned'}</p><ApplicationActions id={record.id} statusHref={formal?`/status?applicationId=${encodeURIComponent(record.id)}`:undefined}/></div></div>
       <div className={s.detailBadges}><Badge tone="blue">{formal?'Formal evaluation':'Pre-Evaluation'}</Badge><Badge tone={record.status==='completed'?'green':'neutral'}>{label(record.status)}</Badge><Badge>{label(record.payment_status)}</Badge></div>
       <div className={s.detailTabs} role="group" aria-label="Application detail sections">{['overview','education','service','documents','payment','activity','message'].map(value=><button key={value} aria-pressed={tab===value} className={tab===value?s.detailTabActive:''} onClick={()=>setTab(value)}>{value==='message'?'Client message':value[0].toUpperCase()+value.slice(1)}</button>)}</div>
       {notice&&<p role="status" className={s.helperText}>{notice}</p>}

@@ -1,62 +1,5 @@
 # AET Implementation Status
 
-## 2026-10-20 — CRM new-application destination
-
-- New application links directly to `/application` from the workspace header and
-  import dialog, replacing the old modal. Existing locale routing is preserved.
-- Kept the payment-request action and mobile action sizing intact.
-- In-app browser verified header clicks reach the new form on desktop and 390px
-  mobile; TypeScript and whitespace checks passed. No application was submitted.
-- Evidence: `output/playwright/crm-new-application-{destination,mobile}.png`.
-
-
-## 2026-10-20 — Align test CRM details and simplify navigation
-
-- Moved Test to the left navigation, ordered Applications / FCE / Pre-evaluation /
-  Payment links / Test. Removed the inline preview switch, workspace Documents
-  entry and document strip. Per-record Documents remains available.
-- Replaced the intake receipt inside the test drawer with the live drawer's shared
-  identity, badges and six tabs. Education and Service reuse the same white cards;
-  saved prices, linked qualifications, notes and confirmation delivery remain
-  visible. Education/Service list actions open their matching section directly.
-- Preserved the original read-only intake endpoint, live write endpoints, office
-  permissions and employee authentication. No database writes, email sends,
-  payments, deployment or push were performed.
-- Verification: owner-run dev server on 3022; in-app browser checked live FCE,
-  test navigation, all six test sections, direct Education entry, 1440px desktop
-  and 390px mobile layouts. Typecheck and 12 focused CRM tests passed.
-
-
-## 2026-10-20 — Match the legacy Dropbox file table
-
-- CRM Documents uses File Name / Size / Uploaded Time columns. Blue file names
-  open the existing Dropbox preview links in a new tab, with full-name tooltips.
-  Dates include hours and minutes using the old viewer formatting.
-- Verified three real file links and rendered table at localhost:3022 in the
-  in-app browser on desktop and at 390px. No horizontal page overflow on mobile.
-  TypeScript and whitespace checks passed. File contents were not reopened;
-  the existing Dropbox sign-in requirement remains unchanged.
-
-
-## 2026-10-20 — Connect CRM document lists to existing Dropbox folders
-
-- Consolidated overlapping Documents implementations after the owner assigned
-  this work to the dashboard chat. Retained the requested legacy folder rule:
-  Status and CRM share `contextFor`; preview selects records without adding a
-  Dropbox directory prefix. This supersedes the earlier preview-storage note below.
-- Live and intake drawers now share a file list with names, sizes, update dates,
-  manual refresh and pagination. Links open Dropbox preview. Each read checks
-  active staff identity and the selected application's existing office grant;
-  request parameters cannot supply a folder, name or office.
-- Verified the supplied Fen Jiang live application on localhost:3022: three PDF
-  files were returned and rendered in the original desktop drawer. Clicking the
-  first file reached Dropbox sign-in. The owner chose to perform the remaining
-  file-opening, mobile and upload-to-CRM checks personally; those are not claimed
-  as verified in this change. No files were moved, uploaded or deleted here.
-- TypeScript, 20 focused tests, offline Dropbox checks and whitespace checks
-  passed. No employee login changes, push, deployment or server restart.
-
-
 ## 2026-10-20 — Make upload completion clear
 
 - Customer uploads use an orange picker/action, green saved rows and progress,
@@ -84,6 +27,69 @@
 - Validation: TypeScript and whitespace checks passed; checked the Test list
   at localhost:3022 in the in-app browser at desktop and mobile widths, including
   column order, focus highlight and opening the Payment tab.
+
+## 2026-10-20 — Simplify application rows and add quick actions
+
+- Removed the trailing application arrow column and mobile identity arrow.
+  Clicking a non-interactive part of a row/card opens its overview drawer;
+  Education and Service controls still open their respective sections. Desktop
+  rows also support Enter/Space.
+- Added Copy ID with success/error feedback and a customer Status link beneath
+  the drawer identity. Formal live links use the new Status page; intake links
+  preserve their stored locale and preview source. Other record kinds retain
+  Copy ID without advertising an unsupported status lookup.
+- Added a blue truck in Service when stored delivery requires mailing, following
+  the legacy delivery-method rule for live records and saved delivery for test
+  records. No record writes, authentication changes or delivery actions.
+- Verified on owner-run localhost:3022: desktop row opening from the date cell,
+  copy success feedback, live and test Status link destinations, the Rachelle
+  record's mail icon, and desktop/mobile drawer layouts. Preview list query
+  returned its three records. TypeScript, 26 focused CRM tests and whitespace
+  checks passed. No build, push or deployment.
+
+## 2026-10-20 — Match the legacy Dropbox file table
+
+- CRM Documents uses File Name / Size / Uploaded Time columns. Blue file names
+  open the existing Dropbox preview links in a new tab, with full-name tooltips.
+  Dates include hours and minutes using the old viewer formatting.
+- Verified three real file links and rendered table at localhost:3022 in the
+  in-app browser on desktop and at 390px. No horizontal page overflow on mobile.
+  TypeScript and whitespace checks passed. File contents were not reopened;
+  the existing Dropbox sign-in requirement remains unchanged.
+
+## 2026-10-20 — Connect CRM document lists to existing Dropbox folders
+
+- Consolidated overlapping Documents implementations after the owner assigned
+  this work to the dashboard chat. Retained the requested legacy folder rule:
+  Status and CRM share `contextFor`; preview selects records without adding a
+  Dropbox directory prefix. This supersedes the earlier preview-storage note below.
+- Live and intake drawers now share a file list with names, sizes, update dates,
+  manual refresh and pagination. Links open Dropbox preview. Each read checks
+  active staff identity and the selected application's existing office grant;
+  request parameters cannot supply a folder, name or office.
+- Verified the supplied Fen Jiang live application on localhost:3022: three PDF
+  files were returned and rendered in the original desktop drawer. Clicking the
+  first file reached Dropbox sign-in. The owner chose to perform the remaining
+  file-opening, mobile and upload-to-CRM checks personally; those are not claimed
+  as verified in this change. No files were moved, uploaded or deleted here.
+- TypeScript, 20 focused tests, offline Dropbox checks and whitespace checks
+  passed. No employee login changes, push, deployment or server restart.
+
+## 2026-10-20 — Align test CRM details and simplify navigation
+
+- Moved Test to the left navigation, ordered Applications / FCE / Pre-evaluation /
+  Payment links / Test. Removed the inline preview switch, workspace Documents
+  entry and document strip. Per-record Documents remains available.
+- Replaced the intake receipt inside the test drawer with the live drawer's shared
+  identity, badges and six tabs. Education and Service reuse the same white cards;
+  saved prices, linked qualifications, notes and confirmation delivery remain
+  visible. Education/Service list actions open their matching section directly.
+- Preserved the original read-only intake endpoint, live write endpoints, office
+  permissions and employee authentication. No database writes, email sends,
+  payments, deployment or push were performed.
+- Verification: owner-run dev server on 3022; in-app browser checked live FCE,
+  test navigation, all six test sections, direct Education entry, 1440px desktop
+  and 390px mobile layouts. Typecheck and 12 focused CRM tests passed.
 
 ## 2026-10-20 — Move Dropbox work to dev and connect the existing status page
 
@@ -317,6 +323,15 @@
   `output/playwright/staff-login-no-recovery-2026-10-20.png`.
 - Reused the owner-managed server; no production build, restart, commit, push or
   deployment. Customer notification storage is outside this change.
+
+## 2026-10-20 — CRM new-application destination
+
+- New application links directly to `/application` from the workspace header and
+  import dialog, replacing the old modal. Existing locale routing is preserved.
+- Kept the payment-request action and mobile action sizing intact.
+- In-app browser verified header clicks reach the new form on desktop and 390px
+  mobile; TypeScript and whitespace checks passed. No application was submitted.
+- Evidence: `output/playwright/crm-new-application-{destination,mobile}.png`.
 
 ## 2026-10-17 — Unified customer status UI
 

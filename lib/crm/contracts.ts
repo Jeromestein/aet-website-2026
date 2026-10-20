@@ -18,6 +18,7 @@ export type WorkspaceFile = { id: string; kind: string; name: string; bytes: num
 export type WorkspacePayment = { id: string; session_id: string | null; amount_cents: number; status: string; created_at: string };
 export type WorkspaceRow = CaseReference & {
   intakeVersion?:number;
+  mailDelivery?:boolean;
   name: string; email: string; office: string | null; service: string; purpose: string;
   country: string; educations: Education[]; status: string; payment_status: string;
   amount: number | null; created_at: string; updated_at: string;

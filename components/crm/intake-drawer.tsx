@@ -18,7 +18,7 @@ export default function IntakeDrawer({id,initial,initialTab='overview',onClose}:
  return <WorkspaceDialog open onClose={onClose} title={(details?.name||'Test')+' application details'} drawer>
   {error&&<p role="alert" className={s.formError}>{error}</p>}
   {!record||!details?<div className={s.empty}><p>{error?'Application unavailable.':'Loading application…'}</p></div>:<>
-   <CaseDetailHeader id={record.id} name={details.name} office={details.office} service={details.service} status={record.status} paymentStatus={initial?.payment_status||'Not recorded'} caption="Test record. Stored separately from live applications." tabs={['overview','education','service','documents','payment','activity']} tab={tab} onTab={setTab}/>
+   <CaseDetailHeader statusHref={record.statusPath} id={record.id} name={details.name} office={details.office} service={details.service} status={record.status} paymentStatus={initial?.payment_status||'Not recorded'} caption="Test record. Stored separately from live applications." tabs={['overview','education','service','documents','payment','activity']} tab={tab} onTab={setTab}/>
    {tab==='overview'&&<div className={s.detailContent}>
     <section><h3>Client information</h3><dl className={s.detailGrid}>
      <div><dt>Email</dt><dd>{record.data.email||'Not recorded'}</dd></div><div><dt>Office</dt><dd>{details.office||'Unassigned'}</dd></div>
