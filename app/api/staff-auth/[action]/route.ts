@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { staffConfiguration } from "@/lib/staff/config";
+import { requestMatchesApplicationOrigin } from "@/lib/preview-environment";
 import { staffClient } from "@/lib/staff/client";
 import { authAttempt, prepareStaffIdentity } from "@/lib/staff/migrate";
 import { normalizeEmail, safeStaffRedirect } from "@/lib/staff/password";
@@ -52,7 +53,7 @@ export async function POST(
   try {
     const { origin } = staffConfiguration();
     if (
-      request.headers.get("origin") !== origin ||
+      !requestMatchesApplicationOrigin(request.headers.get("origin"), origin) ||
       request.headers.get("sec-fetch-site") === "cross-site"
     )
       return json({ error: "Access denied." }, 403);

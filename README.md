@@ -90,6 +90,40 @@ the application pilot has separate service requirements in
 [the local setup guide](docs/pre-evaluation-local.md).
 Deployment is intentionally left to the owner.
 
+### Vercel dev Preview
+
+The Vercel project `aet-website-2026` uses `main` for Production. The `dev`
+Preview has branch-specific configuration; existing Production variables are
+preserved. Its stable application origin is
+`https://aet-website-2026-git-dev-meiyutechs-projects.vercel.app`.
+
+Use `PREEVAL_ENV=preview`, `PREEVAL_DATABASE_MODE=cloud-preview`, and that HTTPS
+origin in `PREEVAL_ORIGIN`. Keep system environment variables enabled. The server
+requires Vercel Preview, Git branch `dev`, and an exact match with
+`VERCEL_BRANCH_URL`. Forms accept only that branch origin or the current exact
+`VERCEL_URL`; no wildcard host or forwarded request header is trusted.
+`STAFF_LEGACY_MIGRATION_ENABLED` and `STAFF_AUTH_CUTOVER_ENABLED` must both remain
+`false`. Production/other branches are not enabled by this pilot configuration.
+
+Authentication, live CRM and isolated intake retain their three separate database
+connections. `CRM_DATA_SOURCE=live` reads and writes the same records as the old
+workspace; deployment environments do not isolate those business records.
+The existing staff accounts are not migrated. An already-provisioned native admin
+uses `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `STAFF_AUTH_DATABASE_URL` without a
+service-role key. Dropbox uses both existing office accounts and stored paths.
+
+Dev Preview uses `STRIPE_PAYMENT_MODE=test` with both offices' test keys and an
+HTTPS `STRIPE_TEST_SITE_URL`; no live Stripe or PayPal credentials were added.
+A hosted webhook endpoint and its matching signing secret have not been set up
+by this configuration change. Local CLI webhook secrets are not copied to the
+hosted environment. Legacy local-only form routes, worker/AI execution and
+production cutover remain outside this Preview setup. The newer `/application`
+intake, `/status` lookup and `/admin/CRM` use the configured cloud connections.
+
+Local `.env.local` and port 3022 remain unchanged. Environment changes apply to
+new deployments; the owner must authorize pushing the adaptation and deploying
+before hosted end-to-end acceptance. Never commit connection strings or keys.
+
 ### Application domains and staff URLs
 
 The owner requires the existing staff address to remain
@@ -128,8 +162,8 @@ remain under `app/[locale]/admin/CRM/page.tsx`. Authentication remains required.
 Still pending: hostname-based separation, root/wrong-host behavior, Vercel/DNS
 configuration, production application origins, access/payment return URLs and
 webhook validation, hosted worker/AI operation, and production acceptance with
-rollback. The current pilot deliberately rejects non-local origins/databases;
-binding a domain does not make it production-ready. Keep the existing AET App
+rollback. The pilot accepts local testing and the explicitly configured dev Preview only;
+binding a production domain does not make it production-ready. Keep the existing AET App
 operational until the separately authorized cutover. No deployment or DNS change
 was made as part of the English-only staff update.
 ### Stripe Checkout

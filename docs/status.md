@@ -1,5 +1,25 @@
 # AET Implementation Status
 
+## 2026-10-20 — Configure branch-scoped Vercel dev Preview
+
+- Added and verified 33 server-side environment entries scoped only to Preview /
+  `dev` in the existing `aet-website-2026` Vercel project. API snapshots confirmed
+  every pre-existing variable record remained unchanged; Production stays on main.
+  Credentials were read from existing local configuration without displaying or
+  committing them. No service-role, live Stripe or PayPal credential was added.
+- Added exact-origin support for the stable dev branch URL and the current Vercel
+  deployment URL. Hosted configuration requires Preview + dev + cloud-preview,
+  both employee switches off, and the same restricted database roles. Existing
+  local 3022 remains supported; other hosts, branches and Production are rejected.
+- Passed 88 focused tests and TypeScript. Under simulated hosted configuration,
+  read-only `select 1` checks passed for all three cloud connections and Supabase
+  Auth settings returned HTTP 200. The owner-run 3022 login route returned 200.
+  Vercel's variable list visually confirmed Preview/dev labels and masked secrets.
+- No local production build, employee/business-record mutation, email send, push
+  or deployment. Hosted login/CRM/status acceptance still requires deployment of
+  this code. Payment webhooks and worker/AI operation remain separate work.
+
+
 ## 2026-10-20 — Make upload completion clear
 
 - Customer uploads use an orange picker/action, green saved rows and progress,

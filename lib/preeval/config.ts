@@ -1,3 +1,5 @@
+import { applicationPilotOrigin, cloudBusinessEnvironmentAllowed } from "../preview-environment";
+
 export function required(name: string) {
   const value = process.env[name];
   if (!value) throw new Error("Missing configuration: " + name);
@@ -6,19 +8,15 @@ export function required(name: string) {
 export const CLOUD_PROJECT = "qrxztgdemfodemlcabcq";
 export const PREVIEW_ROLE = "aet_preview_runtime";
 export function configuration() {
-  const origin = required("PREEVAL_ORIGIN").replace(/\/$/, "");
-  const url = new URL(origin);
-  if (process.env.PREEVAL_ENV !== "local" || !["localhost", "127.0.0.1"].includes(url.hostname)) {
-    throw new Error("This pre-evaluation pilot is restricted to local testing.");
-  }
+  const origin = applicationPilotOrigin();
   const database = new URL(required("PREEVAL_DATABASE_URL"));
   const cloudPreview = process.env.PREEVAL_DATABASE_MODE === "cloud-preview";
   if (cloudPreview) {
     const user = decodeURIComponent(database.username);
     const projectMatches = (database.hostname === `db.${CLOUD_PROJECT}.supabase.co` && user === PREVIEW_ROLE) ||
       (database.hostname.endsWith(".pooler.supabase.com") && user === `${PREVIEW_ROLE}.${CLOUD_PROJECT}`);
-    if (!projectMatches || origin !== "http://localhost:3022" || process.env.STAFF_LEGACY_MIGRATION_ENABLED !== "false" || process.env.STAFF_AUTH_CUTOVER_ENABLED !== "false") {
-      throw new Error("Cloud preview requires the restricted project role, port 3022, and disabled employee cutover.");
+    if (!projectMatches || !cloudBusinessEnvironmentAllowed()) {
+      throw new Error("Cloud preview requires the restricted project role, an approved preview origin, and disabled employee cutover.");
     }
   } else if (process.env.PREEVAL_DATABASE_MODE && process.env.PREEVAL_DATABASE_MODE !== "local") {
     throw new Error("Unknown business database mode.");

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { table, db, type Row } from "./db";
 import { AppError } from "./domain";
 import { configuration } from "./config";
+import { requestMatchesApplicationOrigin } from "../preview-environment";
 import { staffSession, requireStaffApplication } from "../staff/session";
 
 export const hash = (value: string) =>
@@ -80,7 +81,7 @@ export async function consumeLink(token: string) {
   return { token: raw, row: row as Row };
 }
 export function sameOrigin(request: Request) {
-  if (request.headers.get("origin") !== configuration().origin)
+  if (!requestMatchesApplicationOrigin(request.headers.get("origin"), configuration().origin))
     throw new AppError("access_denied", 403);
   if (request.headers.get("sec-fetch-site") === "cross-site")
     throw new AppError("access_denied", 403);
