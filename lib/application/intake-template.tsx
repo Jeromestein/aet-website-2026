@@ -23,7 +23,7 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
   ].filter(Boolean) as string[];
   const amount = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
   return (
-    <BrandedEmailLayout notice="Preview only · No payment has been collected. No document upload or payment is requested in this test. Application links are for the local test website." origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your AET application has been received. Review your application summary and next steps.">
+    <BrandedEmailLayout notice="Test application · Stored separately from live applications. Use the Status page to upload test documents. Payments are disabled; no payment has been collected." origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your AET application has been received. Review your application summary and next steps.">
       <EmailHero eyebrow="CREDENTIAL EVALUATION" description="Your application is saved. Review your details and follow your progress in one place." action={{ href: statusUrl, label: "View Application Status" }} note={privateIdNote}>Application<br />Received</EmailHero>
       <Section className="email-gutter" style={{ padding: "28px 36px 30px" }}>
         <Text style={{ ...paragraph, color: colors.ink, marginBottom: "8px" }}>Dear {data.contactName},</Text>
@@ -51,7 +51,7 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
         </Section>
         <Heading as="h2" style={{ margin: "0 0 18px", fontSize: "18px", lineHeight: "25px", fontWeight: 600, letterSpacing: "-0.4px" }}>What Happens Next?</Heading>
         <NextStep number="01" title="Review Your Details">Open your application to check the information and services you selected.</NextStep>
-        <NextStep number="02" title="Documents & Payment">For the full service, processing begins once all required documents and payment have been received.</NextStep>
+        <NextStep number="02" title="Upload Test Documents">Open the Status page to upload test documents and check your saved files. Payments are disabled for this test application.</NextStep>
         <Text style={{ margin: "22px 0 0", fontSize: "14px", lineHeight: "22px", color: colors.muted }}>Best regards,<br /><strong style={{ color: colors.ink }}>The AET Team</strong></Text>
       </Section>
     </BrandedEmailLayout>
