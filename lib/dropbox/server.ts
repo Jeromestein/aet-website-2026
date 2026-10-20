@@ -7,7 +7,6 @@ export type ApplicationContext = {
   id: string; kind: ApplicationKind; office: Office; fullName: string;
   folderKey: string; submittedAt: string;
   canUpload?: boolean;
-  storage?: 'preview';
 };
 type UploadContext = {
   application: ApplicationContext; sessionId: string; fileName: string; mime: string;
@@ -76,8 +75,7 @@ export function requireUploadAllowed(context: ApplicationContext) {
 }
 export function folderPath(context: ApplicationContext) {
   const { basePath } = accountConfig(accountForOffice(context.office));
-  const root = context.storage === 'preview' ? `${basePath}/AET-FormalEvaluation-Test` : basePath;
-  return `${root}/${context.office}/${safeSegment(`${context.fullName} - ${context.folderKey}`)}`;
+  return `${basePath}/${context.office}/${safeSegment(`${context.fullName} - ${context.folderKey}`)}`;
 }
 export function laFolderPath(context: ApplicationContext) {
   const date = /^(\d{4})-(\d{2})-\d{2}/.exec(context.submittedAt);
@@ -152,7 +150,7 @@ function fileEntry(file: files.FileMetadata): FileEntry {
 }
 async function finishResult(dbx: Dropbox, context: ApplicationContext, file: files.FileMetadata) {
   let archive: 'not-required' | 'saved' | 'failed' = 'not-required';
-  if (context.office === 'Los Angeles' && context.storage !== 'preview') {
+  if (context.office === 'Los Angeles') {
     try {
       await dbx.filesCopyV2({ from_path: file.id, to_path: `${laFolderPath(context)}/${file.name}`, autorename: true });
       archive = 'saved';

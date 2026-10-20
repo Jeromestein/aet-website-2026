@@ -1,5 +1,35 @@
 # AET Implementation Status
 
+## 2026-10-20 — Match the legacy Dropbox file table
+
+- CRM Documents uses File Name / Size / Uploaded Time columns. Blue file names
+  open the existing Dropbox preview links in a new tab, with full-name tooltips.
+  Dates include hours and minutes using the old viewer formatting.
+- Verified three real file links and rendered table at localhost:3022 in the
+  in-app browser on desktop and at 390px. No horizontal page overflow on mobile.
+  TypeScript and whitespace checks passed. File contents were not reopened;
+  the existing Dropbox sign-in requirement remains unchanged.
+
+
+## 2026-10-20 — Connect CRM document lists to existing Dropbox folders
+
+- Consolidated overlapping Documents implementations after the owner assigned
+  this work to the dashboard chat. Retained the requested legacy folder rule:
+  Status and CRM share `contextFor`; preview selects records without adding a
+  Dropbox directory prefix. This supersedes the earlier preview-storage note below.
+- Live and intake drawers now share a file list with names, sizes, update dates,
+  manual refresh and pagination. Links open Dropbox preview. Each read checks
+  active staff identity and the selected application's existing office grant;
+  request parameters cannot supply a folder, name or office.
+- Verified the supplied Fen Jiang live application on localhost:3022: three PDF
+  files were returned and rendered in the original desktop drawer. Clicking the
+  first file reached Dropbox sign-in. The owner chose to perform the remaining
+  file-opening, mobile and upload-to-CRM checks personally; those are not claimed
+  as verified in this change. No files were moved, uploaded or deleted here.
+- TypeScript, 20 focused tests, offline Dropbox checks and whitespace checks
+  passed. No employee login changes, push, deployment or server restart.
+
+
 ## 2026-10-20 — Make upload completion clear
 
 - Customer uploads use an orange picker/action, green saved rows and progress,

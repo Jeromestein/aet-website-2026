@@ -193,6 +193,12 @@ background portrait and content have breathing room without a fixed section heig
   New applications use the existing service intake forms. In the isolated cloud
   preview, identify the workspace and retain paused external delivery controls.
 
+- CRM Documents lists the application's Dropbox files in the right drawer with
+  names, sizes, update dates and explicit manual refresh. File links open Dropbox
+  preview using the employee's office account. Status and CRM share the legacy
+  office/name/application-ID folder rule; the preview flag selects database
+  records only. File requests recheck staff application permissions.
+
 The following presentation rules apply to the connected CRM workspace:
 
 - Place Payment before Status in the application table. Payment uses the same

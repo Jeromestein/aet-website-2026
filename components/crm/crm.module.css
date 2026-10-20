@@ -466,3 +466,20 @@
 .completionDate { color: #617586; }
 .completionDate time { display: block; font-variant-numeric: tabular-nums; }
 .mobileCard > .completion { margin-top: 14px; }
+
+.documentTableWrap { overflow-x: auto; border: 1px solid #e0e4e9; background: #fff; }
+.documentTable { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+.documentTable th { padding: 12px 16px; background: #f8f9fb; color: #6b7280; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.documentTable td { padding: 16px; border-top: 1px solid #e0e4e9; color: #6b7280; vertical-align: top; }
+.documentTable th:first-child { width: 50%; }
+.documentTable td:first-child { overflow-wrap: anywhere; }
+.documentTable td:nth-child(2) { white-space: nowrap; }
+.documentTable a { color: #456dff; text-decoration: none; }
+.documentTable a:hover { text-decoration: underline; }
+.documentTable a:focus-visible { outline: 2px solid #456dff; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .documentTable th, .documentTable td { padding: 10px 8px; }
+  .documentTable { font-size: 13px; }
+  .documentTable th { font-size: 11px; }
+  .documentTable th:first-child { width: 40%; }
+}

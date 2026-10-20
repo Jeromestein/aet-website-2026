@@ -10,10 +10,10 @@ and pre-evaluation diploma reader in the local `aet-app` repository.
   `/api/customer-status` signs access from the record it already loaded. The
   applicant does not re-enter an ID or email. The page retains saved service,
   delivery, payment, education, and confirmation-email details.
-- `source=preview` uses the existing isolated intake reader. Its files are real
-  Dropbox uploads, stored under `{account base}/AET-FormalEvaluation-Test/{office}/{fullName} - {applicationId}`.
-  Preview files never enter live LA archive folders. The source is signed into
-  access/upload context; a caller cannot change it while continuing an upload.
+- `source=preview` selects the isolated intake database reader, not a different
+  Dropbox root. Status uploads and CRM reads use the same legacy folder rule:
+  `{account base}/{office}/{fullName} - {applicationId}`. LA archive copies also
+  follow the legacy rule. Previously uploaded files are not automatically moved.
 - The default status source keeps the existing live/preview database selection.
   For live records, archive dates use `submitted_at`, with `created_at` as the
   fallback for historical records. Unknown IDs retain the existing error state.
@@ -105,8 +105,11 @@ not replace dev's intake, payments, staff CRM, or pre-evaluation pipeline.
 `/documents` remains an optional legacy UUID/email lookup. The compatibility
 `/api/application-status` endpoint reads legacy records; the main status page
 continues to use `/api/customer-status` and its explicit source selection.
-The staff preview component and server diploma reader are reusable integration
-points, not new staff pages. Customer download/delete were TODOs in the source
+The existing CRM Documents tab reads files through a staff-authenticated endpoint
+that rechecks the selected application's office access on each request. Live and
+intake records use the same folder resolver as Status. File links open Dropbox
+preview, which requires the employee's Dropbox account. The server diploma reader
+remains available for pre-evaluation consumers. Customer download/delete were TODOs in the source
 and remain excluded. Existing API URLs are retained for upload/chunks/listing,
 but their request contracts now require an application access token.
 
@@ -145,6 +148,6 @@ Dropbox's recoverable delete API. No customer file was modified.
 The initial module checks above ran before the worktree correction. The module
 now lives in `aet-website-2026-dev` and the existing port 3022 is the verification
 target. The main checkout was restored. Offline checks additionally verify
-preview path isolation, signed source binding, no preview LA copies and status
+legacy folder parity, signed application binding, LA archive copies and status
 capability derivation. See `status.md` for the transfer's actual browser evidence.
 Hosted verification and real-applicant acceptance remain release tasks.

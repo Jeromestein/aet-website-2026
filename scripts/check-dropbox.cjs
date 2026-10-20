@@ -62,7 +62,7 @@ const http = load('lib/dropbox/http.ts', { './shared': shared, './server': serve
 const application = load('lib/dropbox/application.ts', { './shared': shared, './server': server });
 const routes = Object.fromEntries(['access', 'upload', 'chunked-upload', 'viewFilesListFolder'].map(route => [route, load(`app/api/dropbox/${route}/route.ts`, { '@/lib/dropbox/server': server, '@/lib/dropbox/shared': shared, '@/lib/dropbox/http': http, '@/lib/dropbox/application': application })]));
 const statusRoute = load('app/api/application-status/route.ts', { '@/lib/dropbox/application': application, '@/lib/dropbox/http': http });
-const statusDocuments = load('lib/customer-status/documents.ts', { '@/lib/dropbox/shared': shared, '@/lib/dropbox/server': server });
+const statusDocuments = load('lib/customer-status/documents.ts', { '@/lib/dropbox/shared': shared, '@/lib/dropbox/server': server, '@/lib/dropbox/application': application });
 const context = { id: '00000000-0000-4000-8000-000000000001', kind: 'evaluation', office: 'Los Angeles', fullName: 'Synthetic Test', folderKey: '00000000-0000-4000-8000-000000000001', submittedAt: '2026-10-20T00:00:00Z' };
 const expires = Date.now() + 60000;
 const pdf = Buffer.from('%PDF-1.7\nSynthetic test only\n%%EOF');
@@ -95,7 +95,7 @@ async function main() {
   const ready = statusDocuments.withDocuments(record);
   assert.equal(ready.documents.state, 'ready');
   const previewContext = server.unseal(ready.documents.token, 'access').data;
-  assert.match(server.folderPath(previewContext), /\/AET-FormalEvaluation-Test\/Los Angeles\//);
+  assert.match(server.folderPath(previewContext), /\/WebsitesDev\/Los Angeles\//);
   assert.equal(previewContext.canUpload, true);
   assert.equal(server.unseal(statusDocuments.withDocuments({...record, status:'completed'}).documents.token, 'access').data.canUpload, false);
   const liveContext = server.unseal(statusDocuments.withDocuments({...record, source:'live'}, '2025-09-20T00:00:00Z').documents.token, 'access').data;
@@ -109,8 +109,8 @@ async function main() {
   env.DROPBOX_DOCUMENTS_ENABLED='true';
   const copyCount = copies.length;
   const previewFile = await server.uploadSmall(previewContext, new File([pdf], 'preview.pdf', {type:'application/pdf'}));
-  assert.equal(previewFile.archive, 'not-required');
-  assert.equal(copies.length, copyCount, 'Preview files never enter live LA archives');
+  assert.equal(previewFile.archive, 'saved');
+  assert.equal(copies.length, copyCount + 1, 'All LA files use the legacy archive');
   stored = [];
   const previewUpload = await server.startUpload(previewContext, {fileName:'preview-large.pdf',fileSize:large.length,mime:'application/pdf',contentHash:server.dropboxHash(large)});
   await rejects(() => server.continueUpload(liveContext, {action:'cancel',uploadKey:previewUpload.uploadKey}), 'access');

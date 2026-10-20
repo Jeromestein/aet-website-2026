@@ -30,7 +30,7 @@ async function lookup(applicationId: unknown, kind: unknown) {
   return row;
 }
 
-function contextFor(row: Record<string, string | null>, kind: ApplicationKind) {
+export function contextFor(row: Record<string, string | null>, kind: ApplicationKind) {
   const fullName = [row.first_name, row.middle_name, row.last_name].filter(Boolean).join(' ');
   const context: ApplicationContext = {
     id: safeSegment(row.id), kind,
@@ -38,7 +38,7 @@ function contextFor(row: Record<string, string | null>, kind: ApplicationKind) {
     fullName: safeSegment(fullName),
     // Preserve the original stored email spelling; Dropbox paths are historical.
     folderKey: safeSegment(kind === 'evaluation' ? row.id : row.email),
-    submittedAt: (kind === 'evaluation' ? row.submitted_at : row.created_at) ?? '',
+    submittedAt: (kind === 'evaluation' ? row.submitted_at || row.created_at : row.created_at) || '',
     canUpload: kind === 'pre-evaluation' || ['submitted', 'processing'].includes(row.status?.toLowerCase() ?? ''),
   };
   const account = accountForOffice(context.office);
