@@ -190,7 +190,8 @@ background portrait and content have breathing room without a fixed section heig
   workspace view/drawer. The former preview URL opens this workspace too.
 - Distinguish unavailable actions from working ones. Bulk import and standalone
   payment drafts have no connected backend; explain this without simulated saves.
-  New applications use the existing service intake forms. In the isolated cloud
+  New application actions link directly to the unified `/application` page in both
+  live and test CRM views, including the import dialog shortcut. In the isolated cloud
   preview, identify the workspace and retain paused external delivery controls.
 
 - CRM Documents lists the application's Dropbox files in the right drawer with

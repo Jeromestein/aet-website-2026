@@ -297,7 +297,7 @@
   .pageHeading { margin-bottom: 22px; }
   .pageHeading p { max-width: 360px; font-size: 14px; }
   .headingActions { margin-top: 6px; width: 100%; }
-  .headingActions button { flex: 1; min-height: 43px; }
+  .headingActions button, .headingActions a { flex: 1; min-height: 43px; }
   .statTop { font-size: 13px; }
   .statTop svg { width: 14px; height: 14px; }
   .statValue { font-size: 29px; margin-bottom: 13px; }

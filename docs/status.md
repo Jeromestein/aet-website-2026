@@ -1,5 +1,15 @@
 # AET Implementation Status
 
+## 2026-10-20 — CRM new-application destination
+
+- New application links directly to `/application` from the workspace header and
+  import dialog, replacing the old modal. Existing locale routing is preserved.
+- Kept the payment-request action and mobile action sizing intact.
+- In-app browser verified header clicks reach the new form on desktop and 390px
+  mobile; TypeScript and whitespace checks passed. No application was submitted.
+- Evidence: `output/playwright/crm-new-application-{destination,mobile}.png`.
+
+
 ## 2026-10-20 — Align test CRM details and simplify navigation
 
 - Moved Test to the left navigation, ordered Applications / FCE / Pre-evaluation /
