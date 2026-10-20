@@ -1,75 +1,46 @@
-import { required, requireExternalServices } from "./config";
-let cache: { token: string; expires: number } | undefined;
-async function headers() {
-  requireExternalServices();
-  if (!cache || cache.expires < Date.now()) {
-    const response = await fetch("https://api.dropbox.com/oauth2/token", {
-      method: "POST",
-      body: new URLSearchParams({
-        grant_type: "refresh_token",
-        refresh_token: required("DROPBOX_AET_App_REFRESH_TOKEN"),
-        client_id: required("DROPBOX_AET_App_KEY"),
-        client_secret: required("DROPBOX_AET_App_SECRET"),
-      }),
-      signal: AbortSignal.timeout(20000),
-    });
-    if (!response.ok) throw new Error("dropbox_auth_failed");
-    const value = await response.json();
-    cache = {
-      token: value.access_token,
-      expires: Date.now() + (value.expires_in - 120) * 1000,
-    };
-  }
-  return {
-    Authorization: "Bearer " + cache.token,
-    "Dropbox-API-Path-Root": JSON.stringify({
-      ".tag": "namespace_id",
-      namespace_id: required("DROPBOX_AET_App_NAMESPACE_ID"),
-    }),
-  };
+import type { TransactionSql } from 'postgres';
+import { required } from './config';
+import { clientForOffice, requireEnabled } from '../dropbox/server';
+import { contextFor } from '../dropbox/application';
+import { resolveStorage } from '../dropbox/storage';
+import { basePathFor } from '../dropbox/paths';
+import { offices, safeSegment, type Office, type ApplicationKind } from '../dropbox/shared';
+
+/** New pilot files use the same application folders as Status and CRM.
+ * Original names remain in file metadata; a UUID avoids overwriting another upload.
+ * Unreleased formal reports stay in a non-listed child directory. */
+export async function filePath(row: Record<string, string | null>, kind: ApplicationKind, fileId: string, name: string, report = false, tx?: TransactionSql) {
+  const context = contextFor(row, kind);
+  const storage = await resolveStorage(context, tx);
+  return `${storage.write.path}/${report ? '_reports/' : ''}${safeSegment(fileId)}-${safeSegment(name)}`;
 }
-export function filePath(applicationId: string, id: string, ext: string) {
-  const root = required("PREEVAL_DROPBOX_ROOT");
-  if (!root.includes("AET-PreEvaluation-Test"))
-    throw new Error("An isolated Dropbox test directory is required.");
-  return `${root}/${applicationId}/${id}.${ext}`;
+export function officeForStoredPath(path: string): Office {
+  const oldRoot = required('PREEVAL_DROPBOX_ROOT');
+  if (oldRoot.includes('AET-PreEvaluation-Test') && path.startsWith(oldRoot + '/')) {
+    path.slice(oldRoot.length + 1).split('/').forEach(safeSegment);
+    return 'Miami';
+  }
+  for (const office of offices) {
+    const prefix = `${basePathFor(office)}/${office}/`;
+    if (!path.startsWith(prefix)) continue;
+    const parts = path.slice(prefix.length).split('/');
+    if ((parts.length !== 2 && !(parts.length === 3 && parts[1] === '_reports')) ||
+      !/ - [a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(parts[0])) break;
+    parts.forEach(safeSegment);
+    return office;
+  }
+  throw new Error('invalid_file_path');
 }
 export async function uploadFile(path: string, data: Buffer) {
-  const response = await fetch(
-    "https://content.dropboxapi.com/2/files/upload",
-    {
-      method: "POST",
-      headers: {
-        ...(await headers()),
-        "Content-Type": "application/octet-stream",
-        "Dropbox-API-Arg": JSON.stringify({
-          path,
-          mode: "overwrite",
-          autorename: false,
-          mute: true,
-        }),
-      },
-      body: new Uint8Array(data),
-      signal: AbortSignal.timeout(90000),
-    },
-  );
-  if (!response.ok) throw new Error("dropbox_upload_failed");
-  return response.json();
+  requireEnabled();
+  const dbx = await clientForOffice(officeForStoredPath(path));
+  return (await dbx.filesUpload({ path, contents: data, mode: { '.tag': 'overwrite' }, autorename: false, mute: true })).result;
 }
+/** The caller first authorizes the application/file row. Read its saved path,
+ * including historical isolated-pilot paths; never rebuild it from current names. */
 export async function downloadFile(path: string) {
-  if (!path.startsWith(required("PREEVAL_DROPBOX_ROOT") + "/"))
-    throw new Error("invalid_file_path");
-  const response = await fetch(
-    "https://content.dropboxapi.com/2/files/download",
-    {
-      method: "POST",
-      headers: {
-        ...(await headers()),
-        "Dropbox-API-Arg": JSON.stringify({ path }),
-      },
-      signal: AbortSignal.timeout(60000),
-    },
-  );
-  if (!response.ok) throw new Error("dropbox_download_failed");
-  return Buffer.from(await response.arrayBuffer());
+  requireEnabled();
+  const dbx = await clientForOffice(officeForStoredPath(path));
+  const result = await dbx.filesDownload({ path });
+  return Buffer.from((result.result as unknown as { fileBinary: Buffer }).fileBinary);
 }

@@ -100,7 +100,7 @@ export async function application(id: string, staff = false) {
 }
 export async function addFile(id: string, file: File, actor: string) {
   const [app] =
-    await db()`select status from ${table("preeval.applications")} where id=${id}`;
+    await db()`select * from ${table("preeval.applications")} where id=${id}`;
   if (!app || app.status === "cancelled")
     throw new AppError("application_cancelled", 409);
   const data = Buffer.from(await file.arrayBuffer());
@@ -124,15 +124,7 @@ export async function addFile(id: string, file: File, actor: string) {
     )
       throw new AppError("file_limit");
     const fileId = existing?.id || randomUUID(),
-      path = filePath(
-        id,
-        fileId,
-        file.type === "application/pdf"
-          ? "pdf"
-          : file.type === "image/png"
-            ? "png"
-            : "jpg",
-      );
+      path = existing?.dropbox_path || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
     const [row] =
       await tx`insert into ${table("preeval.files")}(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},${name},${file.type},${data.length},${digest},${path})
       on conflict(application_id,sha256) do update set state='uploading',created_at=now() returning *`;

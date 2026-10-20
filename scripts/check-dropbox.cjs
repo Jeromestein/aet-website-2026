@@ -55,11 +55,18 @@ class Dropbox {
   async filesListFolderContinue(args) { assert.equal(args.cursor, 'server-cursor'); return { result: { entries: stored.slice(1), has_more: false } }; }
   async filesDownload() { return { result: { fileBinary: Buffer.from('image fixture') } }; }
 }
-const dependencies = { './shared': shared, dropbox: { Dropbox } };
+const paths = load('lib/dropbox/paths.ts', { './shared': shared });
+const locations = new Map();
+const resolveStorage = async context => {
+ const key = context.kind + ':' + context.id;
+ if (!locations.has(key)) locations.set(key, paths.initialStorage(context));
+ return locations.get(key);
+};
+const dependencies = { './shared': shared, './paths': paths, './storage': { resolveStorage }, dropbox: { Dropbox } };
 const server = load('lib/dropbox/server.ts', dependencies);
 const coldServer = () => load('lib/dropbox/server.ts', dependencies);
-const http = load('lib/dropbox/http.ts', { './shared': shared, './server': server });
-const application = load('lib/dropbox/application.ts', { './shared': shared, './server': server });
+const http = load('lib/dropbox/http.ts', { './shared': shared, './server': server, './paths': paths });
+const application = load('lib/dropbox/application.ts', { './shared': shared, './server': server, './paths': paths });
 const routes = Object.fromEntries(['access', 'upload', 'chunked-upload', 'viewFilesListFolder'].map(route => [route, load(`app/api/dropbox/${route}/route.ts`, { '@/lib/dropbox/server': server, '@/lib/dropbox/shared': shared, '@/lib/dropbox/http': http, '@/lib/dropbox/application': application })]));
 const statusRoute = load('app/api/application-status/route.ts', { '@/lib/dropbox/application': application, '@/lib/dropbox/http': http });
 const statusDocuments = load('lib/customer-status/documents.ts', { '@/lib/dropbox/shared': shared, '@/lib/dropbox/server': server, '@/lib/dropbox/application': application });
@@ -116,8 +123,9 @@ async function main() {
   await rejects(() => server.continueUpload(liveContext, {action:'cancel',uploadKey:previewUpload.uploadKey}), 'access');
   await server.continueUpload(previewContext, {action:'cancel',uploadKey:previewUpload.uploadKey});
 
-  const pre = { ...context, kind: 'pre-evaluation', office: 'Miami', folderKey: 'Case.Email@example.test' };
-  assert.ok(server.folderPath(pre).endsWith('Synthetic Test - Case.Email@example.test'));
+  const pre = { ...context, kind: 'pre-evaluation', office: 'Miami', folderKey: context.id, legacyFolderKey: 'Case.Email@example.test' };
+  assert.ok(server.folderPath(pre).endsWith('Synthetic Test - ' + context.id));
+  assert.ok(paths.initialStorage(pre).reads[1].path.endsWith('Synthetic Test - Case.Email@example.test'));
   delete env.DROPBOX_AET_App_East_KEY;
   await rejects(() => server.clientForOffice('Boston'), 'unavailable');
   env.DROPBOX_AET_App_East_KEY = 'restored';
@@ -157,13 +165,14 @@ async function main() {
   assert.equal([...sessions.values()].at(-1).closed, true, 'Cancel recovers acknowledged offset');
   const page = await server.listFiles(context);
   assert.equal((await server.listFiles(context, page.nextCursor)).files.length, stored.length - 1);
-  await rejects(() => server.listFiles({ ...context, folderKey: 'other' }, page.nextCursor), 'access');
+  await rejects(() => server.listFiles({ ...context, id: '00000000-0000-4000-8000-000000000002' }, page.nextCursor), 'access');
   const row = { id: context.id, email: 'Case.Email@example.test', first_name: 'Synthetic', last_name: 'Test', office: 'Boston', submitted_at: context.submittedAt, created_at: context.submittedAt, status: 'submitted', payment_status: 'paid', paid_at: context.submittedAt };
   rows = [row];
   let access = await application.applicationAccess({ applicationId: context.id, kind: 'evaluation', email: row.email.toLowerCase() });
   assert.equal(server.unseal(access.token, 'access').data.office, 'Boston');
   access = await application.applicationAccess({ applicationId: context.id, kind: 'pre-evaluation', email: row.email });
-  assert.equal(server.unseal(access.token, 'access').data.folderKey, row.email);
+  assert.equal(server.unseal(access.token, 'access').data.folderKey, row.id);
+  assert.equal(server.unseal(access.token, 'access').data.legacyFolderKey, row.email);
   assert.ok(fetches.at(-1).url.includes('purpose=eq.degree-equivalency'));
   await rejects(() => application.applicationAccess({ applicationId: context.id, kind: 'evaluation', email: 'wrong@example.test' }), 'access');
   rows = [];

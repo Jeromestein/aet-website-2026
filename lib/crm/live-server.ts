@@ -1,3 +1,5 @@
+import { resolveStorage } from '../dropbox/storage';
+import { contextFor } from '../dropbox/application';
 import 'server-only';
 import {completionFor} from './completion';
 import type postgres from 'postgres';
@@ -67,7 +69,9 @@ export async function changeInTransaction(tx:Tx,kind:LiveKind,id:string,raw:unkn
   if(kind==='payment'||!statusAllowed(r.status,summary.payment_status,input.status))throw new AppError('invalid_transition',409);
   changes={status:input.status};
  }else if(input.action==='office'){
-  if(kind!=='formal'&&kind!=='external')throw new AppError('unsupported_action',400);scoped(staff,input.office);changes={office:input.office};
+  if(kind!=='formal'&&kind!=='external')throw new AppError('unsupported_action',400);scoped(staff,input.office);
+  if(kind==='formal' && r.office) await resolveStorage(contextFor({...r,submitted_at:timestamp(r.submitted_at),created_at:timestamp(r.created_at)},'evaluation'));
+  changes={office:input.office};
  }else if(input.action==='amount'){
   if(kind!=='formal'||r.status!=='submitted'||r.payment_status==='paid'||r.payment_status==='refunded')throw new AppError('quote_locked',409);
   changes={due_amount:input.amount===null?null:(input.amount/100).toFixed(2)};

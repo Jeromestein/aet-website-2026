@@ -1,3 +1,5 @@
+import { resolveStorage } from '../dropbox/storage';
+import { contextFor } from '../dropbox/application';
 import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import { db, table } from '../preeval/db';
@@ -40,6 +42,7 @@ export async function saveIntake(raw:unknown) {
     row.additional_services_quantity.extra_copy=data.evaluationDelivery.extraCopies;
     row.service_type.websiteQuote={version:2,...quote,educationIds:educations.map(e=>e.id),selectedEducationIds:Object.fromEntries(['document','course'].map(key=>[key,data.evaluationRequest.services[key as 'document'|'course'].educationIndexes.map(index=>educations[index].id)]))};
     await tx`insert into ${table('public.fce_applications')} ${tx({...row,id,service_type:tx.json(row.service_type as never),additional_services_quantity:tx.json(row.additional_services_quantity),submitted_at:new Date().toISOString()})}`;
+    await resolveStorage(contextFor({...row,id,submitted_at:new Date().toISOString()} as never,'evaluation'),tx);
     for(const education of educations) await tx`insert into ${table('public.fce_educations')} ${tx(education)}`;
     await tx`insert into ${table('evaluation.intake_emails')}(application_id,recipient) values(${id},${TEST_RECIPIENT})`;
     await tx`insert into ${table('evaluation.audit')}(application_id,actor,action,detail) values(${id},'customer','intake.submitted',${tx.json({version:2,preview:true})})`;

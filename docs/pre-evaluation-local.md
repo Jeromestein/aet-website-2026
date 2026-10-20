@@ -4,14 +4,17 @@ Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complet
 local pre-evaluation workflow, not a production cutover or formal-evaluation
 migration. The existing AET App remains operational.
 
-## Current cloud preview — October 15, 2026
+## Current cloud preview — updated October 20, 2026
 
 The current `aet-website-2026-dev` preview on **3022** connects directly to the
 existing cloud Supabase project using restricted private preview schemas.
 **Docker is not required.** The owner already runs the Next development server.
 Do not start the local database, Stripe listener or external worker for this mode.
-Mail, payments, file-storage calls and AI processing are paused during business
-permission acceptance. Employee migration and staff cutover remain disabled.
+The older pilot payment, email-worker and AI external-service guards remain in
+place. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
+share the Status/CRM storage integration. The newer formal intake has its own
+confirmation sender and recorded test delivery; mail is not globally disabled.
+Employee migration and staff cutover remain disabled.
 
 See [the active configuration and acceptance procedure](staff-auth.md#cloud-business-preview).
 The setup below documents the earlier optional local-database/service pilot;
@@ -173,9 +176,14 @@ links remain compatible; new customer messages use the reusable ID URL.
 Cross-origin mutations are rejected; submission, lookup, token, email and payment
 actions are limited.
 
-Files are private Dropbox objects under
-`/Team Files/WebsitesDev/AET-PreEvaluation-Test`. Downloads pass through the
-authorized backend. PDF/JPEG/PNG signatures and a 20 MB limit are checked, with
+New pre-evaluation files are private Dropbox objects under
+`/Team Files/WebsitesDev/Miami/{applicant full name} - {application ID}`; FCE uses
+the same folder rule in its assigned office/account. The actual location is
+saved, and per-file paths remain authoritative for reads/retries. Historical
+`/Team Files/WebsitesDev/AET-PreEvaluation-Test/...` files and legacy email folders
+remain compatible. See [Dropbox storage rules and current verification](dropbox.md).
+Downloads pass through the authorized backend. PDF/JPEG/PNG signatures and a
+20 MB limit are checked, with
 five files per application. Identical uploads are deduplicated; interrupted
 uploads can be retried after their two-minute lease. PDF processing permits ten
 pages per file and twenty total image pages. An oversized/encrypted/unreadable

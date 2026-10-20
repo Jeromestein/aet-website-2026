@@ -1,20 +1,17 @@
 import 'server-only';
+import { resolveStorage } from './storage';
+import { applicationFolder, initialStorage, type DocumentIdentity } from './paths';
 import { createCipheriv, createDecipheriv, createHash, hkdfSync, randomBytes } from 'node:crypto';
 import { Dropbox, type files } from 'dropbox';
 import { accountForOffice, CHUNK_SIZE, DocumentError, HASH_BLOCK_SIZE, safeSegment, validateFile, type Account, type ApplicationKind, type FileEntry, type FilePage, type Office } from './shared';
 
-export type ApplicationContext = {
-  id: string; kind: ApplicationKind; office: Office; fullName: string;
-  folderKey: string; submittedAt: string;
-  canUpload?: boolean;
-};
+export type ApplicationContext = DocumentIdentity;
 type UploadContext = {
   application: ApplicationContext; sessionId: string; fileName: string; mime: string;
   size: number; offset: number; contentHash: string;
 };
 type Envelope<T> = { purpose: string; expires: number; data: T };
 const lifetime = 2 * 60 * 60 * 1000;
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export function documentsEnabled() { return process.env.DROPBOX_DOCUMENTS_ENABLED === 'true'; }
 export function requireEnabled() {
@@ -73,14 +70,9 @@ export function contextFromRequest(request: Request) {
 export function requireUploadAllowed(context: ApplicationContext) {
   if (context.canUpload === false) throw new DocumentError('readOnly', 403);
 }
-export function folderPath(context: ApplicationContext) {
-  const { basePath } = accountConfig(accountForOffice(context.office));
-  return `${basePath}/${context.office}/${safeSegment(`${context.fullName} - ${context.folderKey}`)}`;
-}
+export const folderPath = applicationFolder;
 export function laFolderPath(context: ApplicationContext) {
-  const date = /^(\d{4})-(\d{2})-\d{2}/.exec(context.submittedAt);
-  if (!date || !months[Number(date[2]) - 1]) throw new DocumentError('invalid');
-  return `${accountConfig('AET_App').laPath}/${date[1]}/${months[Number(date[2]) - 1]}/${safeSegment(`${context.fullName} - ${context.folderKey}`)}`;
+  return initialStorage(context).archivePath;
 }
 // This cache is an optimization only. A cold instance can always refresh.
 const tokenCache = new Map<Account, { token: string; until: number; fingerprint: string }>();
@@ -150,9 +142,10 @@ function fileEntry(file: files.FileMetadata): FileEntry {
 }
 async function finishResult(dbx: Dropbox, context: ApplicationContext, file: files.FileMetadata) {
   let archive: 'not-required' | 'saved' | 'failed' = 'not-required';
-  if (context.office === 'Los Angeles') {
+  const storage = await resolveStorage(context);
+  if (storage.archivePath) {
     try {
-      await dbx.filesCopyV2({ from_path: file.id, to_path: `${laFolderPath(context)}/${file.name}`, autorename: true });
+      await dbx.filesCopyV2({ from_path: file.id, to_path: `${storage.archivePath}/${file.name}`, autorename: true });
       archive = 'saved';
     } catch { archive = 'failed'; }
   }
@@ -163,11 +156,12 @@ export async function uploadSmall(context: ApplicationContext, file: File) {
   if (file.size > CHUNK_SIZE) throw new DocumentError('tooLarge', 413);
   const bytes = Buffer.from(await file.arrayBuffer());
   checkHeader(file.name, bytes);
-  const dbx = await clientForOffice(context.office);
+  const storage = await resolveStorage(context);
+  const dbx = await clientForOffice(storage.write.office);
   let result;
   try {
     result = await dbx.filesUpload({
-      path: `${folderPath(context)}/${file.name}`, contents: bytes,
+      path: `${storage.write.path}/${file.name}`, contents: bytes,
       mode: { '.tag': 'add' }, autorename: true, content_hash: dropboxHash(bytes),
     });
   } catch { throw new DocumentError('uncertain', 502); }
@@ -179,7 +173,8 @@ export async function startUpload(context: ApplicationContext, data: Record<stri
     typeof contentHash !== 'string' || !/^[a-f0-9]{64}$/.test(contentHash)) throw new DocumentError('invalid');
   validateFile(fileName, fileSize, mime);
   if (fileSize <= CHUNK_SIZE) throw new DocumentError('invalid');
-  const dbx = await clientForOffice(context.office);
+  const storage = await resolveStorage(context);
+  const dbx = await clientForOffice(storage.write.office);
   const session = await dbx.filesUploadSessionStart({ close: false, contents: Buffer.alloc(0) });
   const upload: UploadContext = { application: context, sessionId: session.result.session_id, fileName, size: fileSize, mime, offset: 0, contentHash };
   return { success: true, uploadKey: seal(accountForOffice(context.office), 'upload', upload, expires), offset: 0 };
@@ -189,7 +184,8 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
   const upload = envelope.data;
   if (JSON.stringify(upload.application) !== JSON.stringify(context)) throw new DocumentError('access', 403);
   if (!['append', 'finish', 'cancel'].includes(String(data.action))) throw new DocumentError('invalid');
-  const dbx = await clientForOffice(context.office);
+  const storage = await resolveStorage(context);
+  const dbx = await clientForOffice(storage.write.office);
   const cursor = { session_id: upload.sessionId, offset: upload.offset };
   if (data.action === 'cancel') {
     // Closing without a finish never commits a file. Cancellation may race with
@@ -223,7 +219,7 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
   try {
     result = await dbx.filesUploadSessionFinish({
       cursor, contents: Buffer.alloc(0),
-      commit: { path: `${folderPath(context)}/${upload.fileName}`, mode: { '.tag': 'add' }, autorename: true },
+      commit: { path: `${storage.write.path}/${upload.fileName}`, mode: { '.tag': 'add' }, autorename: true },
     });
   } catch { throw new DocumentError('uncertain', 502); }
   if (result.result.size !== upload.size || result.result.content_hash !== upload.contentHash) {
@@ -235,38 +231,59 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
   return finishResult(dbx, context, result.result);
 }
 export async function listFiles(context: ApplicationContext, cursor?: string | null): Promise<FilePage> {
-  const dbx = await clientForOffice(context.office);
-  let response;
-  try {
-    if (cursor) {
-      const saved = unseal<{ path: string; cursor: string }>(cursor, 'cursor');
-      if (saved.account !== accountForOffice(context.office) || saved.data.path !== folderPath(context)) throw new DocumentError('access', 403);
-      response = await dbx.filesListFolderContinue({ cursor: saved.data.cursor });
-    } else response = await dbx.filesListFolder({ path: folderPath(context), limit: 100 });
-  } catch (error) {
-    if (!cursor && errorSummary(error).startsWith('path/not_found')) return { files: [], nextCursor: null };
-    throw error;
+  const storage = await resolveStorage(context);
+  const binding = JSON.stringify({ id: context.id, kind: context.kind, reads: storage.reads });
+  let index = 0, upstream: string | null = null;
+  if (cursor) {
+    const saved = unseal<{ binding: string; index: number; cursor: string | null }>(cursor, 'cursor');
+    if (saved.account !== accountForOffice(context.office) || saved.data.binding !== binding ||
+        !Number.isInteger(saved.data.index) || saved.data.index < 0 || saved.data.index >= storage.reads.length) throw new DocumentError('access', 403);
+    index = saved.data.index; upstream = saved.data.cursor;
   }
-  const result = response.result;
-  return {
-    files: result.entries.filter((entry): entry is files.FileMetadataReference => entry['.tag'] === 'file').map(fileEntry),
-    nextCursor: result.has_more ? seal(accountForOffice(context.office), 'cursor', { path: folderPath(context), cursor: result.cursor }) : null,
-  };
+  while (index < storage.reads.length) {
+    const location = storage.reads[index];
+    const dbx = await clientForOffice(location.office);
+    let result;
+    try {
+      result = (upstream ? await dbx.filesListFolderContinue({ cursor: upstream })
+        : await dbx.filesListFolder({ path: location.path, limit: 100 })).result;
+    } catch (error) {
+      if (!upstream && errorSummary(error).startsWith('path/not_found')) { index++; continue; }
+      throw error;
+    }
+    const next = result.has_more ? { binding, index, cursor: result.cursor }
+      : index + 1 < storage.reads.length ? { binding, index: index + 1, cursor: null } : null;
+    return { files: result.entries.filter((entry): entry is files.FileMetadataReference => entry['.tag'] === 'file').map(fileEntry),
+      nextCursor: next ? seal(accountForOffice(context.office), 'cursor', next) : null };
+  }
+  return { files: [], nextCursor: null };
 }
-// Retain the legacy pre-evaluation image reader for server-side consumers only.
+/** Download only an ID discovered in this application's authorized folders. */
+export async function readDocument(context: ApplicationContext, fileId: string): Promise<Buffer> {
+  const storage = await resolveStorage(context);
+  let cursor: string | null = null;
+  do {
+    const page = await listFiles(context, cursor);
+    const file = page.files.find(file => file.id === fileId);
+    if (file) {
+      if (file.size > 50 * 1024 * 1024) throw new DocumentError('tooLarge', 413);
+      const location = storage.reads.find(location => file.pathDisplay.slice(0, file.pathDisplay.lastIndexOf('/')).toLowerCase() === location.path.toLowerCase());
+      if (!location) throw new DocumentError('access', 403);
+      const dbx = await clientForOffice(location.office);
+      const result = await dbx.filesDownload({ path: file.id });
+      return Buffer.from((result.result as files.FileMetadata & { fileBinary: Buffer }).fileBinary);
+    }
+    cursor = page.nextCursor;
+  } while (cursor);
+  throw new DocumentError('access', 403);
+}
 export async function readDiplomaImage(context: ApplicationContext): Promise<string | null> {
   if (context.kind !== 'pre-evaluation') throw new DocumentError('invalid');
   let cursor: string | null = null;
   do {
     const page = await listFiles(context, cursor);
     const image = page.files.find(file => /\.(png|jpe?g|gif|bmp|webp)$/i.test(file.name));
-    if (image) {
-      if (image.size > 50 * 1024 * 1024) throw new DocumentError('tooLarge', 413);
-      const dbx = await clientForOffice(context.office);
-      const result = await dbx.filesDownload({ path: image.id });
-      const binary = (result.result as files.FileMetadata & { fileBinary: Buffer }).fileBinary;
-      return Buffer.from(binary).toString('base64');
-    }
+    if (image) return (await readDocument(context, image.id)).toString('base64');
     cursor = page.nextCursor;
   } while (cursor);
   return null;

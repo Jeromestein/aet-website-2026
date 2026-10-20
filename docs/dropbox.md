@@ -11,9 +11,11 @@ and pre-evaluation diploma reader in the local `aet-app` repository.
   applicant does not re-enter an ID or email. The page retains saved service,
   delivery, payment, education, and confirmation-email details.
 - `source=preview` selects the isolated intake database reader, not a different
-  Dropbox root. Status uploads and CRM reads use the same legacy folder rule:
-  `{account base}/{office}/{fullName} - {applicationId}`. LA archive copies also
-  follow the legacy rule. Previously uploaded files are not automatically moved.
+  Dropbox root. FCE and pre-evaluation now share the write rule:
+  `{account base}/{office}/{applicant full name} - {applicationId}/{file name}`.
+  Status, CRM and the older local pilots resolve the same saved location. The
+  application ID distinguishes repeat applications from the same person.
+  Previously uploaded customer files are not moved, renamed or deleted.
 - The default status source keeps the existing live/preview database selection.
   For live records, archive dates use `submitted_at`, with `created_at` as the
   fallback for historical records. Unknown IDs retain the existing error state.
@@ -40,14 +42,49 @@ and pre-evaluation diploma reader in the local `aet-app` repository.
 - Dropbox add/autorename is retained. Different contents with the same name
   produce a renamed file. Identical contents can return the existing file.
   See the [Dropbox write-mode specification](https://github.com/dropbox/dropbox-api-spec/blob/main/files.stone).
-- Pre-evaluation uses Miami and the original stored email as the folder key,
-  preserving spelling for the legacy standalone lookup. This does not replace
-  dev's existing isolated pre-evaluation pipeline. `readDiplomaImage` retains server-side retrieval of the
-  first image, including paginated listings. The native fetch adapter supports
-  the legacy SDK's download response interface.
+- New pre-evaluation files use Miami and the application ID. For historical
+  records, reads include both the ID folder and the old
+  `{fullName} - {original stored email}` folder, preserving email spelling.
+  New applications pin an ID-only location at creation, so a repeat application
+  does not inherit another application's old email-folder access.
+- `readDocument` reads only a file ID listed in this application's authorized
+  folders. `readDiplomaImage` retains first-image retrieval across paginated
+  historical and new listings. The native fetch adapter supports the legacy
+  SDK's download response interface. This change does not enable AI processing.
 - `FileManager` has a `showPreviewLink` option for a trusted staff host.
   Dropbox preview itself still requires the employee's Dropbox access.
   This option is not enabled by a customer-controlled query parameter.
+
+## Saved locations and historical compatibility
+
+`evaluation.document_locations` stores the office/account, canonical write path,
+allowed read paths and optional LA archive path for each `(application ID, kind)`.
+Cloud preview maps this table to `aet_preview_evaluation.document_locations`.
+New applications pin their location in the creation transaction. Historical
+records are registered on first document access; a live FCE office reassignment
+also pins the existing location before changing an already assigned office.
+Subsequent name/office edits never rebuild the saved paths. If an old record was
+renamed before registration, its original path must be supplied from trustworthy
+history; this does not discover arbitrary previous folder names.
+
+The registry permits server-side SELECT/INSERT only, with RLS and no browser-role
+access. Concurrent first access uses one saved location. Application authorization
+still happens before resolution. No foreign key is used because the registry also
+covers live legacy records that are not copied into preview application tables.
+The registry contains references; file bytes remain in Dropbox.
+
+Historical email folders are read-only fallback locations for this new code.
+New writes always use the ID folder. Listings page through both locations; signed
+continuation tokens bind to the application ID and kind, even when old email
+folders were shared by repeat applications in the legacy system.
+
+The older formal/pre-evaluation pilot keeps its stored per-file `dropbox_path`.
+Existing `/Team Files/WebsitesDev/AET-PreEvaluation-Test/...` paths remain readable,
+and retries reuse their recorded paths. New pilot files use the unified folder
+with a UUID-prefixed filename to prevent overwrites; original names remain in
+metadata. Formal pilot reports go under `_reports/`, which the customer document
+list does not recurse into. Report release remains controlled by its existing
+workflow. Status uploads retain their original names and Dropbox autorename.
 
 ## Serverless and access boundaries
 
@@ -61,7 +98,8 @@ refresh results are cached as an optimization.
 The optional standalone documents access endpoint matches an existing UUID and contact email against
 `fce_applications`, or `aet_core_applications` with purpose
 `degree-equivalency`. It reads only the fields needed to derive the original
-folder. It does not create or update application records. This retains the
+folder. It does not create or update business application records; document
+operations can initialize the private location registry described above. This retains the
 legacy application-ID access model with an additional email match for that
 standalone form. The status endpoint deliberately accepts the UUID alone,
 matching the old status-link flow requested by the owner. Neither is a login
@@ -120,9 +158,25 @@ application environment into server-only hosting environment variables.
 Use the original namespaces and access scopes. Also supply the existing
 application project's URL and anon key for the optional legacy standalone lookup under
 `AET_APPLICATIONS_SUPABASE_URL` and `AET_APPLICATIONS_SUPABASE_ANON_KEY`.
-No service-role key or database/RLS changes are needed. Set
-`DROPBOX_DOCUMENTS_ENABLED=true` only when configured. `.env.local` is ignored;
-Git does not publish its values.
+Dropbox calls do not need a Supabase service-role key. Location resolution uses
+the existing restricted server database connection. Apply
+`supabase/migrations/20261020230256_application_document_locations.sql` before
+running this version. For the current private preview (or the configured local
+pilot), run:
+
+```sh
+node --env-file=.env.local --import tsx scripts/dropbox/migrate-locations.mts
+```
+
+The script checks the configured target, maps the preview schema and verifies
+RLS/browser-role denial. It was applied only to the private preview schema in this
+run; it does not migrate customer data or change legacy business tables.
+
+Set `DROPBOX_DOCUMENTS_ENABLED=true` only when configured. This flag now also gates
+file upload/download in the older pilots; their payment, email-worker and AI
+external-service guards are unchanged. Keep `PREEVAL_DROPBOX_ROOT` configured for
+historical pilot-path compatibility. `.env.local` is ignored; Git does not publish
+its values.
 
 Each chunk request is roughly 4 MiB plus small JSON overhead. The server limits
 it to 4 MiB + 32 KiB and ordinary multipart uploads to 3 MiB + 64 KiB.
@@ -132,6 +186,39 @@ platform's body/time limits and both office accounts after deployment.
 Restart a locally managed server after environment changes.
 
 ## Verification
+
+### Unified paths — October 20, 2026
+
+The current dev code passed 30 real integration assertions against synthetic
+records/files: FCE and pre-evaluation uploads, byte-for-byte reads, historical
+email/pilot paths, chunked pre-evaluation upload, repeat-application isolation,
+cross-application read/cursor rejection, concurrent initialization, stable paths
+across name/office changes, pilot metadata/retry deduplication, and report hiding.
+Only generated fixtures were cleaned up, using recoverable Dropbox deletion.
+No customer file was changed; no email, payment or AI call was made.
+
+```sh
+DROPBOX_LIVE_VERIFY=1 node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/dropbox/verify-locations.mts
+```
+
+This opt-in script requires the isolated cloud-preview database and a localhost
+server. It creates uniquely identified synthetic folders, refuses to overwrite
+existing fixture paths, and cleans up its own records/files.
+
+The main Dropbox app passed actual uploads/downloads. The East app passed upload
+and listing, but download returned a provider error for missing
+`files.content.read`. Boston/New York download acceptance remains open until that
+app has the scope and its authorization is renewed as required. No OAuth settings
+were changed by this work.
+
+The existing 3022 server also passed an in-app-browser Status upload, file-list
+refresh and reload at 1280px and 390px. The uploaded bytes were verified through
+`readDocument`, then the fixture was removed. Screenshots:
+`output/playwright/dropbox-path-desktop.png` and
+`output/playwright/dropbox-path-mobile.png`. TypeScript, 128 focused tests and
+`node scripts/check-dropbox.cjs` passed. No build or deployment was run.
+
+### Earlier module acceptance
 
 `node scripts/check-dropbox.cjs` performs offline regression checks without
 network access or local credentials. It covers account isolation, token

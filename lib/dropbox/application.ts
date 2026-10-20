@@ -1,6 +1,6 @@
 import 'server-only';
 import { accountForOffice, DocumentError, safeSegment, type ApplicationKind, type Office } from './shared';
-import { accountConfig, folderPath, seal, type ApplicationContext } from './server';
+import { folderPath, seal, type ApplicationContext } from './server';
 
 async function lookup(applicationId: unknown, kind: unknown) {
   if (typeof applicationId !== 'string' || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(applicationId) ||
@@ -36,13 +36,16 @@ export function contextFor(row: Record<string, string | null>, kind: Application
     id: safeSegment(row.id), kind,
     office: kind === 'evaluation' ? row.office as Office : 'Miami',
     fullName: safeSegment(fullName),
-    // Preserve the original stored email spelling; Dropbox paths are historical.
-    folderKey: safeSegment(kind === 'evaluation' ? row.id : row.email),
+    folderKey: safeSegment(row.id),
+    // Unregistered legacy records can still read their historical email folder.
+    // New applications pin an ID-only location in their creation transaction.
+    ...(kind === 'pre-evaluation' && row.email
+      ? { legacyFolderKey: safeSegment(row.email) } : {}),
     submittedAt: (kind === 'evaluation' ? row.submitted_at || row.created_at : row.created_at) || '',
     canUpload: kind === 'pre-evaluation' || ['submitted', 'processing'].includes(row.status?.toLowerCase() ?? ''),
   };
-  const account = accountForOffice(context.office);
-  accountConfig(account);
+  // Persisting the identity must not require Dropbox OAuth credentials.
+  // Signing access and provider operations validate account configuration.
   folderPath(context);
   if (typeof context.submittedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(context.submittedAt)) throw new DocumentError('unavailable', 503);
   return context;

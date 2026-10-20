@@ -73,8 +73,8 @@ export async function addFile(id: string, file: File, kind: 'document' | 'report
     const [{ count }] = await tx`select count(*)::int from ${table("evaluation.files")} where application_id=${id} and kind=${kind} and state<>'failed'`;
     if (count >= (kind === 'report' ? 10 : 20) && !old) throw new AppError('file_limit');
     const fileId = old?.id ?? randomUUID();
-    const path = filePath('formal-' + id, fileId, file.type === 'application/pdf' ? 'pdf' : file.type === 'image/png' ? 'png' : 'jpg');
     const name = file.name.replace(/[\\/\x00-\x1f\x7f]/g, '_').slice(0, 180) || 'document';
+    const path = old?.dropbox_path || await filePath({ id, office: app.data.client.office, first_name: app.data.evaluee.first, middle_name: app.data.evaluee.middle, last_name: app.data.evaluee.last, submitted_at: new Date(app.created_at).toISOString() }, 'evaluation', fileId, name, kind === 'report', tx);
     const [saved] = await tx`insert into ${table("evaluation.files")}(id,application_id,kind,name,mime_type,bytes,sha256,dropbox_path,input_version)
       values(${fileId},${id},${kind},${name},${file.type},${data.length},${digest},${path},${version})
       on conflict(application_id,kind,sha256,input_version) do update set state='uploading',created_at=now() returning *`;

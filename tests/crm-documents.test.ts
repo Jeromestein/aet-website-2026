@@ -51,7 +51,7 @@ describe('staff document boundaries', () => {
   it('authorizes preliminary records before using their historical Miami/email folder', async () => {
     await staffDocuments('preeval', id, 'live');
     expect(liveDetail).toHaveBeenCalledWith('preeval', id, staff);
-    expect(listFiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'pre-evaluation', office: 'Miami', folderKey: 'Original@Example.com' }), undefined);
+    expect(listFiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'pre-evaluation', office: 'Miami', folderKey: id, legacyFolderKey: 'Original@Example.com' }), undefined);
   });
   it('rejects client-supplied office/path and an invalid source', async () => {
     for (const query of ['office=Miami', 'path=/other', 'source=other']) {

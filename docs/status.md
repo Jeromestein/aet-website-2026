@@ -1,5 +1,40 @@
 # AET Implementation Status
 
+## 2026-10-20 — Unify application document storage
+
+- Updated the checklist first, then shared the applicant-name/application-ID
+  folder rule across FCE, pre-evaluation, Status/CRM and the older local pilots.
+  New applications pin the resolved location in their creation transaction.
+  Historical records pin on first document access or before a live FCE office
+  reassignment. Later name/office edits retain the saved storage account/path.
+- Preserve old pre-evaluation email-folder reads and recorded isolated-pilot
+  per-file paths. New applications do not inherit old email-folder access.
+  Retries preserve the existing file path; formal pilot reports stay under a
+  child directory excluded from the customer document list. No historical
+  customer files were moved, renamed or deleted.
+- Generated the location-registry migration through the Supabase CLI and applied
+  it only to the private `aet_preview_evaluation` schema. Verified RLS, denied
+  browser-role access and restricted runtime SELECT/INSERT. No legacy business
+  table was migrated. Deployment targets must receive the migration before code
+  rollout. Security-advisor output had no finding for the new table; existing
+  unrelated findings remain outside this scope.
+- Passed 30 real integration assertions for canonical/historical upload and
+  download, byte equality, chunking, retry deduplication, application isolation,
+  cursor binding, concurrent initialization, immutable locations and report
+  hiding. Passed 128 focused tests across 11 files, TypeScript and the offline
+  Dropbox checks.
+- The East Dropbox app can upload/list, but its provider rejected downloads for
+  missing `files.content.read`. Boston/New York reads need that external
+  permission fixed and retested; this run did not change OAuth authorization.
+- Used the owner's running 3022 server for Status upload, list refresh/reload and
+  desktop/mobile visual verification. Both sizes showed the saved file; a backend
+  download matched the source bytes. Evidence is under `output/playwright/` in
+  `dropbox-path-desktop.png` and `dropbox-path-mobile.png`.
+- Cleaned up synthetic database records and generated Dropbox folders using
+  recoverable deletion. No email, AI processing, payment, build, commit, push or
+  deployment was performed. See [Dropbox documentation](dropbox.md) for rerun
+  commands, compatibility rules and release prerequisites.
+
 ## 2026-10-20 — Reconcile dev progress
 
 - Audit baseline `40eb360`: reconcile the current checklist with route/form guards,

@@ -1,5 +1,31 @@
 # AET 2026 Website and App Migration Checklist
 
+## Application document paths — October 20, 2026
+
+Owner-approved rule: new FCE and pre-evaluation documents use
+`{account base}/{office}/{applicant name} - {application ID}/{file name}`.
+Persist the resolved storage location so later name/office edits cannot orphan
+files. Existing email-keyed pre-evaluation folders and recorded pilot file paths
+remain readable; do not move, rename or delete historical customer files.
+
+- [x] Record the unified application-folder decision before implementation.
+- [x] Share the application-ID write rule across FCE and pre-evaluation uploads.
+- [x] Preserve historical reads and pin resolved locations across profile edits.
+- [x] Verify path isolation, historical compatibility and chunked-upload behavior.
+- [x] Upload and read synthetic files through the real Dropbox integration;
+  record evidence and clean up only files created by this verification.
+- [x] Verify the shared Status upload/list UI at desktop and mobile sizes on 3022.
+- [ ] Enable `files.content.read` for the East Dropbox app and refresh its OAuth
+  authorization as required; recheck Boston/New York downloads. Upload/listing
+  work, but the provider rejected downloads for the missing scope.
+- [ ] Apply the location-registry migration in each intended deployment database
+  before deploying this code, then repeat hosted acceptance. This run applied it
+  only to the private cloud-preview schema.
+
+Evidence: 30 real integration assertions, offline Dropbox checks, focused tests,
+TypeScript, browser upload/reload, and byte-for-byte downloads. See
+[storage rules and verification](dropbox.md) and [implementation status](status.md).
+
 ## Current dev integration checkpoint — October 20, 2026
 
 Audited baseline: `dev` at `40eb360`. This section supersedes older checkpoint
