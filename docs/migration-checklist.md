@@ -1,45 +1,35 @@
 # AET 2026 Website and App Migration Checklist
 
-## Dropbox transfer to dev — October 20, 2026
+## Current dev integration checkpoint — October 20, 2026
 
-- [x] Back up both working trees and identify the existing dev status/data adapters.
-- [x] Transfer the reusable Dropbox module and preserve unrelated dev changes.
-- [x] Connect the existing status page to server-derived document access for both sources.
-- [x] Preserve legacy folders for live records; isolate preview documents from live archives.
-- [x] Verify small/chunked uploads, access restrictions and desktop/mobile on port 3022.
-- [x] Restore only this task's changes in the main checkout after verifying the transfer.
+Audited baseline: `dev` at `40eb360`. This section supersedes older checkpoint
+wording below. Checked items indicate the stated implementation or recorded
+acceptance, not production readiness. Hosted evidence is the October 20 acceptance
+at `58da862`; the subsequent three fixes were verified locally. This audit did
+not recheck the current deployment, remote refs, database or external accounts.
 
+**Current stage: the new formal-evaluation intake works through customer uploads
+and staff inspection in dev Preview. Staff processing, application-linked payment
+and report delivery are the next incomplete part of that same journey.**
 
-## Credential intake acceptance update — 2026-10-17
+See the [progress analysis and integration gaps](status.md#2026-10-20--reconcile-dev-progress)
+and [dated verification evidence](status.md). Public-site migration counts and
+older local pilots are separate milestones, not percentages of App replacement.
 
-- [x] Connect unified credential-evaluation submission, unique ID/deduplication,
-  transactional persistence, confirmation outbox and retry.
-- [x] Verify ID/link status lookup and the same services in authenticated CRM's
-  explicit isolated test-data view.
-- [x] Test success, concurrency, failure/retry, permissions and source isolation;
-  confirm two real Resend deliveries to `errplusone@gmail.com`.
-- This recipient supersedes older `tech@meiyugroup.org` test-recipient notes for
-  this credential-intake milestone only; it does not change staff authentication.
-- Storage is the existing Supabase project's `aet_preview_evaluation` and
-  `aet_preview_legacy` schemas. See [credential-intake-testing.md](credential-intake-testing.md).
-- [ ] Production cutover and subsequent upload/payment/staff-processing milestones.
-
-
-Initial inventory: September 28, 2026. Current dev checkpoint reconciled October 17, 2026
-against the current working tree, Git history and recorded local verification.
-Sources: the local legacy website, sibling AET App implementation, and the 2026
-design, navigation and page code. App replacement is tracked separately from
-the original public-page migration counts.
-
-## Current dev integration checkpoint — October 17, 2026
-
-This checkpoint supersedes earlier preview-only descriptions. Checked items
-indicate the stated implementation or recorded test milestone, not production
-readiness. Historical acceptance evidence remains in [status.md](status.md).
+| Module | Current implementation and evidence | Remaining gate |
+| --- | --- | --- |
+| Unified application | Evaluation submission, saved quote, receipt and Status handoff; hosted acceptance recorded | Pre-evaluation/translation selections do not submit through this entry |
+| Database | Canonical version-2 intake plus same-ID legacy CRM projection in isolated preview schemas | Workflow writes must keep the snapshot/projection consistent; no general cross-service application model yet |
+| Email | Real test confirmation with office CC; metadata-only delivery history and controlled retry | Real-customer routing, scheduled recovery and lifecycle notifications for the new intake |
+| Customer documents | Status lists/uploads, small and chunked files; hosted Miami acceptance recorded | Connect document metadata to staff processing/report version checks; broader hosted failure/account checks |
+| CRM | Live business records, scoped edits, Test list, shared drawers, documents and CSV | New version-2 Test intake remains read-only; live edits affect the existing business database |
+| Payments | Standalone website payment and older local application pilots have separate implementations | New intake has no enabled checkout, paid-state projection or hosted webhook integration |
+| Staff access | Native Supabase email/password account and office grants; hosted sign-in recorded | Legacy employee migration/cutover remains off |
+| Delivery and rollout | Report/address choices saved; older local pilot can release a PDF | New-intake report release, paper dispatch, production domain/data cutover and old-app retirement |
 
 ### Unified application and evaluation selection
 
-- [x] Build the localized three-step `/application` preview: client/service/office,
+- [x] Build the localized three-step `/application`: client/service/office,
   service details, and review, with draft recovery and conditional validation.
 - [x] Add required pronouns/name/education, optional birth date and wider degree
   fields; limit evaluation offices to Miami, Los Angeles and San Francisco,
@@ -50,40 +40,114 @@ readiness. Historical acceptance evidence remains in [status.md](status.md).
   and each handling office's local 1 pm payment/document cutoff.
 - [x] Add report delivery, paper copies, conditional required mailing address,
   shipping fees and the corresponding review summary.
-- [ ] Connect this new entry to persisted applications, confirmation emails and
-  the upload handoff. Its final submission remains disabled.
-- [ ] Finalize the unified application data model and its CRM mapping. Existing
-  pilots currently retain legacy-compatible business tables plus workflow tables.
+- [x] Connect formal-evaluation submission to transactional persistence, request
+  deduplication, server-priced quote, confirmation outbox and the Status handoff.
+- [x] Preserve all education records and selected-qualification associations in
+  the canonical intake; create the same-ID compatibility projection for CRM.
+- [x] Record hosted acceptance for a two-education application, draft restoration,
+  validation, saved estimate, receipt and reloadable Status lookup.
+- [ ] Connect pre-evaluation and translation submission to this unified entry.
+  Their final submission controls remain disabled.
+- [ ] Define consistent mutable workflow/payment state for version-2 intake
+  while preserving the submitted snapshot and saved prices. The current storage
+  is evaluation-specific; a general application/service-detail model is not done.
 
 ### CRM, staff and customer status
 
 - [x] Connect CRM to shared live records with office-scoped staff authorization,
   restricted edits, audit entries, detail drawers and 20-record pagination.
 - [x] Add completion estimates and canonical English-only staff routes.
+- [x] Replace staff email-link login with Supabase password sign-in and prepared
+  office membership. Record hosted native-admin sign-in; keep employee migration
+  and cutover disabled. Older email-link checkpoints below are historical.
 - [x] Restore localized formal `/status?applicationId=ID` lookup, including client,
   evaluee and linked education fields, without exposing internal notes or reports.
 - [x] Connect status-page Dropbox lists/uploads to the current application, including
   isolated intake previews, 3 MiB chunks and saved service/delivery details.
-- [ ] Connect payment execution. Payment previews retain their explicit unavailable
-  states and existing-portal links where applicable.
-- [ ] Complete new live intake, document/payment operations, customer messaging
-  and report delivery in the new CRM before retiring the previous workspace.
+- [x] Use the same server-derived legacy Dropbox folder resolver for live and Test
+  records. Preview isolates database rows, **not Dropbox accounts or folder roots**;
+  LA archive behavior is retained. Do not describe this as separate test storage.
+- [x] Connect CRM Documents, pagination, Copy ID, Status links, Payment-tab shortcut,
+  mailing indicators and filtered CSV export; record hosted list/drawer/export checks.
+- [x] Fix Test document counts, B/KB/MB sizes and upload/email instructions; verify
+  the fixes locally on desktop/mobile and with focused regression tests.
+- [ ] Verify those latest fixes on the hosted dev deployment; the recorded hosted
+  acceptance predates the fixes. Do not infer deployment from a local Git ref.
+- [ ] Add authorized, audited staff actions for new intake: review documents,
+  request missing material, confirm fees and advance status. The current Test
+  drawer is read-only and older formal-workflow endpoints explicitly reject it.
+- [ ] Connect payment execution and saved payment state to new-intake Status/CRM.
+- [ ] Connect report release/customer access and paper dispatch/tracking to new intake.
+
+### Email and payment integration
+
+- [x] Deliver new-intake confirmations to the fixed test recipient with the
+  assigned office CC; record Resend `delivered` acceptance. Do not claim mail
+  is entirely disabled in cloud preview or that no office receives a test copy.
+- [x] Retain delivery references, attempts, leases, provider ID and content hash;
+  render HTML from saved business data rather than store complete email bodies.
+- [x] Implement shared branded templates and older-pilot quote/payment email
+  events. These events are not yet connected to new intake or live CRM edits.
+- [ ] Provide scheduled outbox recovery and actionable failed-message review for
+  new intake; `after()` plus user-triggered retry is not a hosted queue schedule.
+- [ ] Connect a server-confirmed amount, application-linked Stripe test checkout,
+  hosted signed webhook, idempotent payment update and receipt to new intake.
+  Standalone `/payment` does not complete that application's payment lifecycle.
+- [ ] Verify failure/expiry/replay/reconciliation, then establish manual payment,
+  adjustment/refund and real-customer email rules before production acceptance.
 
 ### Business integration and release
 
 - [x] Retain recorded end-to-end pre-evaluation sandbox acceptance and the formal
   evaluation local pilot; these are separate from the new unified form.
-- [ ] Enable and validate production integrations. Current cloud-preview mode
-  blocks external mail delivery, Stripe, Dropbox and AI; staff cutover is off.
+- [x] Record branch-scoped Vercel dev Preview configuration and hosted acceptance
+  of native-admin CRM, new intake, confirmation mail and document upload/read.
+  Production remains a separate main deployment in that recorded verification.
+- [ ] Enable and validate production integrations. The older cloud-preview
+  pilot blocks its external-service clients; newer intake email, document APIs
+  and standalone Stripe use separate guards. Hosted AI/workers, application
+  payment callbacks and employee cutover are not established by Preview acceptance.
 - [ ] Complete automated formal notifications, paper dispatch and the translation
   order workflow.
 - [x] Integrate main through `902657b`, including its newer payment, navigation
-  and public-site changes, into dev. Verify type safety, 266 tests, localized
-  messages, mocked payment/contact checks and local browser smoke checks.
+  and public-site changes, into dev (merge `2270bf5`).
+- [ ] Integrate or reconcile main's later `71ddcf9` payment-page change. At this
+  audit, local refs show one main-only and 37 dev-only commits; no merge was run.
 - [ ] Verify the unified pre-evaluation journey from submission through files,
   payment, email records, CRM handling and customer results before expansion.
 - [ ] Complete legacy URL compatibility, domain/callback configuration, production
   acceptance and rollback preparation before replacing AET App.
+
+### Next delivery order and acceptance
+
+1. **Recheck the latest dev Preview.** Verify document counts, sizes and current
+   email/upload copy at the deployed commit. Keep the production database boundary
+   explicit during every CRM test.
+2. **Make the new intake operable by staff.** Add document readiness metadata and
+   audited, office-authorized review/quote/status actions. Acceptance: one synthetic
+   intake can request missing material and receive a confirmed quote; customer
+   Status and CRM agree after reload; cross-office and stale writes are rejected.
+3. **Close the payment loop.** Reuse appropriate tested pilot components through
+   a version-2 adapter. Acceptance: exact saved amount, one effective payment after
+   webhook replay, paid state in Status/CRM and one receipt; failure/cancellation
+   remain unpaid. Do not simply remove the current version-2 workflow guard.
+4. **Complete fulfillment and notifications.** Acceptance: approved current report
+   is released only to the eligible paid application; notification failures recover;
+   requested paper delivery has a recorded address and dispatch status.
+5. **Extend the shared entry, then cut over.** Connect the already-tested separate
+   pre-evaluation pilot, then translation; establish hosted AI/worker operation,
+   old-link compatibility, domain/data reconciliation and rollback before retirement.
+
+Fresh local audit checks: 385 tests in 32 files, TypeScript, 586 messages per locale
+(English/Chinese/Spanish), offline Dropbox/payment/contact checks. No production
+build, browser session, database write, message send or external transaction was
+performed in this documentation audit.
+
+## Historical checkpoints
+
+The sections below preserve dated decisions, old local pilots and website migration
+inventory. They are not the current state of every module. For current completion,
+use the October 20 checkpoint above.
 
 ## Application URL compatibility review — October 16, 2026
 
@@ -217,7 +281,7 @@ The [SEO checklist](seo-checklist.md#current-checkpoint--october-1-2026) contain
 detailed execution order, suggested decisions and acceptance criteria. Existing
 decisions on the official domain, shared i18n and Blog biography exceptions remain unchanged.
 
-## Scope and current status
+## Original website migration scope and historical status
 
 The destination is `aet-website-2026`; the content source is
 `server-54.213.58.23/americantranslationservice.com`. Other company websites
@@ -285,7 +349,7 @@ required business workflows and data have passed replacement acceptance.
 Completing the public website/SEO checklist alone does not retire AET App.
 The deferred legacy content/PDF backlog remains deferred.
 
-### Completed preview work
+### Original CRM fixture preview (historical)
 
 - [x] Establish the CRM route and workspace navigation with fictional fixtures;
   exclude it from the public sitemap and set noindex/nofollow.
@@ -301,7 +365,7 @@ The deferred legacy content/PDF backlog remains deferred.
 - [x] Commit the preview as `e67dbc1` and move it to local `dev`. Restore local
   `main` to the pre-CRM commit; no branch was pushed in this workflow.
 
-### First end-to-end milestone — pre-evaluation
+### First end-to-end milestone — separate pre-evaluation pilot
 
 Owner priority: prove the replacement through the smaller pre-evaluation
 (degree-equivalency) workflow first. This supersedes the previous first milestone
@@ -351,7 +415,7 @@ but do not partition or identify offices in this workflow's frontend.
   worker operation, real-payment/email routing, data transition and cutover.
   Local acceptance does not establish those production conditions.
 
-### Extend the validated foundation to formal evaluation
+### Extend the validated foundation — separate four-step formal pilot
 
 - [x] Complete the formal four-step form with multiple education/service selections,
   shared website pricing, report/shipping choices, tab-scoped drafts and review.

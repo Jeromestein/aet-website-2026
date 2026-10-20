@@ -150,4 +150,9 @@ now lives in `aet-website-2026-dev` and the existing port 3022 is the verificati
 target. The main checkout was restored. Offline checks additionally verify
 legacy folder parity, signed application binding, LA archive copies and status
 capability derivation. See `status.md` for the transfer's actual browser evidence.
-Hosted verification and real-applicant acceptance remain release tasks.
+Subsequent October 20 hosted acceptance recorded live San Francisco document
+reads and isolated Miami small/chunked uploads, reload persistence and CRM reads
+at `58da862`. The later count/size fixes were verified locally, so recheck those
+on the deployed dev commit. Hosted checks across both accounts and failure paths,
+and real-applicant production acceptance, remain release tasks. See the current
+[checklist](migration-checklist.md) and [progress analysis](status.md#2026-10-20--reconcile-dev-progress).

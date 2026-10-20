@@ -73,6 +73,10 @@ No Docker is needed. See [live CRM scope](docs/staff-auth.md#shared-live-busines
 
 ## Validation and deployment
 
+For current business progress, read the [migration checklist](docs/migration-checklist.md)
+and [progress analysis](docs/status.md#2026-10-20--reconcile-dev-progress). They distinguish
+the new intake, older local pilots, shared live CRM and remaining release gates.
+
 ```sh
 pnpm check:i18n
 pnpm typecheck

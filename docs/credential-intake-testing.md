@@ -1,19 +1,26 @@
-# Credential intake: local database and email acceptance
+# Credential intake: database and email acceptance
+
+Current progress was reconciled on October 20, 2026. The dated October 17 tests
+below remain historical evidence. See the [current checklist](migration-checklist.md)
+and [progress analysis](status.md#2026-10-20--reconcile-dev-progress) for the integrated dev scope.
 
 ## Scope
 
 The unified `/application?service=evaluation` flow saves credential evaluation only.
 Contact, identity, all education records, selected qualification associations,
 services, server-priced fee ranges, report format, mailing address and shipping
-are preserved. Other unified service selections remain previews. No document
-upload, payment, user-account system, staff authentication migration or deployment
-is included in this milestone.
+are preserved. Other unified service selections remain previews. The initial
+October 17 milestone covered persistence and email. Subsequent dev work connected
+Status uploads, CRM document inspection and hosted Preview acceptance. New-intake
+payment, staff processing and production cutover remain open.
 
 ## Storage and isolation
 
-The current dev configuration uses the existing Supabase PostgreSQL project
-`qrxztgdemfodemlcabcq`, not a local Docker database. The website runs locally at
-`http://localhost:3022`; business test rows are isolated by schema and DB role.
+The dev configuration uses the existing Supabase PostgreSQL project
+`qrxztgdemfodemlcabcq`, not a local Docker database. Supported runtimes are local
+`http://localhost:3022` and the exact configured dev Preview origin documented in
+[README](../README.md#vercel-dev-preview). Business test rows are isolated by
+schema and DB role; this does not isolate shared live CRM or Dropbox resources.
 
 | Location | Purpose |
 | --- | --- |
@@ -72,9 +79,10 @@ these cards when data exists, regardless of source. Historical missing details
 remain labeled unavailable. The staff drawer still uses its compact summary.
 
 Isolated applications show a source label, have no production portal URL and no
-invented payment deadline. File selection remains local and upload disabled;
-payment controls are disabled when there is no connected payment destination.
-On 2026-10-17 the unified page passed desktop/mobile checks for both sources,
+invented payment deadline. Status now lists and uploads files using server-derived
+Dropbox access; CRM uses the same folder resolver. New-intake payment controls
+remain disabled. See [document behavior and boundaries](dropbox.md).
+On 2026-10-17 the earlier unified page passed desktop/mobile checks for both sources,
 279 unit/regression tests and 26 database/HTTP assertions. The additional run
 used simulated mail transport only and removed its disposable records.
 
@@ -105,10 +113,11 @@ modules without enabling the global `react-server` condition, which is incompati
 with React Email's HTML renderer. `pnpm test:email:records` verifies pre-evaluation
 references using disposable preview rows and never sends mail.
 
-The new sender is restricted to this preview workflow and
-`errplusone@gmail.com`, enforced in code and the outbox constraint. It never drains
-the existing pre-evaluation queue or sends to the entered client email, admin
-email, CC or BCC. Existing staff-auth/pre-evaluation settings are not changed.
+The new sender's To recipient is restricted to this preview workflow and
+`errplusone@gmail.com`, enforced in code and the outbox constraint. It also copies
+the assigned office through `officeCc`, as implemented after the initial milestone.
+It does not send to the entered client email or drain the pre-evaluation queue.
+See [current office routing](email-templates.md#sender-and-office-copies).
 
 The response completes after database commit; Next.js `after()` attempts delivery.
 A failed/crashed sender leaves a durable retryable outbox row. Customer status and
@@ -119,8 +128,9 @@ Unresolved attempts older than 23 hours require staff reconciliation instead of
 risking a duplicate beyond the provider's idempotency retention window.
 
 The UI's “Accepted by email provider” is not an inbox/read receipt. Provider
-`last_event=delivered` was separately checked in acceptance. Local links open only
-where the port-3022 server is accessible. The current test template is English;
+`last_event=delivered` was separately checked in acceptance. Links use the configured
+origin: local links require access to port 3022; hosted links use dev Preview.
+The current test template is English;
 form/status UI supports English, Chinese and Spanish; staff UI remains English.
 
 ## Local acceptance, 2026-10-17
@@ -150,5 +160,7 @@ Review paths:
 - `/admin/CRM?source=preview`
 
 Production configuration/cutover, production schema compatibility, long-running
-queue scheduling, payment/upload and subsequent staff processing remain separate
-work. This local milestone must not be represented as production readiness.
+queue scheduling, application-linked payment and subsequent staff processing
+remain separate work. Upload/list integration has since passed recorded hosted
+acceptance. Neither that acceptance nor this initial milestone establishes
+production readiness.

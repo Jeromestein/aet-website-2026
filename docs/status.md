@@ -1,5 +1,58 @@
 # AET Implementation Status
 
+## 2026-10-20 — Reconcile dev progress
+
+- Audit baseline `40eb360`: reconcile the current checklist with route/form guards,
+  database adapters, migrations, CRM, documents, email and prior acceptance records.
+  Retain the findings as the current checklist and written progress analysis.
+- Mark the new formal intake's persistence, confirmation, Status uploads and CRM
+  inspection as completed with recorded dev Preview acceptance. Preserve open
+  staff-processing, application-payment, report-delivery and production gates.
+  Separate older local pilot acceptance from the newer version-2 journey.
+- Correct stale statements about disabled submission, staff email-link login,
+  globally disabled external services and separate preview Dropbox storage.
+  Document the real office CC and shared live CRM/database boundary.
+- Identify the next integration work: authorized version-2 staff actions, document
+  readiness metadata, confirmed quotes, payment state/hosted callbacks, and reliable
+  notification/report delivery. Record main-only `71ddcf9` for later reconciliation.
+- Fresh checks pass: 385 tests across 32 files, TypeScript, 586 messages per locale,
+  offline Dropbox/payment/contact checks. No new browser/hosted acceptance, database
+  mutation, email, payment, build, commit, push or deployment in this documentation audit.
+
+### Integration gaps and next implementation
+
+The new formal-evaluation intake has recorded dev Preview acceptance through
+submission, confirmation, Status uploads and staff inspection. The hosted run
+used `58da862`; the subsequent document-count, file-size and wording fixes were
+verified locally through `40eb360`. Hosted re-verification of those fixes remains
+open. No new external acceptance was performed during this documentation audit.
+
+| Gap | Current code evidence | Required next result |
+| --- | --- | --- |
+| New-intake staff workflow | [IntakeDrawer](../components/crm/intake-drawer.tsx) is read-only; [formal API](../app/api/evaluation/[...path]/route.ts) rejects version 2 | Add office-authorized review, missing-material requests and confirmed quotes with audit history; preserve the submitted snapshot and CRM projection consistently |
+| Documents versus processing | [Dropbox integration](dropbox.md) lists provider files; [older workflow](../lib/evaluation-application/service.ts) requires `evaluation.files`, readiness and input versions | Define durable file references/readiness and report freshness, including existing uploads; a file count alone is not processing readiness |
+| Payment truth | [new Status projection](../lib/customer-status/model.ts) returns `payment: pending`; [Status controls](../components/customer-status/sections.tsx) disable new-intake payment | Connect application-linked checkout, verified webhook/reconciliation, actual paid state in Status/CRM and one receipt |
+| Notifications | [submission route](../app/api/application-intake/route.ts) attempts delivery through `after()`; [sender](../lib/application/intake-email.ts) supports leased retries | Add scheduled recovery and staff failure handling; connect quote/payment/result events to new intake |
+| General application model | [saveIntake](../lib/application/intake-server.ts) stores an evaluation-specific snapshot and compatibility rows | Define shared service contracts as services are connected; a broad database rewrite is not required to finish the current evaluation journey |
+| Hosted and production scope | [runtime guard](../lib/preview-environment.ts) accepts local or configured dev Preview; [pilot config](../lib/preeval/config.ts) blocks older external clients in cloud preview | Establish hosted application payment/worker operation and acceptance before separately authorized production cutover |
+
+Live CRM can edit existing business records. Test intake database isolation does
+not isolate the existing Dropbox accounts, LA archives or real office email CC.
+Customer Status retains the requested application-ID access model. Email records
+track delivery metadata, not a complete two-way email inbox.
+
+Standalone `/payment` does not mark a new intake paid. The older formal pilot
+already has sandbox checkout, signed events, reconciliation and PDF release;
+pre-evaluation also has AI/results. Reuse these foundations through explicit
+new-intake adapters rather than removing the existing guards.
+
+Recommended order: recheck hosted fixes and reconcile main-only `71ddcf9`; make
+new intake operable by staff; connect application payment; complete report/mail
+delivery and recovery; then integrate unified pre-evaluation and translation.
+Preserve old links, reconcile data/payments/files and rehearse rollback before
+domain cutover or retirement. Detailed acceptance criteria remain in the
+[current checklist](migration-checklist.md#next-delivery-order-and-acceptance).
+
 ## 2026-10-20 — Fix the three Preview acceptance findings locally
 
 - Test CRM document counts now read all pages from the existing staff-authorized
