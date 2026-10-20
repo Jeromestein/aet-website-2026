@@ -120,9 +120,11 @@ hosted environment. Legacy local-only form routes, worker/AI execution and
 production cutover remain outside this Preview setup. The newer `/application`
 intake, `/status` lookup and `/admin/CRM` use the configured cloud connections.
 
-Local `.env.local` and port 3022 remain unchanged. Environment changes apply to
-new deployments; the owner must authorize pushing the adaptation and deploying
-before hosted end-to-end acceptance. Never commit connection strings or keys.
+Local `.env.local` and port 3022 remain unchanged. The owner authorized the dev
+push and Preview acceptance; checked behavior and remaining limits are recorded
+in `docs/status.md`. Production cutover requires separate authorization.
+Environment changes apply to new deployments. Never commit connection strings
+or keys.
 
 ### Application domains and staff URLs
 

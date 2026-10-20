@@ -1,5 +1,27 @@
 # AET Implementation Status
 
+## 2026-10-20 — Verify the hosted dev Preview
+
+- With owner authorization, committed and pushed Preview runtime adaptation
+  `bea638f` to the Vercel-linked `MeiyuTech/aet-website-2026` dev branch. Vercel
+  deployment `dpl_CaaG6ZHxNm7eCPeXhKUDWHykMCJy` reached READY and received the
+  stable dev branch alias. No local production build was run.
+- The owner confirmed a successful fresh sign-in. Browser checks independently
+  verified the existing native-admin session and live CRM on the hosted branch
+  URL: 1,191 applications, 20 rows per page, search, and direct Payment drawer
+  navigation. The Test section loaded its three isolated applications and the
+  same detail drawer.
+- The live Documents tab listed all three PDFs for the checked San Francisco
+  record. Opening its file link reached the authenticated Dropbox PDF viewer.
+  The isolated test record listed its two existing uploaded image files. These
+  checks were read-only; upload/write behavior was not re-tested on Preview.
+- Before/after Vercel API snapshots confirmed that Production stayed on the same
+  main deployment and all 56 environment records were unchanged by this push.
+  The 33 dev overrides remain Preview/dev-only. Both employee migration/cutover
+  switches stay disabled; no employee account or business record was changed.
+- The in-app browser was gated by Vercel sign-in. Visual checks used the owner's
+  already-authenticated Chrome session; no protection setting was changed.
+
 ## 2026-10-20 — Configure branch-scoped Vercel dev Preview
 
 - Added and verified 33 server-side environment entries scoped only to Preview /
