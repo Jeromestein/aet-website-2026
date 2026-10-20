@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
 import { configuration, required } from '@/lib/preeval/config';
 import { authorize, sameOrigin, limit } from '@/lib/preeval/auth';
@@ -10,6 +10,7 @@ import { cookieName } from '@/lib/evaluation-application/server';
 import { access, staffAccess, application, addFile, staffAction, makeAccessLink, consumeAccess } from '@/lib/evaluation-application/service';
 import { checkout, reconcile, cancel, handleStripeEvent } from '@/lib/evaluation-application/payments';
 import { canDownloadReport, receiptPath, type ApplicationRecord } from '@/lib/evaluation-application/workflow';
+import { flushFormalEmails } from '@/lib/evaluation-application/email';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 const privateHeaders = { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' };
@@ -30,7 +31,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       const signature = request.headers.get('stripe-signature'); if (!signature) throw new AppError('invalid_signature');
       let event; const raw = await read(request, 1048576);
       try { event = stripeClient().webhooks.constructEvent(raw, signature, required('STRIPE_TEST_WEBHOOK_SECRET')); } catch { throw new AppError('invalid_signature'); }
-      await handleStripeEvent(event); return response({ received: true });
+      await handleStripeEvent(event); after(flushFormalEmails); return response({ received: true });
     }
     const upload = path[0] === 'applications' && path.length === 3 && ['files', 'reports'].includes(path[2]) && post;
     let body: unknown;
@@ -66,10 +67,10 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       const [intake]=await db()`select data->>'intakeVersion' as version from ${table('evaluation.applications')} where id=${id}`;
       if(intake?.version==='2') throw new AppError('intake_preview_read_only',409);
       if (path[2] === 'admin' && path.length === 3 && !post) return response(await application(id, true));
-      if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); return response({ ok: true }); }
+      if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); after(flushFormalEmails); return response({ ok: true }); }
       if (path[2] === 'access-link' && path.length === 3 && post) { await limit('formal-link:' + id, 10, 600); return response({ url: await makeAccessLink(id, current.actor) }); }
       if (path[2] === 'checkout' && path.length === 3 && post) { await limit('formal-checkout:' + id, 10, 600); return response({ url: await checkout(id) }); }
-      if (path[2] === 'reconcile' && path.length === 3 && post) { await limit('formal-reconcile:' + id, 30, 600); await reconcile(id); return response({ ok: true }); }
+      if (path[2] === 'reconcile' && path.length === 3 && post) { await limit('formal-reconcile:' + id, 30, 600); await reconcile(id); after(flushFormalEmails); return response({ ok: true }); }
       if (path[2] === 'cancel' && path.length === 3 && post) { await cancel(id, current.actor); return response({ ok: true }); }
       if (upload) {
         await limit('formal-files:' + id, 40, 600);

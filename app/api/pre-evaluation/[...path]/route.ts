@@ -14,7 +14,6 @@ import {
 } from "@/lib/preeval/auth";
 import {
   applicationEmail,
-  administratorEmail,
   flushEmails,
 } from "@/lib/preeval/email";
 import {
@@ -30,6 +29,7 @@ import {
   stripeClient,
   cancelApplication,
 } from "@/lib/preeval/payments";
+import { flushFormalEmails } from '@/lib/evaluation-application/email';
 import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-application/payments';
 import { downloadFile } from "@/lib/preeval/dropbox";
 
@@ -91,6 +91,7 @@ async function handler(
       }
       await handleStripeEvent(event);
       await handleFormalEvent(event);
+      after(flushFormalEmails);
       return response({ received: true });
     }
     const isFileUpload =
@@ -134,25 +135,11 @@ async function handler(
       after(flushEmails);
       return response({ ok: true });
     }
-    if (endpoint === "admin/login" && isPost) {
-      if (process.env.STAFF_AUTH_CUTOVER_ENABLED === "true") return response({ error: "staff_password_login_required" }, 410);
-      await limit("admin-login", 5, 600);
-      if (
-        typeof body.email === "string" &&
-        body.email.toLowerCase().trim() === configuration().admin
-      )
-        await administratorEmail();
-      after(flushEmails);
-      return response({ ok: true });
-    }
     if (endpoint === "access/consume" && isPost) {
       await limit("token-consume", 30, 600);
       const { token, row } = await consumeLink(String(body.token || ""));
       const res = response({
-        url:
-          row.role === "admin"
-            ? "/admin/CRM"
-            : resultPath(row.locale, row.application_id),
+        url: resultPath(row.locale, row.application_id),
       });
       res.cookies.set(sessionCookie(token));
       return res;

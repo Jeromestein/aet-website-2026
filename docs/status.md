@@ -1,5 +1,155 @@
 # AET Implementation Status
 
+## 2026-10-20 — Title Case email headings
+
+- Updated all seven business emails' main headings, subheadings and intake step
+  titles to Title Case. Application data and body prose are unchanged.
+- In-app browser verified intake desktop/mobile; supplemental browser checks
+  confirmed all seven heading sets and no horizontal overflow at 390px.
+  Evidence: `output/playwright/email-title-case.png`. No emails sent.
+- Pre-commit validation passed all 315 tests across 25 files and TypeScript.
+
+## 2026-10-20 — Match email typography to the homepage
+
+- All seven business templates now load the same locally hosted Poppins assets
+  as the homepage: 400 for body copy and 600 for headings/actions, with 700 for
+  strong emphasis and Arial/Helvetica fallbacks. Primary button labels use Title
+  Case, including the pending-quote variant.
+- TypeScript and whitespace checks passed. In-app browser verified formal intake
+  desktop/mobile. Supplemental browser checks confirmed Poppins 400/600 loaded,
+  correct button labels and no horizontal overflow for all seven templates at
+  900px and 390px. Evidence: `output/playwright/email-poppins-*.png`.
+- No delivery logic changed or emails sent. Inbox font support remains dependent
+  on the receiving client; the preview confirms browser rendering only.
+
+## 2026-10-20 — Unified business email templates and missing receipts
+
+- Applied the approved formal-confirmation design to the other four customer
+  templates. Added the missing legacy payment confirmation and service-fee update
+  templates, bringing the development gallery to seven business categories.
+  The owner excluded Thanksgiving/Christmas promotions. Staff login-link and
+  password recovery emails remain removed. See [email inventory](email-templates.md).
+- Added atomic, reference-only formal payment/quote delivery records and connected
+  the optional formal pilot payment callback, staff quote action and worker.
+  Rendering reads canonical application data, confirmed payment details and the
+  referenced quote audit. Duplicate payment events cannot queue another receipt;
+  superseded quotes/refunded payments are withheld. No subject or HTML is stored.
+- Generated and applied the formal delivery migration only to the isolated preview
+  schema. Existing intake receipts were unchanged. The cloud-preview worker stays
+  paused, fixed test-recipient limits remain, latest intake payment actions stay
+  read-only and the live CRM adapter still does not send notifications.
+- Passed 82 focused template/delivery/intake/customer/workflow/auth tests and
+  TypeScript. The final pending-quote copy adjustment passed its 32 relevant tests.
+  Passed 12 isolated database checks covering transactional queueing, current data,
+  quote supersession, payment replay, refund blocking and browser-role denial.
+  Synthetic records were removed. No mail or Stripe transaction was sent.
+- In-app browser checked payment desktop/mobile, fee-pending mobile and result
+  mobile states. Supplemental screenshots and layout checks covered all seven
+  templates at 900px and 390px: logos loaded and no horizontal overflow. Gallery
+  selections, pending/confirmed quote states and width switching work; iframe
+  height fits content and stays stable on resize. Screenshots:
+  `output/playwright/business-mail-*.png`. Gmail/Outlook inbox rendering is untested.
+- Reused port 3022. No build, restart, commit, push or deployment.
+
+## 2026-10-20 — Formal application confirmation email redesign
+
+- Redesigned only the formal intake confirmation with the existing full AET logo,
+  2026 website colors, structured application/education details, readable fee
+  estimate, orange action, next steps and compact linked navy footer. Kept existing
+  quote/range behavior, private application ID and pilot disclosures.
+- The development gallery uses a local asset origin so the real logo loads while
+  synthetic application/footer links remain nonfunctional. Its intake frame is
+  taller to expose the complete letter. No delivery or database behavior changed.
+- Passed 42 existing intake/email/customer tests, TypeScript and whitespace checks.
+  In-app browser verified desktop and 390px preview, including the lower content
+  and footer. Supplemental full-page screenshots are in
+  `output/playwright/intake-redesign-{desktop,mobile}-2026-10-20.png`. This is browser
+  rendering verification, not a Gmail/Outlook inbox compatibility test.
+- Reused port 3022. No real mail, build, restart, commit, push or deployment.
+
+## 2026-10-20 — Retire staff email-link login
+
+- Removed the administrator email template, enqueue/render logic, email-login and
+  token-consumption pages, fallback login link and legacy mail-login API branch.
+  The preview gallery now lists five customer templates.
+- Staff access uses the existing verified password session and office membership.
+  Old staff link tokens and legacy staff cookies are rejected regardless of the
+  former cutover flag. Customer links/sessions continue to work. Historical admin
+  queue items fail closed before rendering or contacting the mail provider.
+- Passed 55 focused authentication/email/customer tests and TypeScript. Rebuilt
+  two damaged generated development route-type cache files using Next's own
+  generator; no server restart or build. Removed pages and API returned 404.
+- In-app browser verified the five-template gallery and preserved the existing
+  signed-in staff session. A separate Playwright browser verified password-only
+  login at desktop and 390px, without signing the owner out. Screenshots are in
+  `output/playwright/staff-password-only-{desktop,mobile}-2026-10-20.png`.
+- The old optional lifecycle script now requires a password-authenticated test
+  staff cookie instead of minting a legacy administrator session. It was not run.
+- No cloud schema, stored records, accounts, credentials or external settings were
+  changed. No mail sent, commit, push or deployment. Email visual redesign remains
+  a proposal pending discussion; customer template appearance is unchanged.
+
+## 2026-10-20 — Email template preview gallery
+
+- Added development-only `/api/email-template-preview` with all six current React
+  Email templates, real subject lines and desktop/390px preview modes. The raw view
+  exposes each rendered email separately. Production requests return 404.
+- Uses synthetic application data and nonfunctional example links; does not read
+  the database, enqueue mail or contact the delivery provider.
+- Verified all six selections in the in-app browser and the mobile-width toggle.
+  TypeScript passed. Reused the owner's server on port 3022; no server restart,
+  build, commit, push or deployment.
+
+## 2026-10-20 — React Email templates and metadata-only delivery records
+
+- Added pinned React Email 6.11.3 and shared JSX email components. Formal intake,
+  pre-evaluation confirmation/result/access/information and the existing admin
+  email-login fallback render from source data at send time. No subject or HTML
+  is written to application delivery tables.
+- Delivery metadata retains application/recipient IDs, result version or business
+  information-request reference, state, attempts, leases, cooldowns, sanitized error
+  codes, provider receipt and a SHA-256 content digest. Retries preserve the UUID;
+  changed content and superseded/withheld results pause for reconciliation.
+  The fallback sign-in nonce is retained only while delivery is pending and cleared
+  after provider acceptance. Staff password reset remains removed.
+- Applied the generated delivery-record migration only to the isolated preview
+  schemas. The two existing sent intake receipts retained their IDs, state and
+  provider IDs. Runtime/browser permissions and RLS were checked; no production
+  schema, business row, staff account or provider setting changed.
+- Passed 293 unit/regression tests across 23 files, TypeScript and whitespace
+  checks, 29 intake database/HTTP checks and 10 delivery-record database checks.
+  Integration tests used injected transport or rendered in memory; no mail sent.
+  Disposable test records were removed. Fixed the standalone server-only loader
+  so React Email can use react-dom/server without the global react-server condition.
+- In-app browser verified Next.js-rendered intake, result and information templates.
+  Supplemental Playwright checks passed at 390px for intake/result layouts; the
+  intake page had no horizontal overflow. Temporary synthetic preview routes were
+  removed. Evidence: `output/playwright/email-{intake,result}-{desktop,mobile}-2026-10-20.png`.
+- Supabase security advisors had no findings on the two changed delivery tables.
+  Existing unrelated public-schema findings remain outside this scope; see the
+  [RLS advisor reference](https://supabase.com/docs/guides/database/database-linter?lint=0013_rls_disabled_in_public).
+- Reused the owner's port-3022 server. No build, restart, commit, push, deployment
+  or real delivery verification. Existing test-recipient/worker containment remains.
+
+## 2026-10-20 — Remove staff self-service password recovery
+
+- The owner keeps three staff accounts and handles additions and password
+  assistance manually. Removed forgot/reset pages, the login recovery link,
+  Resend recovery sender, token helper and recovery-only migration bypass.
+- Preserved login/logout, membership checks, manual administrator provisioning
+  and verified first-login password migration. Historical SQL remains unchanged;
+  no cloud accounts, passwords, database tables or provider settings were changed.
+- Passed 52 staff regression tests across six files, TypeScript and whitespace
+  checks. Both removed pages and both removed API actions returned HTTP 404 on
+  the existing port-3022 server. Cloud acceptance scripts were updated but not run.
+- In-app browser visually verified `/admin/login` via 127.0.0.1 with no recovery
+  entry. The browser's password toggle did not expose a state change; an isolated
+  Playwright session on localhost confirmed the Show/Hide interaction works.
+  No real credentials were submitted. Screenshot:
+  `output/playwright/staff-login-no-recovery-2026-10-20.png`.
+- Reused the owner-managed server; no production build, restart, commit, push or
+  deployment. Customer notification storage is outside this change.
+
 ## 2026-10-17 — Unified customer status UI
 
 - Live and isolated credential records now use one `CustomerStatus` contract and

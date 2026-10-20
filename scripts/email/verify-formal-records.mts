@@ -1,0 +1,60 @@
+import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
+import type Stripe from "stripe";
+import { db, table } from "../../lib/preeval/db";
+import { configuration } from "../../lib/preeval/config";
+import { initialData, quote } from "../../lib/evaluation-application/domain";
+import { staffAction } from "../../lib/evaluation-application/service";
+import { applyCheckout } from "../../lib/evaluation-application/payments";
+import { renderFormalEmail, flushFormalEmails } from "../../lib/evaluation-application/email";
+assert.equal(configuration().cloudPreview,true,"Use the isolated preview only");
+const sql=db(), id=randomUUID(), events:string[]=[];
+let checks=0;
+function check(value:unknown,message:string){assert.ok(value,message);checks++;console.log("PASS "+message);}
+const before=await sql`select id,state,provider_id,sent_at from ${table("evaluation.intake_emails")} order by id`;
+try {
+  const data=initialData(); data.client.name="Synthetic Email Check"; data.client.email="synthetic@example.invalid";
+  data.evaluee.first="Synthetic";data.evaluee.last="Applicant";data.services.document.tier="standard";data.services.translation=true;
+  await sql`insert into ${table("evaluation.applications")}(id,request_id,request_hash,access_hash,locale,data,quote)
+    values(${id},${randomUUID()},${randomUUID()},${randomUUID()},'en',${sql.json(data)},${sql.json(quote(data))})`;
+  await staffAction(id,{action:"quote",version:1,base:11000,additional:5000,explanation:"Synthetic translation quote"},"synthetic-test");
+  const [fee]=await sql`select * from ${table("evaluation.emails")} where application_id=${id}`;
+  check(fee.kind==="fee_update"&&fee.audit_id&&!('html' in fee)&&!('subject' in fee),"quote saves a delivery record with only its business reference");
+  data.client.name="Changed before rendering";
+  await sql`update ${table("evaluation.applications")} set data=${sql.json(data)} where id=${id}`;
+  const first=await renderFormalEmail(fee);
+  check(first.html.includes("$160.00")&&first.html.includes("Changed before rendering"),"fee template reads saved amount and current application at send time");
+  await staffAction(id,{action:"quote",version:2,base:11000,additional:6000,explanation:"Revised synthetic translation quote"},"synthetic-test");
+  await assert.rejects(()=>renderFormalEmail(fee),/fee_update_superseded/);
+  check(true,"superseded quote cannot be sent");
+  const fees=await sql`select * from ${table("evaluation.emails")} where application_id=${id} order by created_at`;
+  check(fees.length===2&&(await renderFormalEmail(fees[1])).html.includes("$170.00"),"revised quote receives its own reference and correct amount");
+  const sessionId="cs_test_synthetic_"+randomUUID();
+  const [payment]=await sql`insert into ${table("evaluation.payments")}(application_id,session_id,amount_cents,status) values(${id},${sessionId},17000,'open') returning id`;
+  const session={id:sessionId,object:"checkout.session",livemode:false,metadata:{pilot:"aet-formal-2026-local",applicationId:id},client_reference_id:id,currency:"usd",amount_total:17000,payment_status:"paid",status:"complete",payment_intent:"pi_synthetic_"+randomUUID()} as Stripe.Checkout.Session;
+  const eventId="evt_synthetic_"+randomUUID();events.push(eventId);
+  await assert.rejects(()=>applyCheckout({...session,amount_total:1},eventId,"checkout.session.completed"),/invalid_payment/);
+  check((await sql`select id from ${table("evaluation.emails")} where application_id=${id} and kind='payment'`).length===0,"mismatched amount creates no receipt");
+  await applyCheckout(session,eventId,"checkout.session.completed");
+  await applyCheckout(session,eventId,"checkout.session.completed");
+  const replay="evt_synthetic_"+randomUUID();events.push(replay);
+  await applyCheckout(session,replay,"checkout.reconciled");
+  const receipts=await sql`select * from ${table("evaluation.emails")} where application_id=${id} and kind='payment'`;
+  check(receipts.length===1&&receipts[0].payment_id===payment.id,"duplicate payment notifications create exactly one receipt");
+  const [confirmed]=await sql`select paid_at,status from ${table("evaluation.payments")} where id=${payment.id}`;
+  check(confirmed.paid_at&&confirmed.status==="paid","confirmation time is recorded with the successful payment");
+  const content=await renderFormalEmail(receipts[0]);
+  check(content.html.includes("$170.00")&&content.html.includes(payment.id)&&!content.html.includes("Estimated completion"),"receipt contains actual payment details without invented completion date");
+  await sql`update ${table("evaluation.payments")} set status='partially_refunded' where id=${payment.id}`;
+  await assert.rejects(()=>renderFormalEmail(receipts[0]),/payment_receipt_unavailable/);
+  check(true,"refund invalidates an unsent receipt");
+  let sends=0;await flushFormalEmails(async()=>{sends++;return "unused";});check(sends===0,"cloud-preview delivery remains paused");
+  const [permissions]=await sql`select c.relrowsecurity,has_table_privilege('anon',c.oid,'SELECT') as anon_read,has_table_privilege('authenticated',c.oid,'SELECT') as authenticated_read from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='aet_preview_evaluation' and c.relname='emails'`;
+  check(permissions.relrowsecurity&&!permissions.anon_read&&!permissions.authenticated_read,"delivery records remain private to the server");
+  check(JSON.stringify(await sql`select id,state,provider_id,sent_at from ${table("evaluation.intake_emails")} order by id`)===JSON.stringify(before),"existing intake receipts remain unchanged");
+} finally {
+  await sql`delete from ${table("evaluation.applications")} where id=${id}`;
+  for(const eventId of events) await sql`delete from ${table("evaluation.payment_events")} where id=${eventId}`;
+  await sql.end();
+}
+console.log(`Completed ${checks} formal email checks. Synthetic fixtures removed; no emails or Stripe transactions sent.`);

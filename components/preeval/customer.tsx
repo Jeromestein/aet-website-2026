@@ -326,79 +326,11 @@ export function ApplicationForm({ locale }: { locale: string }) {
     </>
   );
 }
-export function AccessForm(props: { locale: string; admin?: boolean; initialId?: string }) {
-  return props.admin ? <StaffAccessForm {...props} /> : <ApplicationLookup locale={props.locale} initialId={props.initialId} />;
+export function AccessForm(props: { locale: string; initialId?: string }) {
+  return <ApplicationLookup locale={props.locale} initialId={props.initialId} />;
 }
-function StaffAccessForm({
-  locale,
-  admin = false,
-  initialId = "",
-}: {
-  locale: string;
-  admin?: boolean;
-  initialId?: string;
-}) {
+export function ConsumeLink({ locale }: { locale: string }) {
   const t = copy(locale),
-    [value, setValue] = useState(initialId),
-    [busy, setBusy] = useState(false),
-    [sent, setSent] = useState(false),
-    [error, setError] = useState("");
-  async function send(e: FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    try {
-      await api(
-        admin ? "admin/login" : "access/request",
-        admin ? { email: value } : { applicationId: value.trim() },
-      );
-      setSent(true);
-    } catch (e) {
-      setError(errorText(t, (e as Error).message));
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <>
-      <p className={s.eyebrow}>{admin ? "AET WORKSPACE" : t.eyebrow}</p>
-      <h1 className={s.title}>{admin ? t.adminTitle : t.statusTitle}</h1>
-      <p className={s.intro}>{admin ? t.adminIntro : t.statusIntro}</p>
-      <form className={s.card + " " + s.form} onSubmit={send}>
-        <label className={s.field}>
-          {admin ? t.email : t.id}
-          <input
-            name={admin ? "email" : "applicationId"}
-            type={admin ? "email" : "text"}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            required
-            maxLength={admin ? 254 : 36}
-            autoComplete={admin ? "email" : "off"}
-          />
-        </label>
-        <button className={s.button} disabled={busy || sent}>
-          {busy ? t.loading : t.send}
-        </button>
-        {sent && (
-          <p role="status" className={s.success}>
-            {t.sent}
-          </p>
-        )}
-        {error && (
-          <p className={s.error} role="alert">
-            {error}
-          </p>
-        )}
-      </form>
-      <a href={pathFor(locale, "/degree-equivalency-tool/application")}>
-        {t.new}
-      </a>
-    </>
-  );
-}
-export function ConsumeLink({ locale, admin = false }: { locale: string; admin?: boolean }) {
-  const t = copy(admin ? "en" : locale),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [ready, setReady] = useState(false);
@@ -422,11 +354,11 @@ export function ConsumeLink({ locale, admin = false }: { locale: string; admin?:
   }
   return (
     <>
-      <p className={s.eyebrow}>{admin ? "AET WORKSPACE" : t.eyebrow}</p>
-      <h1 className={s.title}>{admin ? t.adminTitle : t.accessTitle}</h1>
+      <p className={s.eyebrow}>{t.eyebrow}</p>
+      <h1 className={s.title}>{t.accessTitle}</h1>
       <div className={s.card}>
         <LockKeyhole size={32} />
-        <p>{admin ? "Use your secure link to open the AET workspace." : t.accessIntro}</p>
+        <p>{t.accessIntro}</p>
         <button
           className={s.button}
           onClick={consume}
@@ -440,7 +372,7 @@ export function ConsumeLink({ locale, admin = false }: { locale: string; admin?:
           </p>
         )}
         <div className={s.buttons}>
-          {!admin && <a href={pathFor(locale, "/status-check")}>{t.check}</a>}
+          <a href={pathFor(locale, "/status-check")}>{t.check}</a>
           <a href="/admin/login">{t.adminTitle}</a>
         </div>
       </div>

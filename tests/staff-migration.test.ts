@@ -168,12 +168,4 @@ describe("one-way staff migration", () => {
       expect.objectContaining({ password: "new password" }),
     );
   });
-  it("allows recovery only through the internal verified-token path", async () => {
-    await prepareStaffIdentity("staff@example.com", "new", undefined, true);
-    expect(m.verify).not.toHaveBeenCalled();
-    expect(m.query).toHaveBeenCalledWith(
-      expect.stringContaining("migration_state="),
-      ["new-id", "recovery_only", 10],
-    );
-  });
 });

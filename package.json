@@ -8,7 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "preeval:worker": "node --env-file=.env.local --import tsx scripts/preeval/worker.ts",
+    "preeval:worker": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/worker.ts",
     "legacy:setup": "node --env-file=.env.local --import tsx scripts/legacy/setup-local.ts",
     "test:legacy": "vitest run tests/legacy-application.test.ts",
     "test:legacy:integration": "node --env-file=.env.local --import tsx scripts/legacy/integration.ts",
@@ -16,7 +16,10 @@
     "test:evaluation": "vitest run tests/evaluation-application.test.ts tests/evaluation-workflow.test.ts",
     "test:evaluation:workflow": "node --env-file=.env.local --import tsx scripts/evaluation/workflow-integration.ts",
     "test:evaluation:integration": "node --env-file=.env.local --import tsx scripts/evaluation/integration.ts",
-    "test:preeval:integration": "node --env-file=.env.local --import tsx scripts/preeval/integration.ts"
+    "test:preeval:integration": "node --env-file=.env.local --import tsx scripts/preeval/integration.ts",
+    "test:email:records": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-records.mts",
+    "test:intake:integration": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/application/intake-integration.mts",
+    "test:email:formal": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-formal-records.mts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
@@ -27,6 +30,7 @@
     "postgres": "^3.4.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-email": "6.11.3",
     "resend": "^6.32.0",
     "server-only": "^0.0.1",
     "stripe": "^23.0.0",

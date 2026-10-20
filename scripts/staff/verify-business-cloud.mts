@@ -41,7 +41,7 @@ async function cleanup() {
   for (const c of state.cases) {
     await sql.begin(async tx => {
       if (c.preeval) {
-        for (const name of ['audit','emails','ai_runs','files','payments','tokens','sessions','educations']) await tx`delete from ${table('preeval.' + name)} where application_id=${c.preeval}`;
+        for (const name of ['emails','audit','ai_runs','files','payments','tokens','sessions','educations']) await tx`delete from ${table('preeval.' + name)} where application_id=${c.preeval}`;
         await tx`delete from ${table('preeval.applications')} where id=${c.preeval}`;
         await tx`delete from ${table('public.aet_core_applications')} where id=${c.preeval}`;
       }

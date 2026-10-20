@@ -37,6 +37,8 @@ try {
    }
    await tx.unsafe(render(await readFile(new URL('../legacy/workflow-bridge.sql',import.meta.url),'utf8')));
   } else assert.equal(existing.length,3,'Partial preview schema; inspect manually');
+  await tx.unsafe(render(await readFile(new URL('../../supabase/migrations/20261020165103_email_delivery_records.sql',import.meta.url),'utf8')));
+  await tx.unsafe(render(await readFile(new URL('../../supabase/migrations/20261020173355_formal_email_delivery_records.sql',import.meta.url),'utf8')));
   // LIKE intentionally omits foreign keys; reproduce only relationships inside this fixture set.
   const foreignKeys=await tx`select c.relname as table_name,k.conname,pg_get_constraintdef(k.oid) as definition from pg_constraint k join pg_class c on c.oid=k.conrelid join pg_namespace n on n.oid=c.relnamespace where k.contype='f' and n.nspname='public' and c.relname=any(${legacy})`;
   for(const key of foreignKeys) {

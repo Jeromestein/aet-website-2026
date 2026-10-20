@@ -5,9 +5,6 @@ const m = vi.hoisted(() => ({
   signIn: vi.fn(),
   signOut: vi.fn(),
   session: vi.fn(),
-  issue: vi.fn(),
-  consume: vi.fn(),
-  send: vi.fn(),
   remove: vi.fn(),
 }));
 vi.mock("server-only", () => ({}));
@@ -21,23 +18,12 @@ vi.mock("../lib/staff/client", () => ({
   staffClient: async () => ({
     auth: { signInWithPassword: m.signIn, signOut: m.signOut },
   }),
-  staffAdmin: vi.fn(),
 }));
-vi.mock("../lib/staff/db", () => ({ staffDb: vi.fn() }));
 vi.mock("../lib/staff/migrate", () => ({
   authAttempt: m.attempt,
   prepareStaffIdentity: m.prepare,
 }));
 vi.mock("../lib/staff/session", () => ({ staffSession: m.session }));
-vi.mock("../lib/staff/recovery", () => ({
-  issueRecovery: m.issue,
-  consumeRecovery: m.consume,
-}));
-vi.mock("resend", () => ({
-  Resend: class {
-    emails = { send: m.send };
-  },
-}));
 import { POST } from "../app/api/staff-auth/[action]/route";
 function post(action: string, body: object, origin = "http://localhost:3022") {
   return POST(
@@ -56,9 +42,6 @@ beforeEach(() => {
   m.signIn.mockResolvedValue({ error: null });
   m.signOut.mockResolvedValue({ error: null });
   m.session.mockResolvedValue({ email: "staff@example.com" });
-  m.issue.mockResolvedValue(null);
-  m.consume.mockResolvedValue(null);
-  m.send.mockResolvedValue({ error: null });
 });
 describe("staff authentication HTTP boundaries", () => {
   it("rejects cross-origin mutation before touching credentials", async () => {
@@ -133,41 +116,22 @@ describe("staff authentication HTTP boundaries", () => {
     expect((await result.json()).passwordUpdateRequired).toBe(true);
     expect(m.signIn).not.toHaveBeenCalled();
   });
-  it("sends no recovery mail for an unknown or paused account", async () => {
-    expect(
-      (await post("forgot-password", { email: "unknown@example.com" })).status,
-    ).toBe(200);
-    expect(m.send).not.toHaveBeenCalled();
-  });
-  it("keeps mail delivery failures indistinguishable from unknown accounts", async () => {
-    m.issue.mockResolvedValue("a".repeat(64));
-    m.send.mockRejectedValue(new Error("mail unavailable"));
-    const result = await post("forgot-password", {
-      email: "staff@example.com",
-    });
-    expect(result.status).toBe(200);
-    expect((await result.json()).sent).toBe(true);
-  });
-  it("sends recovery only to the requester with a fragment token and no copied recipients", async () => {
-    m.issue.mockResolvedValue("a".repeat(64));
-    await post("forgot-password", { email: "staff@example.com" });
-    const message = m.send.mock.calls[0][0];
-    expect(message.to).toBe("staff@example.com");
-    expect(message.cc).toBeUndefined();
-    expect(message.bcc).toBeUndefined();
-    expect(message.html).toContain("/admin/reset-password#token=");
-  });
-  it("rejects an expired or used recovery token", async () => {
-    expect(
-      (
-        await post("reset-password", {
-          token: "a".repeat(64),
-          password: "NewPassword!123",
-        })
-      ).status,
-    ).toBe(400);
-    expect(m.prepare).not.toHaveBeenCalled();
-  });
+  it.each(["forgot-password", "reset-password"])(
+    "rejects removed %s actions without accessing credentials",
+    async (action) => {
+      const result = await post(action, {
+        email: "staff@example.com",
+        token: "a".repeat(64),
+        password: "NewPassword!123",
+      });
+      expect(result.status).toBe(404);
+      expect(await result.json()).toEqual({ error: "Not found." });
+      expect(m.attempt).not.toHaveBeenCalled();
+      expect(m.prepare).not.toHaveBeenCalled();
+      expect(m.signIn).not.toHaveBeenCalled();
+      expect(m.remove).not.toHaveBeenCalled();
+    },
+  );
   it("rejects oversized request bodies", async () => {
     expect(
       (

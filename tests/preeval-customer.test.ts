@@ -18,23 +18,23 @@ describe("Application-ID lookup without customer accounts", () => {
   });
 });
 describe("Legacy-style confirmation and result emails", () => {
-  it("includes the ID, education, exact price and reusable localized link", () => {
-    const { html } = customerEmail(app, education, "confirmation", "http://localhost:3022");
+  it("includes the ID, education, exact price and reusable localized link", async () => {
+    const { html } = await customerEmail(app, education, "confirmation", "http://localhost:3022");
     for (const value of [id, "Test degree", "$19.00", "$0.88", "$19.88", `/zh/degree-equivalency-tool/application/success?applicationId=${id}`]) expect(html).toContain(value);
     expect(html).not.toContain("24 hours"); expect(html).not.toContain("#token="); expect(html).not.toContain("PRIVATE RESULT");
   });
-  it("escapes applicant, education, result and information text", () => {
-    const { html } = customerEmail(app, education, "information", "http://localhost:3022", '<img src=x onerror="bad()">');
-    expect(html).not.toContain("<script>"); expect(html).not.toContain("<img"); expect(html).toContain("&lt;Applicant&gt;");
+  it("escapes applicant, education, result and information text", async () => {
+    const { html } = await customerEmail(app, education, "information", "http://localhost:3022", '<img src=x onerror="bad()">');
+    expect(html).not.toContain("<script>"); expect(html).not.toMatch(/<img[^>]*onerror=/); expect(html).toContain("&lt;img src=x"); expect(html).toContain("&lt;Applicant&gt;");
   });
-  it.each(["unpaid", "pending", "refunded", "partially_refunded"])("does not include a result when payment is %s", payment_status => {
-    expect(customerEmail({ ...app, payment_status }, education, "result", "http://localhost:3022").html).not.toContain("PRIVATE RESULT");
+  it.each(["unpaid", "pending", "refunded", "partially_refunded"])("does not include a result when payment is %s", async payment_status => {
+    expect((await customerEmail({ ...app, payment_status }, education, "result", "http://localhost:3022")).html).not.toContain("PRIVATE RESULT");
   });
-  it.each(["cancelled", "needs_information"])("does not include withheld result for %s", status => {
-    expect(customerEmail({ ...app, payment_status: "paid", status }, education, "result", "http://localhost:3022").html).not.toContain("PRIVATE RESULT");
+  it.each(["cancelled", "needs_information"])("does not include withheld result for %s", async status => {
+    expect((await customerEmail({ ...app, payment_status: "paid", status }, education, "result", "http://localhost:3022")).html).not.toContain("PRIVATE RESULT");
   });
-  it("includes result and reasoning in the paid result email", () => {
-    const { html } = customerEmail({ ...app, payment_status: "paid", status: "completed" }, education, "result", "http://localhost:3022");
+  it("includes result and reasoning in the paid result email", async () => {
+    const { html } = await customerEmail({ ...app, payment_status: "paid", status: "completed" }, education, "result", "http://localhost:3022");
     expect(html).toContain("PRIVATE RESULT"); expect(html).toContain("PRIVATE REASONING");
   });
 });

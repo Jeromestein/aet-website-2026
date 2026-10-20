@@ -4,7 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import { staffDb } from "../../lib/staff/db";
 import { staffAdmin } from "../../lib/staff/client";
 import { prepareStaffIdentity } from "../../lib/staff/migrate";
-import { issueRecovery, consumeRecovery } from "../../lib/staff/recovery";
 
 // Explicitly scoped synthetic acceptance test. No employee is migrated and no email is sent.
 assert.ok(
@@ -29,7 +28,6 @@ const sql = staffDb(),
 const id = -randomInt(100000000, 2000000000);
 const email = `aet-auth-test-${-id}@example.invalid`;
 const password = ` Aet-${randomBytes(18).toString("hex")}-测试! `;
-const newPassword = `Updated-${randomBytes(18).toString("hex")}!`;
 const salt = randomBytes(32).toString("hex");
 const hash = pbkdf2Sync(password, salt, 25000, 512, "sha256").toString("hex");
 const origin = process.env.PREEVAL_ORIGIN!;
@@ -167,36 +165,19 @@ try {
       .status === 403,
     "cross-origin login rejected",
   );
-  const nonce = await issueRecovery(email);
-  check(!!nonce, "private recovery nonce issued without sending email");
-  const reset = await post("reset-password", {
-    token: nonce,
-    password: newPassword,
-  });
-  check(
-    reset.status === 200,
-    "3022 recovery resets synthetic account and establishes session",
-  );
-  check(
-    (await consumeRecovery(nonce!)) == null,
-    "recovery nonce cannot be reused",
-  );
+  for (const action of ["forgot-password", "reset-password"]) {
+    check(
+      (await post(action, { email, password })).status === 404,
+      `${action} is unavailable`,
+    );
+  }
   check(
     (await prepareStaffIdentity(email, password)) === "ready",
     "completed mapping does not reapply legacy password",
   );
-  check(
-    !!(await client().auth.signInWithPassword({ email, password })).error,
-    "old password rejected after reset",
-  );
-  check(
-    !(await client().auth.signInWithPassword({ email, password: newPassword }))
-      .error,
-    "new password accepted after reset",
-  );
   await sql`update aet_private.staff_accounts set active=false where legacy_user_id=${id}`;
   check(
-    (await post("login", { email, password: newPassword })).status === 401,
+    (await post("login", { email, password })).status === 401,
     "inactive staff denied even with valid Supabase password",
   );
   const disabledPage = await fetch(`${origin}/admin/CRM`, {
@@ -250,6 +231,6 @@ try {
   check(count === 0, "synthetic legacy and private records removed");
   await sql.end();
   console.log(
-    `${passed} cloud acceptance checks passed; no invitations or recovery emails sent.`,
+    `${passed} cloud acceptance checks passed; no invitations or emails sent.`,
   );
 }

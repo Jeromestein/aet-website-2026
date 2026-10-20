@@ -7,7 +7,7 @@ alter table aet_preview_legacy.fce_applications drop constraint if exists fce_ap
 create table if not exists aet_preview_evaluation.intake_emails (
  id uuid primary key default gen_random_uuid(),
  application_id uuid unique not null references aet_preview_evaluation.applications(id) on delete cascade,
- recipient text not null check(recipient='errplusone@gmail.com'),subject text not null,html text not null,
+ recipient text not null check(recipient='errplusone@gmail.com'),payload_hash text,
  state text not null default 'queued' check(state in ('queued','sending','sent','failed')),
  attempts integer not null default 0,first_attempt_at timestamptz,available_at timestamptz not null default now(),
  locked_at timestamptz,lease uuid,error text,provider_id text,sent_at timestamptz,created_at timestamptz not null default now()

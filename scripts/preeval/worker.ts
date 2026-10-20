@@ -1,6 +1,7 @@
 import { configuration } from "../../lib/preeval/config";
 import { processAI } from "../../lib/preeval/ai";
 import { flushEmails } from "../../lib/preeval/email";
+import { flushFormalEmails } from "../../lib/evaluation-application/email";
 import { db } from "../../lib/preeval/db";
 import { publishIfReady } from "../../lib/preeval/payments";
 
@@ -19,11 +20,13 @@ async function main() {
   do {
     try {
       await flushEmails();
+      await flushFormalEmails();
       const pending =
         await db()`select id from preeval.applications where payment_status='paid' and result is not null and status not in ('cancelled','needs_information')`;
       for (const row of pending) await publishIfReady(row.id);
       const processed = await processAI();
       await flushEmails();
+      await flushFormalEmails();
       if (process.argv.includes("--once")) break;
       if (!processed) await new Promise((resolve) => setTimeout(resolve, 2500));
     } catch (error) {

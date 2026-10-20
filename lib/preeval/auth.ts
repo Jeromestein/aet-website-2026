@@ -15,8 +15,8 @@ export async function session() {
   const value = (await cookies()).get(COOKIE)?.value;
   if (!value || !/^[\w-]{43}$/.test(value)) return null;
   const [row] =
-    await db()`select * from ${table("preeval.sessions")} where hash=${hash(value)} and (role='customer' or ${process.env.STAFF_AUTH_CUTOVER_ENABLED !== 'true'}) and expires_at>now()`;
-  return row || null;
+    await db()`select * from ${table("preeval.sessions")} where hash=${hash(value)} and role='customer' and expires_at>now()`;
+  return row?.role === "customer" ? row : null;
 }
 export async function authorize(id?: string) {
   const current = await session();
@@ -32,10 +32,10 @@ export async function authorize(id?: string) {
 }
 export async function makeSession(
   applicationId: string | null,
-  role: "customer" | "admin",
+  role: "customer",
   email: string,
 ) {
-  if (role !== "customer" && process.env.STAFF_AUTH_CUTOVER_ENABLED === "true") throw new AppError("access_denied", 403);
+  if (role !== "customer") throw new AppError("access_denied", 403);
   const token = secret();
   await db()`insert into ${table("preeval.sessions")}(hash,application_id,role,email,expires_at) values (${hash(token)},${applicationId},${role},${email},now()+interval '24 hours')`;
   return token;
@@ -53,17 +53,16 @@ export function sessionCookie(value: string) {
 }
 export async function makeLink(
   applicationId: string | null,
-  role: "customer" | "admin",
+  role: "customer",
   email: string,
   locale: string,
 ) {
-  if (role !== "customer" && process.env.STAFF_AUTH_CUTOVER_ENABLED === "true") throw new AppError("access_denied", 403);
+  if (role !== "customer") throw new AppError("access_denied", 403);
   const token = secret();
-  const linkLocale = role === "admin" ? "en" : locale;
-  await db()`insert into ${table("preeval.tokens")}(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${linkLocale},now()+interval '24 hours')`;
+  await db()`insert into ${table("preeval.tokens")}(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${locale},now()+interval '24 hours')`;
   return (
     configuration().origin +
-    (role === "admin" ? "/admin/access" : (locale === "en" ? "" : "/" + locale) + "/access") +
+    ((locale === "en" ? "" : "/" + locale) + "/access") +
     "#token=" +
     token
   );
@@ -73,8 +72,8 @@ export async function consumeLink(token: string) {
   const raw = secret();
   const row = await db().begin(async (sql) => {
     const [t] =
-      await sql`update ${table("preeval.tokens")} set consumed_at=now() where hash=${hash(token)} and (role='customer' or ${process.env.STAFF_AUTH_CUTOVER_ENABLED !== 'true'}) and consumed_at is null and expires_at>now() returning *`;
-    if (!t) throw new AppError("invalid_link");
+      await sql`update ${table("preeval.tokens")} set consumed_at=now() where hash=${hash(token)} and role='customer' and consumed_at is null and expires_at>now() returning *`;
+    if (!t || t.role !== "customer") throw new AppError("invalid_link");
     await sql`insert into ${table("preeval.sessions")}(hash,application_id,role,email,expires_at) values (${hash(raw)},${t.application_id},${t.role},${t.email},now()+interval '24 hours')`;
     return t;
   });

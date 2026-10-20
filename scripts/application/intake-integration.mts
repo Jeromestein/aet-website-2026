@@ -33,9 +33,12 @@ try{
  const miami=await workspaceSnapshot({q:id},{email:TEST_RECIPIENT,offices:['Miami'],include_unassigned:false});
  check(miami.rows.length===1&&miami.rows[0].intakeVersion===2&&miami.rows[0].service==='Course by Course','CRM reads the same test application and service');
  const boston=await workspaceSnapshot({q:id},{email:TEST_RECIPIENT,offices:['Boston'],include_unassigned:false});check(boston.rows.length===0,'office restrictions remain enforced');
- await sendIntakeEmail(id,async()=>{throw new Error('synthetic outage');});
+ const [columns]=await sql`select count(*)::int as count from information_schema.columns where table_schema='aet_preview_evaluation' and table_name='intake_emails' and column_name in ('html','subject')`;
+ check(columns.count===0,'delivery records contain no subject or HTML columns');
+ let originalMail='';
+ await sendIntakeEmail(id,async mail=>{originalMail=mail.html;check(mail.html.includes('Test Master')&&mail.html.includes('$570.00'),'send-time template reads saved education and quote');throw new Error('synthetic outage');});
  check((await readIntake(id)).email.state==='failed','mail failure retains saved application');
- let calls=0;const transport=async(mail:{recipient:string;id:string})=>{check(mail.recipient===TEST_RECIPIENT,'recipient pinned to approved test inbox');calls++;return 'synthetic-'+mail.id;};
+ let calls=0;const transport=async(mail:{recipient:string;id:string;html:string})=>{check(mail.recipient===TEST_RECIPIENT,'recipient pinned to approved test inbox');check(mail.html===originalMail,'unchanged application renders the same retry content');calls++;return 'synthetic-'+mail.id;};
  await sendIntakeEmail(id,transport);check(calls===0,'retry cooldown prevents immediate resend');
  await sql`update ${table('evaluation.intake_emails')} set available_at=now()-interval '1 second' where application_id=${id}`;
  await Promise.all([sendIntakeEmail(id,transport),sendIntakeEmail(id,transport)]);check(calls===1&&(await readIntake(id)).email.state==='sent','concurrent retries claim one email');

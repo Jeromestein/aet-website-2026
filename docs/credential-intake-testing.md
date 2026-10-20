@@ -20,7 +20,7 @@ The current dev configuration uses the existing Supabase PostgreSQL project
 | `aet_preview_evaluation.applications` | Canonical complete `data.intake` (version 2), request ID/hash, saved quote and Application ID |
 | `aet_preview_legacy.fce_applications` | Same-ID compatibility projection for existing CRM list conventions |
 | `aet_preview_legacy.fce_educations` | Education rows, with selected IDs recorded in `service_type.websiteQuote.selectedEducationIds` |
-| `aet_preview_evaluation.intake_emails` | One immutable confirmation per application, attempt/lease state and Resend message ID |
+| `aet_preview_evaluation.intake_emails` | One delivery record per application, attempt/lease state, content digest and Resend message ID |
 | `aet_preview_evaluation.audit` | Submission event |
 
 All application rows, education rows, quote and outbox entry commit together.
@@ -55,7 +55,7 @@ Run the owner-managed dev server as usual. Then:
 pnpm exec vitest run
 pnpm exec tsc --noEmit --incremental false
 pnpm check:i18n
-node --env-file=.env.local --conditions=react-server --import tsx scripts/application/intake-integration.mts
+pnpm test:intake:integration
 ```
 
 The integration script creates and deletes its own synthetic rows. Its email
@@ -79,6 +79,31 @@ On 2026-10-17 the unified page passed desktop/mobile checks for both sources,
 used simulated mail transport only and removed its disposable records.
 
 ## Email behavior
+
+React Email templates live in `lib/application/intake-template.tsx` and share
+`lib/email/branded-layout.tsx`. Submission stores only the application reference and
+recipient in the delivery table. The sender reads saved application/education and
+quote data, renders the template in memory, and sends through Resend. Neither the
+subject nor HTML is stored in the database.
+
+Delivery records retain IDs, recipient, state, attempt/lease/cooldown timestamps,
+provider receipt, a sanitized error code and a SHA-256 content digest. The digest
+cannot reconstruct the message; it prevents a retry from using changed content
+under the same provider idempotency key. Changed content pauses delivery for
+reconciliation instead of silently sending a different message.
+
+The October 20 migration was applied only to the isolated preview. Existing sent
+IDs, states and provider receipts were preserved. For other approved local or
+preview databases, run `node --env-file=.env.local --import tsx
+scripts/email/migrate-delivery-records.mts`. The migration removes stored subjects
+and HTML; any legacy attempted/pending message without reproducible references is
+held for review. It never sends mail or resets sent rows. `migrate-preview.mts`
+also applies the new schema. Production deployment remains separate.
+
+Standalone email checks use `scripts/register-server-only.mjs` to load server-only
+modules without enabling the global `react-server` condition, which is incompatible
+with React Email's HTML renderer. `pnpm test:email:records` verifies pre-evaluation
+references using disposable preview rows and never sends mail.
 
 The new sender is restricted to this preview workflow and
 `errplusone@gmail.com`, enforced in code and the outbox constraint. It never drains

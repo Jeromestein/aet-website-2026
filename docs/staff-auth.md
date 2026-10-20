@@ -1,5 +1,18 @@
 # Staff authentication and Payload migration
 
+
+## Current account policy — October 20, 2026
+
+The owner maintains a fixed team of three staff accounts. Additional accounts and
+password assistance are handled manually by the administrator. The website has
+no self-service password recovery: the forgot/reset pages, mail sender, token
+handler and recovery-only migration path have been removed. Login, logout,
+membership checks and verified first-login migration remain available.
+
+Previously applied recovery-table SQL and historical acceptance results below
+are retained as history. This change does not modify cloud accounts, passwords,
+database tables or provider settings.
+
 Updated October 16, 2026. This is the implementation and rollout record for
 `/Users/plusone/Desktop/Code/aet-website-2026-dev`, previewed at
 `http://localhost:3022`. The older `aet-app` checkout is a legacy reference only.
@@ -8,8 +21,9 @@ Updated October 16, 2026. This is the implementation and rollout record for
 
 Use the existing Next.js application with Supabase Auth and a private staff
 roster. This repository has no Payload package or runtime to remove. Its former
-staff login used emailed access links, and is retained at `/admin/email-login`
-until the explicit staff cutover. Customer access links remain independent.
+staff email-link login has been removed, including its pages, mail sender, token
+creation/consumption and acceptance of old staff sessions. Customer access links
+remain independent. Staff now use account/password login exclusively.
 
 The new `/admin/login` uses email and password. No registration, invitation,
 or routine email verification step is offered. Administrators prepare membership
@@ -29,9 +43,9 @@ Both `.env.local` switches remain **false**:
 
 - `STAFF_LEGACY_MIGRATION_ENABLED`: permits first-login creation of an approved,
   pending legacy identity and retirement of that account's old password hash.
-- `STAFF_AUTH_CUTOVER_ENABLED`: disables the former staff email-login endpoint,
-  creation/consumption of staff access links and old staff sessions. Customer
-  links/sessions remain valid. Merely adding the new page does not revoke them.
+- `STAFF_AUTH_CUTOVER_ENABLED`: retained as a compatibility guard for existing
+  preview/live configuration. Staff email links and legacy staff sessions are
+  rejected regardless of this flag. Customer links/sessions remain valid.
 
 Do not enable employee migration in a local preview while the employee still
 needs the production Payload login. Already mapped, active Supabase staff can
@@ -136,11 +150,11 @@ The complete legacy user table and all three original employee credential/scope
 fingerprints compared unchanged after setup and real account provisioning.
 
 `scripts/staff/verify-native-cloud.mts` exercises independent membership, password
-login, dashboard access, all-office permissions, single-use recovery, password
-reset, deactivation and logout with a disposable `.invalid` identity. It issues
-test recovery nonces directly and sends no mail. Require
-`STAFF_AUTH_SYNTHETIC_TEST=true` and keep both employee switches false. The current
-pass completed 20 cloud/cleanup checks and removed its synthetic identity. Browser
+login, dashboard access, all-office permissions, rejection of removed recovery
+endpoints, deactivation and logout with a disposable `.invalid` identity. It sends
+no mail. Require
+`STAFF_AUTH_SYNTHETIC_TEST=true` and keep both employee switches false. The earlier acceptance
+pass (before recovery removal) completed 20 cloud/cleanup checks and removed its synthetic identity. Browser
 verification reached the original CRM and signed out using that test account;
 the owner's real password login remains for the owner to perform.
 
@@ -156,7 +170,7 @@ was verified clean. No removal change was deployed or pushed.
 | Admin shell and sessions | Payload admin catchall, generated import map, `payload.auth()`, `payload-token`, `/api/users/me` | Existing Next.js staff shell, verified Supabase sessions and server-side membership checks |
 | Permissions | CRM hard-codes three email-based office groups | Owner-approved office arrays in `aet_private.staff_accounts`; enforce in list/detail/mutation/file paths |
 | Database adapter | Payload Postgres adapter registers CMS and business tables through schema hooks | Preserve business schemas/IDs; reviewed explicit SQL, never destructive schema synchronization |
-| Email | Legacy `getPayload()` / `payload.sendEmail()` wrappers | This repository already uses Resend; staff recovery sends only to the requester |
+| Email | Legacy `getPayload()` / `payload.sendEmail()` wrappers | Business notifications use Resend; staff login sends no password-recovery email |
 | CMS/content/media | Pages, Posts, Categories, Header, Footer, media/S3, Lexical and SEO/search/redirect/form plugins | These do not become dependencies of the new login. Preserve any active legacy URLs/media until each consumer is accounted for |
 | REST/GraphQL/preview | Payload-generated API catchall, GraphQL, preview and seed tooling | Retire only after caller inventory and full legacy feature replacement; never invoke seed tooling during migration |
 | Build/tooling | `withPayload`, `@payload-config`, generated types and import-map scripts | Absent from this destination; no Payload package removal is necessary here |
@@ -233,14 +247,10 @@ its response or database commit was lost, retry reconciles only an identity with
 the matching immutable marker. A same-email identity with any other marker is
 blocked for manual reconciliation; its password is never overwritten.
 
-Recovery uses a random single-use nonce stored only as a digest with a 30-minute
-expiry, delivered by Resend after a user request. The token is in the URL fragment
-and removed from browser history after hydration. A verified recovery may create
-a pending identity only while migration is enabled. Tokens are consumed before
-password changes; a provider failure requires a fresh link. Recovery responses
-are generic, including mail delivery failures. Tests do not send recovery mail.
-Project-level security-notification delivery/hooks were not changed or fully
-validated; verify them before rollout rather than promising all emails are muted.
+Self-service password recovery is out of scope. An administrator handles account
+provisioning and password assistance manually. The application neither issues nor
+consumes recovery tokens and cannot provision an identity through a recovery
+bypass. Provider-level notification settings remain separately managed.
 
 ## Configuration
 
@@ -273,14 +283,14 @@ No further server restart was performed by Codex.
 - Unit checks: password compatibility, collisions, interrupted-creation
   reconciliation, migration pause, lockout, weak-password exceptions, office
   authorization, HTTP origins, request size, rate limiting, membership and
-  generic recovery responses.
+  rejection of removed recovery endpoints.
 - `scripts/staff/verify-cloud.mts` uses only a uniquely named synthetic account
   with a negative legacy ID and `.invalid` email in the explicit cloud project.
   It temporarily enables migration **inside that CLI process only**, checks
   concurrent migration, original-password login, refresh, 3022 cookies and CRM
-  page access, recovery/reset, inactive-account denial and logout. It cleans up
+  page access, rejection of removed recovery endpoints, inactive-account denial and logout. It cleans up
   fixture Auth/legacy/private records and checks real staff records are unchanged.
-- The test does not invoke the application's recovery mail sender. It does not
+- The test sends no email. It does not
   read customer rows, upload files, create payments or migrate real employees.
 - Run the standalone cloud script with Node 22+ (native WebSocket required by
   the installed Supabase SDK). The existing Next server on Node 20 passed the
@@ -396,7 +406,7 @@ preview does not claim to secure old direct Data API paths.
    Review direct Data API policies alongside existing legacy callers. Finish
    external customer/payment/webhook, Dropbox and worker/email acceptance; the
    cloud business pass uses synthetic payment and file metadata only.
-3. Rehearse backup restoration, confirm mail sender/recovery origins and shared
+3. Rehearse backup restoration, confirm business-mail sender/origins and shared
    Auth settings, and prepare a release rollback that keeps Supabase login for
    already migrated staff. Deploy through the owner-managed release process.
 4. At the approved production switch, enable migration and staff cutover together.

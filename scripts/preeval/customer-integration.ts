@@ -1,3 +1,4 @@
+import { renderQueuedEmail } from "../../lib/preeval/email";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -27,9 +28,10 @@ async function main() {
       await db()`update preeval.applications set ai_status='idle' where id=${created.data.id}`;
     }
     const [id, other] = ids;
-    const [email] = await db()`select html,recipient from preeval.emails where application_id=${id} and kind='confirmation'`;
-    verify(email.html.includes(`applicationId=${id}`) && !email.html.includes("#token="), "Confirmation must use a reusable application link");
-    verify(email.html.includes(input.schoolName) && email.html.includes("$19.88"), "Confirmation includes education and exact total");
+    const [email] = await db()`select * from preeval.emails where application_id=${id} and kind='confirmation'`;
+    const rendered = await renderQueuedEmail(email);
+    verify(rendered.html.includes(`applicationId=${id}`) && !rendered.html.includes("#token="), "Confirmation must use a reusable application link");
+    verify(rendered.html.includes(input.schoolName) && rendered.html.includes("$19.88"), "Confirmation includes education and exact total");
     verify(email.recipient === recipient, "Test email containment");
     await request("lookup", { applicationId: "invalid" }, "", 400);
     await request("lookup", { applicationId: randomUUID() }, "", 404);
@@ -68,7 +70,7 @@ async function main() {
   } finally {
     for (const id of ids) {
       await db().begin(async tx => {
-        for (const table of ["audit", "emails", "ai_runs", "files", "payments", "tokens", "sessions", "educations"]) await tx.unsafe(`delete from preeval.${table} where application_id=$1`, [id]);
+        for (const table of ["emails", "audit", "ai_runs", "files", "payments", "tokens", "sessions", "educations"]) await tx.unsafe(`delete from preeval.${table} where application_id=$1`, [id]);
         await tx`delete from preeval.applications where id=${id}`;
         await tx`delete from public.aet_core_applications where id=${id}`;
       });

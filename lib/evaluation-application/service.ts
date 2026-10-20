@@ -1,3 +1,4 @@
+import { queueFeeUpdateEmail } from './email';
 import { fromLegacyFormal } from '../legacy-application/mapping';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { cookies } from 'next/headers';
@@ -121,7 +122,8 @@ export async function staffAction(id: string, raw: unknown, actor: string) {
       await tx`update ${table("evaluation.applications")} set status='completed',released_file_id=${file.id},customer_message='' where id=${id}`;
     }
     await tx`update ${table("evaluation.applications")} set version=version+1,updated_at=now() where id=${id}`;
-    await tx`insert into ${table("evaluation.audit")}(application_id,actor,action,detail) values(${id},${actor},${'staff.' + body.action},${tx.json(body)})`;
+    const [event] = await tx`insert into ${table("evaluation.audit")}(application_id,actor,action,detail) values(${id},${actor},${'staff.' + body.action},${tx.json(body)}) returning id`;
+    if (body.action === 'quote') await queueFeeUpdateEmail(tx, id, event.id);
   });
 }
 export async function makeAccessLink(id: string, actor: string) {

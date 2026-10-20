@@ -45,11 +45,15 @@ an explicitly authorized push or deployment. Do not copy folders over `main`.
 
 ## Staff authentication
 
+The owner maintains three staff accounts and handles additions and password
+assistance manually. Self-service password-reset pages and emails are not part
+of the website.
+
 The new password-based staff login at `/admin/login` uses cloud Supabase Auth
 without Docker. Staff membership and office scopes are prepared administratively;
 verified first login can preserve the existing email and password without another
 registration or invitation. Both employee-migration and staff-cutover switches
-remain off in the local preview, and the previous email-login entry is retained.
+remain off in the local preview. Staff email-link login has been removed.
 
 Independent website administrators can already sign in with an explicitly
 confirmed Supabase Auth account and private membership while both switches are
@@ -275,8 +279,8 @@ and a reusable application link. Customers do not register, sign in, or wait for
 another email. `/admin/login` is the separate staff authentication entry.
 Staff pages use English-only, unprefixed `/admin/*` URLs, including the legacy
 `/admin/CRM` address. Old language-prefixed staff links redirect to these URLs;
-the website language preference is preserved. Administrator email links open
-`/admin/access`; customer status and result pages remain localized.
+the website language preference is preserved. Staff use account/password login;
+customer status and result pages remain localized.
 `/admin/CRM` uses the original sidebar, overview cards, status tabs, desktop table,
 mobile cards and detail drawer with durable formal/pre-evaluation data. Statistics,
 search, office filters, pagination, document/payment views and CSV export all use

@@ -172,7 +172,10 @@ export async function staffAction(id: string, body: Row, actor: string) {
     await audit(id, actor, "ai.retry_requested");
   } else if (body.action === "retry_email") {
     if (typeof body.emailId !== "string") throw new AppError("invalid_request");
-    await db()`update ${table("preeval.emails")} set state='queued',attempts=0,available_at=now() where id=${body.emailId} and application_id=${id} and state='failed'`;
+    const retried = await db()`update ${table("preeval.emails")} set state='queued',attempts=0,available_at=now()
+      where id=${body.emailId} and application_id=${id} and state='failed' and available_at<>'infinity'::timestamptz
+      and (first_attempt_at is null or first_attempt_at>now()-interval '23 hours') returning id`;
+    if (!retried.length) throw new AppError("email_requires_review",409);
     await audit(id, actor, "email.retry_requested");
   } else if (body.action === "information") {
     if (
@@ -184,8 +187,9 @@ export async function staffAction(id: string, body: Row, actor: string) {
     const [app] =
       await db()`update ${table("preeval.applications")} set status='needs_information',updated_at=now() where id=${id} and status<>'cancelled' returning *`;
     if (!app) throw new AppError("application_cancelled", 409);
-    await applicationEmail(app, "information", body.message);
-    await audit(id, actor, "information.requested");
+    const [request] = await db()`insert into ${table("preeval.audit")}(application_id,actor,action,detail)
+      values (${id},${actor},'information.requested',${db().json({message:body.message})}) returning id`;
+    await applicationEmail(app, "information", request.id);
   } else if (body.action === "cancel") await cancelApplication(id, actor);
   else throw new AppError("invalid_request");
 }

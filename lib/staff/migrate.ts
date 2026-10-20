@@ -23,7 +23,6 @@ export async function prepareStaffIdentity(
   emailInput: string,
   password: string,
   replacement?: string,
-  recovery = false,
 ): Promise<MigrationResult> {
   const email = normalizeEmail(emailInput);
   return staffDb().begin(async (sql) => {
@@ -52,14 +51,13 @@ export async function prepareStaffIdentity(
       if (process.env.STAFF_LEGACY_MIGRATION_ENABLED !== "true")
         return "paused";
       if (
-        !recovery &&
-        ((account.lock_until &&
+        (account.lock_until &&
           new Date(account.lock_until).getTime() > Date.now()) ||
-          !(await verifyLegacyPassword(
-            password,
-            account.salt || "",
-            account.hash || "",
-          )))
+        !(await verifyLegacyPassword(
+          password,
+          account.salt || "",
+          account.hash || "",
+        ))
       )
         return "invalid";
       const { data, error } = await staffAdmin().auth.admin.createUser({
@@ -78,7 +76,7 @@ export async function prepareStaffIdentity(
       }
       authId = data.user.id;
     }
-    await sql`update aet_private.staff_accounts set auth_user_id=${authId},migration_state=${recovery ? "recovery_only" : "complete"},migrated_at=now() where legacy_user_id=${account.legacy_user_id}`;
+    await sql`update aet_private.staff_accounts set auth_user_id=${authId},migration_state='complete',migrated_at=now() where legacy_user_id=${account.legacy_user_id}`;
     await sql`update public.users set hash=null,salt=null,reset_password_token=null,reset_password_expiration=null where id=${account.legacy_user_id}`;
     return "ready";
   });

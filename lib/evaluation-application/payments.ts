@@ -4,6 +4,7 @@ import { configuration } from '../preeval/config';
 import { AppError } from '../preeval/domain';
 import { stripeClient } from '../preeval/payments';
 import { payableTotal, receiptPath, type ApplicationRecord } from './workflow';
+import { queuePaymentEmail } from './email';
 const pilot = 'aet-formal-2026-local';
 export async function checkout(id: string) {
   const stripe = stripeClient();
@@ -49,7 +50,8 @@ export async function applyCheckout(session: Stripe.Checkout.Session, eventId: s
     if (session.payment_status === 'paid' && !['refunded', 'partially_refunded'].includes(payment.status)) {
       const intent = typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id;
       if (!intent) throw new AppError('invalid_payment');
-      await tx`update ${table("evaluation.payments")} set status='paid',payment_intent=${intent},updated_at=now() where id=${payment.id}`;
+      await tx`update ${table("evaluation.payments")} set status='paid',payment_intent=${intent},paid_at=coalesce(paid_at,now()),updated_at=now() where id=${payment.id}`;
+      if (payment.status !== 'paid') await queuePaymentEmail(tx, id, payment.id);
       await tx`update ${table("evaluation.applications")} set payment_status='paid',version=version+1,updated_at=now() where id=${id} and payment_status not in ('refunded','partially_refunded')`;
     } else if ((session.status === 'expired' || eventType === 'checkout.session.async_payment_failed') && !['paid', 'refunded', 'partially_refunded'].includes(payment.status)) {
       await tx`update ${table("evaluation.payments")} set status='expired',updated_at=now() where id=${payment.id}`;

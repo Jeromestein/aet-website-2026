@@ -160,7 +160,7 @@ background portrait and content have breathing room without a fixed section heig
 
 ### CRM workspace
 
-- Staff pages are English-only, including login and access-link confirmation.
+- Staff pages are English-only, including account/password login.
   Keep the legacy `/admin/CRM` URL and all `/admin/*` routes unprefixed.
   Redirect existing `/en/admin/*`, `/zh/admin/*`, `/es/admin/*`, and lowercase
   `/admin/crm` entries to their canonical staff URLs. Hide language selectors.
@@ -171,9 +171,9 @@ background portrait and content have breathing room without a fixed section heig
   work are documented in [README.md](../README.md#application-domains-and-staff-urls).
 - Use a compact email/password login card with the existing full AET logo,
   navy actions, cool-white surfaces, visible field labels, a password visibility
-  control and a quiet password-recovery link. Do not offer public registration
-  or repeat employee invitations. Keep the previous staff sign-in entry during
-  transition until the explicit cutover; customer access links remain separate.
+  control. Do not offer public registration, password recovery, email-link login
+  or repeat employee invitations. The administrator maintains the three staff
+  accounts manually; customer access links remain separate.
 - Retain office permissions on the server using the owner's approved staff
   roster. Scope statistics, searches, documents, payments and CSV exports before
   returning data. Office selectors contain only permitted offices and, when
@@ -602,3 +602,22 @@ An explicit language URL wins over saved preferences. Otherwise use the saved
 language, browser preference, then English. Preserve the current page, query, and
 fragment when switching. Missing translations fall back to English and are flagged
 by development checks. New localized pages reuse the same route and message structure.
+
+### Transactional email design
+
+- All transactional business emails use the full transparent header PNG at a proportional
+  286px desktop/254px mobile width, a white 600px letter, pale-blue heading and fee
+  sections, navy typography and one orange primary action. Use the homepage’s locally hosted Poppins (400 body, 600 headings/actions),
+  with Arial/Helvetica fallbacks in email clients that cannot load web fonts.
+  Use Title Case for email headings, subheadings and primary button labels. Use tables and inline styles; responsive padding targets the
+  generated table cells, not their parent tables.
+- Content order: brand, receipt heading, greeting, application reference, service
+  summary, education, estimated fees, application action, next steps, team signoff.
+  Keep IDs subordinate but readable, and preserve quote ranges/pending estimates.
+- A compact navy footer contains company identity and Website, Application status,
+  Contact and Privacy links. Pilot-only disclosures remain outside the main letter.
+- Share the same layout for formal confirmation, payment confirmation, fee updates,
+  pre-evaluation confirmation/results, information requests and customer access.
+  Put the confirmed amount, provisional assessment or requested information in a
+  pale-blue panel. Never invent payment dates, quotes or completion estimates.
+  Promotional and staff authentication emails are outside this template set.

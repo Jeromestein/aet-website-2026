@@ -6,7 +6,6 @@ import { AppError } from '../preeval/domain';
 import { initialData } from '../evaluation-application/domain';
 import { toLegacyFormal, toLegacyEducation, type LegacyFormalProjection } from '../legacy-application/mapping';
 import { intakeSchema, normalizeIntake, intakeQuote, officeNames, statusPath, TEST_RECIPIENT, type IntakeReceipt } from './intake';
-import { confirmationEmail } from './intake-template';
 export function requireIntakePreview() {
   if(!configuration().cloudPreview) throw new AppError('preview_unavailable',503);
 }
@@ -42,8 +41,7 @@ export async function saveIntake(raw:unknown) {
     row.service_type.websiteQuote={version:2,...quote,educationIds:educations.map(e=>e.id),selectedEducationIds:Object.fromEntries(['document','course'].map(key=>[key,data.evaluationRequest.services[key as 'document'|'course'].educationIndexes.map(index=>educations[index].id)]))};
     await tx`insert into ${table('public.fce_applications')} ${tx({...row,id,service_type:tx.json(row.service_type as never),additional_services_quantity:tx.json(row.additional_services_quantity),submitted_at:new Date().toISOString()})}`;
     for(const education of educations) await tx`insert into ${table('public.fce_educations')} ${tx(education)}`;
-    const mail=confirmationEmail(id,parsed.locale,data,quote,configuration().origin);
-    await tx`insert into ${table('evaluation.intake_emails')}(application_id,recipient,subject,html) values(${id},${TEST_RECIPIENT},${mail.subject},${mail.html})`;
+    await tx`insert into ${table('evaluation.intake_emails')}(application_id,recipient) values(${id},${TEST_RECIPIENT})`;
     await tx`insert into ${table('evaluation.audit')}(application_id,actor,action,detail) values(${id},'customer','intake.submitted',${tx.json({version:2,preview:true})})`;
     return {id,created:true,statusPath:statusPath(id,parsed.locale)};
   });

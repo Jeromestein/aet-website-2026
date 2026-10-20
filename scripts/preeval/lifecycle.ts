@@ -46,9 +46,9 @@ async function main() {
   const customer =
     "aet_preeval_session=" +
     (await makeSession(id, "customer", configuration().recipient));
-  const admin =
-    "aet_preeval_session=" +
-    (await makeSession(null, "admin", configuration().admin));
+  // Supply a password-authenticated test staff session with access to the fixtures.
+  const admin = process.env.PREEVAL_TEST_STAFF_COOKIE;
+  assert.ok(admin, "Set PREEVAL_TEST_STAFF_COOKIE from a password-authenticated test staff session.");
   const [other] =
     await db()`select id from preeval.applications where payment_status='paid' and exists(select 1 from preeval.ai_runs r where r.application_id=preeval.applications.id and r.state='completed') order by created_at desc limit 1`;
   check(other, "Run the real browser payment/AI acceptance first.");
@@ -248,10 +248,8 @@ async function main() {
   const key = "retry-test:" + randomUUID();
   await enqueueEmail({
     applicationId: id,
-    kind: "acceptance_retry",
+    kind: "access",
     key,
-    subject: "AET local test — delivery retry",
-    html: "<p>Local delivery retry verification. No action is required.</p>",
   });
   const saved = process.env.RESEND_API_KEY;
   process.env.RESEND_API_KEY = "invalid-local-test-key";
@@ -276,7 +274,10 @@ async function main() {
     sent.state === "sent" && !!sent.provider_id,
     "Delivery retry succeeds once",
   );
-  await request("logout", { admin: true }, admin);
+  const logout = await fetch(origin + "/api/staff-auth/logout", {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json", Cookie: admin }, body: "{}",
+  });
+  check(logout.ok, "Password-authenticated staff logout succeeds");
   await request("admin/applications", undefined, admin, 401);
   await writeFile(
     ".local/lifecycle-report.json",

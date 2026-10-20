@@ -28,7 +28,6 @@ export default async function Page({
     <PreEvaluationShell locale="en" narrow staff>
       <StaffAuthForm
         returnTo={safeStaffRedirect(returnTo)}
-        allowEmailFallback={process.env.STAFF_AUTH_CUTOVER_ENABLED !== "true"}
       />
     </PreEvaluationShell>
   );

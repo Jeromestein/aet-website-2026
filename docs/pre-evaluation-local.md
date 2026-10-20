@@ -18,7 +18,7 @@ The setup below documents the earlier optional local-database/service pilot;
 its test fixtures and Docker commands are not the current cloud workflow.
 Current password-based staff login and office scopes are documented in
 [staff-auth.md](staff-auth.md). Historical email-login descriptions below are
-superseded by that document; the old staff entry is retained only for transition.
+superseded by that document; staff email-link login has been removed.
 
 ## Owner-approved behavior
 
@@ -196,10 +196,33 @@ Unpaid cancellation expires open checkout sessions. Paid cancellation requires
 staff contact. Partial/full refunds hide the result; refund events cannot regress
 an already-recorded refund. This pilot does not initiate refunds from the UI.
 
-The email outbox records attempts, provider IDs, errors and sent state. Resend
-idempotency keys prevent duplicate sends during automatic retries; result messages
-are deduplicated by application/result version. Failed sends retry up to five
-attempts and have a staff retry control. Workspace `sent` means accepted by
+Email templates are React Email components in `lib/preeval/email-template.tsx`.
+The outbox stores delivery metadata and business references only, never a subject
+or rendered HTML. Send-time rendering reads the application and education records.
+Result mail references `result_version`; superseded, cancelled or withheld results
+are not sent. Information requests are application audit records with their own
+message text; the delivery row stores only that record ID. This preserves the
+original staff request without storing an email copy.
+
+Resend idempotency keys use the stable delivery UUID. A SHA-256 digest detects
+changed rendered content on retries; a mismatch pauses delivery for review. The
+sender records provider receipts, sanitized errors, attempts, leases and cooldowns.
+Failed sends retry up to five attempts, with a 60-second delay and three-minute
+stale-lease recovery. Retry is limited to 23 hours from the first attempt, including
+manual retries. Changed-content/legacy-review records require reconciliation and
+cannot be forced through the ordinary retry control.
+
+Staff use account/password login only. The administrator email template and
+sender have been removed; historical administrator queue entries are rejected
+before rendering or delivery. Customer notifications remain test-contained;
+the cloud-preview worker is still disabled. The historical `access_token` column
+is unused; no cloud schema or stored records were modified for this removal.
+
+Apply `20261020165103_email_delivery_records.sql` through the local migration
+workflow, or use `scripts/email/migrate-delivery-records.mts` for the isolated
+preview. Never apply preview schema changes to production. Legacy unsent messages
+without reproducible references are retained as failed/review-required records;
+sent records keep their original IDs and provider receipts. Workspace `sent` means accepted by
 Resend, not necessarily inbox delivery; acceptance separately checked Resend's
 `delivered` status. Customers can always reopen their application using its ID
 or the reusable link in the confirmation email.
