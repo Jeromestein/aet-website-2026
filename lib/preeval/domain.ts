@@ -28,6 +28,7 @@ export const applicationSchema = z
     startDate: date,
     endDate: date,
     terms: z.literal(true),
+    uploadsPending: z.boolean().optional(),
   })
   .strict()
   .refine((v) => v.startDate <= v.endDate, {

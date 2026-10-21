@@ -31,6 +31,7 @@ export default function PreEvaluationShell({
         id="main-content"
         className={
           s.main +
+          (!staff ? " " + s.publicMain : "") +
           (narrow ? " " + s.narrow : "") +
           (workspace ? " " + s.workspace : "")
         }

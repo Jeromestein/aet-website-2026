@@ -1,5 +1,115 @@
 # AET Implementation Status
 
+## 2026-10-21 — Degree title and physical-page evidence implementation
+
+- Added structured US degree level/name/field/concentration, distinct from source
+  qualification. Complete customer titles are assembled within the existing limit;
+  ambiguous evidence can still return Unable to determine. No case answer rules.
+- Replaced multi-page counting with individually identified single-page PDF inputs.
+  Model evidence references are resolved to original locations by the server;
+  unknown IDs are rejected and short excerpts are retained. Originals and existing
+  limits remain unchanged. This verifies location, not semantic truth of a claim.
+- Passed 113 focused tests, the full 464-test suite and TypeScript; all 23 real source
+  pages rendered identically after copying. Source documents, reference answers
+  and baseline outputs are unchanged. No OCR, frontend edit, database migration,
+  server restart or build was needed for this refinement.
+- The verified implementation will be committed before a second four-case live
+  benchmark; measured comparison will be recorded separately afterward.
+
+
+## 2026-10-21 — Historical pre-evaluation GPT baseline
+
+- Ran four private cases once each through the unchanged production analysis
+  function, using `gpt-6.1-sol` and prompt `preeval-direct-files-v2`. All four
+  completed; no hidden retry, reference-report upload or prompt tuning.
+- Calls took 13.49, 16.00, 12.52 and 30.44 seconds; total sequential batch 72.64
+  seconds, mean 18.11 seconds. Usage: 83,065 input + 1,986 output = 85,051 tokens.
+  Local file-to-analysis timing excludes Dropbox, queue, CRM, payment and email.
+- Assistant comparison found matching bachelor level in 4/4 cases, full reference
+  equivalency in 3/4, and one partial US field/concentration mapping. A separate
+  visual check identified three wrong citation page locations in one case despite
+  its correct degree conclusion. No general accuracy claim or staff sign-off.
+- Added an opt-in timed runner with offline preflight, hashes and private raw/parsed
+  output. Passed 18 existing AI tests and TypeScript including the runner. Stored
+  analysis and proposed improvements in the ignored run directory; production
+  prompt, UI and workflows remain unchanged. No server restart, build or deployment.
+- Priorities: preserve US degree/concentration detail, validate evidence locations,
+  remove irrelevant course-level caveats, then benchmark input/latency optimizations
+  and broaden the independent test set. See [benchmark instructions](preeval-benchmark.md).
+
+## 2026-10-21 — Private degree-only pre-evaluation benchmark
+
+- Built four owner-provided historical FCE cases in the Git-ignored
+  `.local/preeval-benchmark/fce-v1/` directory. Kept byte-exact source/report copies,
+  source inventory, SHA-256 hashes, page maps and exact report paragraph citations.
+- Expected labels cover only US degree level, field and concentration. GPA, credits
+  and course results were not extracted or scored. Original uploaded transcripts
+  and reference reports remain unchanged, including any grades they contain.
+- Prepared five input PDFs containing all 23 original pages. Split the 11-page
+  input into 10 + 1 pages; rendered comparison confirmed identical pixels for all
+  11 pages. Missing submitted form values remain blank, never inferred from answers.
+- Offline validation passed for all cases. Eight deliberate negative checks rejected
+  hash mismatch, incorrect page mapping, reference-as-input, path escape, extra
+  answer metadata, report-derived form fields, extra request documents and symlink
+  escape. Confirmed the local corpus is Git-ignored and diff whitespace is clean.
+- No actual model calls, accuracy scores, database writes, Dropbox uploads, emails,
+  UI changes, server restart, build, deployment or commit in this dataset task.
+  A live benchmark runner remains separate. See [instructions](preeval-benchmark.md).
+
+## 2026-10-20 — Automatic pre-evaluation execution within Hobby technical limits
+
+- Updated the checklist before implementing request-triggered Next `after()` jobs.
+  The existing 3022 server now runs eligible submissions, completed upload batches
+  and customer/staff retries. Authorized application reads resume due jobs, with
+  existing atomic claims, backoff, retry caps and upload/correction fencing.
+- Added a secret-protected, opt-in daily recovery route, limited to three attempts,
+  and a single daily Cron entry. Execution routes use Node.js and 300-second limits.
+  No minute Cron, paid queue, separate hosted process or second local terminal is
+  required. Daily recovery is off by default; Preview/local Cron does not auto-run.
+- Fixed the real Next/Dropbox Buffer-versus-Blob response difference across AI and
+  document downloads. Static upload-hook imports also avoid the Node/tsx dynamic
+  import failure found during integration checks. No OCR was added.
+- Passed 240 focused tests, TypeScript and 40 isolated DB/Dropbox checks. In-app
+  browser confirmation triggered one real GPT request through 3022 and automatically
+  reached Completed on desktop and mobile. The returned model was `gpt-6.1-sol`,
+  with 2,475 tokens. A second HTTP scan-PDF check took 19.4 seconds and 2,951
+  tokens; concurrent completion requests produced one run. Duplicate reads did not regenerate. Customer-only
+  API access preserved the unpaid result gate; the browser used its existing staff
+  session. An authenticated download matched the original bytes exactly.
+- Removed synthetic rows/files, including the interrupted-test fixture. No mail
+  dispatch, payment, additional dev server, deployment or production cutover.
+- Hobby compatibility is technical only: its terms restrict use to personal,
+  non-commercial projects. Paid-service hosting eligibility, production guards,
+  Fluid Compute settings and hosted Cron/function acceptance remain open.
+  See [execution setup](pre-evaluation-local.md#vercel-execution-and-free-tier-technical-limits)
+  and [acceptance](pre-evaluation-local.md#automatic-execution-acceptance-on-port-3022).
+
+## 2026-10-20 — Pre-evaluation direct GPT file analysis
+
+- Updated the migration checklist first. Added an independent Responses API worker
+  that reads original PDF/images from canonical and historical Dropbox paths,
+  without OCR or a local Codex subprocess. Added server-only key/model placeholders.
+- Upload batches, durable claims, heartbeats, bounded retries and version/run
+  fencing protect partial uploads and staff corrections. Customer/staff file lists
+  include shared uploads. Paid result release remains unchanged. AI never dispatches
+  mail or calls Stripe. Staff CRM includes run metadata and evidence references.
+- Applied the additive migration only to private preview schemas; verified RLS and
+  browser-role denial. The security advisor reported no new-table finding.
+- Passed 157 focused tests, TypeScript, offline Dropbox checks and 28 isolated
+  real DB/Dropbox integration checks with injected model responses. Customer
+  desktop/mobile confirmation, waiting, failure and retry were checked in-app.
+  English CRM history/evidence and regeneration were also verified on desktop
+  and mobile. Synthetic applications and files were removed afterward.
+- After the owner added the API key, live `gpt-6.1-sol` acceptance passed for text
+  PDF, image-only PDF, PNG and blank evidence. Six requests including two diagnostic
+  rechecks used 9,188 tokens. Extracted facts, conflicts, insufficient evidence,
+  persisted results/usage, payment gating and duplicate-job prevention were checked.
+  PDF input now requests high detail. Prompt v2 removes unsupported speculation
+  about file parsing; the conflict case was rerun successfully. Test rows/files
+  were deleted; no email was enqueued or sent, and no payment was made.
+- Hosted execution acceptance, deployment and production cutover remain separate. See
+  [the setup and live acceptance guide](pre-evaluation-local.md#live-gpt-acceptance).
+
 ## 2026-10-20 — Unify application document storage
 
 - Updated the checklist first, then shared the applicant-name/application-ID

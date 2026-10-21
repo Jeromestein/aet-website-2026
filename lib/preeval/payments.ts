@@ -14,7 +14,7 @@ export function stripeClient() {
 export async function publishIfReady(id: string) {
   const [app] = await db().begin(async (tx) => {
     const ready =
-      await tx`select * from ${table("preeval.applications")} where id=${id} and payment_status='paid' and result is not null and status not in ('cancelled','needs_information') for update`;
+      await tx`select * from ${table("preeval.applications")} where id=${id} and payment_status='paid' and result is not null and ai_status='completed' and not uploads_pending and status not in ('cancelled','needs_information') for update`;
     if (ready[0] && ready[0].status !== "completed")
       await tx`update ${table("preeval.applications")} set status='completed',updated_at=now() where id=${id}`;
     return ready;

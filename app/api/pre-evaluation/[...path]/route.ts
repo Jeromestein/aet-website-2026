@@ -31,9 +31,12 @@ import {
 } from "@/lib/preeval/payments";
 import { flushFormalEmails } from '@/lib/evaluation-application/email';
 import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-application/payments';
+import { completeUploads, retryAnalysis } from "@/lib/preeval/ai-jobs";
+import { scheduleAI } from "@/lib/preeval/ai-scheduler";
 import { downloadFile } from "@/lib/preeval/dropbox";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 const response = (value: unknown, status = 200) =>
   NextResponse.json(value, {
@@ -118,6 +121,7 @@ async function handler(
         201,
       );
       res.cookies.set(sessionCookie(result.token));
+      await scheduleAI(result.app.id);
       after(flushEmails);
       return res;
     }
@@ -177,8 +181,18 @@ async function handler(
     if (path[0] === "applications" && path[1]) {
       const id = uuid(path[1]),
         current = await authorize(id);
-      if (path.length === 2 && !isPost)
-        return response(await application(id, current.role === "admin"));
+      if (path.length === 2 && !isPost) {
+        const app = await application(id, current.role === "admin");
+        if (['queued', 'running'].includes(app.ai_status)) await scheduleAI(id);
+        return response(app);
+      }
+      if (path[2] === "uploads-complete" && isPost) {
+        await completeUploads(id); await scheduleAI(id); return response({ ok: true });
+      }
+      if (path[2] === "retry-ai" && isPost) {
+        await limit("ai-retry:" + id, 3, 600);
+        await retryAnalysis(id); await scheduleAI(id); return response({ ok: true });
+      }
       if (path[2] === "checkout" && isPost) {
         await limit("checkout:" + id, 10, 600);
         return response({ url: await checkout(id) });
@@ -209,6 +223,7 @@ async function handler(
       if (path[2] === "staff" && isPost) {
         await authorize();
         await staffAction(id, body, current.email);
+        if (body.action === "retry_ai") await scheduleAI(id);
         after(flushEmails);
         return response({ ok: true });
       }

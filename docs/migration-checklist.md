@@ -1,5 +1,114 @@
 # AET 2026 Website and App Migration Checklist
 
+## Degree equivalency and evidence-page refinement — October 21, 2026
+
+Improve the unchanged-model baseline without reading reference answers during
+inference. Preserve original uploads and historical results. Commit the verified
+implementation before a second run of the same four cases.
+
+- [x] Record the implementation and comparison plan first.
+- [x] Separate source qualifications from structured US degree/field/concentration;
+  derive the complete customer title without a ten-word truncation rule.
+- [x] Supply each PDF page as an individually identified direct-file input; resolve
+  returned evidence IDs to original document/page positions on the server and
+  retain supporting excerpts. No OCR or original-file edits.
+- [x] Test page identity, malformed references, degree-title preservation, unknown
+  equivalencies, legacy compatibility and actual multi-page PDF preparation.
+- [ ] Commit only the reviewed analysis/benchmark changes and required dependencies.
+- [ ] Rerun all four unchanged cases once using the same model and timing boundaries;
+  compare full equivalency, evidence locations, tokens and duration with the baseline.
+- [ ] Record limitations and measured differences; commit the comparison documentation.
+
+
+## Historical pre-evaluation live benchmark — October 21, 2026
+
+Owner authorized one baseline run on the four private historical cases using the
+current GPT analysis function, with per-case timing and degree-only review.
+
+- [x] Record scope before running the benchmark; preserve the production prompt.
+- [x] Add an explicit live runner with input allowlisting, integrity checks,
+  isolated output, monotonic timings and provider usage metadata.
+- [x] Execute all four cases once; retain failures without hidden retries.
+- [x] Compare degree level, field and concentration against private references;
+  record observed limitations and proposed improvements without tuning to answers.
+- [x] Save the private run report and update documentation with measured results.
+
+
+Baseline: four completed calls, 72.64 seconds total, 85,051 tokens. Degree level
+matched in 4/4 cases; full degree/field/concentration matched in 3/4 with one
+partial mapping. One case had incorrect evidence page locations. These are
+assistant-reviewed observations from one run per case, not general accuracy.
+Private report: `.local/preeval-benchmark/fce-v1/runs/2026-10-21T17-20-49-805Z/report.md`.
+
+## Historical FCE benchmark dataset — October 21, 2026
+
+Use four owner-provided completed FCE cases as a private, document-only regression
+set. Applicant uploads are model inputs; completed AET reports supply reference
+answers and must never enter the model request. Per the owner's clarification,
+score only US degree level, field and concentration; exclude GPA, credits and
+individual courses. Do not infer missing form inputs from reports or treat four
+bachelor-level cases as a representative accuracy study.
+
+- [x] Record the dataset construction plan before implementation.
+- [x] Inventory and visually review uploads/reference conclusions; curate sourced
+  degree-only labels with exact DOCX paragraph references.
+- [x] Preserve originals and hashes in ignored local storage; separate model inputs
+  from references, with explicit page mappings for the 11-page scan.
+- [x] Add an input-only manifest and offline validator. Scope this round to dataset
+  construction; a live model runner and real-case scoring remain future work.
+- [x] Validate all four cases and 23 original pages; reject eight deliberate
+  integrity/leakage/path mutations. Verify all 11 split pages render identically
+  to their originals. Confirm private corpus files are Git-ignored.
+- [x] Document scope and limitations. No real-case API analysis was run.
+
+See [benchmark instructions](preeval-benchmark.md). Private labels and source
+material live under `.local/preeval-benchmark/fce-v1/` and must not enter Git.
+
+## Pre-evaluation automatic execution within Hobby limits — October 20, 2026
+
+Owner requested compatibility with the free Vercel tier and one local Next server.
+Use request-triggered `after()` execution, persisted task state, authorized
+application-read/retry recovery and one optional daily fallback. No minute cron,
+continuous hosted process, paid queue or additional local terminal is required.
+Technical limits do not override Hobby's personal/non-commercial eligibility.
+
+- [x] Record the free-tier implementation plan before editing code.
+- [x] Trigger eligible AI jobs after submission, batch completion and explicit retries.
+- [x] Recover due/interrupted jobs when their authorized application is viewed;
+  preserve leases, backoff, retry caps, cancellation and upload/version fencing.
+- [x] Add a secret-protected, opt-in daily recovery endpoint with bounded work and
+  Node.js route durations no greater than 300 seconds.
+- [x] Verify disabled/missing configuration, unauthorized recovery, duplicate
+  triggers, backoff and existing routes; run one real HTTP-to-GPT acceptance.
+- [x] Verify the customer page using only the existing 3022 server; document daily
+  fallback limits, environment setup, Hobby terms and hosted verification gaps.
+
+## Pre-evaluation GPT document analysis — October 20, 2026
+
+Owner-approved scope: read the application's saved Dropbox PDF/images and send
+those files plus education fields to the OpenAI Responses API. No Google Vision
+OCR or local Codex process in this path. Keep optional attachments, payment-gated
+customer results, staff correction and historical file compatibility. The owner configured the server-side API key. Mocked checks and live GPT
+acceptance are recorded separately.
+
+- [x] Record this implementation plan before changing application code.
+- [x] Add configurable server-only GPT file analysis with structured results,
+  evidence references, uncertainty and bounded input size/page limits.
+- [x] Reconcile canonical/historical Dropbox documents into one analysis manifest;
+  wait for the current upload batch and avoid silently ignoring failed uploads.
+- [x] Run durable, versioned AI jobs separately from email/payment workers; prevent
+  duplicate execution and stale results overwriting new files or staff corrections.
+- [x] Show pending/running/completed/failed states and controlled retries while
+  preserving the existing customer result and payment rules.
+- [x] Prepare environment placeholders and setup/rerun instructions for the owner.
+- [x] Verify PDF/image/multiple-file inputs, form conflicts, missing/unreadable
+  evidence, provider failures, duplicate jobs and concurrent file updates using
+  isolated fixtures; inspect the customer UI on desktop and mobile.
+- [x] After the owner configured an API key, run real GPT acceptance with synthetic
+  text PDF, scanned PDF, PNG and blank evidence; record actual model/output/usage.
+  Six real requests including two diagnostic rechecks used 9,188 tokens in total.
+  See [the acceptance record](pre-evaluation-local.md#live-gpt-acceptance). Production rollout stays separate.
+
 ## Application document paths — October 20, 2026
 
 Owner-approved rule: new FCE and pre-evaluation documents use

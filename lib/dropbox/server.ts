@@ -1,4 +1,6 @@
 import 'server-only';
+import { downloadBytes } from './download';
+import { startDocumentUpload, finishDocumentUpload } from '../preeval/ai-jobs';
 import { resolveStorage } from './storage';
 import { applicationFolder, initialStorage, type DocumentIdentity } from './paths';
 import { createCipheriv, createDecipheriv, createHash, hkdfSync, randomBytes } from 'node:crypto';
@@ -8,7 +10,7 @@ import { accountForOffice, CHUNK_SIZE, DocumentError, HASH_BLOCK_SIZE, safeSegme
 export type ApplicationContext = DocumentIdentity;
 type UploadContext = {
   application: ApplicationContext; sessionId: string; fileName: string; mime: string;
-  size: number; offset: number; contentHash: string;
+  size: number; offset: number; contentHash: string; aiAttempt?: string | null;
 };
 type Envelope<T> = { purpose: string; expires: number; data: T };
 const lifetime = 2 * 60 * 60 * 1000;
@@ -151,32 +153,52 @@ async function finishResult(dbx: Dropbox, context: ApplicationContext, file: fil
   }
   return { success: true, file: fileEntry(file), archive };
 }
+async function startAIUpload(context: ApplicationContext, key: string) {
+  if (context.kind !== 'pre-evaluation') return null;
+  return startDocumentUpload(context.id, key);
+}
+async function finishAIUpload(context: ApplicationContext, attempt: string | null | undefined, success: boolean, file?: files.FileMetadata) {
+  if (attempt) await finishDocumentUpload(context.id, attempt, success,
+    file ? { name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev } : undefined);
+}
+function validateAIFile(context: ApplicationContext, name: string, size: number) {
+  if (context.kind !== 'pre-evaluation') return;
+  if (!/\.(pdf|png|jpe?g)$/i.test(name)) throw new DocumentError('fileType', 415);
+  if (size > 20 * 1024 * 1024) throw new DocumentError('tooLarge', 413);
+}
 export async function uploadSmall(context: ApplicationContext, file: File) {
+  validateAIFile(context, file.name, file.size);
   validateFile(file.name, file.size, file.type);
   if (file.size > CHUNK_SIZE) throw new DocumentError('tooLarge', 413);
   const bytes = Buffer.from(await file.arrayBuffer());
   checkHeader(file.name, bytes);
   const storage = await resolveStorage(context);
   const dbx = await clientForOffice(storage.write.office);
+  const attempt = await startAIUpload(context, file.name);
   let result;
   try {
     result = await dbx.filesUpload({
       path: `${storage.write.path}/${file.name}`, contents: bytes,
       mode: { '.tag': 'add' }, autorename: true, content_hash: dropboxHash(bytes),
     });
-  } catch { throw new DocumentError('uncertain', 502); }
+  } catch { await finishAIUpload(context, attempt, false); throw new DocumentError('uncertain', 502); }
+  await finishAIUpload(context, attempt, true, result.result);
   return finishResult(dbx, context, result.result);
 }
 export async function startUpload(context: ApplicationContext, data: Record<string, unknown>, expires: number) {
   const { fileName, fileSize, mime, contentHash } = data;
   if (typeof fileName !== 'string' || typeof fileSize !== 'number' || typeof mime !== 'string' ||
     typeof contentHash !== 'string' || !/^[a-f0-9]{64}$/.test(contentHash)) throw new DocumentError('invalid');
+  validateAIFile(context, fileName, fileSize);
   validateFile(fileName, fileSize, mime);
   if (fileSize <= CHUNK_SIZE) throw new DocumentError('invalid');
   const storage = await resolveStorage(context);
   const dbx = await clientForOffice(storage.write.office);
-  const session = await dbx.filesUploadSessionStart({ close: false, contents: Buffer.alloc(0) });
-  const upload: UploadContext = { application: context, sessionId: session.result.session_id, fileName, size: fileSize, mime, offset: 0, contentHash };
+  const aiAttempt = await startAIUpload(context, fileName);
+  let session;
+  try { session = await dbx.filesUploadSessionStart({ close: false, contents: Buffer.alloc(0) }); }
+  catch (error) { await finishAIUpload(context, aiAttempt, false); throw error; }
+  const upload: UploadContext = { application: context, sessionId: session.result.session_id, fileName, size: fileSize, mime, offset: 0, contentHash, aiAttempt };
   return { success: true, uploadKey: seal(accountForOffice(context.office), 'upload', upload, expires), offset: 0 };
 }
 export async function continueUpload(context: ApplicationContext, data: Record<string, unknown>) {
@@ -196,6 +218,7 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
       if (Number.isSafeInteger(offset)) await dbx.filesUploadSessionAppendV2({ cursor: { ...cursor, offset: offset! }, close: true, contents: Buffer.alloc(0) });
       else if (!/closed|not_found/.test(errorSummary(error))) throw error;
     }
+    await finishAIUpload(context, upload.aiAttempt, false);
     return { success: true };
   }
   if (data.action === 'append') {
@@ -221,13 +244,15 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
       cursor, contents: Buffer.alloc(0),
       commit: { path: `${storage.write.path}/${upload.fileName}`, mode: { '.tag': 'add' }, autorename: true },
     });
-  } catch { throw new DocumentError('uncertain', 502); }
+  } catch { await finishAIUpload(context, upload.aiAttempt, false); throw new DocumentError('uncertain', 502); }
   if (result.result.size !== upload.size || result.result.content_hash !== upload.contentHash) {
     // Dropbox can return an existing identical file. Never auto-delete the
     // returned ID; a failed client-supplied hash must not erase prior uploads.
     // Leave it for review, report an integrity error and skip the LA copy.
+    await finishAIUpload(context, upload.aiAttempt, false);
     throw new DocumentError('integrity', 422);
   }
+  await finishAIUpload(context, upload.aiAttempt, true, result.result);
   return finishResult(dbx, context, result.result);
 }
 export async function listFiles(context: ApplicationContext, cursor?: string | null): Promise<FilePage> {
@@ -271,7 +296,7 @@ export async function readDocument(context: ApplicationContext, fileId: string):
       if (!location) throw new DocumentError('access', 403);
       const dbx = await clientForOffice(location.office);
       const result = await dbx.filesDownload({ path: file.id });
-      return Buffer.from((result.result as files.FileMetadata & { fileBinary: Buffer }).fileBinary);
+      return downloadBytes(result.result);
     }
     cursor = page.nextCursor;
   } while (cursor);

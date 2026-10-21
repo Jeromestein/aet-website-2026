@@ -243,3 +243,16 @@ at `58da862`. The later count/size fixes were verified locally, so recheck those
 on the deployed dev commit. Hosted checks across both accounts and failure paths,
 and real-applicant production acceptance, remain release tasks. See the current
 [checklist](migration-checklist.md) and [progress analysis](status.md#2026-10-20--reconcile-dev-progress).
+
+## Pre-evaluation GPT reader — October 20, 2026
+
+The independent AI worker reads original PDF/JPG/PNG revisions from the same saved
+application locations. It combines shared uploads, pilot per-file metadata and
+permitted historical paths; newer applications still cannot inherit another
+application's historical email folder. Shared pre-evaluation uploads are indexed
+in the pilot file list. FCE storage and processing remain unchanged.
+
+Upload batches pause analysis until confirmed complete; missing or failed files
+produce a visible failure instead of silently dropping evidence. The server passes
+file bytes to OpenAI Responses, not a Dropbox URL. There is no OCR step or public
+sharing link. See [setup, limits and acceptance](pre-evaluation-local.md#direct-gpt-analysis--october-20-2026).

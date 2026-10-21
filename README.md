@@ -120,7 +120,7 @@ Dev Preview uses `STRIPE_PAYMENT_MODE=test` with both offices' test keys and an
 HTTPS `STRIPE_TEST_SITE_URL`; no live Stripe or PayPal credentials were added.
 A hosted webhook endpoint and its matching signing secret have not been set up
 by this configuration change. Local CLI webhook secrets are not copied to the
-hosted environment. Legacy local-only form routes, worker/AI execution and
+hosted environment. Legacy local-only form routes, hosted AI acceptance and
 production cutover remain outside this Preview setup. The newer `/application`
 intake, `/status` lookup and `/admin/CRM` use the configured cloud connections.
 
@@ -332,8 +332,13 @@ existing workflow APIs. `/admin/evaluations` and its detail links redirect into 
 corresponding workspace view/drawer; `/admin/CRM/preview` redirects to the workspace.
 
 The 3022 checkout connects directly to isolated cloud Supabase preview schemas;
-Docker is not used. Business email, AI, Stripe and file transfer remain paused in
-this mode. Both employee migration/cutover switches stay off. The old AET App
+Docker is not used. Dropbox transfers are enabled independently; pre-evaluation
+GPT analysis now runs automatically in the Next service after an eligible request,
+using a server-only key. No second local terminal is required. An optional daily
+recovery endpoint fits Hobby scheduling limits; hosted acceptance and commercial
+plan eligibility remain separate. The older payment and email-worker guards stay
+in place. See [AI setup and acceptance](docs/pre-evaluation-local.md#direct-gpt-analysis--october-20-2026).
+Both employee migration/cutover switches stay off. The old AET App
 remains the production system until a separately authorized cutover. See
 [cloud preview boundaries](docs/staff-auth.md#cloud-business-preview).
 

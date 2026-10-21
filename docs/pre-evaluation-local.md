@@ -1,5 +1,17 @@
 # Pre-evaluation local pilot
 
+## October 21 refinement: US equivalency and physical-page evidence
+
+The current `preeval-direct-pages-v3` prompt returns structured US degree, field
+and concentration separately from the original foreign qualification. The server
+assembles the full customer title. PDF pages are provided as individually identified
+single-page copies, without OCR or modifying originals; evidence IDs resolve to
+source document/page positions on the server and retain short supporting excerpts.
+Unknown IDs are rejected. Location integrity does not prove semantic support, so
+source review remains necessary. Historical output stays readable. See the
+[benchmark design and comparison](preeval-benchmark.md).
+
+
 Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complete
 local pre-evaluation workflow, not a production cutover or formal-evaluation
 migration. The existing AET App remains operational.
@@ -9,9 +21,10 @@ migration. The existing AET App remains operational.
 The current `aet-website-2026-dev` preview on **3022** connects directly to the
 existing cloud Supabase project using restricted private preview schemas.
 **Docker is not required.** The owner already runs the Next development server.
-Do not start the local database, Stripe listener or external worker for this mode.
-The older pilot payment, email-worker and AI external-service guards remain in
-place. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
+Do not start the local database, Stripe listener or older combined email/payment
+worker for this mode.
+The older pilot payment and email-worker external-service guards remain in
+place. GPT analysis has its own explicit switch and runs inside the existing Next service. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
 share the Status/CRM storage integration. The newer formal intake has its own
 confirmation sender and recorded test delivery; mail is not globally disabled.
 Employee migration and staff cutover remain disabled.
@@ -22,6 +35,259 @@ its test fixtures and Docker commands are not the current cloud workflow.
 Current password-based staff login and office scopes are documented in
 [staff-auth.md](staff-auth.md). Historical email-login descriptions below are
 superseded by that document; staff email-link login has been removed.
+
+## Direct GPT analysis — October 20, 2026
+
+The checklist was updated before implementation. The active path is:
+
+`Submit → upload to Dropbox → confirm the entire batch → durable AI queue →
+read original Dropbox revisions → OpenAI Responses → save result → release after payment`.
+
+### Owner setup on dev / port 3022
+
+The owner configured `OPENAI_API_KEY` in the dev worktree's ignored `.env.local`
+and live acceptance passed below. For a fresh checkout, fill that variable. The local
+`PREEVAL_AI_ENABLED=true` and `PREEVAL_OPENAI_MODEL=gpt-6.1-sol` placeholders
+are prepared; existing values are never replaced by setup. Keep the key out of
+browser code, chat, Git and documentation. After saving environment changes,
+restart your existing Next dev command in VS Code:
+
+```sh
+pnpm exec next dev --port 3022
+```
+
+**Only the existing Next server is needed.** Eligible submissions, completed upload
+batches and explicit retries schedule analysis with Next `after()`. The HTTP
+response returns first; the server awaits the analysis in that request's managed
+background lifetime. Authenticated customer/staff application reads also resume
+due or interrupted jobs. The customer result page polls while visible.
+
+No AI request runs if the switch is disabled or the key is absent. Only the
+`openai` pipeline is eligible; historical `legacy` jobs are not automatically
+processed. An explicit staff retry opts an old pilot application into this pipeline.
+The processor does not invoke Stripe or dispatch email. The old email/payment
+worker remains separate and disabled in the current cloud preview.
+
+The CLI remains an optional diagnostic tool, not a prerequisite for the website:
+
+```sh
+pnpm preeval:ai --application <application-id>
+# Optional continuous diagnostics only; normally unnecessary.
+pnpm preeval:ai --watch
+```
+
+### Vercel execution and free-tier technical limits
+
+The same Next project serves the page and executes analysis. No separate worker
+service, paid queue or minute-level Cron is required. The three execution routes
+use Node.js with `maxDuration = 300`; verify **Fluid Compute is enabled** before
+hosted acceptance. The OpenAI request itself times out after 150 seconds; Dropbox
+and database work also consume the function budget. A platform timeout can still
+interrupt a run. The saved lease becomes recoverable after eight minutes without
+a heartbeat, respecting the three-attempt cap and retry backoff. Failed/exhausted
+jobs require explicit customer/staff retry; page views do not reset the cap.
+
+The optional daily fallback is configured in `vercel.json`:
+
+```json
+{"crons":[{"path":"/api/internal/pre-evaluation/process","schedule":"0 9 * * *"}]}
+```
+
+This requests one run daily at **09:00 UTC**. Hobby may invoke it anywhere within
+that hour. Each invocation considers at most three eligible applications and
+waits for those attempts; it does not drain the entire queue or wait through
+backoff. Without page visits, a missed/transient job may wait until the next daily
+run; backlog can take longer. This is not a guaranteed prompt-recovery service.
+
+For a future authorized deployment:
+
+1. Add server-only `OPENAI_API_KEY`, `PREEVAL_AI_ENABLED=true` and the selected
+   `PREEVAL_OPENAI_MODEL` to the intended environment. Keep the existing database,
+   Dropbox and origin guards; never copy production secrets into a test target.
+2. Set a strong random `CRON_SECRET` (at least 16 characters) and then explicitly
+   enable `PREEVAL_AI_DAILY_RECOVERY_ENABLED=true` only after verifying the target.
+   Vercel sends it as `Authorization: Bearer …`; unauthorized calls are rejected.
+   The recovery switch defaults to `false`.
+3. Redeploy when authorized. Vercel Cron runs only on **Production deployments**;
+   it does not run automatically in local development or dev Preview. Local and
+   Preview analysis still runs after ordinary eligible requests.
+
+The current business pilot explicitly rejects Production, so the daily fallback
+is prepared but **not activated or claimed verified on Vercel**. Production
+configuration and acceptance remain part of a separately authorized cutover.
+The 3022 server has no timer or additional background process to start.
+
+These are technical compatibility choices only: **Vercel Hobby allows personal,
+non-commercial use**. A paid AET service must use hosting whose terms permit that
+use before launch. OpenAI API usage remains separately billed, and Vercel quota
+exhaustion can suspend execution; this design does not make either service unlimited.
+Official references: [Cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing),
+[function duration](https://vercel.com/docs/functions/configuring-functions/duration),
+[Cron setup](https://vercel.com/docs/cron-jobs/quickstart),
+[Hobby eligibility](https://vercel.com/docs/plans/hobby).
+
+The private migration is `20261020232924_preeval_gpt_analysis.sql`, applied on
+October 20 only to `aet_preview_preeval`. For another isolated environment:
+
+```sh
+node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/migrate-ai.mts
+```
+
+### Files, output and recovery
+
+- Original PDFs use Responses `input_file` with high image detail; JPG/PNG use `input_image`, sent as
+  in-memory base64. No public Dropbox link or OpenAI Files upload is created.
+  `store:false` is set; it does not promise exemption from provider retention policies.
+- The server combines saved per-file paths with the application's pinned canonical
+  and historical Dropbox folders, deduplicates paths, records revisions/content
+  hashes, and downloads exact revisions. It verifies byte hashes and actual PDF
+  pages before calling GPT. Limits: 5 files, 20 MB per file, 30 MB combined,
+  10 pages per PDF, 20 pages total; malformed/encrypted/unsupported files fail
+  explicitly. Shared uploads are indexed in the same customer/staff file list.
+- Attachments remain optional. An explicitly completed application without files
+  can receive a clearly marked form-only assessment. Failed, missing or incomplete
+  uploads must not silently become a form-only assessment. Retry the original
+  failed file; contact staff to replace a saved unreadable/unsupported document.
+- Initial form submission waits until all selected uploads succeed. Later customer
+  uploads pause analysis until the customer confirms all files are ready. Shared
+  multi-file uploads finalize as a batch; failed/interrupted attempts block analysis.
+  Interrupted shared-upload attempts can be retried after a 15-minute lease if the
+  browser could not cancel them. Pilot upload retries retain their 2-minute lease.
+- Customer output stays `result` plus `reasoning`. Additional structured facts,
+  conflicts, uncertainty and document/page references are stored for staff review
+  in CRM's Service tab, along with model, prompt/input versions and token usage.
+  Fields and file contents are untrusted evidence. No tools, browsing or shell
+  execution are exposed to the model; output and evidence IDs/pages are validated.
+- The queue uses an atomic claim and a run-specific lease, with heartbeats. An
+  upload or staff correction invalidates older work; finalization checks input
+  version, active run and current file/education snapshot. Stale runs are retained
+  as superseded. Transient failures retry at most three times with backoff;
+  other failures require customer/staff retry. Customer retries are rate limited.
+  This prevents duplicate active jobs, but does not guarantee exactly-once provider
+  billing after an ambiguous network failure.
+- Result publication still requires confirmed payment. AI completion cannot
+  dispatch emails; it may enqueue result delivery under the existing rules.
+  An email enqueue failure cannot erase a completed assessment.
+
+### Verification
+
+Passed 157 focused tests, TypeScript and offline Dropbox checks. The opt-in
+synthetic integration script passed 28 checks using the real private preview DB
+and Dropbox, including PDF/image/chunked reads, historical folders, batch failures,
+concurrent workers, bounded retries, missing evidence, stale jobs, staff corrections,
+payment gating, customer file-list parity and protected routes. GPT responses were
+injected, not real API responses. No email was dispatched. Temporary applications,
+AI records and Dropbox files were removed after tests.
+
+The in-app browser verified Chinese customer pending/queued/failed states,
+confirmation and retry, at desktop and 390 px mobile widths. The English CRM drawer was verified at desktop and mobile widths using
+synthetic results: model/token metadata, document references, and authenticated
+regeneration returned the application to Queued. The subsequent live checks below
+verified actual API responses and their saved content. These synthetic cases
+establish integration behavior; they are not a benchmark of professional
+credential-equivalency accuracy or production readiness.
+
+Reproducible checks:
+
+```sh
+pnpm exec vitest run tests/preeval-ai.test.ts tests/preeval.test.ts tests/preeval-customer.test.ts tests/legacy-application.test.ts tests/dropbox-paths.test.ts tests/evaluation-application.test.ts tests/evaluation-workflow.test.ts
+PREEVAL_AI_VERIFY=1 node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/verify-ai.mts
+# Opt-in real API usage; creates and deletes synthetic preview records/files.
+PREEVAL_AI_LIVE_VERIFY=1 node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/verify-ai-live.mts
+# Add --case=conflict, --case=blank, --case=image or --case=scan for one case.
+```
+
+Official implementation references: [PDF/file inputs](https://developers.openai.com/api/docs/guides/file-inputs),
+[Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs),
+[model capability reference](https://developers.openai.com/api/docs/models/gpt-6.1-sol).
+The model is configurable. Live acceptance below records the model actually returned by the API.
+
+### Automatic execution acceptance on port 3022
+
+The owner’s existing Next server processed a new synthetic PNG after the in-app
+browser confirmed the upload batch. No CLI AI worker was started. The request
+returned before completion; page polling then displayed Completed on desktop and
+390 px mobile. The browser retained a staff session, so its result content was
+staff-visible; a separate customer-only cookie verified that the unpaid API result
+remained hidden. Duplicate completion and application reads left exactly one AI
+run, with no additional model request.
+
+The response model was `gpt-6.1-sol`; usage was **1,956 input + 519 output = 2,475
+tokens**. It read the institution, country, degree and dates directly from pixels,
+flagged the entered-field conflicts, and correctly treated the synthetic document
+as insufficient for a real equivalency. The script measured 71.8 seconds including
+the wait for the browser confirmation; this is not model latency. Earlier failed
+HTTP diagnostics stopped during file loading before the provider call.
+
+A second HTTP acceptance sent two simultaneous batch-completion requests for a
+new image-only PDF. It completed in 19.4 seconds with exactly one saved run; GPT
+read the scanned facts and conflicts. Usage was **2,445 input + 506 output = 2,951
+tokens**. The two successful Next-driven calls used **5,426 tokens** combined.
+The PDF download matched the uploaded bytes, the unpaid customer result stayed
+hidden, and duplicate completion/read caused no additional model request.
+
+This acceptance uncovered a real runtime difference: the Dropbox SDK returned
+Buffer in the standalone script and Blob in Next. AI reads, pilot downloads and
+the shared document reader now use one binary adapter. The scan acceptance also verified an authenticated
+HTTP download returned the exact original PDF bytes. Upload hooks use static
+imports to avoid the older Node/tsx relative dynamic-import failure.
+
+Passed **240 focused tests**, TypeScript, and **40 isolated DB/Dropbox checks**,
+including scheduler authorization/configuration, bounded daily work, backoff,
+interrupted leases, retry caps, cancellation, completed-job deduplication, upload
+fencing, historical folders, chunked reads and staff corrections. One integration
+attempt encountered a local IPv6 connection timeout; rerunning with IPv4 preferred
+passed. Temporary rows and Dropbox files were removed, including the fixture from
+an interrupted test. No email was sent or payment taken; no server was started or
+restarted by this work. Vercel execution and Cron delivery remain unverified.
+
+```sh
+pnpm exec vitest run tests/preeval-ai-scheduler.test.ts tests/preeval-ai-routes.test.ts tests/dropbox-download.test.ts
+# Real HTTP -> Next after -> GPT; only disposable synthetic private-preview data.
+PREEVAL_AI_LIVE_VERIFY=1 node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/verify-ai-live.mts --http --case=image
+# Optional browser-driven batch confirmation; the script prints the fixture URL,
+# waits up to four minutes, then keeps the completed case for 90 seconds and cleans up.
+PREEVAL_AI_LIVE_VERIFY=1 node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/verify-ai-live.mts --http --browser --case=image
+```
+
+Use a current Node runtime for verification. If this local network cannot reach
+Dropbox over IPv6, prefix only the test command with
+`NODE_OPTIONS=--dns-result-order=ipv4first`; this is not a deployment requirement.
+
+### Live GPT acceptance
+
+After the owner added the key, six real API calls completed against new synthetic
+applications in the private preview schemas. Every original file was uploaded to
+Dropbox, read back by revision, validated and sent through the production worker
+code with no provider injection. The returned model was `gpt-6.1-sol` throughout.
+
+| Case | Observed result | Input / output tokens | Worker seconds |
+| --- | --- | --- | --- |
+| Two-page text PDF; final prompt v2 | Extracted Bachelor of Science; flagged the entered Master of Science; cited both pages | 611 / 420 | 11.7 |
+| Blank PDF | Insufficient evidence; all extracted facts null; no invented qualification | 491 / 223 | 10.0 |
+| PNG with academic text only in pixels | Read Visual Fixture Institute, Canada, Bachelor of Engineering, dates; flagged all form conflicts | 1,924 / 490 | 13.1 |
+| Image-only PDF with the same raster fixture | Read the same facts from the scanned page and cited page 1 | 2,413 / 445 | 14.6 |
+
+The initial text-PDF call and its high-detail recheck consumed another 1,097 and
+1,074 total tokens. Both read the academic text correctly but made an unsupported
+claim about original page availability. PDF inputs now explicitly request high
+detail; prompt `preeval-direct-files-v2` limits reasoning to concrete academic
+evidence and avoids speculation about parsing/transport. The final text-PDF rerun
+above removed that claim while retaining the qualification conflict. The other
+three cases were verified before this narrow prompt adjustment.
+
+Total observed usage across all six requests: **6,597 input + 2,591 output = 9,188
+tokens**. Timing includes Dropbox reads and database work and is not a latency SLA.
+All documents were marked synthetic; returning “Unable to determine” was correct
+and was not treated as a verified US degree equivalency. The raster fixture is
+`tests/fixtures/preeval-synthetic-scan.png` and contains no real applicant data.
+
+Each case verified persisted output/model/usage and document revision/hash,
+confirmed the unpaid customer could not see the result, and confirmed another
+worker poll made no duplicate request. No email was enqueued/dispatched and no
+payment was made. All temporary application, audit, AI and Dropbox records were
+removed in cleanup. No continuous worker, new dev server or deployment was left
+running by this acceptance.
 
 ## Owner-approved behavior
 
@@ -51,12 +317,13 @@ superseded by that document; staff email-link login has been removed.
   a Start over action. Refreshing restores the draft; optional files must be
   reselected and the terms must be accepted again. Successful submission clears
   the saved draft.
-- One staff administrator and one test recipient: `tech@meiyugroup.org`.
-  All pilot email and Stripe customer email are redirected there. Legacy CC/BCC
+- The administrator remains `tech@meiyugroup.org`; the current test recipient is
+  `errplusone@gmail.com`. Pilot email uses the configured test recipient. Legacy CC/BCC
   recipients are not used. The `office` field is retained but the operational
   pre-evaluation UI has no office selection, badges or access partitioning.
-- AI uses the locally authenticated Codex ChatGPT account. There is no OpenAI
-  API key, paid API call, Google OCR service or automatic production deployment.
+- AI reads the saved Dropbox PDF/images through the server and uses the OpenAI
+  Responses API. No Google Vision OCR, Poppler conversion or Codex subprocess
+  runs in this pipeline. API credentials remain server-only; deployment is separate.
 
 ## Open locally
 
@@ -95,13 +362,13 @@ checkout routes and four standalone staff-tool URLs still return 404. The new
 [October 15 route audit](app-url-compatibility.md) for the mapping and follow-up
 work; existing production email links and app-domain routing need separate checks.
 
-## Local setup and processes
+## Earlier local-database setup and processes
 
 Use `.env.example` as the variable reference; secrets belong only in the ignored
 `.env.local`. In the dev worktree, `PREEVAL_ORIGIN` and `PAYMENT_SITE_URL` are
 `http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `PREEVAL_TEST_EMAIL` both use
-`tech@meiyugroup.org`. `PREEVAL_CODEX_BIN` points to the dev worktree's installed
-Codex executable. Reuse the configured local database and test services without
+`tech@meiyugroup.org` in the earlier pilot. The current test recipient is
+`errplusone@gmail.com`. AI configuration now follows the direct GPT section above. Reuse the configured local database and test services without
 copying secrets into documentation. This guide and its service acceptance require
 `PREEVAL_DATABASE_MODE=local` and the isolated local database on port 55422.
 A separately configured `cloud-preview` mode disables external services and uses
@@ -110,11 +377,8 @@ Do not overwrite another session's environment to switch modes. The local servic
 pilot rejects remote database URLs, remote origins, live Stripe keys/events and
 Dropbox roots outside the named test folder.
 
-Prerequisites: Node 20.9+, pnpm, Docker, Stripe CLI, the bundled project Codex CLI
-with an existing ChatGPT login, and Poppler (`pdfinfo` and `pdftoppm`). The current
-machine uses `/opt/homebrew/bin/pdfinfo` and `/opt/homebrew/bin/pdftoppm` through
-explicit environment overrides. The account's selected Codex model can be set
-with `PREEVAL_CODEX_MODEL`.
+For the optional local database pilot: Node 20.9+, pnpm, Docker and Stripe CLI.
+The new AI path does not require Poppler or a local Codex login.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -136,11 +400,9 @@ pnpm preeval:worker
 The Stripe listener forwards only relevant test events to
 `/api/pre-evaluation/stripe-webhook` and updates the signing secret privately in
 `.env.local`. The development server reloads this file. Restart a user-managed
-server if it does not pick up that change. The worker drains durable AI and email
-queues; it must remain running for new assessments. `pnpm preeval:worker --once`
-processes one cycle. The worker needs normal access to the existing local Codex
-login; running it inside a filesystem sandbox that denies Codex app-server state
-writes fails even though the assessment subprocess itself is read-only.
+server if it does not pick up that change. The legacy worker drains email
+and delivery queues; `pnpm preeval:worker --once` processes one cycle. The new
+AI queue runs in Next after eligible requests; `pnpm preeval:ai` is now optional diagnostics. See the active setup above.
 
 This project has an isolated Supabase project ID `aet-pre-evaluation-local`, API
 port 55421 and database port 55422. It does not reset or reuse another project's
@@ -189,13 +451,8 @@ uploads can be retried after their two-minute lease. PDF processing permits ten
 pages per file and twenty total image pages. An oversized/encrypted/unreadable
 PDF leaves an actionable AI failure, not a fabricated result.
 
-PDFs are rendered to images, and Codex reads the pages directly. There is no OCR
-stage. Form names/emails/payment data are excluded from the AI prompt; uploaded
-images can contain their original document content. Inputs are untrusted evidence,
-shell/web/MCP tools are disabled, output is schema-validated, and temporary files
-are removed. Each run records its input version and output; superseded work
-cannot overwrite a newer upload or staff correction. Interrupted or failed AI
-runs remain visible and can be retried in the workspace.
+PDFs and supported images now go directly to GPT through the Responses API.
+See the active direct GPT section for input limits, audit metadata and recovery.
 
 Stripe signs payment callbacks. Amount, currency, application ownership and
 session identity must match the saved payment; event IDs are deduplicated. A

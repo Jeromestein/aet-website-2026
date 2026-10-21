@@ -60,6 +60,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   const [queue, setQueue] = useState<QueueFile[]>([]);
   const [selectionError, setSelectionError] = useState<ErrorCode | null>(null);
   const [busy, setBusy] = useState(false);
+  const [batchError, setBatchError] = useState<ErrorCode | null>(null);
   const [dragging, setDragging] = useState(false);
   const cancelled = useRef(new Set<string>());
   const active = useRef<AbortController | null>(null);
@@ -112,7 +113,16 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     } catch { /* Audio is optional in browsers that block or do not support it. */ }
     const pending = queue.filter(item => item.status === 'pending' || item.status === 'failed' || item.status === 'cancelled');
     let saved = 0;
+    setBatchError(null);
     setBusy(true); onBusyChange?.(true);
+    const batch = (action: string) => request('/api/dropbox/upload-batch', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action }),
+    }, token);
+    try { if (pending.length) await batch('start'); }
+    catch (error) {
+      for (const row of pending) update(row.id, { status: 'failed', error: errorCode(error) });
+      setBusy(false); onBusyChange?.(false); return;
+    }
     cancelled.current.clear();
     for (const row of pending) {
       if (!mounted.current) break;
@@ -173,13 +183,17 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
           error: controller.signal.aborted ? undefined
             : committing && !(error instanceof RequestError) ? 'uncertain' : errorCode(error),
         });
-        if (uploadKey && controller.signal.aborted) {
+        if (uploadKey && !committing) {
           await request('/api/dropbox/chunked-upload', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'cancel', uploadKey }), signal: AbortSignal.timeout(10000),
           }, token).catch(() => {});
         }
       }
+    }
+    if (saved === pending.length) {
+      try { await batch('complete'); }
+      catch (error) { setBatchError(errorCode(error)); saved = 0; }
     }
     active.current = null;
     if (mounted.current) {
@@ -210,7 +224,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     if (row.status === 'hashing' || row.status === 'uploading') active.current?.abort();
     update(row.id, { status: 'cancelled' });
   }
-  const allSaved = queue.length > 0 && queue.every(row => row.status === 'success');
+  const allSaved = !batchError && queue.length > 0 && queue.every(row => row.status === 'success');
   const formatSize = (size: number) => formatFileSize(size, locale);
   return <div className={embedded ? `${styles.manager} ${styles.embedded}` : styles.manager} aria-busy={busy}>
     <section aria-labelledby="uploaded-title" className={styles.panel}>
@@ -249,6 +263,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
         </div></div>
       </aside>
       {allSaved && <div className={styles.successBanner} role="status"><CircleCheck size={26} aria-hidden="true"/><div><strong>{t('complete')}</strong><p>{t('completeDetail', {count: queue.length})}</p></div></div>}
+      {batchError && <p className={styles.error} role="alert">{t(`errors.${batchError}`)}</p>}
       {selectionError && <p className={styles.error} role="alert">{t(`errors.${selectionError}`)}</p>}
       {!!queue.length && <ul className={styles.queue}>{queue.map(row => <li key={row.id} className={row.status === 'success' ? styles.successRow : undefined}>
         <div className={styles.headingRow}><strong className={styles.fileName}>{row.file.name}</strong>
@@ -259,7 +274,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
         {row.error && <p className={styles.error} role="alert">{t(`errors.${row.error}`)}</p>}
         {row.archiveFailed && <p className={styles.warning} role="status">{t('archiveFailed')}</p>}
       </li>)}</ul>}
-      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || !queue.some(row => row.status !== 'success')} onClick={() => void upload()}>
+      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || (!batchError && !queue.some(row => row.status !== 'success'))} onClick={() => void upload()}>
         {allSaved && <Check size={19} aria-hidden="true"/>}{busy ? t('uploading') : allSaved ? t('complete') : t('upload')}
       </button>
       {!allSaved && <p className={styles.note}>{t('keepOpen')}</p>}

@@ -1,4 +1,5 @@
 import { saveLegacyPreeval } from "../legacy-application/store";
+import { pauseForUpload, retryAnalysis } from "./ai-jobs";
 import { randomUUID } from "node:crypto";
 import { table, db, audit, type Row } from "./db";
 import { hash, makeSession, authorize } from "./auth";
@@ -20,8 +21,8 @@ export async function submit(input: unknown) {
     fingerprint = hash(JSON.stringify(v));
   const app = await db().begin(async (tx) => {
     const [created] =
-      await tx`insert into ${table("preeval.applications")}(request_id,request_hash,email,first_name,middle_name,last_name,country,locale,ai_status)
-      values (${v.requestId},${fingerprint},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},${v.locale},'queued') on conflict(request_id) do nothing returning *`;
+      await tx`insert into ${table("preeval.applications")}(request_id,request_hash,email,first_name,middle_name,last_name,country,locale,ai_status,ai_pipeline,uploads_pending)
+      values (${v.requestId},${fingerprint},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},${v.locale},${v.uploadsPending ? 'idle' : 'queued'},'openai',${Boolean(v.uploadsPending)}) on conflict(request_id) do nothing returning *`;
     if (!created) {
       const [existing] =
         await tx`select * from ${table("preeval.applications")} where request_id=${v.requestId}`;
@@ -67,6 +68,8 @@ export async function application(id: string, staff = false) {
     status: app.status,
     payment_status: app.payment_status,
     ai_status: app.ai_status,
+    uploads_pending: app.uploads_pending,
+    document_issue: /^(document_|pdf_|image_|invalid_document|unreadable_document|encrypted_document|unsupported_document|uploads_incomplete)/.test(app.ai_error || ""),
     result: visible ? app.result : null,
     result_version: visible ? app.result_version : 0,
     // Legacy education rows include ai_output; never expose it through the customer payload.
@@ -94,7 +97,7 @@ export async function application(id: string, staff = false) {
     response.payments =
       await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
     response.runs =
-      await db()`select id,input_version,input,output,state,error,created_at from ${table("preeval.ai_runs")} where application_id=${id} order by created_at desc limit 10`;
+      await db()`select id,input_version,input,output,state,error,created_at,model,response_id,usage,prompt_version from ${table("preeval.ai_runs")} where application_id=${id} order by created_at desc limit 10`;
   }
   return response;
 }
@@ -123,6 +126,7 @@ export async function addFile(id: string, file: File, actor: string) {
         .length >= 5
     )
       throw new AppError("file_limit");
+    await pauseForUpload(id, tx);
     const fileId = existing?.id || randomUUID(),
       path = existing?.dropbox_path || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
     const [row] =
@@ -139,7 +143,6 @@ export async function addFile(id: string, file: File, actor: string) {
   }
   await db().begin(async (tx) => {
     await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
-    await tx`update ${table("preeval.applications")} set input_version=input_version+1,ai_status='queued',ai_attempts=0,ai_error=null,result=null,status='processing',updated_at=now() where id=${id} and status<>'cancelled'`;
     await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
   });
 }
@@ -153,14 +156,12 @@ export async function staffAction(id: string, body: Row, actor: string) {
     const result = resultSchema.safeParse(body.result);
     if (!result.success) throw new AppError("invalid_result");
     const updated =
-      await db()`update ${table("preeval.applications")} set result=${db().json(result.data)},result_version=result_version+1,result_source='staff',ai_status='completed',status='processing',input_version=input_version+1,updated_at=now() where id=${id} and status<>'cancelled' returning id`;
+      await db()`update ${table("preeval.applications")} set result=${db().json(result.data)},result_version=result_version+1,result_source='staff',ai_active_run=null,ai_locked_at=null,ai_status='completed',status='processing',input_version=input_version+1,updated_at=now() where id=${id} and status<>'cancelled' and not uploads_pending returning id`;
     if (!updated.length) throw new AppError("application_cancelled", 409);
     await audit(id, actor, "result.corrected");
     await publishIfReady(id);
   } else if (body.action === "retry_ai") {
-    const updated =
-      await db()`update ${table("preeval.applications")} set ai_status='queued',ai_attempts=0,ai_error=null,input_version=input_version+1,result=null,status='processing',updated_at=now() where id=${id} and status<>'cancelled' returning id`;
-    if (!updated.length) throw new AppError("application_cancelled", 409);
+    await retryAnalysis(id, true);
     await audit(id, actor, "ai.retry_requested");
   } else if (body.action === "retry_email") {
     if (typeof body.emailId !== "string") throw new AppError("invalid_request");

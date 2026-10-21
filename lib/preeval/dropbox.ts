@@ -1,4 +1,5 @@
 import type { TransactionSql } from 'postgres';
+import { downloadBytes } from '../dropbox/download';
 import { required } from './config';
 import { clientForOffice, requireEnabled } from '../dropbox/server';
 import { contextFor } from '../dropbox/application';
@@ -42,5 +43,5 @@ export async function downloadFile(path: string) {
   requireEnabled();
   const dbx = await clientForOffice(officeForStoredPath(path));
   const result = await dbx.filesDownload({ path });
-  return Buffer.from((result.result as unknown as { fileBinary: Buffer }).fileBinary);
+  return downloadBytes(result.result);
 }

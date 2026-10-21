@@ -605,3 +605,9 @@
 .table td:last-child {
   white-space: nowrap;
 }
+
+/* Public pages share the fixed website navigation. */
+.main.publicMain { padding-top: 126px; }
+@media (max-width: 760px) {
+  .main.publicMain { padding-top: 108px; }
+}

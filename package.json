@@ -19,7 +19,8 @@
     "test:preeval:integration": "node --env-file=.env.local --import tsx scripts/preeval/integration.ts",
     "test:email:records": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-records.mts",
     "test:intake:integration": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/application/intake-integration.mts",
-    "test:email:formal": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-formal-records.mts"
+    "test:email:formal": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-formal-records.mts",
+    "preeval:ai": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/ai-worker.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
@@ -28,6 +29,7 @@
     "lucide-react": "^0.468.0",
     "next": "16.3.6",
     "next-intl": "^4.14.7",
+    "pdf-lib": "1.17.1",
     "postgres": "^3.4.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

@@ -154,6 +154,7 @@ export function ApplicationForm({ locale }: { locale: string }) {
         ...values,
         locale,
         terms,
+        uploadsPending: documents.length > 0,
         requestId: requestId.current,
       });
       try {
@@ -164,6 +165,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
       for (const document of documents) {
         const body = new FormData(); body.set('file', document);
         try { await api(`applications/${data.id}/files`, body); }
+        catch { uploadFailed = true; }
+      }
+      if (documents.length && !uploadFailed) {
+        try { await api(`applications/${data.id}/uploads-complete`, {}); }
         catch { uploadFailed = true; }
       }
       window.location.assign(data.url + (uploadFailed ? '&upload=retry' : ''));
@@ -502,6 +507,13 @@ export function ApplicationResult({
           {t.processing}: {label(app.ai_status)}
         </span>
       </div>
+      {app.status !== 'cancelled' && <section className={s.card} aria-live="polite">
+        <h2>{t.analysisTitle}</h2>
+        <p>{app.uploads_pending ? t.analysisUploads : app.ai_status === 'failed' ? (app.document_issue ? t.analysisDocuments : t.analysisFailed) :
+          app.ai_status === 'running' ? t.analysisRunning : app.ai_status === 'completed' ? t.analysisComplete : t.analysisQueued}</p>
+        {app.uploads_pending && <button className={s.secondary} disabled={!!busy} onClick={() => action('uploads-complete')}>{t.finishUploads}</button>}
+        {!app.uploads_pending && app.ai_status === 'failed' && <button className={s.secondary} disabled={!!busy} onClick={() => action('retry-ai')}>{t.retryAnalysis}</button>}
+      </section>}
       {cancelled && <p className={s.notice}>{t.cancelledCheckout}</p>}
       {(error || loadError) && (
         <p role="alert" className={s.error}>
