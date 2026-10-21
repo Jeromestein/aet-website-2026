@@ -1,5 +1,24 @@
 # AET Implementation Status
 
+## 2026-10-21 — Committed v3 baseline comparison
+
+- Committed the reviewed GPT integration, degree title and page-identity refinement
+  as `1372473`, then ran the same four cases once with unchanged inputs/model.
+- Four completed calls took 14.50, 15.68, 13.51 and 13.53 seconds. Total batch was
+  57.40 seconds versus 72.64; mean analysis time 14.30 versus 18.11. Tokens rose
+  from 85,051 to 88,774 (+4.4%). The observed 21.0% time reduction is one comparison,
+  largely driven by one case; it is not a demonstrated repeatable speed-up.
+- Degree levels agree in 4/4; full reference equivalency remains 3/4. The fourth
+  output is more specific but still uses a different US field/concentration mapping.
+  Staff-approved normalization policy remains open; no answer hardcoding was added.
+- Source-page visual review found no wrong page locations among 30 v3 evidence
+  items, compared with three wrong locations in the baseline. Valid IDs do not
+  independently verify the semantic truth of future claims or excerpts.
+- Private comparison, raw responses and timing/usage records remain Git-ignored.
+  No changed labels, hidden retries, database writes, emails, payment, deployment
+  or push. See [benchmark comparison](preeval-benchmark.md#v3-comparison-results).
+
+
 ## 2026-10-21 — Degree title and physical-page evidence implementation
 
 - Added structured US degree level/name/field/concentration, distinct from source
@@ -13,8 +32,8 @@
   pages rendered identically after copying. Source documents, reference answers
   and baseline outputs are unchanged. No OCR, frontend edit, database migration,
   server restart or build was needed for this refinement.
-- The verified implementation will be committed before a second four-case live
-  benchmark; measured comparison will be recorded separately afterward.
+- The verified implementation was committed as `1372473` before the second
+  four-case live benchmark; measured comparison is recorded above.
 
 
 ## 2026-10-21 — Historical pre-evaluation GPT baseline

@@ -125,5 +125,37 @@ three incorrect evidence page locations despite the correct degree conclusion.
 The private run report is at
 `.local/preeval-benchmark/fce-v1/runs/2026-10-21T17-20-49-805Z/report.md`.
 The report includes exact outputs, timings, token counts, comparison rationale,
-visual citation findings and proposals. Production prompt changes have not been
-applied. Repeatability, broader degree coverage and staff review remain open.
+visual citation findings and proposals. The baseline was captured before the v3
+implementation below. Repeatability, broader degree coverage and staff review
+remain open.
+
+## v3 comparison results
+
+Implementation `1372473` was committed before the October 21 second run. Inputs,
+reference labels, model and low reasoning setting stayed unchanged. Four cases
+completed once each without retries.
+
+| Metric | v2 | v3 |
+| --- | ---: | ---: |
+| Total sequential batch | 72.64 s | 57.40 s |
+| Mean analysis time | 18.11 s | 14.30 s |
+| Total tokens | 85,051 | 88,774 |
+| Degree-level agreement | 4/4 | 4/4 |
+| Full reference equivalency agreement | 3/4 | 3/4 |
+| Wrong evidence locations observed | 3 | 0 |
+
+The refined degree titles retain specialization, but one US field/concentration
+mapping still differs from the owner reference. It remains a partial match, not a
+passed case. A staff-approved normalization policy and independent test examples
+are needed; no applicant-specific mapping was hardcoded.
+
+The 30 v3 evidence locations were checked visually against source pages. This is
+assistant review, not independent expert sign-off or a semantic guarantee from ID
+validation. Single-page copies preserve all 23 source pages. Token use increased
+4.4%; the observed 21.0% time reduction is primarily one case and must not be treated
+as a repeatable performance result without further measurements.
+
+The private before/after report is
+`.local/preeval-benchmark/fce-v1/runs/2026-10-21T17-47-55-116Z/comparison.md`.
+Raw responses, parsed outputs, page maps, input hashes and timings are beside it.
+Neither benchmark writes to application databases or changes original files.

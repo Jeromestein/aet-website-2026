@@ -14,11 +14,23 @@ implementation before a second run of the same four cases.
   retain supporting excerpts. No OCR or original-file edits.
 - [x] Test page identity, malformed references, degree-title preservation, unknown
   equivalencies, legacy compatibility and actual multi-page PDF preparation.
-- [ ] Commit only the reviewed analysis/benchmark changes and required dependencies.
-- [ ] Rerun all four unchanged cases once using the same model and timing boundaries;
+- [x] Commit only the reviewed analysis/benchmark changes and required dependencies.
+- [x] Rerun all four unchanged cases once using the same model and timing boundaries;
   compare full equivalency, evidence locations, tokens and duration with the baseline.
-- [ ] Record limitations and measured differences; commit the comparison documentation.
+- [x] Record limitations and measured differences; commit the comparison documentation.
 
+
+Implementation committed as `1372473` before the second run. All four calls
+completed. Full reference equivalency remains 3/4, with one related but different
+US field/concentration mapping. The three previously wrong evidence locations
+were absent from the 30 reviewed v3 evidence items. Total time was 57.40 seconds
+(v2: 72.64); tokens 88,774 (v2: 85,051). One run per version does not establish
+repeatable speed or general accuracy. Private comparison:
+`.local/preeval-benchmark/fce-v1/runs/2026-10-21T17-47-55-116Z/comparison.md`.
+
+Follow-up identified by this comparison:
+- [ ] Establish staff-approved US degree/field/concentration normalization policy
+  and validate it on independent examples; do not hardcode benchmark answers.
 
 ## Historical pre-evaluation live benchmark — October 21, 2026
 
