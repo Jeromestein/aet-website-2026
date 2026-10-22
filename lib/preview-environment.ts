@@ -1,3 +1,4 @@
+import { environmentValue } from "./application-environment.mjs";
 /** Trust deployment configuration, never a request Host or forwarded header. */
 function parsedOrigin(value: string) {
   const url = new URL(value);
@@ -12,10 +13,10 @@ export function employeeLoginUnchanged() {
 }
 
 function vercelDevPreview() {
-  return process.env.PREEVAL_ENV === "preview" &&
+  return environmentValue("APP_ENV") === "preview" &&
     process.env.VERCEL === "1" && process.env.VERCEL_ENV === "preview" &&
     process.env.VERCEL_GIT_COMMIT_REF === "dev" &&
-    process.env.PREEVAL_DATABASE_MODE === "cloud-preview" && employeeLoginUnchanged();
+    environmentValue("APPLICATION_DATABASE_MODE") === "cloud-preview" && employeeLoginUnchanged();
 }
 
 function vercelOrigin(host: string | undefined) {
@@ -25,8 +26,8 @@ function vercelOrigin(host: string | undefined) {
 }
 
 export function applicationPilotOrigin() {
-  const url = parsedOrigin(process.env.PREEVAL_ORIGIN || "");
-  if (process.env.PREEVAL_ENV === "local" && !process.env.VERCEL &&
+  const url = parsedOrigin(environmentValue("APP_ORIGIN") || "");
+  if (environmentValue("APP_ENV") === "local" && !process.env.VERCEL &&
       !process.env.VERCEL_ENV && ["localhost", "127.0.0.1"].includes(url.hostname) &&
       ["http:", "https:"].includes(url.protocol)) return url.origin;
   if (vercelDevPreview() && url.origin === vercelOrigin(process.env.VERCEL_BRANCH_URL))
@@ -43,7 +44,7 @@ export function cloudBusinessEnvironmentAllowed() {
 /** The stable branch URL and this exact deployment URL can both submit forms. */
 export function requestMatchesApplicationOrigin(origin: string | null, configured: string) {
   if (!origin) return false;
-  if (process.env.PREEVAL_ENV !== "preview") return origin === configured;
+  if (environmentValue("APP_ENV") !== "preview") return origin === configured;
   const canonical = applicationPilotOrigin();
   if (configured !== canonical) return false;
   if (origin === canonical) return true;

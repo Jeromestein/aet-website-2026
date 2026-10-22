@@ -46,7 +46,7 @@ intakes to prevent legacy edits from overwriting the saved snapshot.
 
 Use the existing dev `.env.local`. Do not copy keys into documentation. Required
 configuration is the existing restricted cloud-preview database connection,
-`PREEVAL_ORIGIN=http://localhost:3022`, disabled employee/auth cutover flags, and
+`APP_ORIGIN=http://localhost:3022`, disabled employee/auth cutover flags, and
 Resend key/from-address settings. No environment change or server restart was
 needed for the acceptance run.
 

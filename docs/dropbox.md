@@ -174,7 +174,7 @@ run; it does not migrate customer data or change legacy business tables.
 
 Set `DROPBOX_DOCUMENTS_ENABLED=true` only when configured. This flag now also gates
 file upload/download in the older pilots; their payment, email-worker and AI
-external-service guards are unchanged. Keep `PREEVAL_DROPBOX_ROOT` configured for
+external-service guards are unchanged. Keep `DROPBOX_LEGACY_PILOT_ROOT` configured for
 historical pilot-path compatibility. `.env.local` is ignored; Git does not publish
 its values.
 

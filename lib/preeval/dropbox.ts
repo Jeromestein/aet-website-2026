@@ -16,7 +16,7 @@ export async function filePath(row: Record<string, string | null>, kind: Applica
   return `${storage.write.path}/${report ? '_reports/' : ''}${safeSegment(fileId)}-${safeSegment(name)}`;
 }
 export function officeForStoredPath(path: string): Office {
-  const oldRoot = required('PREEVAL_DROPBOX_ROOT');
+  const oldRoot = required('DROPBOX_LEGACY_PILOT_ROOT');
   if (oldRoot.includes('AET-PreEvaluation-Test') && path.startsWith(oldRoot + '/')) {
     path.slice(oldRoot.length + 1).split('/').forEach(safeSegment);
     return 'Miami';

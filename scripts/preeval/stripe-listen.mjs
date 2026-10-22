@@ -1,9 +1,10 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 const key = process.env.STRIPE_TEST_SECRET_KEY;
 if (!key?.startsWith("sk_test_") && !key?.startsWith("rk_test_"))
   throw new Error("Stripe test key required.");
-const origin = new URL(process.env.PREEVAL_ORIGIN || "");
+const origin = new URL(environmentValue("APP_ORIGIN") || "");
 if (!["localhost", "127.0.0.1"].includes(origin.hostname))
   throw new Error("Local forwarding only.");
 await mkdir(".local", { recursive: true });

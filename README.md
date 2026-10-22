@@ -32,7 +32,7 @@ pnpm exec next dev --port 3022
 `pnpm dev` still selects port 3021 in both checkouts; `.env.local` does not
 override that explicit script argument. Reuse the owner's running server for
 the matching checkout. The dev worktree's ignored `.env.local` uses port 3022
-for `PREEVAL_ORIGIN` and `PAYMENT_SITE_URL`. Keep secrets out of Git and restart
+for `APP_ORIGIN` and `PAYMENT_SITE_URL`. Keep secrets out of Git and restart
 the user-managed process after changing startup configuration when required.
 
 Worktrees share Git history but have separate files, dependencies and local
@@ -48,9 +48,68 @@ an explicitly authorized push or deployment. Do not copy folders over `main`.
 Use one private `.env.local` in each worktree for actual local values. Keep
 `.env.example` as the shared, secret-free template. Do not create a second `.env`
 or service-specific secret file for the same worktree. Both files are grouped by
-application URLs, authentication, CRM, isolated applications, AI, email, Stripe,
-PayPal, Dropbox and scheduled tasks. Existing legacy tool paths stay in a final
-local-tools group; organizing settings does not enable or disable their services.
+shared application configuration, pilot compatibility/test recipients, staff
+authentication, CRM, optional AI/email/payments/Dropbox and scheduled tasks.
+The template origin defaults to port 3022 for the dev worktree; use 3021 for main.
+Organizing settings does not enable or disable their services.
+
+Shared settings now use `APP_`, `APPLICATION_` and Dropbox-specific names.
+Pre-evaluation-only settings keep `PREEVAL_`. Formal intake and some staff workflows
+use the same configuration/database helpers. Marketing pages alone do not need
+this entire configuration; the standalone Production expiry worker needs only
+its three settings documented below.
+
+### Temporary legacy-name compatibility
+
+Server code and standalone scripts read through
+[`lib/application-environment.mjs`](lib/application-environment.mjs).
+The new name wins whenever it is defined, including an explicit empty string;
+only an absent new name falls back to its old alias. Required empty values still
+fail validation instead of silently using an older connection or recipient.
+Values are read at call time without copying aliases into `process.env`.
+
+| New name | Temporary fallback |
+| --- | --- |
+| `APP_ENV` | `PREEVAL_ENV` |
+| `APP_ORIGIN` | `PREEVAL_ORIGIN` |
+| `APPLICATION_DATABASE_MODE` | `PREEVAL_DATABASE_MODE` |
+| `APPLICATION_DATABASE_URL` | `PREEVAL_DATABASE_URL` |
+| `APPLICATION_TEST_EMAIL` | `PREEVAL_TEST_EMAIL` |
+| `DROPBOX_LEGACY_PILOT_ROOT` | `PREEVAL_DROPBOX_ROOT` |
+
+The template and local file contain only the new names. During a later authorized
+Vercel rollout, deploy the compatibility reader first using the existing aliases,
+then add new names with the same environment-specific values and redeploy.
+Verify the intended environment before removing old Vercel entries. Keep the
+compatibility reader until all scripts/deployments have migrated. No Vercel
+configuration or deployment was changed by this local rename. The cloud-setup
+script reads either naming scheme and writes the new database keys going forward.
+
+### Required and optional settings
+
+| Variables | Requirement and current purpose |
+| --- | --- |
+| `APP_ENV`, `APP_ORIGIN` | Required for the application pilot; select local or the approved dev Preview and its trusted origin. Also consumed by staff configuration and older form routing. |
+| `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL` | Shared application storage. URL is required; mode defaults to local when absent, but cloud-preview must be explicit. Keep mode explicit in the template. This is separate from the live CRM connection. |
+| `PREEVAL_ADMIN_EMAIL` | Required by the current shared config reader and used as an actor by lifecycle test scripts. It does not create an administrator, grant access or select staff membership. |
+| `APPLICATION_TEST_EMAIL` | Required by the shared config reader; controls pilot mail recipients and the pre-evaluation test Checkout email. Keep it even when optional mail dispatch is disabled. |
+| `PREEVAL_AI_ENABLED`, `PREEVAL_OPENAI_MODEL` | Optional AI capability and model override. Missing switch means off; the current model default is `gpt-6.1-sol`. The API key is required when AI is enabled. |
+| `PREEVAL_EMAIL_ENABLED` | Optional cloud-preview mail opt-in; dispatch also requires an application ID. It is not a universal mail kill switch: the older local-database dispatcher bypasses this flag. |
+| `PREEVAL_STRIPE_TEST_ENABLED` | Optional permission for pre-evaluation test payment calls in cloud-preview. Missing means no opt-in; local pilot behavior and formal-payment restrictions are unchanged. This does not select live/test mode for the shared Payment page. |
+| `DROPBOX_LEGACY_PILOT_ROOT` | Historical pilot-path compatibility. The saved-path resolver still requires it, even though new uploads use office/application folders. Retain it while those readers remain. |
+| `PREEVAL_AI_DAILY_RECOVERY_ENABLED` | Optional scheduled AI recovery only; absent/false disables that endpoint's work. On-demand AI does not require this switch. |
+
+The unused `PREEVAL_CODEX_BIN`, `PREEVAL_CODEX_MODEL`, `PREEVAL_PDFINFO_BIN`
+and `PREEVAL_PDFTOPPM_BIN` have been removed from the local file. Current direct
+API analysis does not read them. The template also omits unused Stripe publishable
+keys because hosted Checkout uses server-side secret keys.
+
+One-off verification switches and staff-session cookies should be supplied only
+to their explicit verification commands. The optional scoped email-recovery
+settings are documented in [email recovery](docs/preeval-email-recovery.md); they
+are not required for normal request-scoped mail delivery and are not enabled by
+this template. A blank or absent optional provider credential does not by itself
+prove that all of its callers are disabled; check the applicable feature's guard.
 
 Keep `STATUS_EXPIRY_ENABLED=false` locally. Vercel Production uses the saved
 `STATUS_EXPIRY_DATABASE_URL` and `CRON_SECRET`, with its own expiry switch set
@@ -84,7 +143,7 @@ work. Authentication uses `STAFF_AUTH_DATABASE_URL`. The original 3022 CRM now
 reads and edits the shared production business tables through a separate restricted
 `CRM_DATABASE_URL` with `CRM_DATA_SOURCE=live`. Changes appear in the old workspace
 after refresh; employee authentication remains unchanged. Customer intake and its
-auxiliary workflows still use the isolated `PREEVAL_DATABASE_URL` cloud preview.
+auxiliary workflows still use the isolated `APPLICATION_DATABASE_URL` cloud preview.
 No Docker is needed. See [live CRM scope](docs/staff-auth.md#shared-live-business-records).
 
 ## Validation and deployment
@@ -117,8 +176,8 @@ Preview has branch-specific configuration; existing Production variables are
 preserved. Its stable application origin is
 `https://aet-website-2026-git-dev-meiyutechs-projects.vercel.app`.
 
-Use `PREEVAL_ENV=preview`, `PREEVAL_DATABASE_MODE=cloud-preview`, and that HTTPS
-origin in `PREEVAL_ORIGIN`. Keep system environment variables enabled. The server
+Use `APP_ENV=preview`, `APPLICATION_DATABASE_MODE=cloud-preview`, and that HTTPS
+origin in `APP_ORIGIN`. Keep system environment variables enabled. The server
 requires Vercel Preview, Git branch `dev`, and an exact match with
 `VERCEL_BRANCH_URL`. Forms accept only that branch origin or the current exact
 `VERCEL_URL`; no wildcard host or forwarded request header is trusted.
@@ -232,7 +291,7 @@ Spanish use `/zh` and `/es`. Migrate each additional page once through this same
 locale architecture; language variants do not require separate page implementations.
 
 Formal application buttons use the localized `/apply` entry point. In the local
-pilot (`PREEVAL_ENV=local`), this opens the four-step formal evaluation form at
+pilot (`APP_ENV=local`), this opens the four-step formal evaluation form at
 `/credential-evaluation-application`; other environments retain the existing
 application portal. The form supports shared website pricing, multiple education
 records, report/delivery options, tab-scoped drafts, validated local submissions
@@ -246,7 +305,7 @@ contracts. After the local Supabase migrations, run `pnpm legacy:setup`; it
 creates a schema-only local fixture and installs auxiliary workflow bridges.
 Existing production tables and records are untouched. See
 [field mappings and the old-reader compatibility patch](docs/legacy-form-compatibility.md). In the
-local pilot (`PREEVAL_ENV=local`), the homepage pre-evaluation button opens the new
+local pilot (`APP_ENV=local`), the homepage pre-evaluation button opens the new
 local workflow; other environments retain the existing portal destination. Miami, Boston, Los Angeles and Beijing
 office pages are local at `/offices/{miami,boston,los-angeles,beijing}`, with
 English, Chinese and Spanish variants. The localized Contact page is implemented. A localized Payment page is available
@@ -357,7 +416,7 @@ guards stay in place. Pre-evaluation Stripe Sandbox checkout can be explicitly
 enabled with `PREEVAL_STRIPE_TEST_ENABLED=true`; local payment tests also need a
 temporary Stripe CLI callback forwarder. See [payment setup and verified
 acceptance](docs/pre-evaluation-local.md#october-22-stripe-test-payment-acceptance). Pre-evaluation notifications can now run in that same request lifecycle:
-set `PREEVAL_EMAIL_ENABLED=true` only with the intended `PREEVAL_TEST_EMAIL`.
+set `PREEVAL_EMAIL_ENABLED=true` only with the intended `APPLICATION_TEST_EMAIL`.
 Cloud preview sends are scoped to one authorized application; it does not drain
 historical mail globally. See [AI setup and acceptance](docs/pre-evaluation-local.md#direct-gpt-analysis--october-20-2026)
 and [full journey verification](docs/pre-evaluation-local.md#october-22-full-customer-journey-acceptance).

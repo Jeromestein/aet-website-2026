@@ -1,3 +1,4 @@
+import { environmentValue } from "../../../../lib/application-environment.mjs";
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sameOrigin, limit } from '@/lib/preeval/auth';
@@ -9,7 +10,7 @@ export const dynamic = 'force-dynamic';
 const response = (value: unknown, status = 200) => NextResponse.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' } });
 export async function POST(request: Request) {
   try {
-    if (process.env.PREEVAL_ENV !== 'local') return response({ error: 'unavailable' }, 503);
+    if (environmentValue("APP_ENV") !== 'local') return response({ error: 'unavailable' }, 503);
     configuration(); sameOrigin(request);
     if (!request.headers.get('content-type')?.startsWith('application/json')) throw new AppError('invalid_request');
     const key = keySchema.parse(request.headers.get('x-application-key'));

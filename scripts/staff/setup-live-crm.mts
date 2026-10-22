@@ -1,10 +1,11 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {readFile,writeFile} from 'node:fs/promises';
 import postgres from 'postgres';
 import {CLOUD_PROJECT} from '../../lib/preeval/config';
 const role='aet_crm_runtime';
-assert.equal(process.env.PREEVAL_ORIGIN,'http://localhost:3022');
+assert.equal(environmentValue("APP_ORIGIN"),'http://localhost:3022');
 assert.equal(process.env.STAFF_LEGACY_MIGRATION_ENABLED,'false');assert.equal(process.env.STAFF_AUTH_CUTOVER_ENABLED,'false');
 const url=new URL(process.env.STAFF_AUTH_DATABASE_URL!);
 assert.ok(url.hostname===`db.${CLOUD_PROJECT}.supabase.co`||url.hostname.endsWith('.pooler.supabase.com')&&decodeURIComponent(url.username).endsWith(`.${CLOUD_PROJECT}`));

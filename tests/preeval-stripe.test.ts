@@ -6,14 +6,14 @@ import { CLOUD_PROJECT, PREVIEW_ROLE, requireExternalServices } from '../lib/pre
 import type Stripe from 'stripe';
 
 beforeEach(() => {
-  vi.stubEnv('PREEVAL_ENV', 'local');
-  vi.stubEnv('PREEVAL_ORIGIN', 'http://localhost:3022');
+  vi.stubEnv('APP_ENV', 'local');
+  vi.stubEnv('APP_ORIGIN', 'http://localhost:3022');
   vi.stubEnv('PREEVAL_ADMIN_EMAIL', 'admin@example.invalid');
-  vi.stubEnv('PREEVAL_TEST_EMAIL', 'test@example.invalid');
+  vi.stubEnv('APPLICATION_TEST_EMAIL', 'test@example.invalid');
   vi.stubEnv('STAFF_LEGACY_MIGRATION_ENABLED', 'false');
   vi.stubEnv('STAFF_AUTH_CUTOVER_ENABLED', 'false');
-  vi.stubEnv('PREEVAL_DATABASE_MODE', 'cloud-preview');
-  vi.stubEnv('PREEVAL_DATABASE_URL', `postgresql://${PREVIEW_ROLE}.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);
+  vi.stubEnv('APPLICATION_DATABASE_MODE', 'cloud-preview');
+  vi.stubEnv('APPLICATION_DATABASE_URL', `postgresql://${PREVIEW_ROLE}.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);
   vi.stubEnv('STRIPE_TEST_SECRET_KEY', 'sk_test_synthetic');
   vi.stubEnv('PREEVAL_STRIPE_TEST_ENABLED', 'true');
 });
@@ -45,17 +45,17 @@ describe('pre-evaluation Stripe test containment', () => {
     expect(canVerifyPreEvaluationPayment()).toBe(false);
   });
   it('still validates database role and approved origin when opted in', () => {
-    vi.stubEnv('PREEVAL_ORIGIN', 'http://localhost:3021');
+    vi.stubEnv('APP_ORIGIN', 'http://localhost:3021');
     expect(() => stripeClient('pre-evaluation')).toThrow();
     expect(canVerifyPreEvaluationPayment()).toBe(false);
-    vi.stubEnv('PREEVAL_ORIGIN', 'http://localhost:3022');
-    vi.stubEnv('PREEVAL_DATABASE_URL', `postgresql://postgres.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);
+    vi.stubEnv('APP_ORIGIN', 'http://localhost:3022');
+    vi.stubEnv('APPLICATION_DATABASE_URL', `postgresql://postgres.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);
     expect(() => stripeClient('pre-evaluation')).toThrow();
     expect(canVerifyPreEvaluationPayment()).toBe(false);
   });
   it('preserves local test-pilot behavior without the preview opt-in', () => {
-    vi.stubEnv('PREEVAL_DATABASE_MODE', 'local');
-    vi.stubEnv('PREEVAL_DATABASE_URL', 'postgresql://postgres:test@localhost:55422/postgres');
+    vi.stubEnv('APPLICATION_DATABASE_MODE', 'local');
+    vi.stubEnv('APPLICATION_DATABASE_URL', 'postgresql://postgres:test@localhost:55422/postgres');
     vi.stubEnv('PREEVAL_STRIPE_TEST_ENABLED', 'false');
     expect(stripeClient().checkout.sessions).toBeDefined();
     expect(canVerifyPreEvaluationPayment()).toBe(true);

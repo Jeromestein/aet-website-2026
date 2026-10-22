@@ -16,7 +16,7 @@ remains a separate historical acceptance run.
   keys are accepted and live events are rejected. Formal checkout and the older
   combined worker retain their cloud restriction. Cloud callbacks skip formal
   handlers/mail rather than enabling that unrelated workflow.
-- Keep `PREEVAL_EMAIL_ENABLED=true` and `PREEVAL_TEST_EMAIL=errplusone@gmail.com`
+- Keep `PREEVAL_EMAIL_ENABLED=true` and `APPLICATION_TEST_EMAIL=errplusone@gmail.com`
   for this acceptance. Mail dispatch stays application-scoped.
 - Local Stripe cannot call localhost directly. For a deliberate payment test,
   run `node --env-file=.env.local scripts/preeval/stripe-listen.mjs` from this
@@ -207,7 +207,7 @@ remain in place; pre-evaluation has its own test-only opt-in. GPT analysis has i
 share the Status/CRM storage integration. Pre-evaluation mail is now opt-in through `PREEVAL_EMAIL_ENABLED=true` and requires
 a valid application ID in cloud preview. Submission, authorized reads and the
 managed AI scheduler dispatch only that application's eligible mail to
-`PREEVAL_TEST_EMAIL`; historical recipients and unscoped queue drains are excluded.
+`APPLICATION_TEST_EMAIL`; historical recipients and unscoped queue drains are excluded.
 The newer formal intake retains its own confirmation sender.
 Employee migration and staff cutover remain disabled.
 
@@ -533,7 +533,7 @@ deployment remain pending; see [the deployment proposal](../README.md#applicatio
 
 Customer pages share English, Chinese and Spanish routes. AI results and emails
 remain English, matching the legacy result experience. The homepage uses the
-local pre-evaluation destination only when `PREEVAL_ENV=local`; other deployment
+local pre-evaluation destination only when `APP_ENV=local`; other deployment
 configurations retain the existing portal link. All new workflow pages are
 noindex and excluded from the public sitemap.
 
@@ -550,12 +550,12 @@ work; existing production email links and app-domain routing need separate check
 ## Earlier local-database setup and processes
 
 Use `.env.example` as the variable reference; secrets belong only in the ignored
-`.env.local`. In the dev worktree, `PREEVAL_ORIGIN` and `PAYMENT_SITE_URL` are
-`http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `PREEVAL_TEST_EMAIL` both use
+`.env.local`. In the dev worktree, `APP_ORIGIN` and `PAYMENT_SITE_URL` are
+`http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `APPLICATION_TEST_EMAIL` both use
 `tech@meiyugroup.org` in the earlier pilot. The current test recipient is
 `errplusone@gmail.com`. AI configuration now follows the direct GPT section above. Reuse the configured local database and test services without
 copying secrets into documentation. This guide and its service acceptance require
-`PREEVAL_DATABASE_MODE=local` and the isolated local database on port 55422.
+`APPLICATION_DATABASE_MODE=local` and the isolated local database on port 55422.
 A separately configured `cloud-preview` mode uses different business tables and
 retains formal-payment/combined-worker guards. Pre-evaluation Stripe tests,
 Dropbox, GPT and scoped mail have independent opt-in switches. Do not run these local fixture scripts against it.

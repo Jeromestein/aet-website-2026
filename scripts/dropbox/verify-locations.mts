@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 /** Real, opt-in synthetic verification. Does not send mail or invoke AI/payments. */
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -14,7 +15,7 @@ import { downloadFile } from '../../lib/preeval/dropbox';
 import { initialData } from '../../lib/evaluation-application/domain';
 assert.equal(process.env.DROPBOX_LIVE_VERIFY, '1', 'Explicit synthetic-test opt-in required');
 assert.equal(configuration().cloudPreview, true, 'Only isolated preview database');
-const origin = process.env.PREEVAL_ORIGIN!;
+const origin = environmentValue("APP_ORIGIN")!;
 assert.ok(/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin), 'Only owner local server');
 const adminUrl = new URL(process.env.STAFF_AUTH_DATABASE_URL!);
 assert.ok(adminUrl.hostname === `db.${CLOUD_PROJECT}.supabase.co` || adminUrl.hostname.endsWith('.pooler.supabase.com') && decodeURIComponent(adminUrl.username).endsWith('.' + CLOUD_PROJECT));
@@ -112,7 +113,7 @@ try {
   check(formalFiles.every(f => f.dropbox_path.startsWith(formalStorage.write.path + '/')), 'Formal pilot uses shared application folder');
   check(formalFiles.find(f => f.kind === 'report')!.dropbox_path.includes('/_reports/'), 'Unreleased report is stored outside the customer listing');
   check((await allFiles(formal)).length === 1, 'Customer folder lists documents only, not unreleased reports');
-  const isolated = { office: 'Miami' as const, path: process.env.PREEVAL_DROPBOX_ROOT! + '/' + randomUUID() };
+  const isolated = { office: 'Miami' as const, path: environmentValue("DROPBOX_LEGACY_PILOT_ROOT")! + '/' + randomUUID() };
   await reserve(isolated);
   await (await clientForOffice('Miami')).filesUpload({ path: isolated.path + '/historical.png', contents: png, mode: { '.tag': 'add' }, autorename: false });
   check((await downloadFile(isolated.path + '/historical.png')).equals(png), 'Historical isolated-pilot path remains readable');

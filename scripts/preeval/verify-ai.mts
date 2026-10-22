@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 /** Synthetic preview verification: real private DB/Dropbox; injected GPT only. */
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -115,7 +116,7 @@ try {
   await processAI(empty,deps);
   check((await row(empty)).ai_status==='completed','optional no-file application can use form-only analysis');
   // Historical per-file path is read without moving the original object.
-  const historical = process.env.PREEVAL_DROPBOX_ROOT!+'/'+randomUUID(); folders.push(historical);
+  const historical = environmentValue("DROPBOX_LEGACY_PILOT_ROOT")!+'/'+randomUUID(); folders.push(historical);
   const dbx = await clientForOffice('Miami');
   await dbx.filesUpload({path:historical+'/old.png',contents:png,mode:{'.tag':'add'}});
   await db()`insert into ${table('preeval.files')}(id,application_id,name,mime_type,bytes,sha256,dropbox_path,state) values(${randomUUID()},${empty},'old.png','image/png',${png.length},'synthetic-old',${historical+'/old.png'},'ready')`;

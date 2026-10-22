@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 /** Controls only the synthetic fixture retained by verify-ai.mts. */
 import assert from 'node:assert/strict';
 import { readFile, unlink } from 'node:fs/promises';
@@ -20,7 +21,7 @@ try {
     const admin = postgres(url.toString(), {prepare:false,max:1});
     try {
       for(const path of fixture.folders) {
-        assert.ok(ids.some(id => path.includes('AET AI Verification - '+id) || path.includes('AET AI Verification - synthetic-'+id+'@example.invalid')) || path.startsWith(process.env.PREEVAL_DROPBOX_ROOT+'/'));
+        assert.ok(ids.some(id => path.includes('AET AI Verification - '+id) || path.includes('AET AI Verification - synthetic-'+id+'@example.invalid')) || path.startsWith(environmentValue("DROPBOX_LEGACY_PILOT_ROOT")+'/'));
         await (await clientForOffice('Miami')).filesDeleteV2({path});
       }
       for(const id of ids) {

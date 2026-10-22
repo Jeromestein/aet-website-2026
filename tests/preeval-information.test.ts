@@ -9,7 +9,7 @@ import postgres from 'postgres';
 // Opt-in integration regression: PREEVAL_F3_TEST_PG_BIN=/path/to/postgres/bin
 // pnpm exec vitest run tests/preeval-information.test.ts
 // Always creates its own disposable cluster, with Unix sockets and no TCP.
-// Never reads PREEVAL_DATABASE_URL or connects to an existing database.
+// Never reads APPLICATION_DATABASE_URL or connects to an existing database.
 const state = vi.hoisted(() => ({ sql: undefined as ReturnType<typeof postgres> | undefined }));
 vi.mock('server-only', () => ({}));
 vi.mock('../lib/preeval/db', () => ({

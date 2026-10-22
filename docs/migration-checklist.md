@@ -1090,7 +1090,7 @@ retirement response; do not redirect every removed URL to the homepage.
   `https://app.americantranslationservice.com/credential-evaluation-application`.
 - [x] Preserve the production **Start Your Pre-Evaluation** portal destination.
   The local pilot homepage uses `/degree-equivalency-tool` only when
-  `PREEVAL_ENV=local`; switching the production destination remains a release task.
+  `APP_ENV=local`; switching the production destination remains a release task.
 - [ ] Verify the handoff to existing application/status/upload and checkout flows
   after the website changes. These remain in `aet-app`; they are not marketing
   pages to copy into the new website.

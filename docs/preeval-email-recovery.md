@@ -29,8 +29,8 @@ Set these server-side values only for the approved isolated environment:
 PREEVAL_EMAIL_ENABLED=true
 PREEVAL_EMAIL_RECOVERY_ENABLED=true
 PREEVAL_EMAIL_RECOVERY_APPLICATION_IDS=<comma-separated approved UUIDs, maximum 20>
-PREEVAL_EMAIL_RECOVERY_RECIPIENT=<exact PREEVAL_TEST_EMAIL value, lowercase>
-PREEVAL_EMAIL_RECOVERY_ORIGIN=<exact canonical PREEVAL_ORIGIN>
+PREEVAL_EMAIL_RECOVERY_RECIPIENT=<exact APPLICATION_TEST_EMAIL value, lowercase>
+PREEVAL_EMAIL_RECOVERY_ORIGIN=<exact canonical APP_ORIGIN>
 CRON_SECRET=<at least 16 characters, supplied securely>
 ```
 

@@ -2,7 +2,7 @@ import postgres from "postgres";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Opt-in integration suite for a disposable, loopback-only test database. Never
-// uses PREEVAL_DATABASE_URL or .env.local; every provider call is injected.
+// uses APPLICATION_DATABASE_URL or .env.local; every provider call is injected.
 const m = vi.hoisted(() => ({ sql: undefined as unknown as ReturnType<typeof postgres> }));
 vi.mock("server-only", () => ({}));
 vi.mock("../lib/preeval/db", () => ({ db: () => m.sql, table: (name: string) => m.sql(name) }));

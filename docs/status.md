@@ -1,5 +1,52 @@
 # AET Implementation Status
 
+## 2026-10-22 — Rename shared environment variables with legacy fallback
+
+- Renamed the six shared settings to `APP_ENV`, `APP_ORIGIN`,
+  `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL`,
+  `APPLICATION_TEST_EMAIL` and `DROPBOX_LEGACY_PILOT_ROOT` across runtime code,
+  standalone scripts, tests, the environment template/local file and guides.
+  Pre-evaluation-specific switches and `PREEVAL_ADMIN_EMAIL` keep their names.
+- Added `lib/application-environment.mjs` as the shared server/Node reader.
+  New names take priority, including explicit empty strings; only undefined
+  values fall back to the six legacy aliases. No environment mutation, cached
+  configuration snapshot or cross-service credential fallback was introduced.
+- Preserved all 45 local assignment values under their renamed keys; the local
+  file remains ignored with mode 0600. Both environment files passed Next parsing
+  and duplicate-key checks. The cloud setup script now writes new database keys.
+- Passed 164 related tests across 10 files (162 initially, then the updated
+  14-test compatibility suite including two additional hosted-boundary cases).
+  Full TypeScript and whitespace checks passed. Tests cover old-only, new-only,
+  mixed/conflicting and explicitly empty values, hosted Preview/Production guards,
+  and standalone Node without a TypeScript loader. No production build ran.
+- A fresh process loaded only the new local names and successfully ran a read-only
+  `SELECT 1` through the application database helper. No migration, email, AI,
+  payment or other write workflow was executed.
+- After the owner restarted port 3022, the in-app browser verified the homepage's
+  local pre-evaluation link and formal application redirect, plus the enabled
+  application form at 1280px and 390px. Screenshots are in
+  `/private/tmp/aet-env-rename-20261022/`. No application was submitted.
+- No commit, push, Vercel environment edit or deployment. Existing hosted aliases
+  can remain until a separately authorized rollout; README documents the order.
+
+## 2026-10-22 — Audit and regroup environment variables
+
+- Reviewed the active dev worktree's template/local settings against application,
+  script and test readers. Preserved historical `PREEVAL_` names that also serve
+  formal intake and staff workflows; documented required, optional and legacy
+  compatibility settings in README and in matching environment-file groups.
+- Removed four unreferenced local Codex/Poppler variables (49 local entries to 45).
+  Preserved every retained local assignment byte-for-byte, including credentials,
+  recipients and feature-switch values. Removed two unused Stripe publishable-key
+  placeholders from the example (53 entries to 51) and aligned its origin with
+  dev port 3022; the comments explain main port 3021.
+- Documented that the email switch is a cloud-preview opt-in, not a global mail
+  kill switch, and that the admin email remains required by the shared reader
+  and is used in lifecycle tests rather than granting staff membership.
+- Both files passed Next environment parsing, duplicate-key and whitespace checks.
+  No runtime code, service state or Vercel configuration was changed. Local
+  configuration remains Git-ignored with mode 0600. No build or deployment.
+
 ## 2026-10-22 — Deploy and verify the standalone Production expiry Cron
 
 - Production commit `83357c3` was pushed to `MeiyuTech/aet-website-2026/main`.

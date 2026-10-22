@@ -6,7 +6,7 @@ const state = globalThis as typeof globalThis & {
 };
 export function db() {
   const config = configuration();
-  const connection = required("PREEVAL_DATABASE_URL");
+  const connection = required("APPLICATION_DATABASE_URL");
   if (state.preevalSql && state.preevalConnection !== connection) {
     void state.preevalSql.end({ timeout: 1 });
     state.preevalSql = undefined;

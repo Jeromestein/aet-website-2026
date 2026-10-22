@@ -1,9 +1,10 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import postgres from 'postgres';
 import { configuration, CLOUD_PROJECT } from '../../lib/preeval/config';
 const config = configuration();
-const connection = config.cloudPreview ? process.env.STAFF_AUTH_DATABASE_URL : process.env.PREEVAL_DATABASE_URL;
+const connection = config.cloudPreview ? process.env.STAFF_AUTH_DATABASE_URL : environmentValue("APPLICATION_DATABASE_URL");
 assert.ok(connection);
 const url = new URL(connection);
 assert.ok(config.cloudPreview ? url.hostname === `db.${CLOUD_PROJECT}.supabase.co` || url.hostname.endsWith('.pooler.supabase.com') && decodeURIComponent(url.username).endsWith('.' + CLOUD_PROJECT) : ['localhost','127.0.0.1'].includes(url.hostname));

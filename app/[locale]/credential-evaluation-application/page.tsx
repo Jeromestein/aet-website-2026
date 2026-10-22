@@ -1,3 +1,4 @@
+import { environmentValue } from "../../../lib/application-environment.mjs";
 import { getTranslations } from 'next-intl/server';
 import ApplicationShell from '@/components/evaluation-application/shell';
 import { EvaluationApplication } from '@/components/evaluation-application/form';
@@ -9,5 +10,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return <ApplicationShell locale={locale}><EvaluationApplication locale={locale} enabled={process.env.PREEVAL_ENV === 'local'} /></ApplicationShell>;
+  return <ApplicationShell locale={locale}><EvaluationApplication locale={locale} enabled={environmentValue("APP_ENV") === 'local'} /></ApplicationShell>;
 }

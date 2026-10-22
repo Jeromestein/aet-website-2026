@@ -1,3 +1,4 @@
+import { environmentValue } from "../application-environment.mjs";
 import { applicationPilotOrigin } from "../preview-environment";
 
 export function staffConfiguration() {
@@ -10,10 +11,10 @@ export function staffConfiguration() {
   if (process.env.VERCEL && (
     process.env.VERCEL_ENV !== "preview" ||
     process.env.VERCEL_GIT_COMMIT_REF !== "dev" ||
-    process.env.PREEVAL_ENV !== "preview"
+    environmentValue("APP_ENV") !== "preview"
   )) throw new Error("Hosted staff authentication requires the dev Preview environment");
-  const origin = process.env.PREEVAL_ENV === "preview"
-    ? applicationPilotOrigin() : process.env.PREEVAL_ORIGIN || "";
+  const origin = environmentValue("APP_ENV") === "preview"
+    ? applicationPilotOrigin() : environmentValue("APP_ORIGIN") || "";
   return { url, key, database, origin };
 }
 export const staffCookieName = "aet_staff_auth";
@@ -22,7 +23,7 @@ export function staffCookieOptions() {
     name: staffCookieName,
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: (process.env.PREEVAL_ORIGIN || "").startsWith("https:"),
+    secure: (environmentValue("APP_ORIGIN") || "").startsWith("https:"),
     path: "/",
   };
 }

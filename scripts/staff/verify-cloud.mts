@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from "node:assert/strict";
 import { randomBytes, randomInt, pbkdf2Sync, createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
@@ -15,7 +16,7 @@ assert.equal(
   new URL(process.env.SUPABASE_URL!).hostname,
   `${project}.supabase.co`,
 );
-assert.equal(process.env.PREEVAL_ORIGIN, "http://localhost:3022");
+assert.equal(environmentValue("APP_ORIGIN"), "http://localhost:3022");
 assert.equal(process.env.STAFF_LEGACY_MIGRATION_ENABLED, "false");
 assert.equal(process.env.STAFF_AUTH_CUTOVER_ENABLED, "false");
 assert.equal(
@@ -30,7 +31,7 @@ const email = `aet-auth-test-${-id}@example.invalid`;
 const password = ` Aet-${randomBytes(18).toString("hex")}-测试! `;
 const salt = randomBytes(32).toString("hex");
 const hash = pbkdf2Sync(password, salt, 25000, 512, "sha256").toString("hex");
-const origin = process.env.PREEVAL_ORIGIN!;
+const origin = environmentValue("APP_ORIGIN")!;
 const clients: ReturnType<typeof createClient>[] = [];
 const client = () => {
   const c = createClient(

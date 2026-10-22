@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import { graph, organizationSchema } from '@/lib/structured-data';
 import { StructuredData } from '@/components/structured-data';
 import { pageMetadata } from '@/lib/seo';
@@ -43,7 +44,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale);
   const t = await getTranslations();
   const apply = getPathname({ locale, href: '/apply' });
-  const pre = process.env.PREEVAL_ENV === 'local'
+  const pre = environmentValue("APP_ENV") === 'local'
     ? getPathname({ locale, href: '/degree-equivalency-tool' })
     : legacyPre;
   const services = [

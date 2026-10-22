@@ -38,7 +38,7 @@ Storage failure keeps the in-memory form usable and displays a warning.
 
 The localized `/apply` bridge connects header, homepage, Evaluation, About,
 application-method and pre-evaluation-result actions to this form only when
-`PREEVAL_ENV=local`. Other environments continue to the existing portal.
+`APP_ENV=local`. Other environments continue to the existing portal.
 
 ## Pricing authority
 

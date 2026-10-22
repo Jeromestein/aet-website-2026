@@ -1,3 +1,4 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
@@ -225,7 +226,7 @@ async function main() {
   const fixture = await readFile("pre-evaluation-test-document.pdf"),
     digest = hash(fixture.toString("base64")),
     fileId = randomUUID();
-  await db()`insert into preeval.files(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},'interrupted-test.pdf','application/pdf',${fixture.length},${digest},${process.env.PREEVAL_DROPBOX_ROOT + "/" + id + "/" + fileId + ".pdf"}) on conflict(application_id,sha256) do update set state='uploading',created_at=now()`;
+  await db()`insert into preeval.files(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},'interrupted-test.pdf','application/pdf',${fixture.length},${digest},${environmentValue("DROPBOX_LEGACY_PILOT_ROOT") + "/" + id + "/" + fileId + ".pdf"}) on conflict(application_id,sha256) do update set state='uploading',created_at=now()`;
   const upload = new File([new Uint8Array(fixture)], "interrupted-test.pdf", {
     type: "application/pdf",
   });

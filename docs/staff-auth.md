@@ -35,7 +35,7 @@ Cloud authentication is connected directly to the existing Supabase project
 `qrxztgdemfodemlcabcq` (`jhaccounting.org & AET`). It does not need Docker.
 The original CRM now uses a separate restricted `CRM_DATABASE_URL` to read and
 edit the shared live business tables. Customer intake and auxiliary workflows
-still use the isolated `PREEVAL_DATABASE_URL` preview schemas. The frontend
+still use the isolated `APPLICATION_DATABASE_URL` preview schemas. The frontend
 remains local on 3022; employee authentication and production hosting have not
 been cut over. No customer records were copied between environments.
 
@@ -263,7 +263,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 STAFF_AUTH_DATABASE_URL=
 STAFF_LEGACY_MIGRATION_ENABLED=false
 STAFF_AUTH_CUTOVER_ENABLED=false
-PREEVAL_ORIGIN=http://localhost:3022
+APP_ORIGIN=http://localhost:3022
 ```
 
 The URL/public key, service credential and staff database connection must all
@@ -313,7 +313,7 @@ remain outside that acceptance scope.
 ## Cloud business preview
 
 The owner-run 3022 server connects directly to cloud project
-`qrxztgdemfodemlcabcq` with `PREEVAL_DATABASE_MODE=cloud-preview`. No Docker,
+`qrxztgdemfodemlcabcq` with `APPLICATION_DATABASE_MODE=cloud-preview`. No Docker,
 second Supabase project or local database is required for this mode.
 
 | Logical tables | Private cloud destination |

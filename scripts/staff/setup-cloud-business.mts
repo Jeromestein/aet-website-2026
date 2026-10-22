@@ -1,10 +1,11 @@
+import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import postgres from 'postgres';
 import { CLOUD_PROJECT, PREVIEW_ROLE } from '../../lib/preeval/config';
 
-assert.equal(process.env.PREEVAL_ORIGIN,'http://localhost:3022');
+assert.equal(environmentValue("APP_ORIGIN"),'http://localhost:3022');
 assert.equal(process.env.STAFF_LEGACY_MIGRATION_ENABLED,'false');
 assert.equal(process.env.STAFF_AUTH_CUTOVER_ENABLED,'false');
 const adminUrl = new URL(process.env.STAFF_AUTH_DATABASE_URL!);
@@ -14,7 +15,7 @@ const schemas=['aet_preview_legacy','aet_preview_preeval','aet_preview_evaluatio
 const legacy=['aet_core_applications','aet_core_educations','aet_core_payments','fce_applications','fce_educations'];
 const envPath=new URL('../../.env.local',import.meta.url);
 const current=await readFile(envPath,'utf8');
-const priorUrl=process.env.PREEVAL_DATABASE_MODE==='cloud-preview' ? new URL(process.env.PREEVAL_DATABASE_URL!) : null;
+const priorUrl=environmentValue("APPLICATION_DATABASE_MODE")==='cloud-preview' ? new URL(environmentValue("APPLICATION_DATABASE_URL")!) : null;
 const password=priorUrl ? decodeURIComponent(priorUrl.password) : randomBytes(36).toString('hex');
 const restricted=new URL(adminUrl);
 restricted.username=adminUrl.hostname.startsWith('db.') ? PREVIEW_ROLE : `${PREVIEW_ROLE}.${CLOUD_PROJECT}`;
@@ -71,7 +72,7 @@ try {
  const preview=postgres(restricted.toString(),{max:1,prepare:false,connect_timeout:15});
  try { const [identity]=await preview`select current_user`; assert.equal(identity.current_user,PREVIEW_ROLE); await preview`select count(*) from aet_preview_preeval.applications`; }
  finally { await preview.end(); }
- const values={PREEVAL_DATABASE_URL:restricted.toString(),PREEVAL_DATABASE_MODE:'cloud-preview'};
+ const values={APPLICATION_DATABASE_URL:restricted.toString(),APPLICATION_DATABASE_MODE:'cloud-preview'};
  let updated=current;
  for(const [key,value] of Object.entries(values)) {const line=`${key}=${value}`; const pattern=new RegExp(`^${key}=.*$`,'m'); updated=pattern.test(updated)?updated.replace(pattern,()=>line):`${updated.trimEnd()}\n${line}\n`;}
  // Only business connection/mode change. Staff keys and both cutover flags stay untouched.
