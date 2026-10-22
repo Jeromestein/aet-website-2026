@@ -4,6 +4,15 @@ See [migration architecture](migration-architecture.md) for the English Mermaid
 diagrams of AET 2026 and legacy AET App, including shared data and integration
 boundaries. This checklist tracks implementation and acceptance separately.
 
+## F5 email recovery automation — deferred on October 22, 2026
+
+- [ ] **TODO — deferred:** Reassess automatic email retries and scheduled recovery
+  only when operational checks reveal a substantial backlog of unsent messages
+  or recurring delivery failures. Agree on the threshold when that need arises.
+- Owner decision: no further design, implementation or scheduler activation now.
+  Existing F5 code is retained; this decision does not schedule email monitoring
+  or change the separate payment-expiry job.
+
 ## Pre-evaluation Stripe test checkout — October 22, 2026
 
 - [x] Record the plan before implementation. Use a new synthetic application in
@@ -329,8 +338,10 @@ older local pilots are separate milestones, not percentages of App replacement.
   render HTML from saved business data rather than store complete email bodies.
 - [x] Implement shared branded templates and older-pilot quote/payment email
   events. These events are not yet connected to new intake or live CRM edits.
-- [ ] Provide scheduled outbox recovery and actionable failed-message review for
-  new intake; `after()` plus user-triggered retry is not a hosted queue schedule.
+- [ ] **TODO — deferred:** Reassess scheduled outbox recovery for new intake only
+  after substantial unsent-email backlog or recurring failures are observed, in
+  line with the F5 decision above. Existing delivery records and manual retry
+  remain available; no further automation design or implementation is planned now.
 - [ ] Connect a server-confirmed amount, application-linked Stripe test checkout,
   hosted signed webhook, idempotent payment update and receipt to new intake.
   Standalone `/payment` does not complete that application's payment lifecycle.
