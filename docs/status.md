@@ -1,5 +1,33 @@
 # AET Implementation Status
 
+## 2026-10-22 — Collapsible CRM sidebar
+
+- Replaced the Visit AET website trailing arrow with a globe icon and theme-orange
+  text on a pale orange background.
+- Added a desktop toggle between the full sidebar and a 72px icon rail, keeping
+  the AET emblem, active navigation, named icon tooltips, refresh and account
+  controls. The content area expands, and browser storage remembers the choice.
+  Mobile retains the full drawer navigation.
+- TypeScript and diff whitespace checks passed. After the owner reopened the
+  local page, Codex in-app verification passed at 1440px and 390px: full/sidebar
+  icon layouts, the orange website link without a trailing arrow, reload
+  persistence, keyboard expansion and mobile drawer open/Escape-close behavior.
+  Desktop collapse also remained set when resizing back from the mobile drawer.
+  Screenshots were saved under `/private/tmp/aet-crm-sidebar-20261022/`.
+- Presentation-only update; no application data or staff login changes.
+
+## 2026-10-22 — Simplified CRM navigation and overview
+
+- Temporarily hid FCE and Payment links in the shared desktop/mobile navigation;
+  Applications, Pre-evaluation and Test remain visible. Direct view URLs and the
+  application Payment drawer shortcut remain available.
+- Hid the four overview cards in live and test workspaces, allowing the list to
+  follow the page heading without an empty statistics area.
+- Verified localhost:3022 in the Codex in-app browser at 1440px and 390px:
+  live application list, mobile navigation and Test list. TypeScript and diff
+  whitespace checks passed. No new tests were added for this presentation change.
+- Presentation-only update; application data and staff login behavior are unchanged.
+
 ## 2026-10-22 — Restore the standalone legacy GPA calculator
 
 - Replaced the connected CRM's simplified 4.0-scale modal with a new-tab link to

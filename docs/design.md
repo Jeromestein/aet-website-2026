@@ -189,8 +189,8 @@ background portrait and content have breathing room without a fixed section heig
   roster. Scope statistics, searches, documents, payments and CSV exports before
   returning data. Office selectors contain only permitted offices and, when
   authorized, Unassigned. A selector never grants access.
-- Use the original CRM layout as the connected workspace: fixed sidebar, four
-  overview cards, status tabs, table/mobile cards and a right-hand
+- Use the original CRM layout as the connected workspace: fixed sidebar,
+  status tabs, table/mobile cards and a right-hand
   detail drawer. Formal and preliminary evaluations share the shell. Education
   and Service open their own drawer sections; edits persist through the existing
   authenticated workflow APIs. Older formal-list/detail URLs open the matching
@@ -201,10 +201,20 @@ background portrait and content have breathing room without a fixed section heig
   live and test CRM views, including the import dialog shortcut. In the isolated cloud
   preview, identify the workspace and retain paused external delivery controls.
 
-- Order the left navigation as Applications, FCE, Pre-evaluation, Payment links,
-  Test. Test is a dedicated link to `source=preview`; the other links return to
-  live data. Omit the workspace-level Documents entry and document strip; keep
-  Documents inside each application drawer.
+- Show Applications, Pre-evaluation and Test in the left navigation. Temporarily
+  hide FCE and Payment links on desktop and mobile, retaining their direct URLs
+  and the application-level Payment drawer shortcut. Hide all four overview cards
+  so the list follows the page heading without an empty statistics area. Apply
+  this presentation to live and test workspaces. Test is a dedicated link to
+  `source=preview`; the other visible links return to live data. Omit the
+  workspace-level Documents entry and document strip; keep Documents inside each
+  application drawer.
+- Desktop sidebar collapses to a 72px icon rail. Keep the AET emblem, accessible
+  icon labels/tooltips, active navigation, refresh, website and account controls.
+  The content area expands without resetting filters or refetching records.
+  Remember the preference in browser storage; mobile retains the full drawer.
+  Highlight Visit AET website with theme orange text and a pale orange background,
+  using a globe icon instead of a trailing arrow. Respect reduced motion.
 - CRM Documents lists the application's Dropbox files in the right drawer with
   names, sizes, update dates and explicit manual refresh. File links open Dropbox
   preview using the employee's office account. Status and CRM share the legacy
