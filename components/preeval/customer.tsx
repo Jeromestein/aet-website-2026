@@ -12,6 +12,7 @@ import {
 import { copy, errorText, stateLabel } from "@/lib/preeval/copy";
 import { lookupApplication } from "@/lib/preeval/customer-access";
 import ApplicationLookup from "./application-lookup";
+import { uploadDocuments, validateDocuments } from "@/lib/preeval/upload-client";
 import {
   BASE_CENTS,
   FEE_CENTS,
@@ -124,8 +125,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
           "startDate",
           "endDate",
         ];
+  const submitting = useRef(false);
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
     setError("");
     const current = { ...values };
     if (step < 2) {
@@ -148,8 +151,10 @@ export function ApplicationForm({ locale }: { locale: string }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    submitting.current = true;
     setBusy(true);
     try {
+      if (documents.length) validateDocuments(documents);
       const data = await api("applications", {
         ...values,
         locale,
@@ -162,19 +167,15 @@ export function ApplicationForm({ locale }: { locale: string }) {
         sessionStorage.removeItem("aet-pre-evaluation-draft");
       } catch { /* Submission already succeeded. */ }
       let uploadFailed = false;
-      for (const document of documents) {
-        const body = new FormData(); body.set('file', document);
-        try { await api(`applications/${data.id}/files`, body); }
-        catch { uploadFailed = true; }
-      }
-      if (documents.length && !uploadFailed) {
-        try { await api(`applications/${data.id}/uploads-complete`, {}); }
+      if (documents.length) {
+        try { await uploadDocuments(data.id, documents, api); }
         catch { uploadFailed = true; }
       }
       window.location.assign(data.url + (uploadFailed ? '&upload=retry' : ''));
     } catch (e) {
       setError(errorText(t, (e as Error).message));
       setBusy(false);
+      submitting.current = false;
     }
   }
   return (
@@ -452,13 +453,16 @@ export function ApplicationResult({
       setBusy("");
     }
   }
+  const uploading = useRef(false);
   async function upload(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (uploading.current || busy) return;
+    uploading.current = true;
     setBusy("upload");
     setError("");
     setNotice("");
     try {
-      await api("applications/" + id + "/files", new FormData(e.currentTarget));
+      await uploadDocuments(id, Array.from(fileInput.current?.files || []), api);
       if (fileInput.current) fileInput.current.value = "";
       setNotice(t.uploadDone);
       await load();
@@ -466,6 +470,7 @@ export function ApplicationResult({
       setError(errorText(t, (e as Error).message));
     } finally {
       setBusy("");
+      uploading.current = false;
     }
   }
   if (!app)
@@ -624,6 +629,7 @@ export function ApplicationResult({
                 ref={fileInput}
                 type="file"
                 name="file"
+                multiple
                 accept=".pdf,.jpg,.jpeg,.png"
                 required
               />

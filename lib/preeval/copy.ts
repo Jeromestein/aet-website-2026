@@ -86,7 +86,7 @@ const en = {
   upload: "Upload document",
   uploadHint:
     "A clear diploma or degree certificate can help the assessment. PDF, JPG or PNG; up to 20 MB per file, 5 files, 10 pages per PDF, 20 pages total and 30 MB combined. Documents are optional.",
-  uploadDone: "Document saved. When all files are uploaded, confirm to start the assessment.",
+  uploadDone: "Documents saved. Your assessment will start automatically.",
   cancelledCheckout:
     "Payment was not completed. Your saved application is still available.",
   cancel: "Cancel unpaid application",
@@ -214,7 +214,7 @@ const zh: Copy = {
   upload: "上传文件",
   uploadHint:
     "清晰的毕业证或学位证有助于评估。支持 PDF、JPG、PNG；每份不超过 20 MB，最多 5 个文件，每份 PDF 最多 10 页，总计最多 20 页、30 MB。文件为选填。",
-  uploadDone: "文件已保存。全部材料上传完成后，请点击开始评估。",
+  uploadDone: "文件已保存，评估将自动开始。",
   cancelledCheckout: "付款未完成，已保存的申请仍可访问。",
   cancel: "取消未付款申请",
   cancelPrompt: "确定取消这份未付款申请吗？",
@@ -342,7 +342,7 @@ const es: Copy = {
   upload: "Subir documento",
   uploadHint:
     "Un diploma legible puede ayudar. PDF, JPG o PNG; hasta 20 MB por archivo, 5 archivos, 10 páginas por PDF y 20 páginas y 30 MB en total. Los documentos son opcionales.",
-  uploadDone: "Documento guardado. Confirme cuando haya subido todos los archivos para iniciar la evaluación.",
+  uploadDone: "Documentos guardados. Su evaluación comenzará automáticamente.",
   cancelledCheckout: "El pago no se completó. Su solicitud sigue guardada.",
   cancel: "Cancelar solicitud sin pagar",
   cancelPrompt: "¿Cancelar esta solicitud sin pagar?",
