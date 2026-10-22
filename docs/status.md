@@ -1,5 +1,36 @@
 # AET Implementation Status
 
+## 2026-10-22 — Restore the standalone legacy GPA calculator
+
+- Replaced the connected CRM's simplified 4.0-scale modal with a new-tab link to
+  `/admin/CRM/gpa-calculator`, protected by the same staff session check as CRM.
+- Compared directly with `aet-app/src/components/gpa/GPACalculator.tsx`: preserve
+  course-name/credits/grade rows separated by tabs or spaces, case-insensitive
+  aliases, the A+ 4.35 scale, credit-only P/CR/T and GPA-counted F/WF.
+- Preserve the copyable GPA Summary labels, six-decimal GPA, three-decimal total
+  credits and two-decimal grade subtotals, with combined F/WF and P/CR rows.
+  Show T when present (the old UI counted but omitted it); malformed rows now
+  produce line-specific errors instead of silently lowering the course count.
+- Added responsive input/result panels, grading reference, Copy summary and Reset.
+  Editing input invalidates the previous result. Calculation stays in the browser;
+  there is no application write or transcript persistence.
+- Passed eight focused GPA tests and TypeScript. Existing 3022 server returns
+  307 to staff login for unauthenticated access and 308 from the localized legacy
+  URL to the canonical staff URL. Initial in-app verification reached login.
+- On the owner's follow-up request, used their open authenticated Chrome tabs to
+  calculate identical synthetic inputs on the live legacy page and the new
+  `http://localhost:3022/admin/CRM/gpa-calculator` page. No IP-address alias used.
+  Twenty mixed courses returned GPA `2.517187` and total credits `41.000` on both;
+  all original distribution rows matched after whitespace normalization. Covered
+  every letter-grade band, fractional credits, mixed tabs/spaces, lowercase grades,
+  Fail/Pass/Credit aliases, WF and T. The new T row is the only summary-content
+  difference: one course / 3.00 credits, already counted in both total-credit values.
+- The original two-course example also matched: GPA `2.736364`, total credits
+  `5.500`, and every summary row. Desktop result screenshots were inspected and
+  saved with the exact inputs and rendered outputs. Mobile remains unverified.
+  No real transcript or applicant data was used or changed.
+- No server restart, production build, commit, push or deployment in this task.
+
 ## 2026-10-21 — Committed v3 baseline comparison
 
 - Committed the reviewed GPT integration, degree title and page-identity refinement

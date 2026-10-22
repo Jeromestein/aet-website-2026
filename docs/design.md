@@ -164,6 +164,13 @@ background portrait and content have breathing room without a fixed section heig
 
 ### CRM workspace
 
+- GPA calculator is a standalone staff tool at `/admin/CRM/gpa-calculator`,
+  opened from CRM in a new tab. Accept one course per line with tab/space-separated
+  course name, credits and letter grade. Preserve the legacy AET 4.35 scale,
+  credit-only grades and copyable GPA Summary precision. Display explicit row
+  errors rather than silently excluding invalid input. Use two input/result
+  panels on desktop, stacked on mobile, with Reset and Copy summary controls.
+
 - Staff pages are English-only, including account/password login.
   Keep the legacy `/admin/CRM` URL and all `/admin/*` routes unprefixed.
   Redirect existing `/en/admin/*`, `/zh/admin/*`, `/es/admin/*`, and lowercase

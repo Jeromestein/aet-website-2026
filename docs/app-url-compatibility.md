@@ -6,6 +6,19 @@ three public pre-evaluation URLs are retained, and formal status lookup is now
 restored locally. Checkout and four standalone staff-tool URLs still need
 compatibility work; production hostname behavior remains unverified.
 
+## GPA standalone page update — October 22, 2026
+
+The legacy `/admin/CRM/gpa-calculator` path is now implemented as a standalone
+staff page. CRM opens it in a new tab. It restores the original pasted transcript
+format, AET 4.35 grading scale and copyable summary. Local unauthenticated access
+returns 307 to staff login; `/zh/admin/CRM/gpa-calculator` returns 308 to the
+unprefixed route. Eight calculation tests and TypeScript passed. Authenticated
+Chrome comparison against the live old calculator matched GPA, total credits and
+all existing distribution rows for the original example and a 20-course synthetic
+transcript; the new summary additionally lists T credits. See [recorded results](status.md#2026-10-22--restore-the-standalone-legacy-gpa-calculator).
+Mobile and new production hosting remain unverified. The October 16 404 entry
+below is retained as historical evidence.
+
 ## Scope and evidence
 
 Compared the sibling `aet-app` source with `aet-website-2026-dev`, then checked 23
