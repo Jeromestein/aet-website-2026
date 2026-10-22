@@ -1,3 +1,4 @@
+import { legacyTestActor } from "../legacy-test-actor";
 import { environmentValue } from "../../lib/application-environment.mjs";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -14,6 +15,8 @@ import {
 import { application, addFile, staffAction } from "../../lib/preeval/service";
 import { enqueueEmail, flushEmails } from "../../lib/preeval/email";
 import { downloadFile } from "../../lib/preeval/dropbox";
+// Test-only audit identity: supply for this command, never through website configuration.
+const testActor = legacyTestActor();
 let checks = 0;
 const origin = configuration().origin;
 function check(value: unknown, message: string) {
@@ -198,7 +201,7 @@ async function main() {
   await staffAction(
     id,
     { action: "notes", notes: "Local acceptance verified persistence." },
-    configuration().admin,
+    testActor,
   );
   check(
     (await application(id, true)).notes.includes("verified persistence"),
@@ -215,7 +218,7 @@ async function main() {
           "Synthetic local acceptance fixture. No valid academic credential supplied.",
       },
     },
-    configuration().admin,
+    testActor,
   );
   check(
     (await application(id)).status === "processing" &&
@@ -242,7 +245,7 @@ async function main() {
   );
   await db()`update preeval.applications set status='cancelled',ai_status='idle' where id=${id}`;
   await assert.rejects(() =>
-    staffAction(id, { action: "retry_ai" }, configuration().admin),
+    staffAction(id, { action: "retry_ai" }, testActor),
   );
   checks++;
   // Exercise a real Resend rejection followed by one controlled successful retry.
@@ -265,7 +268,7 @@ async function main() {
   await staffAction(
     id,
     { action: "retry_email", emailId: failed.id },
-    configuration().admin,
+    testActor,
   );
   await flushEmails();
   await flushEmails();

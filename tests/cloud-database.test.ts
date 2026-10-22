@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { businessTableName, configuration, requireExternalServices, CLOUD_PROJECT, PREVIEW_ROLE } from '../lib/preeval/config';
 beforeEach(()=>{
- vi.stubEnv('APP_ENV','local');vi.stubEnv('APP_ORIGIN','http://localhost:3022');vi.stubEnv('PREEVAL_ADMIN_EMAIL','admin@example.invalid');vi.stubEnv('APPLICATION_TEST_EMAIL','test@example.invalid');
+ vi.stubEnv('APP_ENV','local');vi.stubEnv('APP_ORIGIN','http://localhost:3022');vi.stubEnv('APPLICATION_TEST_EMAIL','test@example.invalid');
  vi.stubEnv('STAFF_LEGACY_MIGRATION_ENABLED','false');vi.stubEnv('STAFF_AUTH_CUTOVER_ENABLED','false');vi.stubEnv('APPLICATION_DATABASE_MODE','cloud-preview');
  vi.stubEnv('APPLICATION_DATABASE_URL',`postgresql://${PREVIEW_ROLE}.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);
 });

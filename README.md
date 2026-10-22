@@ -48,7 +48,7 @@ an explicitly authorized push or deployment. Do not copy folders over `main`.
 Use one private `.env.local` in each worktree for actual local values. Keep
 `.env.example` as the shared, secret-free template. Do not create a second `.env`
 or service-specific secret file for the same worktree. Both files are grouped by
-shared application configuration, pilot compatibility/test recipients, staff
+shared application configuration, pilot test recipient, staff
 authentication, CRM, optional AI/email/payments/Dropbox and scheduled tasks.
 The template origin defaults to port 3022 for the dev worktree; use 3021 for main.
 Organizing settings does not enable or disable their services.
@@ -91,18 +91,41 @@ script reads either naming scheme and writes the new database keys going forward
 | --- | --- |
 | `APP_ENV`, `APP_ORIGIN` | Required for the application pilot; select local or the approved dev Preview and its trusted origin. Also consumed by staff configuration and older form routing. |
 | `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL` | Shared application storage. URL is required; mode defaults to local when absent, but cloud-preview must be explicit. Keep mode explicit in the template. This is separate from the live CRM connection. |
-| `PREEVAL_ADMIN_EMAIL` | Required by the current shared config reader and used as an actor by lifecycle test scripts. It does not create an administrator, grant access or select staff membership. |
-| `APPLICATION_TEST_EMAIL` | Required by the shared config reader; controls pilot mail recipients and the pre-evaluation test Checkout email. Keep it even when optional mail dispatch is disabled. |
-| `PREEVAL_AI_ENABLED`, `PREEVAL_OPENAI_MODEL` | Optional AI capability and model override. Missing switch means off; the current model default is `gpt-6.1-sol`. The API key is required when AI is enabled. |
-| `PREEVAL_EMAIL_ENABLED` | Optional cloud-preview mail opt-in; dispatch also requires an application ID. It is not a universal mail kill switch: the older local-database dispatcher bypasses this flag. |
+| `APPLICATION_TEST_EMAIL` | Required by the shared config reader; controls pre-evaluation/legacy workflow recipients and the pre-evaluation test Checkout email. New formal intake uses its own fixed pilot recipient in `lib/application/intake.ts`; this is not a site-wide recipient override. Keep it even when optional mail dispatch is disabled. |
+| `PREEVAL_AI_ENABLED`, `PREEVAL_OPENAI_MODEL` | Optional pre-evaluation AI capability and model override. Missing switch means off; the current model default is `gpt-6.1-sol`. The API key is required when AI is enabled. |
+| `PREEVAL_EMAIL_ENABLED` | Optional pre-evaluation cloud-preview mail opt-in; dispatch also requires an application ID. It does not control newer formal-intake confirmation mail, and the older local-database dispatcher bypasses this flag. |
 | `PREEVAL_STRIPE_TEST_ENABLED` | Optional permission for pre-evaluation test payment calls in cloud-preview. Missing means no opt-in; local pilot behavior and formal-payment restrictions are unchanged. This does not select live/test mode for the shared Payment page. |
 | `DROPBOX_LEGACY_PILOT_ROOT` | Historical pilot-path compatibility. The saved-path resolver still requires it, even though new uploads use office/application folders. Retain it while those readers remain. |
 | `PREEVAL_AI_DAILY_RECOVERY_ENABLED` | Optional scheduled AI recovery only; absent/false disables that endpoint's work. On-demand AI does not require this switch. |
+
+Local values may intentionally differ from the safe template: `APP_ENV=local`
+can use `APPLICATION_DATABASE_MODE=cloud-preview` for a localhost server backed
+by the restricted cloud database. Local opt-ins do not enable Vercel services.
+Optional entries need not be copied into `.env.local`: missing
+`PREEVAL_AI_DAILY_RECOVERY_ENABLED` disables scheduled AI recovery; missing
+`STRIPE_PAYMENT_MODE` selects test only in development and disables the shared
+Payment page elsewhere. Each office needs its own account key for the selected
+mode; missing BOS keys leave Boston/NYC Stripe unavailable without falling back
+to another office account. `STRIPE_TEST_SITE_URL` is an optional return-origin
+override; see [Payment configuration](content/payment/README.md).
 
 The unused `PREEVAL_CODEX_BIN`, `PREEVAL_CODEX_MODEL`, `PREEVAL_PDFINFO_BIN`
 and `PREEVAL_PDFTOPPM_BIN` have been removed from the local file. Current direct
 API analysis does not read them. The template also omits unused Stripe publishable
 keys because hosted Checkout uses server-side secret keys.
+
+Old pre-evaluation lifecycle and formal-evaluation workflow/browser-fixture
+scripts take an explicit `--test-actor=email` command-line argument through
+`scripts/legacy-test-actor.ts`. There is no environment-variable fallback or
+website setting for this identity. Use a synthetic identity such as
+`--test-actor=lifecycle-test@example.invalid`; see
+[lifecycle test setup](docs/pre-evaluation-local.md#lifecycle-test-only-audit-identity).
+The argument labels test audit entries or synthetic legacy authentication fixtures;
+it does not configure website staff membership or change the controlled recipient.
+
+When integrating older feature branches, retain the removal of `admin` from
+shared website configuration and the environment template. Adapt old fixtures to
+the command-line helper instead of restoring an environment dependency.
 
 One-off verification switches and staff-session cookies should be supplied only
 to their explicit verification commands. The optional scoped email-recovery

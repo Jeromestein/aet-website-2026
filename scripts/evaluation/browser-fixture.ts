@@ -1,3 +1,4 @@
+import { legacyTestActor } from "../legacy-test-actor";
 // Creates a synthetic local case and one-use links for interactive verification.
 // Never sends email. Links are stored only in ignored local artifacts.
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
@@ -7,7 +8,8 @@ import { configuration } from '../../lib/preeval/config';
 import { shipping } from '../../lib/pricing';
 import { initialData } from '../../lib/evaluation-application/domain';
 async function main() {
- const {origin,admin}=configuration();const sql=db();const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
+ const admin=legacyTestActor();
+ const {origin}=configuration();const sql=db();const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
  try{
   const data=initialData();Object.assign(data.client,{name:'Fictional Workflow Preview',email:'formal-preview@example.test',phone:'+1 202 555 0149',street:'123 Fictional Street',city:'Miami',region:'FL',postal:'33101',country:'United States',office:'Miami',purpose:'education'});
   data.evaluee={title:'mx',first:'Sample',middle:'',last:'Applicant',birth:'1995-02-28'};data.educations=[{school:'Fictional University',country:'Canada',degree:'Bachelor of Science',start:'2013-09',end:'2017-06'}];data.services.document.tier='standard';data.terms=true;

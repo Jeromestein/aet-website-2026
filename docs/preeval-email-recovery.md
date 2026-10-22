@@ -48,17 +48,23 @@ is limited to daily invocation; a daily schedule cannot guarantee a retry inside
 or alter the existing AI and payment-expiry entries in `vercel.json`.
 
 Use an existing approved scheduler to invoke the independent endpoint every five
-minutes. The one-shot caller is `scripts/email/recover.mjs`; it requires Node with
-`--env-file` support, allows only an explicit HTTPS `*.vercel.app` origin, rejects
+minutes. The one-shot caller is `scripts/email/recover.mjs`; it reads its process
+environment, allows only an explicit HTTPS `*.vercel.app` origin, rejects
 redirects and times out after five minutes. It does not access a database or AI.
-A concrete entry for an existing Unix scheduler is:
+For a scheduler that securely injects the caller's environment, the command is:
 
-```cron
-*/5 * * * * /absolute/path/to/node --env-file=/secure/aet-email-recovery.env /absolute/path/to/aet-website-2026-dev/scripts/email/recover.mjs
+```sh
+/absolute/path/to/node /absolute/path/to/aet-website-2026-dev/scripts/email/recover.mjs
 ```
 
-The scheduler's private env file needs `PREEVAL_EMAIL_RECOVERY_ORIGIN` and
-`CRON_SECRET` matching the server. If Vercel deployment protection is enabled,
+Configure its five-minute schedule and supply `PREEVAL_EMAIL_RECOVERY_ORIGIN` and
+`CRON_SECRET` matching the server through that scheduler's secret configuration.
+Plain cron does not automatically load shell or project environment files; its
+launcher must provide these values. Do not create a second service-specific
+secret file in this worktree. An explicitly authorized manual local invocation
+can use `node --env-file=.env.local scripts/email/recover.mjs` after adding the
+caller settings to the existing private file; it still targets the approved
+HTTPS Preview origin, not localhost. If Vercel deployment protection is enabled,
 provide its separately authorized `VERCEL_AUTOMATION_BYPASS_SECRET` to the caller;
 it is sent only as the protection-bypass header and does not replace Cron auth.
 The caller exits 1 for a failed/disabled invocation, 2 for newly parked review

@@ -228,10 +228,12 @@ read original Dropbox revisions → OpenAI Responses → save result → release
 ### Owner setup on dev / port 3022
 
 The owner configured `OPENAI_API_KEY` in the dev worktree's ignored `.env.local`
-and live acceptance passed below. For a fresh checkout, fill that variable. The local
-`PREEVAL_AI_ENABLED=true` and `PREEVAL_OPENAI_MODEL=gpt-6.1-sol` placeholders
-are prepared; existing values are never replaced by setup. Keep the key out of
-browser code, chat, Git and documentation. After saving environment changes,
+and live acceptance passed below. That local setup explicitly enables
+`PREEVAL_AI_ENABLED=true`; a fresh copy of `.env.example` keeps it `false`.
+To opt into pre-evaluation AI, supply `OPENAI_API_KEY` and explicitly enable the
+switch. `PREEVAL_OPENAI_MODEL` is optional and defaults to `gpt-6.1-sol` in code;
+setup must preserve existing values. Keep the key out of browser code, chat, Git
+and documentation. After saving environment changes,
 restart your existing Next dev command in VS Code:
 
 ```sh
@@ -551,7 +553,7 @@ work; existing production email links and app-domain routing need separate check
 
 Use `.env.example` as the variable reference; secrets belong only in the ignored
 `.env.local`. In the dev worktree, `APP_ORIGIN` and `PAYMENT_SITE_URL` are
-`http://localhost:3022`; `PREEVAL_ADMIN_EMAIL` and `APPLICATION_TEST_EMAIL` both use
+`http://localhost:3022`; `APPLICATION_TEST_EMAIL` used
 `tech@meiyugroup.org` in the earlier pilot. The current test recipient is
 `errplusone@gmail.com`. AI configuration now follows the direct GPT section above. Reuse the configured local database and test services without
 copying secrets into documentation. This guide and its service acceptance require
@@ -770,8 +772,24 @@ pnpm typecheck
 pnpm check:i18n
 pnpm test:preeval
 pnpm test:preeval:integration
-node --env-file=.env.local --import tsx scripts/preeval/lifecycle.ts
+node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/lifecycle.ts --test-actor=lifecycle-test@example.invalid
 ```
+
+### Lifecycle test-only audit identity
+
+The older lifecycle script requires exactly one `--test-actor=email` argument
+through the script-only `legacyTestActor()` helper, as shown above. The helper
+trims and lowercases the value and rejects missing, blank or duplicate arguments
+before reading fixtures or accessing services. It has no environment fallback.
+Use a synthetic actor such as `lifecycle-test@example.invalid`; this value labels
+audit entries for direct test actions. It does not sign in a user, grant access
+or change `APPLICATION_TEST_EMAIL`. A separately authenticated
+`PREEVAL_TEST_STAFF_COOKIE` is still required for the staff HTTP checks.
+
+Do not store the test actor in website `.env` files or Vercel. Normal website
+configuration no longer reads or requires it. The complete lifecycle script
+still needs the isolated local database and prior fixtures described here;
+setting an actor alone does not make it safe to run against cloud/live records.
 
 Integration creates a disposable local application, sends a controlled test email
 and creates/expires a real Stripe test checkout. Lifecycle checks additionally

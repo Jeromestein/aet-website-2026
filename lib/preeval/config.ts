@@ -24,7 +24,7 @@ export function configuration() {
   } else if (!["localhost", "127.0.0.1"].includes(database.hostname)) {
     throw new Error("Remote business databases require explicit cloud-preview configuration.");
   }
-  return { origin, cloudPreview, admin: required("PREEVAL_ADMIN_EMAIL").toLowerCase(), recipient: required("APPLICATION_TEST_EMAIL").toLowerCase() };
+  return { origin, cloudPreview, recipient: required("APPLICATION_TEST_EMAIL").toLowerCase() };
 }
 export function businessTableName(name: string) {
   const match = /^(public|preeval|evaluation)\.([a-z][a-z0-9_]*)$/.exec(name);

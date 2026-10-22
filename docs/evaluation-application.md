@@ -152,9 +152,9 @@ pnpm test:preeval
 pnpm test:legacy
 pnpm test:legacy:integration
 pnpm test:evaluation:integration
-pnpm test:evaluation:workflow
+pnpm test:evaluation:workflow --test-actor=formal-test@example.invalid
 # Optional: real isolated Dropbox uploads and Stripe test session creation/expiration
-pnpm test:evaluation:workflow --services
+pnpm test:evaluation:workflow --test-actor=formal-test@example.invalid --services
 ```
 
 Integration checks create disposable fictional local records, verify persistence,
@@ -165,6 +165,18 @@ local records. Its optional `--services` mode additionally uploads a synthetic
 one-pixel image to the Dropbox test root, downloads it, creates/reuses a real Stripe
 test Checkout session and expires it. Local records are cleaned up; synthetic
 Dropbox files remain in the isolated test directory. No emails are sent.
+The older workflow integration and browser-fixture scripts require an explicit
+`--test-actor=email` argument for that invocation only. Their script-only helper
+rejects missing, blank or duplicate arguments before accessing the database or
+services, with no environment fallback. This identity
+is for synthetic legacy authentication fixtures, not production staff membership;
+the current password-authentication flow is unchanged. Do not store it in website
+environment files. For the browser fixture, use:
+
+```sh
+node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/evaluation/browser-fixture.ts --test-actor=formal-test@example.invalid
+```
+
 `browser-fixture.ts` prepares an explicitly fictional case, private ignored access
 links and a synthetic report for interactive acceptance. Do not share its access file.
 Browser verification and screenshots are recorded in `docs/status.md`.

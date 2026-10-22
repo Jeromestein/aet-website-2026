@@ -1,12 +1,92 @@
 # AET Implementation Status
 
+## 2026-10-22 — Audit environment names, defaults and documentation scopes
+
+- Audited the current dev worktree's environment files, runtime readers, scripts,
+  tests and setup guides. Corrected shortened variable names in comments and
+  limited the alias claim to the six shared-name fallbacks in README. Retained
+  pre-evaluation-specific AI, email and test-payment names.
+- Corrected the fresh-checkout AI instructions: the template defaults to disabled;
+  the existing local configuration explicitly opts in. Clarified that the mail
+  switch and shared test-recipient setting do not override newer formal-intake
+  confirmation delivery, which uses a separate fixed pilot recipient.
+- Scoped the Payment guide's no-webhook claim to standalone Payment; separate
+  application API handlers still consume the test webhook secret. Aligned email
+  recovery caller instructions with one private local environment file per
+  worktree and externally managed scheduler secrets.
+- Both environment files parse with Next's environment loader, without duplicate
+  keys: 50 template entries and 44 local entries. The six template-only settings
+  are optional daily AI recovery, shared Stripe mode/test return origin, and
+  account-specific Stripe keys. Missing local BOS keys leave Boston/NYC Stripe
+  unavailable; missing shared Stripe mode defaults to test only in development.
+  All assignments, secrets, feature states and file permissions were preserved;
+  the local file remains ignored with mode 0600.
+- All 160 targeted tests across nine files, full TypeScript and whitespace checks
+  passed. Credential-free startup probes of the package workflow/integration
+  commands reached their expected argument/configuration rejection. No full
+  integration workflow, external provider, database or live Vercel check was run.
+- This audit changed comments and documentation only. No runtime change, frontend
+  change, server restart, commit, push or deployment was performed.
+
+## 2026-10-22 — Make legacy test identities command-line only
+
+- Replaced the temporary script environment input with an explicit
+  `--test-actor=email` argument for all three legacy scripts. The shared
+  script-only helper trims/lowercases one value and rejects missing, blank,
+  bare or duplicate arguments. No environment fallback remains.
+- Updated legacy invocation examples and tests, removed obsolete environment
+  stubs, and replaced the retired variable name in historical prose with a
+  description. The current dev source, docs, tests and both environment files
+  have zero matches for the retired name; Git history and dependency/build
+  caches are outside this audit. Other worktrees were not edited.
+- All 79 targeted tests across five files, full TypeScript and whitespace checks
+  passed. Subprocess tests exercised only early rejection with no credentials;
+  no full lifecycle, database or provider workflow was run.
+- No frontend or additional environment-file changes, commit, push, Vercel
+  configuration change or deployment in this follow-up.
+
+## 2026-10-22 — Remove the legacy test actor from website configuration
+
+- Removed the legacy test-identity setting and the `admin` return property from the shared
+  website configuration reader. New-name and legacy-name application setups work
+  without it; an obsolete value does not affect website configuration.
+- Removed its assignment from `.env.example` (50 remaining entries) and the
+  ignored `.env.local` (44 remaining entries). All retained local values and mode
+  0600 were preserved. Controlled recipients and staff authentication are unchanged.
+- The pre-evaluation lifecycle script and two older formal evaluation scripts
+  (workflow integration and browser fixture) now require the identity only when
+  explicitly run, via `scripts/legacy-test-actor.ts`. Missing/blank input fails
+  before fixtures, database access or provider operations. Supplied identities
+  are trimmed/lowercased for their existing audit or legacy fixture usage.
+- Updated the setup guides with invocation-scoped examples, removed the normal
+  website test fixtures' dependency, and added missing/empty/whitespace startup
+  checks for all three scripts plus identity-normalization coverage.
+- All 77 targeted tests across five files, full TypeScript and whitespace checks
+  passed. A fresh process loaded `.env.local` and accepted website configuration
+  with no test actor; no provider/database operation was needed for this check.
+  Only fail-fast script paths were run, not their side-effecting test workflows.
+- No frontend changes, production build, commit, push, Vercel edit or deployment.
+  Restart the owner-managed 3022 process to discard its old environment entry.
+- At the intermediate reference audit, the dev worktree still contained the old
+  name in seven files: the script-only helper, two regression test files, README,
+  two legacy-script guides and this historical log. Website `lib/` / `app/` code
+  and both environment files had no reference. The later command-line-only
+  cleanup removes those remaining name references; older wording was clarified.
+- The separate `x/preeval-result-publication` and `x/preeval-upload-recovery`
+  worktrees still have their older configuration readers/templates. They have not
+  received this dev change; upload-recovery also has unrelated working changes.
+  No other worktree was edited. Preserve this removal when integrating them into
+  dev, and rerun the configuration tests on the combined result.
+
 ## 2026-10-22 — Rename shared environment variables with legacy fallback
 
 - Renamed the six shared settings to `APP_ENV`, `APP_ORIGIN`,
   `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL`,
   `APPLICATION_TEST_EMAIL` and `DROPBOX_LEGACY_PILOT_ROOT` across runtime code,
   standalone scripts, tests, the environment template/local file and guides.
-  Pre-evaluation-specific switches and `PREEVAL_ADMIN_EMAIL` keep their names.
+  Pre-evaluation-specific switches kept their names. At this stage the test actor
+  still lived in website configuration; the later removal entry above supersedes
+  that behavior and moves it to explicit legacy-script invocations.
 - Added `lib/application-environment.mjs` as the shared server/Node reader.
   New names take priority, including explicit empty strings; only undefined
   values fall back to the six legacy aliases. No environment mutation, cached
@@ -41,8 +121,8 @@
   placeholders from the example (53 entries to 51) and aligned its origin with
   dev port 3022; the comments explain main port 3021.
 - Documented that the email switch is a cloud-preview opt-in, not a global mail
-  kill switch, and that the admin email remains required by the shared reader
-  and is used in lifecycle tests rather than granting staff membership.
+  kill switch. At this stage the shared reader still required the admin test
+  identity; that requirement was subsequently removed as recorded above.
 - Both files passed Next environment parsing, duplicate-key and whitespace checks.
   No runtime code, service state or Vercel configuration was changed. Local
   configuration remains Git-ignored with mode 0600. No build or deployment.

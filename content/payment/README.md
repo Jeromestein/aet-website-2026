@@ -109,9 +109,11 @@ the correct Stripe Dashboard and match them to their service requests.
 - A return-page visit is not required for the money to reach Stripe. Offices must
   check their Dashboard even if the customer closes the tab. Unverified/cancelled
   pages tell customers to check before paying again.
-- There is no webhook receiver, application status update or custom receipt email
-  in this website. The legacy test webhook secret is unused. Manage Stripe's
-  payment notifications and receipt settings in each account. Before automated
+- This standalone Payment flow has no webhook receiver, application status update
+  or custom receipt email. It does not use `STRIPE_TEST_WEBHOOK_SECRET`; the separate
+  pre-evaluation and legacy evaluation API handlers still read that secret for
+  their test webhook signatures (see [pre-evaluation setup](../../docs/pre-evaluation-local.md)).
+  Manage Stripe's payment notifications and receipt settings in each account. Before automated
   fulfillment, add server-owned order amounts/IDs, durable state, verified webhook
   processing and order-level idempotency.
 

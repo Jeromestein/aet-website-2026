@@ -13,7 +13,7 @@ beforeEach(() => {
     VERCEL_BRANCH_URL: host, VERCEL_URL: deployment.slice(8),
     STAFF_LEGACY_MIGRATION_ENABLED: "false", STAFF_AUTH_CUTOVER_ENABLED: "false",
     APPLICATION_DATABASE_URL: `postgresql://${PREVIEW_ROLE}.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`,
-    PREEVAL_ADMIN_EMAIL: "admin@example.invalid", APPLICATION_TEST_EMAIL: "test@example.invalid",
+    APPLICATION_TEST_EMAIL: "test@example.invalid",
     SUPABASE_URL: "https://example.supabase.co", SUPABASE_ANON_KEY: "test", STAFF_AUTH_DATABASE_URL: "test",
   })) vi.stubEnv(key, value);
 });

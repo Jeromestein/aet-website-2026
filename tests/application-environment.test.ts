@@ -20,7 +20,6 @@ beforeEach(() => {
   vi.stubEnv("VERCEL_ENV", undefined);
   vi.stubEnv("STAFF_LEGACY_MIGRATION_ENABLED", "false");
   vi.stubEnv("STAFF_AUTH_CUTOVER_ENABLED", "false");
-  vi.stubEnv("PREEVAL_ADMIN_EMAIL", "actor@example.invalid");
   vi.stubEnv("SUPABASE_URL", "https://auth.example.invalid");
   vi.stubEnv("SUPABASE_ANON_KEY", "synthetic-anon-key");
   vi.stubEnv("STAFF_AUTH_DATABASE_URL", "postgresql://test:test@localhost/staff");
@@ -52,6 +51,7 @@ describe("application environment compatibility", () => {
   it.each(["new", "legacy"] as const)("accepts a complete %s configuration through real pilot and staff readers", names => {
     pilot(names);
     expect(configuration()).toMatchObject({ origin: "http://localhost:3022", cloudPreview: true, recipient: "test@example.invalid" });
+    expect(configuration()).not.toHaveProperty("admin");
     expect(staffConfiguration().origin).toBe("http://localhost:3022");
     expect(staffCookieOptions().secure).toBe(false);
     expect(required("DROPBOX_LEGACY_PILOT_ROOT")).toContain("AET-PreEvaluation-Test");

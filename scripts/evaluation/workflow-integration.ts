@@ -1,3 +1,4 @@
+import { legacyTestActor } from "../legacy-test-actor";
 // This exercises local APIs with synthetic applicants and signed Stripe fixture events.
 // Real Dropbox test uploads and real Stripe TEST checkout creation/expiration are optional.
 import assert from 'node:assert/strict';
@@ -6,7 +7,8 @@ import Stripe from 'stripe';
 import { db } from '../../lib/preeval/db';
 import { configuration, required } from '../../lib/preeval/config';
 import { initialData } from '../../lib/evaluation-application/domain';
-const { origin, admin } = configuration(); const sql = db(); const ids: string[] = [];
+const admin = legacyTestActor();
+const { origin } = configuration(); const sql = db(); const ids: string[] = [];
 const digest = (v: string) => createHash('sha256').update(v).digest('hex');
 const adminToken = randomBytes(32).toString('base64url'); const adminCookie = 'aet_preeval_session=' + adminToken;
 const stripeKey = required('STRIPE_TEST_SECRET_KEY');

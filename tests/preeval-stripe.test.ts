@@ -8,7 +8,6 @@ import type Stripe from 'stripe';
 beforeEach(() => {
   vi.stubEnv('APP_ENV', 'local');
   vi.stubEnv('APP_ORIGIN', 'http://localhost:3022');
-  vi.stubEnv('PREEVAL_ADMIN_EMAIL', 'admin@example.invalid');
   vi.stubEnv('APPLICATION_TEST_EMAIL', 'test@example.invalid');
   vi.stubEnv('STAFF_LEGACY_MIGRATION_ENABLED', 'false');
   vi.stubEnv('STAFF_AUTH_CUTOVER_ENABLED', 'false');
