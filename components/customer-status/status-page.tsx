@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Search, CircleCheck, Clock3 } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
+import { paymentWindow } from '@/lib/customer-status/payment-window';
 import { statusCopy } from '@/lib/customer-status/copy';
 import { statusLookup, type CustomerStatus } from '@/lib/customer-status/model';
 import s from './status.module.css';
@@ -29,9 +30,10 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
   finally {if(!controller.signal.aborted) setBusy(false);}
  }
  useEffect(()=>{setId(initialId); if(initialId) void check(initialId); return ()=>active.current?.abort();},[initialId,locale,preview]);
- useEffect(()=>{if(!record?.deadline)return;const timer=setInterval(()=>setNow(Date.now()),1000);return ()=>clearInterval(timer);},[record?.deadline]);
+ useEffect(()=>{if(!record?.deadline || record.payment !== 'pending')return;const end=Date.parse(record.deadline);if(end<=Date.now())return;const timer=setInterval(()=>{const time=Date.now();setNow(time);if(time>=end)clearInterval(timer);},1000);return ()=>clearInterval(timer);},[record?.deadline,record?.payment]);
  const date=(value:string)=>{const d=new Date(value);return value&&Number.isFinite(d.getTime())?new Intl.DateTimeFormat(locale==='zh'?'zh-CN':locale,{dateStyle:'medium',timeStyle:'short'}).format(d):t.unknown;};
  const remaining=record?.deadline?Math.max(0,Math.floor((new Date(record.deadline).getTime()-now)/1000)):0;
+ const windowState=record?paymentWindow(record,now):'none';
  const timer=[Math.floor(remaining/3600),Math.floor(remaining/60)%60,remaining%60].map(n=>String(n).padStart(2,'0')).join(' : ');
  const label=(map:Record<string,string>,key:string)=>map[key]||t.unknown;
  function submit(e:FormEvent){e.preventDefault();void check(id,true);}
@@ -39,7 +41,7 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
   <header className={s.intro}><p className={s.eyebrow}>{t.eyebrow}</p><h1>{t.title}</h1><p>{t.intro}</p></header>
   <div className={s.layout}>
    <aside className={s.aside}><h2>{t.next}</h2><ol>{t.steps.map((step,i)=><li key={step}><span>{i+1}</span><div><h3>{step}</h3><p>{t.descriptions[i]}</p></div></li>)}</ol>
-    {record?.deadline&&<div className={s.warning}><strong><Clock3 size={18}/>{t.paymentRequired}</strong><p>{remaining>0?t.remaining:t.expired}</p>{remaining>0&&<div className={s.timer} aria-label={t.remaining}>{timer}</div>}</div>}
+    {windowState!=='none'&&<div className={s.warning}><strong><Clock3 size={18}/>{windowState==='expired'?t.payments.expired:t.paymentRequired}</strong><p>{windowState==='pending'?t.remaining:t.expired}</p>{windowState==='pending'&&<div className={s.timer} aria-label={t.remaining}>{timer}</div>}</div>}
     <p className={s.help}>{t.help}</p>
    </aside>
    <div className={s.content}>

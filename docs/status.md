@@ -23,7 +23,6 @@
   not yet observed. Evidence: `/private/tmp/aet-cron-production-schedule.png`.
 
 
-
 ## 2026-10-22 — Verify pre-evaluation upload, GPT and notification journey
 
 - Kept the owner-accepted model/v3 benchmark unchanged and updated the checklist
@@ -45,6 +44,7 @@
 - Retained synthetic case `1a25c57d-194c-4c53-9500-b1623886f6e7` for inspection.
   See [journey evidence and limits](pre-evaluation-local.md#october-22-full-customer-journey-acceptance).
 
+
 ## 2026-10-22 — Collapsible CRM sidebar
 
 - Replaced the Visit AET website trailing arrow with a globe icon and theme-orange
@@ -61,17 +61,21 @@
   Screenshots were saved under `/private/tmp/aet-crm-sidebar-20261022/`.
 - Presentation-only update; no application data or staff login changes.
 
-## 2026-10-22 — Simplified CRM navigation and overview
+## 2026-10-22 — Align formal Status with the legacy payment window
 
-- Temporarily hid FCE and Payment links in the shared desktop/mobile navigation;
-  Applications, Pre-evaluation and Test remain visible. Direct view URLs and the
-  application Payment drawer shortcut remain available.
-- Hid the four overview cards in live and test workspaces, allowing the list to
-  follow the page heading without an empty statistics area.
-- Verified localhost:3022 in the Codex in-app browser at 1440px and 390px:
-  live application list, mobile navigation and Test list. TypeScript and diff
-  whitespace checks passed. No new tests were added for this presentation change.
-- Presentation-only update; application data and staff login behavior are unchanged.
+- Corrected the deadline to `submitted_at + 48 hours`, with no creation-time
+  fallback. Persisted expired payments no longer show a running timer; paid,
+  failed/refunded and disconnected preview intakes have no pending countdown.
+- Confirmed the old GitHub workflow is `disabled_inactivity`; latest visible
+  success is May 18, 2026. Did not reactivate or dispatch that production task.
+- Added an opt-in, secret-protected daily replacement with atomic pending-to-expired
+  updates, batch bounds and dedicated least-privilege role setup. Production
+  provisioning/activation remains an explicit deployment step; CRM cannot write payments.
+- Passed 38 focused tests, TypeScript, 19 rolled-back SQL/permission checks and
+  local endpoint authorization. In-app desktop and 390px mobile checks passed for
+  the real historical application's expired-window state. No business rows changed.
+- See [payment-expiry rules, scheduler evidence and activation](payment-expiry.md).
+
 
 ## 2026-10-22 — Restore the standalone legacy GPA calculator
 
@@ -103,6 +107,18 @@
   saved with the exact inputs and rendered outputs. Mobile remains unverified.
   No real transcript or applicant data was used or changed.
 - No server restart, production build, commit, push or deployment in this task.
+
+## 2026-10-22 — Simplified CRM navigation and overview
+
+- Temporarily hid FCE and Payment links in the shared desktop/mobile navigation;
+  Applications, Pre-evaluation and Test remain visible. Direct view URLs and the
+  application Payment drawer shortcut remain available.
+- Hid the four overview cards in live and test workspaces, allowing the list to
+  follow the page heading without an empty statistics area.
+- Verified localhost:3022 in the Codex in-app browser at 1440px and 390px:
+  live application list, mobile navigation and Test list. TypeScript and diff
+  whitespace checks passed. No new tests were added for this presentation change.
+- Presentation-only update; application data and staff login behavior are unchanged.
 
 ## 2026-10-21 — Committed v3 baseline comparison
 

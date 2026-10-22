@@ -4,6 +4,23 @@ See [migration architecture](migration-architecture.md) for the English Mermaid
 diagrams of AET 2026 and legacy AET App, including shared data and integration
 boundaries. This checklist tracks implementation and acceptance separately.
 
+## Formal Status payment expiry — October 22, 2026
+
+- [x] Use the original 48-hour window from `submitted_at`; respect saved payment
+  states and retain the disconnected preview guard.
+- [x] Verify the old GitHub task is disabled for inactivity; implement and test a
+  bounded atomic replacement with isolated permissions and no customer lookup writes.
+- [x] Provision and verify the dedicated task credential; store the credentials in grouped
+  `.env.local` with local expiry disabled (24 checks, no business-row changes).
+- [x] Configure Vercel Production and activate the replacement scheduler; the
+  recorded dashboard-triggered runs expired 77 eligible records, then zero on
+  repeat, with no unexpected changes. See the committed deployment evidence in
+  [payment-expiry setup](payment-expiry.md) and [status](status.md).
+- [ ] Observe the first automatic scheduled execution; dashboard-triggered runs
+  do not establish scheduled delivery. Keep the old GitHub task disabled.
+  New-intake checkout/webhook/reconciliation remains separate work.
+
+
 ## Accepted AI baseline and full customer journey — October 22, 2026
 
 The owner accepts the current four-case result (three full reference matches and

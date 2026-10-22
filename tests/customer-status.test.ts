@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {projectStatus,statusLookup} from '@/lib/customer-status/model';
 describe('customer formal status',()=>{
- const row={id:'1cb802d3-00ee-4242-a905-bbaad7e73480',status:'submitted',payment_status:'pending',created_at:'2026-10-15T16:29:32Z',paid_at:null,office:'Miami',due_amount:'340',service_type:{translation:{required:true}},email:'private@example.com',staff_notes:'private',report:'unreleased'};
+ const row={id:'1cb802d3-00ee-4242-a905-bbaad7e73480',status:'submitted',payment_status:'pending',created_at:'2026-10-10T10:00:00Z',submitted_at:'2026-10-15T16:29:32Z',paid_at:null,office:'Miami',due_amount:'340',service_type:{translation:{required:true}},email:'private@example.com',staff_notes:'private',report:'unreleased'};
  it('accepts trimmed uppercase UUIDs and rejects incomplete IDs and extra fields',()=>{expect(statusLookup.parse({applicationId:' '+row.id.toUpperCase()+' '}).applicationId).toBe(row.id);expect(statusLookup.safeParse({applicationId:'123'}).success).toBe(false);expect(statusLookup.safeParse({applicationId:row.id,office:'Miami'}).success).toBe(false);});
  it('projects only customer status fields and preserves saved amounts',()=>{const result=projectStatus(row);expect(result.amount).toBe(34000);expect(result.deadline).toBe('2026-10-17T16:29:32.000Z');expect(result).not.toHaveProperty('email');expect(result).not.toHaveProperty('staff_notes');expect(result).not.toHaveProperty('report');});
- it('has no unpaid deadline for settled or cancelled records',()=>{expect(projectStatus({...row,payment_status:'paid'}).deadline).toBeNull();expect(projectStatus({...row,status:'cancelled'}).deadline).toBeNull();});
- it('does not invent amounts, dates or completion timing',()=>{const result=projectStatus({...row,due_amount:null,created_at:null});expect(result.amount).toBeNull();expect(result.deadline).toBeNull();expect(result.completion).toBeNull();});
+ it('does not count down for paid, failed or refunded payments',()=>{for(const payment_status of ['paid','failed','refunded'])expect(projectStatus({...row,payment_status}).deadline).toBeNull();});
+ it('retains the legacy window for pending cancelled applications',()=>{expect(projectStatus({...row,status:'cancelled'}).deadline).toBe('2026-10-17T16:29:32.000Z');});
+ it('uses only submitted_at and never falls back to created_at',()=>{expect(projectStatus(row).submitted).toBe(row.submitted_at);for(const submitted_at of [null,'','invalid'])expect(projectStatus({...row,submitted_at}).deadline).toBeNull();});
+ it('does not invent amounts, dates or completion timing',()=>{const result=projectStatus({...row,due_amount:null,submitted_at:null});expect(result.amount).toBeNull();expect(result.deadline).toBeNull();expect(result.completion).toBeNull();});
 });
 
 describe('authorized customer details projection',()=>{

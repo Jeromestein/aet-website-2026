@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { paymentDeadline } from './payment-window';
 import { officeNames, type IntakeReceipt } from '@/lib/application/intake';
 import { completionFor, type Completion } from '@/lib/crm/completion';
 import { cents, services, timestamp } from '@/lib/crm/live-domain';
@@ -24,8 +25,7 @@ export function projectStatus(row: Record<string, any>, educations: Record<strin
       ? `${year}-${String(month).padStart(2,'0')}` : '';
   };
   const birth = row.date_of_birth instanceof Date ? row.date_of_birth.toISOString().slice(0,10) : text(row.date_of_birth).slice(0,10);
-  const submitted = timestamp(row.created_at);
-  const date = new Date(submitted);
+  const submitted = timestamp(row.submitted_at);
   return {
     source,
     portalUrl: source==='preview'?null: 'https://app.americantranslationservice.com/status?applicationId='+encodeURIComponent(row.id),
@@ -35,8 +35,8 @@ export function projectStatus(row: Record<string, any>, educations: Record<strin
     id: row.id, status: row.status, payment: row.payment_status || 'pending', submitted,
     paid: timestamp(row.paid_at), office: row.office || null, services: services(row.service_type),
     amount: cents(row.due_amount), completion: completionFor('formal', row),
-    deadline: source==='live' && row.payment_status !== 'paid' && row.status === 'submitted' && Number.isFinite(date.getTime())
-      ? new Date(date.getTime() + 48 * 3600000).toISOString() : null };
+    deadline: source === 'live' && ['pending', 'expired'].includes(row.payment_status)
+      ? paymentDeadline(submitted) : null };
 }
 
 // Normalize saved intake data into the same customer contract as legacy records.
