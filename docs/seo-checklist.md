@@ -72,7 +72,7 @@ None of these decisions is reopened by this update.
 
 Detailed URL decisions: [legacy inventory](seo-legacy-urls.md).
 Page/content/payment acceptance: [migration checklist](migration-checklist.md).
-Verification evidence and boundaries: [status](status.md#hosted-audit-and-local-corrections--october-1-2026).
+Verification evidence and boundaries: [status](archive/status-through-2026-10-22.md#hosted-audit-and-local-corrections--october-1-2026).
 
 ## Scope and sources
 

@@ -1,199 +1,20 @@
 # Pre-evaluation local pilot
 
-## October 22 Stripe test-payment acceptance
+Start with the current configuration below. The dedicated flow is separate from
+the general `/application` form. Use [current status](status.md) and the
+[active checklist](migration-checklist.md) for integrated progress and release gates.
 
-A new synthetic case, `1b79980c-8edf-465c-a68e-1d5c96c30610` (`AET Stripe 20261022
-Test`), verified actual Stripe Sandbox checkout through the existing 3022 server.
-The owner restarted that server after the test switch/signing-secret update.
-This case has no manual paid-state fixture. The earlier upload/AI journey below
-remains a separate historical acceptance run.
+- [Current cloud preview](#current-cloud-preview--updated-october-22-2026)
+- [GPT execution and setup](#direct-gpt-analysis--october-20-2026)
+- [Owner-approved behavior](#owner-approved-behavior)
+- [Open locally](#open-locally)
+- [Implementation and recovery](#implementation-and-recovery)
+- [Recorded Stripe test acceptance](#october-22-stripe-test-payment-acceptance)
+- [Recorded full customer journey](#october-22-full-customer-journey-acceptance)
 
-### Configuration and local callbacks
-
-- `PREEVAL_STRIPE_TEST_ENABLED=true` explicitly permits pre-evaluation Stripe test
-  operations in restricted cloud preview. Its example default is false. The
-  approved origin/database-role checks still run; only `sk_test_` / `rk_test_`
-  keys are accepted and live events are rejected. Formal checkout and the older
-  combined worker retain their cloud restriction. Cloud callbacks skip formal
-  handlers/mail rather than enabling that unrelated workflow.
-- Keep `PREEVAL_EMAIL_ENABLED=true` and `APPLICATION_TEST_EMAIL=errplusone@gmail.com`
-  for this acceptance. Mail dispatch stays application-scoped.
-- Local Stripe cannot call localhost directly. For a deliberate payment test,
-  run `node --env-file=.env.local scripts/preeval/stripe-listen.mjs` from this
-  worktree with the official Stripe CLI on PATH. It forwards relevant test events
-  to `/api/pre-evaluation/stripe-webhook` and privately writes
-  `STRIPE_TEST_WEBHOOK_SECRET` into the ignored `.env.local`.
-  Have the owner restart their existing server after a secret/config change.
-- This temporary callback forwarder is needed for local Stripe testing only; it
-  is not an AI worker or a second website server. It was stopped after this run.
-  On a future hosted test deployment, configure the HTTPS route as a Stripe test
-  event destination and use that destination's signing secret. Hosted delivery
-  remains unverified; no deployment or external destination was created here.
-
-### Verified results
-
-- A fresh synthetic API submission uploaded one two-page, 1,801-byte PDF to the
-  canonical Dropbox test folder. One automatic v3 GPT run took 15.43 seconds
-  (1,675 tokens). Customer-only HTTP access withheld the saved result while
-  unpaid. Anonymous access was denied; no result email existed before payment.
-- Two concurrent checkout requests returned the same open session and left one
-  payment row. The amount stayed USD 19.88 (19.00 + 0.88). The in-app browser
-  displayed Sandbox and completed checkout using Stripe's 4242 test card, with
-  Link saving unchecked. No real card or live payment was used.
-- Session `cs_test_a1wM2hn4mDdFN6AbJ9zSe4BStpDIEfUWG5798RuBlSmAxc0AdqTycP3RcJ`,
-  PaymentIntent `pi_3UTPdSJMcR2XIhyn157xt0Gz` and charge
-  `ch_3UTPdSJMcR2XIhyn1DSKCSOB` were retrieved from Stripe and each had
-  `livemode=false`; the intent succeeded for 1,988 cents.
-- Stripe event `evt_1UTPdTJMcR2XIhynWxqEAnn5` (`checkout.session.completed`)
-  arrived through the CLI forwarder and received HTTP 200. It changed the saved
-  application to Paid/Completed and queued its result before return-page
-  reconciliation. The customer-only response then exposed the unchanged result.
-  The in-app browser already had staff access, so payment gating was asserted
-  with a separate customer session; browser return/reload verified Paid/Completed
-  and the rendered degree/reasoning. No UI layout changed in this task.
-- Two additional local signed replays of that actual event returned 200 without
-  adding a payment, callback audit or email. These replays were test-generated,
-  not extra Stripe deliveries. Signed negative variants for amount, currency,
-  client reference and application ownership were rejected (400/409); bad
-  signatures and live events were rejected (400). Paid checkout returned 409.
-- Confirmation `01a1649d-1052-71ba-8169-49663d5a67d9` and result
-  `01a1649f-3f07-703e-a078-79c4a475a573` each sent once, only to
-  `errplusone@gmail.com`, with no CC/BCC. Resend reports both as `delivered`.
-  Their IDs/result URLs match this case; the result email contains its saved
-  degree mapping. Delivery means recipient-server acceptance, not inbox/open proof.
-- Timing (UTC): click 17:18:37.595; callback audit 17:18:39.576;
-  result email queued 17:18:40.015 and sent 17:18:40.498; return reconciliation
-  17:18:43.247. Click-to-callback was 1.98 seconds; callback-to-send 0.92 seconds.
-  These are one-run observations, not performance guarantees.
-- Targeted regression: 91 tests passed across payment-mode guards, callback
-  dispatch, cloud containment, customer result/email gates and delivery retries.
-  TypeScript and whitespace checks passed. No production build was run.
-
-Private ignored evidence is in `.local/preeval-stripe/2026-10-22/`: synthetic PDF,
-pre-payment snapshot, original Stripe event, payment/replay assertions, timing,
-Resend receipts and screenshots. The application/test payment are retained.
-The result URL is
-`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1b79980c-8edf-465c-a68e-1d5c96c30610`.
-This completes the requested local test-card path. Alipay, asynchronous bank flows,
-refunds and hosted webhook delivery were not exercised in this run. Production
-records, the accepted AI model/prompt and production recipient policy are unchanged.
-
-### CRM payment-verification follow-up
-
-Open CRM > Test, select `AET Stripe 20261022 Test`, then Payment. The staff API
-returns only a boolean verification capability, derived from the same Stripe
-configuration guard used by reconciliation. With the preview test opt-in and a
-valid test-key configuration, Verify payment is enabled and the helper explains
-that it checks status without creating a charge. Disabled or missing configuration
-keeps the button disabled and displays an unavailable explanation. Formal payment
-preview restrictions remain unchanged.
-
-On October 22, the in-app desktop (1280px) and mobile (390px) checks passed after
-the owner restarted 3022. Clicking Verify payment locked the controls while busy,
-then displayed "Payment status checked." The existing USD 19.88 payment stayed
-Paid, and Activity still showed one send attempt for each confirmation/result.
-No new payment was made. The follow-up passed 92 targeted regression tests and
-source TypeScript checks; the default type check encountered a malformed generated
-Next validator, so source checking used a temporary configuration excluding `.next`.
-The generated-file issue was subsequently repaired on October 22 by triggering
-Next's existing route watcher. The full `pnpm typecheck --incremental false` then
-passed with the unchanged repository configuration and generated types included.
-
-References: [Stripe test cards](https://docs.stripe.com/testing) and
-[local webhook forwarding/signature verification](https://docs.stripe.com/webhooks).
-
-## October 22 full customer journey acceptance
-
-The owner accepted the existing 3/4 full-match benchmark and authorized a
-synthetic browser submission, Dropbox upload, real GPT analysis and test emails
-only to `errplusone@gmail.com`. The checklist was updated first. The owner
-restarted the existing 3022 Next server after the ignored email configuration
-changed; no second worker or development server was started.
-
-The run exposed disabled pre-evaluation delivery in cloud preview. The fix adds
-`PREEVAL_EMAIL_ENABLED` (false by default in `.env.example`) and a UUID-scoped
-sender. It filters both eligible and interrupted deliveries by application and
-configured recipient; unscoped cloud draining remains disabled. Submission,
-authorized reads, AI completion, staff actions and applicable payment callbacks
-schedule delivery through Next `after()`. A send failure leaves the saved
-application/result intact and preserves the existing retry/idempotency policy.
-Customer copy now distinguishes a visible completed result from a result still
-withheld for payment, in all three supported languages.
-
-### Observed results
-
-- One synthetic application: `1a25c57d-194c-4c53-9500-b1623886f6e7`, named
-  `AET Journey 20261022 Test`. Its two-page PDF is clearly labeled synthetic.
-- Data resides in the restricted Supabase preview schemas, not a local Docker
-  database. Runtime role `aet_preview_runtime` has no INSERT on the production
-  application table; no production or historical records were modified.
-- Dropbox saved the file under
-  `/Team Files/WebsitesDev/Miami/AET Journey 20261022 Test - 1a25c57d-194c-4c53-9500-b1623886f6e7/`.
-  One 1,805-byte file is ready. An authenticated customer download has the exact
-  SHA-256 of the original; the AI run records that same hash, Dropbox revision,
-  two pages and `basis=documents`.
-- One automatic `gpt-6.1-sol` / `preeval-direct-pages-v3` call returned a
-  hypothetical Bachelor of Science in Computer Science and explicitly noted the
-  document is synthetic. All six saved evidence references match the authored
-  page locations. This functional fixture does not extend the accuracy benchmark.
-- Submission was saved at 16:49:36.428 UTC; upload audit at 16:49:40.006;
-  AI run at 16:49:40.683–16:49:53.010. Upload took 3.58 seconds from save;
-  the persisted AI run took 12.33 seconds, and submission-to-result was 16.58.
-  Usage: 1,166 input + 431 output = 1,597 tokens. These are single-run timings.
-- A fresh customer-only HTTP session, obtained using the Application ID lookup,
-  could download the PDF but received `result=null` before payment. Anonymous
-  application access returned 401. No result email existed while unpaid.
-  The in-app browser already had staff access, which intentionally permits
-  unpaid result review; customer restrictions were therefore checked separately.
-- An exact-ID, guarded synthetic paid-state transition recorded
-  `test.payment_fixture` with `noCharge=true`. Normal `publishIfReady` then
-  completed the application and queued result delivery. No Stripe session,
-  charge or webhook was created or simulated as a provider event.
-- Confirmation receipt `01a16484-a709-7d6c-9fef-8fba9d721f0a` and result receipt
-  `01a16486-034f-7425-acd3-c4f0eabd6bec` both report Resend `delivered`.
-  Each has one attempt, only `errplusone@gmail.com`, no CC/BCC, the correct
-  Application ID and a localhost result link. The result email matches the
-  stored result. Mail-server acceptance is not inbox/open confirmation.
-- Repeated upload completion, publication and authorized reads retained exactly
-  one analysis and one email of each kind. Reload and reopening the result link
-  preserved the output. CRM Test search/detail shows the same applicant,
-  Pre-Evaluation service, one document, Paid/Completed and the AI result.
-- In-app desktop 1280px and mobile 390px result checks passed, including the
-  corrected completed-state copy, full degree title, file row and footer; mobile
-  document width equals viewport width. The full automated suite passed 498
-  tests; TypeScript and whitespace checks passed. No production build was run.
-
-### Retained evidence and remaining boundaries
-
-Private evidence lives in ignored `.local/preeval-journey/2026-10-22/`: original
-and downloaded PDFs, fixture, database/run snapshot, customer unpaid/paid payloads,
-verification assertions, two rendered test emails, Resend receipts and browser
-screenshots. Scripts there are acceptance artifacts, not a production worker.
-The synthetic application and Dropbox file remain available for owner review.
-
-The result is at
-`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1a25c57d-194c-4c53-9500-b1623886f6e7`.
-Email links require this local server and are not a public deployment. This earlier
-run validates the paid release gate using a fixture; the separate Stripe test run
-above subsequently verified actual checkout/callbacks. Hosted Vercel execution
-remains separate acceptance work.
-The production recipient strategy and deployment cutover remain unchanged.
-
-## October 21 refinement: US equivalency and physical-page evidence
-
-The current `preeval-direct-pages-v3` prompt returns structured US degree, field
-and concentration separately from the original foreign qualification. The server
-assembles the full customer title. PDF pages are provided as individually identified
-single-page copies, without OCR or modifying originals; evidence IDs resolve to
-source document/page positions on the server and retain short supporting excerpts.
-Unknown IDs are rejected. Location integrity does not prove semantic support, so
-source review remains necessary. Historical output stays readable. See the
-[benchmark design and comparison](preeval-benchmark.md).
-
-
-Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complete
-local pre-evaluation workflow, not a production cutover or formal-evaluation
-migration. The existing AET App remains operational.
+Earlier local-database commands and dated acceptance sections describe their own
+environments. They do not authorize provider calls or establish current hosted
+behavior. Staff password authentication is maintained in [staff-auth.md](staff-auth.md).
 
 ## Current cloud preview — updated October 22, 2026
 
@@ -531,7 +352,7 @@ pages have no language selector and do not overwrite the saved website language.
 Staff authentication is maintained independently; see [staff authentication](staff-auth.md).
 The intended production dashboard remains
 `https://app.americantranslationservice.com/admin/CRM`. Hostname routing and
-deployment remain pending; see [the deployment proposal](../README.md#application-domains-and-staff-urls).
+deployment remain pending; see [the deployment proposal](development.md#application-domains-and-staff-urls).
 
 Customer pages share English, Chinese and Spanish routes. AI results and emails
 remain English, matching the legacy result experience. The homepage uses the
@@ -577,7 +398,7 @@ pnpm exec next dev --port 3022
 Run setup/start commands only for services that are not already available.
 The owner starts the dev server in VS Code; reuse that running port 3022 server.
 `pnpm dev` still hardcodes port 3021, which is used by the main checkout. See
-[the worktree setup](../README.md#main-and-dev-worktrees). Run each remaining
+[the worktree setup](development.md#main-and-dev-worktrees). Run each remaining
 process from the dev worktree in a separate terminal:
 
 ```sh
@@ -680,6 +501,201 @@ sent records keep their original IDs and provider receipts. Workspace `sent` mea
 Resend, not necessarily inbox delivery; acceptance separately checked Resend's
 `delivered` status. Customers can always reopen their application using its ID
 or the reusable link in the confirmation email.
+
+## October 22 Stripe test-payment acceptance
+
+A new synthetic case, `1b79980c-8edf-465c-a68e-1d5c96c30610` (`AET Stripe 20261022
+Test`), verified actual Stripe Sandbox checkout through the existing 3022 server.
+The owner restarted that server after the test switch/signing-secret update.
+This case has no manual paid-state fixture. The earlier upload/AI journey below
+remains a separate historical acceptance run.
+
+### Configuration and local callbacks
+
+- `PREEVAL_STRIPE_TEST_ENABLED=true` explicitly permits pre-evaluation Stripe test
+  operations in restricted cloud preview. Its example default is false. The
+  approved origin/database-role checks still run; only `sk_test_` / `rk_test_`
+  keys are accepted and live events are rejected. Formal checkout and the older
+  combined worker retain their cloud restriction. Cloud callbacks skip formal
+  handlers/mail rather than enabling that unrelated workflow.
+- Keep `PREEVAL_EMAIL_ENABLED=true` and `APPLICATION_TEST_EMAIL=errplusone@gmail.com`
+  for this acceptance. Mail dispatch stays application-scoped.
+- Local Stripe cannot call localhost directly. For a deliberate payment test,
+  run `node --env-file=.env.local scripts/preeval/stripe-listen.mjs` from this
+  worktree with the official Stripe CLI on PATH. It forwards relevant test events
+  to `/api/pre-evaluation/stripe-webhook` and privately writes
+  `STRIPE_TEST_WEBHOOK_SECRET` into the ignored `.env.local`.
+  Have the owner restart their existing server after a secret/config change.
+- This temporary callback forwarder is needed for local Stripe testing only; it
+  is not an AI worker or a second website server. It was stopped after this run.
+  On a future hosted test deployment, configure the HTTPS route as a Stripe test
+  event destination and use that destination's signing secret. Hosted delivery
+  remains unverified; no deployment or external destination was created here.
+
+### Verified results
+
+- A fresh synthetic API submission uploaded one two-page, 1,801-byte PDF to the
+  canonical Dropbox test folder. One automatic v3 GPT run took 15.43 seconds
+  (1,675 tokens). Customer-only HTTP access withheld the saved result while
+  unpaid. Anonymous access was denied; no result email existed before payment.
+- Two concurrent checkout requests returned the same open session and left one
+  payment row. The amount stayed USD 19.88 (19.00 + 0.88). The in-app browser
+  displayed Sandbox and completed checkout using Stripe's 4242 test card, with
+  Link saving unchecked. No real card or live payment was used.
+- Session `cs_test_a1wM2hn4mDdFN6AbJ9zSe4BStpDIEfUWG5798RuBlSmAxc0AdqTycP3RcJ`,
+  PaymentIntent `pi_3UTPdSJMcR2XIhyn157xt0Gz` and charge
+  `ch_3UTPdSJMcR2XIhyn1DSKCSOB` were retrieved from Stripe and each had
+  `livemode=false`; the intent succeeded for 1,988 cents.
+- Stripe event `evt_1UTPdTJMcR2XIhynWxqEAnn5` (`checkout.session.completed`)
+  arrived through the CLI forwarder and received HTTP 200. It changed the saved
+  application to Paid/Completed and queued its result before return-page
+  reconciliation. The customer-only response then exposed the unchanged result.
+  The in-app browser already had staff access, so payment gating was asserted
+  with a separate customer session; browser return/reload verified Paid/Completed
+  and the rendered degree/reasoning. No UI layout changed in this task.
+- Two additional local signed replays of that actual event returned 200 without
+  adding a payment, callback audit or email. These replays were test-generated,
+  not extra Stripe deliveries. Signed negative variants for amount, currency,
+  client reference and application ownership were rejected (400/409); bad
+  signatures and live events were rejected (400). Paid checkout returned 409.
+- Confirmation `01a1649d-1052-71ba-8169-49663d5a67d9` and result
+  `01a1649f-3f07-703e-a078-79c4a475a573` each sent once, only to
+  `errplusone@gmail.com`, with no CC/BCC. Resend reports both as `delivered`.
+  Their IDs/result URLs match this case; the result email contains its saved
+  degree mapping. Delivery means recipient-server acceptance, not inbox/open proof.
+- Timing (UTC): click 17:18:37.595; callback audit 17:18:39.576;
+  result email queued 17:18:40.015 and sent 17:18:40.498; return reconciliation
+  17:18:43.247. Click-to-callback was 1.98 seconds; callback-to-send 0.92 seconds.
+  These are one-run observations, not performance guarantees.
+- Targeted regression: 91 tests passed across payment-mode guards, callback
+  dispatch, cloud containment, customer result/email gates and delivery retries.
+  TypeScript and whitespace checks passed. No production build was run.
+
+Private ignored evidence is in `.local/preeval-stripe/2026-10-22/`: synthetic PDF,
+pre-payment snapshot, original Stripe event, payment/replay assertions, timing,
+Resend receipts and screenshots. The application/test payment are retained.
+The result URL is
+`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1b79980c-8edf-465c-a68e-1d5c96c30610`.
+This completes the requested local test-card path. Alipay, asynchronous bank flows,
+refunds and hosted webhook delivery were not exercised in this run. Production
+records, the accepted AI model/prompt and production recipient policy are unchanged.
+
+### CRM payment-verification follow-up
+
+Open CRM > Test, select `AET Stripe 20261022 Test`, then Payment. The staff API
+returns only a boolean verification capability, derived from the same Stripe
+configuration guard used by reconciliation. With the preview test opt-in and a
+valid test-key configuration, Verify payment is enabled and the helper explains
+that it checks status without creating a charge. Disabled or missing configuration
+keeps the button disabled and displays an unavailable explanation. Formal payment
+preview restrictions remain unchanged.
+
+On October 22, the in-app desktop (1280px) and mobile (390px) checks passed after
+the owner restarted 3022. Clicking Verify payment locked the controls while busy,
+then displayed "Payment status checked." The existing USD 19.88 payment stayed
+Paid, and Activity still showed one send attempt for each confirmation/result.
+No new payment was made. The follow-up passed 92 targeted regression tests and
+source TypeScript checks; the default type check encountered a malformed generated
+Next validator, so source checking used a temporary configuration excluding `.next`.
+The generated-file issue was subsequently repaired on October 22 by triggering
+Next's existing route watcher. The full `pnpm typecheck --incremental false` then
+passed with the unchanged repository configuration and generated types included.
+
+References: [Stripe test cards](https://docs.stripe.com/testing) and
+[local webhook forwarding/signature verification](https://docs.stripe.com/webhooks).
+
+## October 22 full customer journey acceptance
+
+The owner accepted the existing 3/4 full-match benchmark and authorized a
+synthetic browser submission, Dropbox upload, real GPT analysis and test emails
+only to `errplusone@gmail.com`. The checklist was updated first. The owner
+restarted the existing 3022 Next server after the ignored email configuration
+changed; no second worker or development server was started.
+
+The run exposed disabled pre-evaluation delivery in cloud preview. The fix adds
+`PREEVAL_EMAIL_ENABLED` (false by default in `.env.example`) and a UUID-scoped
+sender. It filters both eligible and interrupted deliveries by application and
+configured recipient; unscoped cloud draining remains disabled. Submission,
+authorized reads, AI completion, staff actions and applicable payment callbacks
+schedule delivery through Next `after()`. A send failure leaves the saved
+application/result intact and preserves the existing retry/idempotency policy.
+Customer copy now distinguishes a visible completed result from a result still
+withheld for payment, in all three supported languages.
+
+### Observed results
+
+- One synthetic application: `1a25c57d-194c-4c53-9500-b1623886f6e7`, named
+  `AET Journey 20261022 Test`. Its two-page PDF is clearly labeled synthetic.
+- Data resides in the restricted Supabase preview schemas, not a local Docker
+  database. Runtime role `aet_preview_runtime` has no INSERT on the production
+  application table; no production or historical records were modified.
+- Dropbox saved the file under
+  `/Team Files/WebsitesDev/Miami/AET Journey 20261022 Test - 1a25c57d-194c-4c53-9500-b1623886f6e7/`.
+  One 1,805-byte file is ready. An authenticated customer download has the exact
+  SHA-256 of the original; the AI run records that same hash, Dropbox revision,
+  two pages and `basis=documents`.
+- One automatic `gpt-6.1-sol` / `preeval-direct-pages-v3` call returned a
+  hypothetical Bachelor of Science in Computer Science and explicitly noted the
+  document is synthetic. All six saved evidence references match the authored
+  page locations. This functional fixture does not extend the accuracy benchmark.
+- Submission was saved at 16:49:36.428 UTC; upload audit at 16:49:40.006;
+  AI run at 16:49:40.683–16:49:53.010. Upload took 3.58 seconds from save;
+  the persisted AI run took 12.33 seconds, and submission-to-result was 16.58.
+  Usage: 1,166 input + 431 output = 1,597 tokens. These are single-run timings.
+- A fresh customer-only HTTP session, obtained using the Application ID lookup,
+  could download the PDF but received `result=null` before payment. Anonymous
+  application access returned 401. No result email existed while unpaid.
+  The in-app browser already had staff access, which intentionally permits
+  unpaid result review; customer restrictions were therefore checked separately.
+- An exact-ID, guarded synthetic paid-state transition recorded
+  `test.payment_fixture` with `noCharge=true`. Normal `publishIfReady` then
+  completed the application and queued result delivery. No Stripe session,
+  charge or webhook was created or simulated as a provider event.
+- Confirmation receipt `01a16484-a709-7d6c-9fef-8fba9d721f0a` and result receipt
+  `01a16486-034f-7425-acd3-c4f0eabd6bec` both report Resend `delivered`.
+  Each has one attempt, only `errplusone@gmail.com`, no CC/BCC, the correct
+  Application ID and a localhost result link. The result email matches the
+  stored result. Mail-server acceptance is not inbox/open confirmation.
+- Repeated upload completion, publication and authorized reads retained exactly
+  one analysis and one email of each kind. Reload and reopening the result link
+  preserved the output. CRM Test search/detail shows the same applicant,
+  Pre-Evaluation service, one document, Paid/Completed and the AI result.
+- In-app desktop 1280px and mobile 390px result checks passed, including the
+  corrected completed-state copy, full degree title, file row and footer; mobile
+  document width equals viewport width. The full automated suite passed 498
+  tests; TypeScript and whitespace checks passed. No production build was run.
+
+### Retained evidence and remaining boundaries
+
+Private evidence lives in ignored `.local/preeval-journey/2026-10-22/`: original
+and downloaded PDFs, fixture, database/run snapshot, customer unpaid/paid payloads,
+verification assertions, two rendered test emails, Resend receipts and browser
+screenshots. Scripts there are acceptance artifacts, not a production worker.
+The synthetic application and Dropbox file remain available for owner review.
+
+The result is at
+`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1a25c57d-194c-4c53-9500-b1623886f6e7`.
+Email links require this local server and are not a public deployment. This earlier
+run validates the paid release gate using a fixture; the separate Stripe test run
+above subsequently verified actual checkout/callbacks. Hosted Vercel execution
+remains separate acceptance work.
+The production recipient strategy and deployment cutover remain unchanged.
+
+## October 21 refinement: US equivalency and physical-page evidence
+
+The current `preeval-direct-pages-v3` prompt returns structured US degree, field
+and concentration separately from the original foreign qualification. The server
+assembles the full customer title. PDF pages are provided as individually identified
+single-page copies, without OCR or modifying originals; evidence IDs resolve to
+source document/page positions on the server and retain short supporting excerpts.
+Unknown IDs are rejected. Location integrity does not prove semantic support, so
+source review remains necessary. Historical output stays readable. See the
+[benchmark design and comparison](preeval-benchmark.md).
+
+
+Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complete
+local pre-evaluation workflow, not a production cutover or formal-evaluation
+migration. The existing AET App remains operational.
 
 ## Customer-flow acceptance — October 15, 2026
 

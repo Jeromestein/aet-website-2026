@@ -10,16 +10,21 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## AET Project Guidance
 
-- Before visual, copy, or interaction changes, read [docs/design.md](docs/design.md).
-  It defines the design targets; it does not imply that every target is implemented.
-- Read [docs/status.md](docs/status.md) to identify outstanding work. Update only
-  affected items after implementation or verification, recording what was actually checked.
+- Before visual, copy, or interaction changes, read [docs/design/README.md](docs/design/README.md).
+  Then read only the relevant website/business UI pattern linked there. These
+  define design targets; they do not imply that every target is implemented.
+- Read [docs/status.md](docs/status.md) for current progress and
+  [docs/migration-checklist.md](docs/migration-checklist.md) for active or deferred work.
+  Update affected items in place after verification; link detailed dated evidence
+  under `docs/archive/` instead of appending full session logs to current status.
 - Before writing or editing Blog articles, read [docs/blog-requirements.md](docs/blog-requirements.md)
   for article structure, question headings, and AI links.
-- Use [README.md](README.md) for setup, routing scope, and delivery instructions;
-  use [ASSETS.md](ASSETS.md) for asset sources and licenses.
-- Keep stable design decisions in the design guide and completion evidence in the
-  status file. Do not duplicate progress logs or external reference histories in the guide.
+- Start at [README.md](README.md) and [docs/README.md](docs/README.md). Use
+  [docs/development.md](docs/development.md) for detailed setup and delivery,
+  and [ASSETS.md](ASSETS.md) for asset sources and licenses.
+- Keep stable design decisions in the design guide, current capability in status,
+  tasks in the checklist and detailed evidence in dated archives. Do not duplicate
+  progress logs or external reference histories across these documents.
 - Use pnpm. Do not run `pnpm build` or its production-build aliases locally.
 - Prefer the owner's existing development server for the checkout being edited:
   main uses port 3021; the sibling dev worktree uses port 3022. See README.md for

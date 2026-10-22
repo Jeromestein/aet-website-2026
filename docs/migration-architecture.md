@@ -7,9 +7,9 @@ and migration checklist link to this page.
 The diagrams originate from the October 22, 2026 review of `dev` at `1d431ac`
 and the accompanying working tree. They describe component relationships, not
 a production deployment certification. Subsequent implementation and acceptance
-evidence belongs in the [migration checklist](migration-checklist.md) and
-[implementation status](status.md). Detailed findings and source references
-are maintained separately in dated code reviews.
+are summarized in the [migration checklist](migration-checklist.md) and
+[implementation status](status.md). Detailed findings and verification evidence
+are preserved in the [dated archives](README.md#historical-evidence).
 
 ## AET 2026 architecture
 
@@ -54,9 +54,10 @@ flowchart TB
 - **External services:** Dropbox continues using existing office accounts.
   Preview database isolation does not imply separate storage or provider accounts.
 - **Background recovery:** AI recovery, independent email recovery and payment
-  expiry have separate responsibilities. Email-recovery fixes and other review
-  follow-ups are being developed concurrently; activation and acceptance must be
-  tracked in the checklist rather than inferred from this diagram.
+  expiry have separate responsibilities. Further email-recovery work and scheduler
+  activation are deferred by the owner; payment expiry has its own recorded
+  activation. Track each job in the checklist rather than inferring its status
+  from this diagram.
 - **Other paths:** the earlier formal-evaluation pilot and the standalone website
   payment page are not automatically connected to the unified v2 intake. They
   are omitted from this overview to keep the main migration boundaries readable.
@@ -100,8 +101,9 @@ diagram groups the main business access paths for readability.
 
 - Update the relevant diagram when component ownership, data sources or provider
   connections change. Keep every diagram label in English.
-- Keep task completion and verification evidence in the migration checklist and
-  status file; do not treat an architecture connection as a passed acceptance test.
+- Keep current tasks in the checklist and verified capability in status; link
+  detailed dated evidence from the archives. Do not treat an architecture
+  connection as a passed acceptance test.
 - Preserve the dated review as a historical snapshot. Use this document for the
   maintained overview rather than duplicating Mermaid blocks in the README.
 - Before retiring AET App, verify replacement coverage for customer URLs, staff

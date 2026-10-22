@@ -19,6 +19,26 @@ Legacy templates were checked in `aet-app/src/app/(frontend)/(aet-app)/component
 Thanksgiving/Christmas promotional templates are excluded at the owner's request.
 Staff email-link login and password recovery remain removed.
 
+## Visual design
+
+Business emails use the blue-gradient design approved on 2026-10-20.
+
+- Use the full transparent logo at 286px desktop/254px mobile within a compact
+  white header and a 600px letter. Keep Poppins 400/600/700 and Arial/Helvetica
+  fallbacks. Image/font URLs use the shared public HTTPS asset origin.
+- Lead with a navy-to-blue gradient, subtle light at the top right, a short white
+  Title Case heading, one explanatory sentence and one orange pill-shaped action.
+  Keep a solid navy fallback. Headings/actions remain real HTML text, not artwork.
+- Place the greeting, readable application reference, service/education details,
+  compact ruled amount section, next steps and signoff in the white body. Retain
+  confirmed-payment details, fee ranges, quote-pending states and result caveats.
+- Use a light, quiet footer with company identity and Website, Application status,
+  Contact and Privacy links. Keep pilot disclosures outside the letter.
+- Share this structure across all seven business templates. Use tables and inline
+  styles; responsive padding targets generated table cells. Keep pale-blue panels
+  for assessment results and information requests. Promotional and staff login
+  emails remain excluded. Never invent payment dates or completion estimates.
+
 ## Public email assets
 
 All seven templates default to `EMAIL_ASSET_ORIGIN`, independently of application

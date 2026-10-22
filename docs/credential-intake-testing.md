@@ -2,7 +2,7 @@
 
 Current progress was reconciled on October 20, 2026. The dated October 17 tests
 below remain historical evidence. See the [current checklist](migration-checklist.md)
-and [progress analysis](status.md#2026-10-20--reconcile-dev-progress) for the integrated dev scope.
+and [progress analysis](status.md#module-progress) for the integrated dev scope.
 
 ## Scope
 
@@ -19,7 +19,7 @@ payment, staff processing and production cutover remain open.
 The dev configuration uses the existing Supabase PostgreSQL project
 `qrxztgdemfodemlcabcq`, not a local Docker database. Supported runtimes are local
 `http://localhost:3022` and the exact configured dev Preview origin documented in
-[README](../README.md#vercel-dev-preview). Business test rows are isolated by
+[development guide](development.md#vercel-dev-preview). Business test rows are isolated by
 schema and DB role; this does not isolate shared live CRM or Dropbox resources.
 
 | Location | Purpose |

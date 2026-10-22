@@ -1,11 +1,14 @@
 # Dev branch review and system architecture — 2026-10-22
 
+> **Historical record — frozen on October 22, 2026.**
+> Finding locations and counts apply to the reviewed commit. See [current status](../status.md) for subsequent integration and acceptance boundaries.
+
 ## Historical snapshot and subsequent disposition
 
 The findings, line numbers and diagrams below describe the reviewed baseline,
 not the current unresolved backlog. Preserve them as review evidence. See
-[migration architecture](migration-architecture.md) for the maintained architecture
-reference and [migration checklist](migration-checklist.md) for current priorities.
+[migration architecture](../migration-architecture.md) for the maintained architecture
+reference and [migration checklist](../migration-checklist.md) for current priorities.
 
 | Finding | Subsequent local dev status |
 | --- | --- |
@@ -19,7 +22,7 @@ The owner will reconsider F5 only if operational checks show a substantial
 unsent-email backlog or recurring failures. No email monitoring or scheduler is
 activated by this documentation update. Committed fixes do not establish hosted
 acceptance; local Stripe test-payment evidence is recorded separately in
-[the pre-evaluation guide](pre-evaluation-local.md#october-22-stripe-test-payment-acceptance).
+[the pre-evaluation guide](../pre-evaluation-local.md#october-22-stripe-test-payment-acceptance).
 The recommended sequence at the end remains part of the original review, subject
 to this later owner decision.
 

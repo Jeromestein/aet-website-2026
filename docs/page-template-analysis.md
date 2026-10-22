@@ -156,7 +156,7 @@ when adding interior routes. Give each page its own localized metadata.
 ## Evidence and verification boundary
 
 - [Migration scope](migration-checklist.md) and [blog inventory](migration-blog-inventory.md).
-- [Design baseline](design.md), [status](status.md), and [project scope](../README.md).
+- [Design baseline](design/README.md), [status](status.md), and [project scope](../README.md).
 - Local legacy source: `server-54.213.58.23/americantranslationservice.com/`,
   including the 20 P0 entry points and their content includes.
 - Structural scan of all 109 blog includes, plus representative editorial,

@@ -2,7 +2,8 @@
 
 Use Evaluation as the implementation reference and Certified Translation as the
 second service. This is a composition guide, not a requirement to copy every section.
-[Design](design.md) owns visual rules; [status](status.md) records completed checks.
+[Core design](design/README.md) and [website patterns](design/website.md) own visual
+rules; [status](status.md) summarizes completed checks.
 [Migration checklist](migration-checklist.md) owns route and launch scope.
 
 ## Source and content authority

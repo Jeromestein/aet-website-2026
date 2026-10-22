@@ -242,7 +242,7 @@ reads and isolated Miami small/chunked uploads, reload persistence and CRM reads
 at `58da862`. The later count/size fixes were verified locally, so recheck those
 on the deployed dev commit. Hosted checks across both accounts and failure paths,
 and real-applicant production acceptance, remain release tasks. See the current
-[checklist](migration-checklist.md) and [progress analysis](status.md#2026-10-20--reconcile-dev-progress).
+[checklist](migration-checklist.md) and [progress analysis](status.md#module-progress).
 
 ## Pre-evaluation GPT reader — October 20, 2026
 

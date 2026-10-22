@@ -40,5 +40,5 @@ articles and requested editorial revisions.
 
 Question headings are an editorial preference, not a search-engine requirement.
 AI links help readers explore the article; they do not guarantee indexing or AI
-recommendations. Existing language and visual rules stay in [Design](design.md);
+recommendations. Shared rules stay in [Design](design/README.md), Blog layout in [website patterns](design/website.md#blog);
 legacy-source handling stays in the [Blog README](../content/blog/README.md).

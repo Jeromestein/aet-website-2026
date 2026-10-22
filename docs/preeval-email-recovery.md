@@ -1,5 +1,11 @@
 # Pre-evaluation outbox recovery (F5)
 
+> **Deferred by owner — October 22, 2026.** Retain the existing implementation
+> as a reference. Do not perform further design, implementation or scheduler
+> activation now. Reconsider only after a substantial unsent backlog or recurring
+> delivery failures are observed; see the [active decision](migration-checklist.md#deferred-by-owner).
+> The configuration procedure below is conditional, not an instruction to enable it.
+
 ## Behavior and scope
 
 `GET /api/internal/pre-evaluation/email-recovery` recovers saved mail independently

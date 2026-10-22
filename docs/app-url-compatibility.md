@@ -3,8 +3,10 @@
 Recorded October 16, 2026 from the October 15 source comparison and local HTTP
 checks. **The 2026 application does not yet preserve every legacy URL.** The
 three public pre-evaluation URLs are retained, and formal status lookup is now
-restored locally. Checkout and four standalone staff-tool URLs still need
-compatibility work; production hostname behavior remains unverified.
+restored locally. The GPA staff route was restored on October 22, leaving
+checkout and three other standalone staff-tool URLs for compatibility work.
+Production hostname behavior remains unverified. The October 16 table below
+retains its original HTTP results; use the dated updates for later changes.
 
 ## GPA standalone page update — October 22, 2026
 
@@ -15,7 +17,7 @@ returns 307 to staff login; `/zh/admin/CRM/gpa-calculator` returns 308 to the
 unprefixed route. Eight calculation tests and TypeScript passed. Authenticated
 Chrome comparison against the live old calculator matched GPA, total credits and
 all existing distribution rows for the original example and a 20-course synthetic
-transcript; the new summary additionally lists T credits. See [recorded results](status.md#2026-10-22--restore-the-standalone-legacy-gpa-calculator).
+transcript; the new summary additionally lists T credits. See [recorded results](archive/status-through-2026-10-22.md#2026-10-22--restore-the-standalone-legacy-gpa-calculator).
 Mobile and new production hosting remain unverified. The October 16 404 entry
 below is retained as historical evidence.
 
@@ -119,7 +121,7 @@ Keeping the full production address
 `https://app.americantranslationservice.com/admin/CRM` also requires domain and
 hostname routing. The proposed deployment uses one Vercel project with public
 website and app domains; this audit did not implement or verify that setup.
-See [the deployment proposal](../README.md#application-domains-and-staff-urls).
+See [the deployment proposal](development.md#application-domains-and-staff-urls).
 
 ## Public website aliases are a different inventory
 
