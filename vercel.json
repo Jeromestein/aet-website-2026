@@ -4,6 +4,10 @@
     {
       "path": "/api/internal/pre-evaluation/process",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/internal/customer-status/expire",
+      "schedule": "0 12 * * *"
     }
   ]
 }
