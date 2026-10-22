@@ -23,6 +23,34 @@
   not yet observed. Evidence: `/private/tmp/aet-cron-production-schedule.png`.
 
 
+## 2026-10-22 — Consolidate and organize local environment configuration
+
+- Merged the prepared expiry connection and Cron secret into the existing
+  `.env.local`; kept local expiry disabled and deleted the duplicate secret file.
+- Grouped local settings and `.env.example` consistently by service, preserving
+  every existing local value and template default. Retained legacy local tool keys.
+- Updated preparation tooling to reuse/append local settings without replacing
+  unrelated variables, and refreshed README, expiry and migration instructions.
+- Verified parsed values, unique keys, Git ignore and mode 0600. No database change,
+  credential rotation, production activation, server restart or deployment.
+
+
+## 2026-10-22 — Prepare the Vercel payment-expiry database credential
+
+- On explicit owner authorization, provisioned `aet_payment_expiry` on the existing
+  project with a TLS-tested restricted pooler login and pending -> expired RLS.
+  Preserved existing business policies and the CRM payment-write prohibition.
+- Generated the connection and Cron secret in a Git-ignored mode-0600 file for
+  Production configuration. Did not edit loaded local environment variables,
+  Vercel settings, old GitHub scheduling, or production payment records.
+- Passed 24 live privilege/rollback checks and TypeScript. Verified business-row
+  fingerprints unchanged; 77 records currently meet the original expiry rule.
+  Security advisor returned no finding for the affected table; unrelated existing
+  findings are recorded in the setup guide. No task dispatch or deployment.
+- Production environment setup and first real scheduled-run verification remain
+  with the owner. See [the exact Vercel variables](payment-expiry.md#prepared-production-credentials-2026-10-22).
+
+
 ## 2026-10-22 — Verify pre-evaluation upload, GPT and notification journey
 
 - Kept the owner-accepted model/v3 benchmark unchanged and updated the checklist

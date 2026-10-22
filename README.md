@@ -43,6 +43,22 @@ To integrate later, commit the intended changes on `dev`, merge `dev` into
 `main` from the main checkout, resolve conflicts and verify the result before
 an explicitly authorized push or deployment. Do not copy folders over `main`.
 
+## Environment configuration
+
+Use one private `.env.local` in each worktree for actual local values. Keep
+`.env.example` as the shared, secret-free template. Do not create a second `.env`
+or service-specific secret file for the same worktree. Both files are grouped by
+application URLs, authentication, CRM, isolated applications, AI, email, Stripe,
+PayPal, Dropbox and scheduled tasks. Existing legacy tool paths stay in a final
+local-tools group; organizing settings does not enable or disable their services.
+
+Keep `STATUS_EXPIRY_ENABLED=false` locally. Vercel Production uses the saved
+`STATUS_EXPIRY_DATABASE_URL` and `CRON_SECRET`, with its own expiry switch set
+explicitly to `true` when ready. Never import the entire local file into Vercel:
+origins, database modes and feature switches are environment-specific. See
+[payment-expiry setup](docs/payment-expiry.md). Real values remain Git-ignored;
+restart the owner-run local server after environment edits.
+
 ## Staff authentication
 
 The owner maintains three staff accounts and handles additions and password
