@@ -47,11 +47,22 @@ export async function startDocumentUpload(id: string, fileKey: string) {
     return attempt;
   });
 }
+type DocumentUploadFile = { name: string; path: string; size: number; contentHash: string };
 export async function finishDocumentUpload(id: string, attempt: string | null, success: boolean,
-  file?: { name: string; path: string; size: number; contentHash: string }) {
-  if (!attempt) return;
-  await db().begin(async tx => {
-    if (success && file) {
+  savedFile?: DocumentUploadFile | (() => Promise<DocumentUploadFile>)) {
+  if (!attempt) return false;
+  return db().begin(async tx => {
+    // Match startDocumentUpload's lock order. Keep the lock through an optional
+    // storage commit so a retry cannot replace the attempt after validation.
+    const [app] = await tx`select id,status from ${table('preeval.applications')} where id=${id} for update`;
+    if (!app || app.status === 'cancelled') return false;
+    const claimed = await tx`update ${table('preeval.document_uploads')} set state=${success ? 'ready' : 'failed'},updated_at=now()
+      where application_id=${id} and attempt_id=${attempt} and state='uploading' returning attempt_id`;
+    if (!claimed.length) return false;
+    if (success && savedFile) {
+      // The claim is uncommitted until storage and indexing both succeed. A
+      // stale/settled callback never invokes storage or changes application data.
+      const file = typeof savedFile === 'function' ? await savedFile() : savedFile;
       // Also index shared-uploader files so customer/staff lists and analysis use
       // the same documents. The saved Dropbox path remains authoritative.
       await pauseForUpload(id, tx);
@@ -60,7 +71,7 @@ export async function finishDocumentUpload(id: string, attempt: string | null, s
         values (${randomUUID()},${id},${file.name},${mime},${file.size},${'dropbox:'+file.contentHash},${file.path},'ready')
         on conflict do nothing`;
     }
-    await tx`update ${table('preeval.document_uploads')} set state=${success ? 'ready' : 'failed'},updated_at=now() where application_id=${id} and attempt_id=${attempt}`;
+    return true;
   });
 }
 

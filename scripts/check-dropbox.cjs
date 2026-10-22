@@ -62,7 +62,12 @@ const resolveStorage = async context => {
  if (!locations.has(key)) locations.set(key, paths.initialStorage(context));
  return locations.get(key);
 };
-const dependencies = { './shared': shared, './paths': paths, './storage': { resolveStorage }, dropbox: { Dropbox } };
+const download = load('lib/dropbox/download.ts', { './shared': shared });
+// This suite covers formal uploads and legacy access. Preview AI/database
+// transitions are exercised by the isolated PostgreSQL regression suites.
+const unexpectedAIUpload = async () => { throw new Error('Unexpected preview AI database call in offline Dropbox checks'); };
+const dependencies = { './shared': shared, './paths': paths, './storage': { resolveStorage }, './download': download,
+  '../preeval/ai-jobs': { startDocumentUpload: unexpectedAIUpload, finishDocumentUpload: unexpectedAIUpload }, dropbox: { Dropbox } };
 const server = load('lib/dropbox/server.ts', dependencies);
 const coldServer = () => load('lib/dropbox/server.ts', dependencies);
 const http = load('lib/dropbox/http.ts', { './shared': shared, './server': server, './paths': paths });

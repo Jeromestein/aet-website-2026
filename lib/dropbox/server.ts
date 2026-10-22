@@ -161,6 +161,25 @@ async function finishAIUpload(context: ApplicationContext, attempt: string | nul
   if (attempt) await finishDocumentUpload(context.id, attempt, success,
     file ? { name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev } : undefined);
 }
+async function commitAIUpload(context: ApplicationContext, attempt: string | null | undefined,
+  commit: () => Promise<files.FileMetadata>) {
+  if (!attempt) return commit();
+  let file!: files.FileMetadata;
+  let accepted: boolean;
+  try {
+    accepted = await finishDocumentUpload(context.id, attempt, true, async () => {
+      file = await commit();
+      return { name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev };
+    });
+  } catch (error) {
+    // The claim rolled back. Failure is fenced too, in case a new attempt won
+    // the application lock before this callback could record the failure.
+    await finishAIUpload(context, attempt, false);
+    throw error;
+  }
+  if (!accepted) throw new DocumentError('sequence', 409);
+  return file;
+}
 function validateAIFile(context: ApplicationContext, name: string, size: number) {
   if (context.kind !== 'pre-evaluation') return;
   if (!/\.(pdf|png|jpe?g)$/i.test(name)) throw new DocumentError('fileType', 415);
@@ -175,15 +194,15 @@ export async function uploadSmall(context: ApplicationContext, file: File) {
   const storage = await resolveStorage(context);
   const dbx = await clientForOffice(storage.write.office);
   const attempt = await startAIUpload(context, file.name);
-  let result;
-  try {
-    result = await dbx.filesUpload({
-      path: `${storage.write.path}/${file.name}`, contents: bytes,
-      mode: { '.tag': 'add' }, autorename: true, content_hash: dropboxHash(bytes),
-    });
-  } catch { await finishAIUpload(context, attempt, false); throw new DocumentError('uncertain', 502); }
-  await finishAIUpload(context, attempt, true, result.result);
-  return finishResult(dbx, context, result.result);
+  const result = await commitAIUpload(context, attempt, async () => {
+    try {
+      return (await dbx.filesUpload({
+        path: `${storage.write.path}/${file.name}`, contents: bytes,
+        mode: { '.tag': 'add' }, autorename: true, content_hash: dropboxHash(bytes),
+      })).result;
+    } catch { throw new DocumentError('uncertain', 502); }
+  });
+  return finishResult(dbx, context, result);
 }
 export async function startUpload(context: ApplicationContext, data: Record<string, unknown>, expires: number) {
   const { fileName, fileSize, mime, contentHash } = data;
@@ -238,22 +257,23 @@ export async function continueUpload(context: ApplicationContext, data: Record<s
     return { success: true, offset: nextOffset, uploadKey: seal(envelope.account, 'upload', { ...upload, offset: nextOffset }, envelope.expires) };
   }
   if (data.action !== 'finish' || upload.offset !== upload.size) throw new DocumentError('sequence', 409);
-  let result;
-  try {
-    result = await dbx.filesUploadSessionFinish({
-      cursor, contents: Buffer.alloc(0),
-      commit: { path: `${storage.write.path}/${upload.fileName}`, mode: { '.tag': 'add' }, autorename: true },
-    });
-  } catch { await finishAIUpload(context, upload.aiAttempt, false); throw new DocumentError('uncertain', 502); }
-  if (result.result.size !== upload.size || result.result.content_hash !== upload.contentHash) {
-    // Dropbox can return an existing identical file. Never auto-delete the
-    // returned ID; a failed client-supplied hash must not erase prior uploads.
-    // Leave it for review, report an integrity error and skip the LA copy.
-    await finishAIUpload(context, upload.aiAttempt, false);
-    throw new DocumentError('integrity', 422);
-  }
-  await finishAIUpload(context, upload.aiAttempt, true, result.result);
-  return finishResult(dbx, context, result.result);
+  const result = await commitAIUpload(context, upload.aiAttempt, async () => {
+    let saved;
+    try {
+      saved = (await dbx.filesUploadSessionFinish({
+        cursor, contents: Buffer.alloc(0),
+        commit: { path: `${storage.write.path}/${upload.fileName}`, mode: { '.tag': 'add' }, autorename: true },
+      })).result;
+    } catch { throw new DocumentError('uncertain', 502); }
+    if (saved.size !== upload.size || saved.content_hash !== upload.contentHash) {
+      // Dropbox can return an existing identical file. Never auto-delete the
+      // returned ID; a failed client-supplied hash must not erase prior uploads.
+      // Leave it for review, report an integrity error and skip the LA copy.
+      throw new DocumentError('integrity', 422);
+    }
+    return saved;
+  });
+  return finishResult(dbx, context, result);
 }
 export async function listFiles(context: ApplicationContext, cursor?: string | null): Promise<FilePage> {
   const storage = await resolveStorage(context);
