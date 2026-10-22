@@ -40,6 +40,14 @@ export async function submit(input: unknown) {
   return { app, token: await makeSession(app.id, "customer", app.email) };
 }
 export async function application(id: string, staff = false) {
+  // Callers authorize this application before reading it. Recover a saved result
+  // without another AI run, including in preview where no delivery worker runs.
+  // Publication rechecks eligibility under the application lock. Always read a
+  // fresh snapshot afterwards: a refund, upload or staff edit may have won it.
+  try { await publishIfReady(id); }
+  catch { console.error("Pre-evaluation publication incomplete; the next authorized read will retry."); }
+  // Email enqueue happens after the publication commit. Its failure must not
+  // hide a successfully published result or fail the customer's status read.
   const [app] =
     await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
@@ -56,7 +64,8 @@ export async function application(id: string, staff = false) {
     await db()`select id,name,mime_type,bytes,state,created_at from ${table("preeval.files")} where application_id=${id} order by created_at`;
   const visible =
     staff ||
-    (canRelease(app.payment_status, app.status) && app.status === "completed");
+    (canRelease(app.payment_status, app.status) && app.status === "completed" &&
+      app.ai_status === "completed" && !app.uploads_pending);
   const response: Row = {
     id: app.id,
     first_name: app.first_name,

@@ -1,5 +1,34 @@
 # AET Implementation Status
 
+## 2026-10-22 — Recover saved pre-evaluation result publication
+
+- Authorized customer/staff detail reads now retry `publishIfReady` before
+  loading a fresh application snapshot. A paid result saved with completed AI
+  but processing application status can recover after a transient publication
+  failure, including cloud preview without a local worker. No AI regeneration,
+  scheduled recovery or new external request is involved.
+- Existing publication eligibility is rechecked under the application row lock;
+  result versions and email dedupe keys are preserved. Customer projections
+  additionally require completed AI and no pending uploads. An enqueue failure
+  after publication cannot hide the committed result; later reads can retry the
+  missing enqueue. Existing email dispatch and review rules remain unchanged.
+- Added 26 real temporary-PostgreSQL tests with simulated AI/Stripe/email and
+  database triggers that reject publication/enqueue. Verified repeated failures,
+  concurrent reads, both payment orders, unpaid/pending/refund withholding,
+  cancellation/information/upload gates, staff corrections, superseded AI runs,
+  stale emails and deterministic row-lock races with refunds/uploads/corrections.
+  Route tests also verify authorization precedes the recovery-capable read.
+- Verification: 645 tests passed in the full run with publication, information
+  and upload PostgreSQL suites enabled; the remaining 87 refund/email database
+  tests passed separately against disposable loopback databases (732 total).
+  Full TypeScript, i18n (586 messages per language) and whitespace checks passed.
+  No production build, live provider calls, real email/payment or deployment.
+- Backend-only change; no browser/UI acceptance was performed. Hosted fault
+  recovery still requires acceptance after an authorized integration/deployment.
+  Recovery requires a subsequent authorized detail read and database availability;
+  unattended/email scheduler work remains deferred under F5. The feature remains
+  isolated on `x/preeval-result-publication` while `dev` has unrelated local work.
+
 ## 2026-10-22 — Deploy and verify the standalone Production expiry Cron
 
 - Production commit `83357c3` was pushed to `MeiyuTech/aet-website-2026/main`.
