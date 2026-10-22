@@ -178,7 +178,8 @@ export async function staffAction(id: string, body: Row, actor: string) {
     )
       throw new AppError("invalid_request");
     const [app] =
-      await db()`update ${table("preeval.applications")} set status='needs_information',updated_at=now() where id=${id} and status<>'cancelled' returning *`;
+      await db()`update ${table("preeval.applications")} set status='needs_information',input_version=input_version+1,result=null,
+        ai_status='idle',ai_active_run=null,ai_locked_at=null,ai_error=null,ai_attempts=0,updated_at=now() where id=${id} and status<>'cancelled' returning *`;
     if (!app) throw new AppError("application_cancelled", 409);
     const [request] = await db()`insert into ${table("preeval.audit")}(application_id,actor,action,detail)
       values (${id},${actor},'information.requested',${db().json({message:body.message})}) returning id`;

@@ -7,24 +7,29 @@ export async function pauseForUpload(id: string, tx?: TransactionSql) {
   const sql = tx || db();
   const rows = await sql`update ${table('preeval.applications')} set uploads_pending=true,input_version=input_version+1,
     ai_pipeline='openai',ai_status='idle',ai_active_run=null,ai_locked_at=null,ai_error=null,ai_attempts=0,
-    result=null,status='processing',updated_at=now() where id=${id} and status not in ('cancelled','needs_information') returning id`;
+    result=null,status='processing',updated_at=now() where id=${id} and status<>'cancelled' returning id`;
   if (!rows.length) throw new AppError('application_unavailable', 409);
 }
 export async function completeUploads(id: string) {
   return db().begin(async tx => {
     const [app] = await tx`select * from ${table('preeval.applications')} where id=${id} for update`;
-    if (!app || ['cancelled','needs_information'].includes(app.status)) throw new AppError('application_unavailable', 409);
+    // A customer must start a supplemental batch; only staff can resume a
+    // request without new files. A request made during a batch may finish it.
+    if (!app || app.status === 'cancelled' || (app.status === 'needs_information' && !app.uploads_pending)) throw new AppError('application_unavailable', 409);
     if (!app.uploads_pending) return;
-    const incomplete = await tx`select id from ${table('preeval.files')} where application_id=${id} and state<>'ready'
-      union all select attempt_id as id from ${table('preeval.document_uploads')} where application_id=${id} and state<>'ready'`;
-    if (incomplete.length) throw new AppError('uploads_incomplete', 409);
-    await tx`update ${table('preeval.applications')} set uploads_pending=false,ai_status='queued',ai_pipeline='openai',ai_available_at=now(),ai_attempts=0,ai_error=null,updated_at=now() where id=${id}`;
+    const uploads = await tx`select state from ${table('preeval.files')} where application_id=${id}
+      union all select state from ${table('preeval.document_uploads')} where application_id=${id}`;
+    if (!uploads.length || uploads.some(upload => upload.state !== 'ready')) throw new AppError('uploads_incomplete', 409);
+    await tx`update ${table('preeval.applications')} set uploads_pending=false,ai_status='queued',ai_pipeline='openai',ai_available_at=now(),ai_attempts=0,ai_error=null,
+      ai_active_run=null,ai_locked_at=null,input_version=input_version+1,result=null,status='processing',updated_at=now() where id=${id}`;
   });
 }
 export async function retryAnalysis(id: string, staff = false) {
   const rows = await db()`update ${table('preeval.applications')} set ai_status='queued',ai_pipeline='openai',ai_active_run=null,
     ai_attempts=0,ai_error=null,ai_locked_at=null,ai_available_at=now(),input_version=input_version+1,result=null,status='processing',updated_at=now()
-    where id=${id} and not uploads_pending and status not in ('cancelled','needs_information') and (${staff} or ai_status='failed') returning id`;
+    where id=${id} and not uploads_pending and status<>'cancelled' and (${staff} or (ai_status='failed' and status<>'needs_information'))
+    and not exists(select 1 from ${table('preeval.files')} where application_id=${id} and state<>'ready')
+    and not exists(select 1 from ${table('preeval.document_uploads')} where application_id=${id} and state<>'ready') returning id`;
   if (!rows.length) throw new AppError('ai_retry_unavailable', 409);
 }
 /** Shared uploader uses attempt IDs to fence concurrent retries. Legacy-only
