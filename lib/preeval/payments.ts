@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
 import { table, db } from "./db";
 import { required, configuration, requireExternalServices } from "./config";
 import { TOTAL_CENTS, AppError, resultPath } from "./domain";
@@ -106,9 +107,10 @@ export async function applyCheckout(
       payment.amount_cents !== TOTAL_CENTS
     )
       throw new AppError("invalid_payment");
+    const refunded = await syncCheckoutRefund(tx, "preeval", payment, session, () => stripeClient());
     const event =
       await tx`insert into ${table("preeval.payment_events")}(id,type) values (${eventId},${eventType}) on conflict do nothing returning id`;
-    if (!event.length) return;
+    if (!event.length || refunded) return;
     if (
       session.payment_status === "paid" &&
       !["refunded", "partially_refunded"].includes(payment.status)
@@ -135,7 +137,7 @@ export async function applyCheckout(
 }
 export async function reconcile(id: string) {
   const rows =
-    await db()`select session_id from ${table("preeval.payments")} where application_id=${id} and status in ('open','paid') order by created_at desc limit 3`;
+    await db()`select session_id from ${table("preeval.payments")} where application_id=${id} and status in ('open','paid','partially_refunded') order by created_at desc limit 3`;
   for (const row of rows) {
     const s = await stripeClient().checkout.sessions.retrieve(row.session_id);
     await applyCheckout(
@@ -161,31 +163,7 @@ export async function handleStripeEvent(event: Stripe.Event) {
       event.type,
     );
   } else if (event.type === "charge.refunded") {
-    const charge = event.data.object as Stripe.Charge;
-    const intent =
-      typeof charge.payment_intent === "string"
-        ? charge.payment_intent
-        : charge.payment_intent?.id;
-    if (!intent) return;
-    await db().begin(async (tx) => {
-      const [payment] =
-        await tx`select * from ${table("preeval.payments")} where payment_intent=${intent} for update`;
-      if (!payment) return;
-      if (charge.currency !== "usd" || charge.amount !== payment.amount_cents)
-        throw new AppError("invalid_payment");
-      if (
-        !(
-          await tx`insert into ${table("preeval.payment_events")}(id,type) values (${event.id},${event.type}) on conflict do nothing returning id`
-        ).length
-      )
-        return;
-      const refund = Math.max(payment.refunded_cents, charge.amount_refunded);
-      const status =
-        refund >= payment.amount_cents ? "refunded" : "partially_refunded";
-      await tx`update ${table("preeval.payments")} set status=${status},refunded_cents=${refund},updated_at=now() where id=${payment.id}`;
-      await tx`update ${table("preeval.applications")} set payment_status=${status},updated_at=now() where id=${payment.application_id}`;
-      await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${payment.application_id},'stripe',${status})`;
-    });
+    await applyChargeRefund(event, "preeval", "aet-2026-local", () => stripeClient());
   }
 }
 export async function cancelApplication(id: string, actor: string) {
