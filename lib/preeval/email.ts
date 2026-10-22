@@ -56,7 +56,7 @@ export async function renderQueuedEmail(row: Row) {
 const resendTransport: EmailTransport = async mail => {
   const { data, error } = await new Resend(required("RESEND_API_KEY")).emails.send({
     from: mail.from, to: mail.recipient, subject: mail.subject, html: mail.html,
-  }, { idempotencyKey: mail.id });
+  }, { idempotencyKey: mail.id, signal: AbortSignal.timeout(15000) });
   if (error || !data) throw new Error("delivery_failed");
   return data.id;
 };
@@ -72,9 +72,22 @@ export async function flushEmails(transport: EmailTransport = resendTransport, a
   const scope = applicationId || null;
   const recipient = configuration().recipient;
   const sql = db(), lease = randomUUID();
+  // Terminal/uncertain deliveries retain their IDs and receipts for reconciliation.
+  // Never reset first_attempt_at: the provider's deduplication window is finite.
+  const reviewed = await sql`update ${table("preeval.emails")} set state='failed',
+    error=case when first_attempt_at<=now()-interval '23 hours' then 'delivery_window_expired_review' else 'delivery_retry_exhausted_review' end,
+    available_at='infinity'::timestamptz,locked_at=null,lease=null where id in
+    (select id from ${table("preeval.emails")} where
+      (state in ('queued','failed') or (state='sending' and locked_at<now()-interval '3 minutes'))
+      and (${scope}::uuid is null or application_id=${scope}::uuid) and recipient=${recipient}
+      and available_at<>'infinity'::timestamptz
+      and (attempts>=5 or first_attempt_at<=now()-interval '23 hours')
+      order by created_at,id limit 5 for update skip locked) returning id`;
   await sql`update ${table("preeval.emails")} set state='failed',error='interrupted',locked_at=null,lease=null
-    where state='sending' and locked_at<now()-interval '3 minutes'
-      and (${scope}::uuid is null or application_id=${scope}::uuid) and recipient=${recipient}`;
+    where id in (select id from ${table("preeval.emails")} where state='sending' and locked_at<now()-interval '3 minutes'
+      and (${scope}::uuid is null or application_id=${scope}::uuid) and recipient=${recipient}
+      and attempts<5 and first_attempt_at>now()-interval '23 hours'
+      order by created_at,id limit 5 for update skip locked)`;
   const rows = await sql`update ${table("preeval.emails")} set state='sending',locked_at=now(),lease=${lease},
     attempts=attempts+1,first_attempt_at=coalesce(first_attempt_at,now()) where id in
     (select id from ${table("preeval.emails")} where
@@ -83,6 +96,7 @@ export async function flushEmails(transport: EmailTransport = resendTransport, a
       and attempts<5 and available_at<=now()
       and (first_attempt_at is null or first_attempt_at>now()-interval '23 hours')
       order by created_at limit 5 for update skip locked) returning *`;
+  const outcome = { attempted: 0, sent: 0, reviewRequired: reviewed.length };
   for (const row of rows) {
     try {
       const content = await renderQueuedEmail(row);
@@ -92,17 +106,25 @@ export async function flushEmails(transport: EmailTransport = resendTransport, a
         ...content,
       };
       const digest = deliveryHash(mail, row.payload_hash);
-      const claimed = await sql`update ${table("preeval.emails")} set payload_hash=${digest} where id=${row.id} and lease=${lease} returning id`;
+      // A slow render must not send after its lease or retry window has expired.
+      const claimed = await sql`update ${table("preeval.emails")} set payload_hash=${digest},locked_at=now()
+        where id=${row.id} and lease=${lease} and state='sending'
+        and locked_at>=now()-interval '3 minutes' and first_attempt_at>now()-interval '23 hours' returning id`;
       if (!claimed.length) continue;
+      outcome.attempted++;
       const providerId = await transport(mail);
-      await sql`update ${table("preeval.emails")} set state='sent',provider_id=${providerId},sent_at=now(),error=null,locked_at=null,lease=null where id=${row.id} and lease=${lease}`;
+      const saved = await sql`update ${table("preeval.emails")} set state='sent',provider_id=${providerId},sent_at=now(),error=null,locked_at=null,lease=null where id=${row.id} and lease=${lease} returning id`;
+      outcome.sent += saved.length;
     } catch (error) {
       const blocked = error instanceof EmailReviewRequired;
+      const review = blocked || row.attempts >= 5;
       await sql`update ${table("preeval.emails")} set state='failed',error=${blocked ? error.message : "delivery_failed"},
-        available_at=case when ${blocked} then 'infinity'::timestamptz else now()+interval '60 seconds' end,
+        available_at=case when ${review} then 'infinity'::timestamptz else now()+interval '60 seconds' end,
         locked_at=null,lease=null where id=${row.id} and lease=${lease}`;
+      if (review) outcome.reviewRequired++;
     }
   }
+  return outcome;
 }
 
 /** Notification outages must not change a successful save or AI result. */
