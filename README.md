@@ -352,8 +352,11 @@ Docker is not used. Dropbox transfers are enabled independently; pre-evaluation
 GPT analysis now runs automatically in the Next service after an eligible request,
 using a server-only key. No second local terminal is required. An optional daily
 recovery endpoint fits Hobby scheduling limits; hosted acceptance and commercial
-plan eligibility remain separate. The older payment and email-worker guards stay
-in place. Pre-evaluation notifications can now run in that same request lifecycle:
+plan eligibility remain separate. The older formal-payment and combined-worker
+guards stay in place. Pre-evaluation Stripe Sandbox checkout can be explicitly
+enabled with `PREEVAL_STRIPE_TEST_ENABLED=true`; local payment tests also need a
+temporary Stripe CLI callback forwarder. See [payment setup and verified
+acceptance](docs/pre-evaluation-local.md#october-22-stripe-test-payment-acceptance). Pre-evaluation notifications can now run in that same request lifecycle:
 set `PREEVAL_EMAIL_ENABLED=true` only with the intended `PREEVAL_TEST_EMAIL`.
 Cloud preview sends are scoped to one authorized application; it does not drain
 historical mail globally. See [AI setup and acceptance](docs/pre-evaluation-local.md#direct-gpt-analysis--october-20-2026)

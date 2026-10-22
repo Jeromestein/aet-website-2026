@@ -23,6 +23,62 @@
   not yet observed. Evidence: `/private/tmp/aet-cron-production-schedule.png`.
 
 
+## 2026-10-22 — Repair generated Next route types and pass the full type check
+
+- Confirmed one active Next dev server for this worktree on port 3022. Its
+  generated `.next/dev/types/validator.ts` contained a truncated statement and
+  repeated route/layout validation blocks. The original corruption trigger was
+  not established; no framework upgrade or dependency patch was applied.
+- Backed up the malformed artifact, then triggered the existing Next route watcher
+  by updating an existing layout's modification time. Next regenerated the route
+  types from current routes; layout contents were verified unchanged. The owner’s
+  server remained running, with no additional restart or production build.
+- `pnpm typecheck --incremental false` passed with exit code 0 using the original
+  repository `tsconfig.json`, including generated Next route validators. No type
+  exclusions or ignored build errors were introduced; `tsconfig.json` and
+  `next-env.d.ts` remained byte-identical to their pre-repair snapshots.
+- This resolves the full-type-check limitation recorded in the CRM payment
+  verification follow-up below. Whitespace checks passed. Backup evidence is in
+  `/private/tmp/aet-next-type-repair-20261022/`; no commit, push or deployment.
+
+## 2026-10-22 — Align CRM payment verification with Stripe test configuration
+
+- Pre-evaluation staff details now return a payment-verification capability using
+  the same server-side test-key/configuration guard as actual Stripe actions.
+  The Payment tab shows enabled/unavailable copy and enables Verify payment only
+  when allowed. Formal-evaluation preview restrictions remain in place.
+- Successful reconciliation reports "Payment status checked."; the existing busy
+  lock prevents repeated clicks while the request runs. No credentials reach the UI.
+- After the owner's 3022 restart, the Codex in-app browser verified the existing
+  synthetic Stripe case at 1280px and 390px, including a real Verify payment click.
+  It remained Paid/Completed at USD 19.88 with one payment and one send attempt
+  for each confirmation/result email. No new checkout or charge was created.
+- 92 targeted regression tests and source TypeScript checks passed, as did the
+  whitespace check. Full default type checking was blocked by malformed generated
+  `.next/dev/types/validator.ts`; the source check excluded `.next` through a
+  temporary configuration and did not modify repository TypeScript settings.
+- Screenshots: `/private/tmp/aet-payment-verification-20261022/desktop.png` and
+  `mobile.png`. No commit, push or deployment in this follow-up.
+
+## 2026-10-22 — Verify pre-evaluation Stripe test payment and result delivery
+
+- Added an explicit pre-evaluation-only Stripe test opt-in for restricted cloud
+  preview, with live-key/event rejection and unchanged formal/combined-worker
+  restrictions. Reused the owner's restarted 3022 server.
+- Submitted a new synthetic case, uploaded its PDF to Dropbox and ran GPT once.
+  Completed a real Sandbox 4242-card checkout for USD 19.88; the signed Stripe
+  callback returned 200 and unlocked the result before return reconciliation.
+- One payment row survived concurrent checkout requests and duplicate local event
+  replays. Invalid signatures, live events, amount/currency/ownership mismatch and
+  repeat checkout after payment were rejected. Customer-only unpaid/paid gates
+  passed; in-app desktop checkout return/reload showed Paid/Completed and result.
+- Confirmation and result each sent once only to `errplusone@gmail.com`; both
+  Resend receipts report delivered. Click-to-callback 1.98 seconds, then 0.92
+  seconds to result email send. No manual paid fixture or real charge.
+- 91 targeted regression tests, TypeScript and whitespace checks passed. The
+  temporary local callback forwarder was stopped; no push or deployment.
+- Case and evidence: [Stripe test acceptance](pre-evaluation-local.md#october-22-stripe-test-payment-acceptance).
+
 ## 2026-10-22 — Consolidate and organize local environment configuration
 
 - Merged the prepared expiry connection and Cron secret into the existing

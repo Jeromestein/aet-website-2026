@@ -4,6 +4,40 @@ See [migration architecture](migration-architecture.md) for the English Mermaid
 diagrams of AET 2026 and legacy AET App, including shared data and integration
 boundaries. This checklist tracks implementation and acceptance separately.
 
+## Pre-evaluation Stripe test checkout — October 22, 2026
+
+- [x] Record the plan before implementation. Use a new synthetic application in
+  restricted preview, the existing 3022 server and Stripe test keys only.
+- [x] Add an explicit pre-evaluation-only Stripe test opt-in for cloud preview;
+  retain formal-payment restrictions and reject live keys/events.
+- [x] Verify a real test Checkout payment and signed Stripe callback, including
+  amount/ownership checks, duplicate-event handling and unpaid result withholding.
+- [x] Verify paid result unlock and one result notification to
+  `errplusone@gmail.com`; record provider delivery and actual event evidence.
+- [x] Document timings, limitations and temporary callback-forwarder cleanup.
+- [x] Drive CRM pre-evaluation Payment copy and Verify payment availability from
+  the server's Stripe test capability, including key/configuration validation.
+  Preserve formal-evaluation preview restrictions and use explicit check feedback.
+- [x] Verify disabled/missing test configuration and enabled test-key behavior;
+  92 targeted regression tests passed.
+- [x] Verify the updated CRM Payment interaction on 3022 after the owner restart:
+  1280px/390px views, enabled button, busy lock and successful Stripe reconciliation.
+  The paid USD 19.88 record and one-attempt confirmation/result emails stayed intact.
+- [x] Regenerate the malformed Next dev route validator and pass the full project
+  type check with the original `tsconfig.json` and generated types included
+  (`pnpm typecheck --incremental false`, exit 0). No build or server restart.
+
+No real charge, production application, deployment or model change is authorized.
+
+Application `1b79980c-8edf-465c-a68e-1d5c96c30610`: one actual Stripe Sandbox
+payment for USD 19.88; all provider objects have `livemode=false`. The signed
+callback returned 200 and released the result before return-page reconciliation.
+Click-to-callback: 1.98 seconds; callback-to-result-mail: 0.92 seconds. Confirmation
+and result emails each delivered once to the requested test address. Concurrent
+checkout reuse, duplicate replay and invalid-event guards passed; 91 regression
+tests and TypeScript passed. Temporary callback forwarding stopped after the run.
+See [Stripe acceptance evidence](pre-evaluation-local.md#october-22-stripe-test-payment-acceptance).
+
 ## Formal Status payment expiry — October 22, 2026
 
 - [x] Use the original 48-hour window from `submitted_at`; respect saved payment
@@ -53,9 +87,9 @@ Full regression suite: 498 tests passed; TypeScript and whitespace checks passed
 See [full journey evidence and boundaries](pre-evaluation-local.md#october-22-full-customer-journey-acceptance).
 
 No historical applicant files, production records, model tuning, deployment or
-push were part of this run. Stripe checkout/webhook was not exercised: restricted
-cloud preview still blocks that integration. The paid fixture verifies release
-behavior, not payment processing. `delivered` confirms recipient mail-server
+push were part of this earlier run. It used a paid fixture, not payment
+processing. The separate Stripe test acceptance above subsequently exercised
+checkout/webhook with an explicit pre-evaluation test opt-in. `delivered` confirms recipient mail-server
 acceptance, not inbox placement or that the owner opened the message. The test
 case is retained in preview; private artifacts are ignored under
 `.local/preeval-journey/2026-10-22/`.

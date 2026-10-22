@@ -1,5 +1,107 @@
 # Pre-evaluation local pilot
 
+## October 22 Stripe test-payment acceptance
+
+A new synthetic case, `1b79980c-8edf-465c-a68e-1d5c96c30610` (`AET Stripe 20261022
+Test`), verified actual Stripe Sandbox checkout through the existing 3022 server.
+The owner restarted that server after the test switch/signing-secret update.
+This case has no manual paid-state fixture. The earlier upload/AI journey below
+remains a separate historical acceptance run.
+
+### Configuration and local callbacks
+
+- `PREEVAL_STRIPE_TEST_ENABLED=true` explicitly permits pre-evaluation Stripe test
+  operations in restricted cloud preview. Its example default is false. The
+  approved origin/database-role checks still run; only `sk_test_` / `rk_test_`
+  keys are accepted and live events are rejected. Formal checkout and the older
+  combined worker retain their cloud restriction. Cloud callbacks skip formal
+  handlers/mail rather than enabling that unrelated workflow.
+- Keep `PREEVAL_EMAIL_ENABLED=true` and `PREEVAL_TEST_EMAIL=errplusone@gmail.com`
+  for this acceptance. Mail dispatch stays application-scoped.
+- Local Stripe cannot call localhost directly. For a deliberate payment test,
+  run `node --env-file=.env.local scripts/preeval/stripe-listen.mjs` from this
+  worktree with the official Stripe CLI on PATH. It forwards relevant test events
+  to `/api/pre-evaluation/stripe-webhook` and privately writes
+  `STRIPE_TEST_WEBHOOK_SECRET` into the ignored `.env.local`.
+  Have the owner restart their existing server after a secret/config change.
+- This temporary callback forwarder is needed for local Stripe testing only; it
+  is not an AI worker or a second website server. It was stopped after this run.
+  On a future hosted test deployment, configure the HTTPS route as a Stripe test
+  event destination and use that destination's signing secret. Hosted delivery
+  remains unverified; no deployment or external destination was created here.
+
+### Verified results
+
+- A fresh synthetic API submission uploaded one two-page, 1,801-byte PDF to the
+  canonical Dropbox test folder. One automatic v3 GPT run took 15.43 seconds
+  (1,675 tokens). Customer-only HTTP access withheld the saved result while
+  unpaid. Anonymous access was denied; no result email existed before payment.
+- Two concurrent checkout requests returned the same open session and left one
+  payment row. The amount stayed USD 19.88 (19.00 + 0.88). The in-app browser
+  displayed Sandbox and completed checkout using Stripe's 4242 test card, with
+  Link saving unchecked. No real card or live payment was used.
+- Session `cs_test_a1wM2hn4mDdFN6AbJ9zSe4BStpDIEfUWG5798RuBlSmAxc0AdqTycP3RcJ`,
+  PaymentIntent `pi_3UTPdSJMcR2XIhyn157xt0Gz` and charge
+  `ch_3UTPdSJMcR2XIhyn1DSKCSOB` were retrieved from Stripe and each had
+  `livemode=false`; the intent succeeded for 1,988 cents.
+- Stripe event `evt_1UTPdTJMcR2XIhynWxqEAnn5` (`checkout.session.completed`)
+  arrived through the CLI forwarder and received HTTP 200. It changed the saved
+  application to Paid/Completed and queued its result before return-page
+  reconciliation. The customer-only response then exposed the unchanged result.
+  The in-app browser already had staff access, so payment gating was asserted
+  with a separate customer session; browser return/reload verified Paid/Completed
+  and the rendered degree/reasoning. No UI layout changed in this task.
+- Two additional local signed replays of that actual event returned 200 without
+  adding a payment, callback audit or email. These replays were test-generated,
+  not extra Stripe deliveries. Signed negative variants for amount, currency,
+  client reference and application ownership were rejected (400/409); bad
+  signatures and live events were rejected (400). Paid checkout returned 409.
+- Confirmation `01a1649d-1052-71ba-8169-49663d5a67d9` and result
+  `01a1649f-3f07-703e-a078-79c4a475a573` each sent once, only to
+  `errplusone@gmail.com`, with no CC/BCC. Resend reports both as `delivered`.
+  Their IDs/result URLs match this case; the result email contains its saved
+  degree mapping. Delivery means recipient-server acceptance, not inbox/open proof.
+- Timing (UTC): click 17:18:37.595; callback audit 17:18:39.576;
+  result email queued 17:18:40.015 and sent 17:18:40.498; return reconciliation
+  17:18:43.247. Click-to-callback was 1.98 seconds; callback-to-send 0.92 seconds.
+  These are one-run observations, not performance guarantees.
+- Targeted regression: 91 tests passed across payment-mode guards, callback
+  dispatch, cloud containment, customer result/email gates and delivery retries.
+  TypeScript and whitespace checks passed. No production build was run.
+
+Private ignored evidence is in `.local/preeval-stripe/2026-10-22/`: synthetic PDF,
+pre-payment snapshot, original Stripe event, payment/replay assertions, timing,
+Resend receipts and screenshots. The application/test payment are retained.
+The result URL is
+`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1b79980c-8edf-465c-a68e-1d5c96c30610`.
+This completes the requested local test-card path. Alipay, asynchronous bank flows,
+refunds and hosted webhook delivery were not exercised in this run. Production
+records, the accepted AI model/prompt and production recipient policy are unchanged.
+
+### CRM payment-verification follow-up
+
+Open CRM > Test, select `AET Stripe 20261022 Test`, then Payment. The staff API
+returns only a boolean verification capability, derived from the same Stripe
+configuration guard used by reconciliation. With the preview test opt-in and a
+valid test-key configuration, Verify payment is enabled and the helper explains
+that it checks status without creating a charge. Disabled or missing configuration
+keeps the button disabled and displays an unavailable explanation. Formal payment
+preview restrictions remain unchanged.
+
+On October 22, the in-app desktop (1280px) and mobile (390px) checks passed after
+the owner restarted 3022. Clicking Verify payment locked the controls while busy,
+then displayed "Payment status checked." The existing USD 19.88 payment stayed
+Paid, and Activity still showed one send attempt for each confirmation/result.
+No new payment was made. The follow-up passed 92 targeted regression tests and
+source TypeScript checks; the default type check encountered a malformed generated
+Next validator, so source checking used a temporary configuration excluding `.next`.
+The generated-file issue was subsequently repaired on October 22 by triggering
+Next's existing route watcher. The full `pnpm typecheck --incremental false` then
+passed with the unchanged repository configuration and generated types included.
+
+References: [Stripe test cards](https://docs.stripe.com/testing) and
+[local webhook forwarding/signature verification](https://docs.stripe.com/webhooks).
+
 ## October 22 full customer journey acceptance
 
 The owner accepted the existing 3/4 full-match benchmark and authorized a
@@ -71,9 +173,10 @@ The synthetic application and Dropbox file remain available for owner review.
 
 The result is at
 `http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1a25c57d-194c-4c53-9500-b1623886f6e7`.
-Email links require this local server and are not a public deployment. Stripe
-checkout/webhook and hosted Vercel execution remain separate acceptance work;
-this run validates the paid release gate using a fixture, not actual payment.
+Email links require this local server and are not a public deployment. This earlier
+run validates the paid release gate using a fixture; the separate Stripe test run
+above subsequently verified actual checkout/callbacks. Hosted Vercel execution
+remains separate acceptance work.
 The production recipient strategy and deployment cutover remain unchanged.
 
 ## October 21 refinement: US equivalency and physical-page evidence
@@ -97,10 +200,10 @@ migration. The existing AET App remains operational.
 The current `aet-website-2026-dev` preview on **3022** connects directly to the
 existing cloud Supabase project using restricted private preview schemas.
 **Docker is not required.** The owner already runs the Next development server.
-Do not start the local database, Stripe listener or older combined email/payment
-worker for this mode.
-The older pilot payment and email-worker external-service guards remain in
-place. GPT analysis has its own explicit switch and runs inside the existing Next service. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
+Do not start the local database or older combined email/payment worker for this mode.
+The Stripe listener is only needed during an explicitly enabled local Stripe
+test, as described above. The older formal-payment and combined-worker guards
+remain in place; pre-evaluation has its own test-only opt-in. GPT analysis has its own explicit switch and runs inside the existing Next service. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
 share the Status/CRM storage integration. Pre-evaluation mail is now opt-in through `PREEVAL_EMAIL_ENABLED=true` and requires
 a valid application ID in cloud preview. Submission, authorized reads and the
 managed AI scheduler dispatch only that application's eligible mail to
@@ -453,9 +556,9 @@ Use `.env.example` as the variable reference; secrets belong only in the ignored
 `errplusone@gmail.com`. AI configuration now follows the direct GPT section above. Reuse the configured local database and test services without
 copying secrets into documentation. This guide and its service acceptance require
 `PREEVAL_DATABASE_MODE=local` and the isolated local database on port 55422.
-A separately configured `cloud-preview` mode retains the Stripe/combined-worker
-guards and uses different business tables; Dropbox, GPT and scoped mail have
-independent opt-in switches. Do not run these local fixture scripts against it.
+A separately configured `cloud-preview` mode uses different business tables and
+retains formal-payment/combined-worker guards. Pre-evaluation Stripe tests,
+Dropbox, GPT and scoped mail have independent opt-in switches. Do not run these local fixture scripts against it.
 Do not overwrite another session's environment to switch modes. The local service
 pilot rejects remote database URLs, remote origins, live Stripe keys/events and
 Dropbox roots outside the named test folder.
