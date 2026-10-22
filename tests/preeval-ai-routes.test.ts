@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-const m = vi.hoisted(() => ({ schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn() }));
+const m = vi.hoisted(() => ({ schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn() }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/server', async original => ({ ...await original<typeof import('next/server')>(), after: m.after }));
 vi.mock('../lib/preeval/ai-scheduler', () => ({ scheduleAI: m.schedule }));
@@ -7,7 +7,7 @@ vi.mock('../lib/preeval/ai-jobs', () => ({ completeUploads: m.complete, retryAna
 vi.mock('../lib/preeval/config', () => ({ configuration: () => ({}), required: () => '' }));
 vi.mock('../lib/preeval/db', () => ({ db: () => m.query, table: (name: string) => name }));
 vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, consumeLink: vi.fn(), sessionCookie: () => ({ name: 'test', value: 'test' }), sameOrigin: vi.fn(), limit: vi.fn(), hash: vi.fn(), COOKIE: 'test' }));
-vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), flushEmails: vi.fn() }));
+vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), deliverApplicationEmails: m.mail }));
 vi.mock('../lib/preeval/service', () => ({ submit: m.submit, application: m.application, addFile: vi.fn(), staffAction: m.staff }));
 vi.mock('../lib/preeval/payments', () => ({ checkout: vi.fn(), reconcile: vi.fn(), handleStripeEvent: vi.fn(), stripeClient: vi.fn(), cancelApplication: vi.fn() }));
 vi.mock('../lib/evaluation-application/email', () => ({ flushFormalEmails: vi.fn() }));
@@ -38,6 +38,7 @@ describe('application dispatch boundaries', () => {
   it('schedules a successfully saved submission', async () => {
     expect((await call('POST', 'applications')).status).toBe(201);
     expect(m.schedule).toHaveBeenCalledWith(id);
+    await m.after.mock.calls[0][0](); expect(m.mail).toHaveBeenCalledWith(id);
     expect(m.submit.mock.invocationCallOrder[0]).toBeLessThan(m.schedule.mock.invocationCallOrder[0]);
   });
   it('does not schedule a rejected submission', async () => {
@@ -64,11 +65,12 @@ describe('application dispatch boundaries', () => {
     m.application.mockResolvedValue({ ai_status });
     expect((await call('GET', `applications/${id}`)).status).toBe(200);
     expect(m.schedule).not.toHaveBeenCalled();
+    await m.after.mock.calls[0][0](); expect(m.mail).toHaveBeenCalledWith(id);
   });
   it.each(['', '/uploads-complete', '/retry-ai', '/staff'])('never dispatches for unauthorized access %s', async suffix => {
     m.authorize.mockRejectedValue(new AppError('unauthorized', 401));
     expect((await call(suffix ? 'POST' : 'GET', `applications/${id}${suffix}`, { action: 'retry_ai' })).status).toBe(401);
-    expect(m.schedule).not.toHaveBeenCalled(); expect(m.complete).not.toHaveBeenCalled(); expect(m.retry).not.toHaveBeenCalled();
+    expect(m.schedule).not.toHaveBeenCalled(); expect(m.complete).not.toHaveBeenCalled(); expect(m.retry).not.toHaveBeenCalled(); expect(m.after).not.toHaveBeenCalled();
   });
   it('requires the staff grant before regeneration', async () => {
     m.authorize.mockResolvedValueOnce({ role: 'customer' }).mockRejectedValueOnce(new AppError('forbidden', 403));

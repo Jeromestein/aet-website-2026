@@ -1,5 +1,81 @@
 # Pre-evaluation local pilot
 
+## October 22 full customer journey acceptance
+
+The owner accepted the existing 3/4 full-match benchmark and authorized a
+synthetic browser submission, Dropbox upload, real GPT analysis and test emails
+only to `errplusone@gmail.com`. The checklist was updated first. The owner
+restarted the existing 3022 Next server after the ignored email configuration
+changed; no second worker or development server was started.
+
+The run exposed disabled pre-evaluation delivery in cloud preview. The fix adds
+`PREEVAL_EMAIL_ENABLED` (false by default in `.env.example`) and a UUID-scoped
+sender. It filters both eligible and interrupted deliveries by application and
+configured recipient; unscoped cloud draining remains disabled. Submission,
+authorized reads, AI completion, staff actions and applicable payment callbacks
+schedule delivery through Next `after()`. A send failure leaves the saved
+application/result intact and preserves the existing retry/idempotency policy.
+Customer copy now distinguishes a visible completed result from a result still
+withheld for payment, in all three supported languages.
+
+### Observed results
+
+- One synthetic application: `1a25c57d-194c-4c53-9500-b1623886f6e7`, named
+  `AET Journey 20261022 Test`. Its two-page PDF is clearly labeled synthetic.
+- Data resides in the restricted Supabase preview schemas, not a local Docker
+  database. Runtime role `aet_preview_runtime` has no INSERT on the production
+  application table; no production or historical records were modified.
+- Dropbox saved the file under
+  `/Team Files/WebsitesDev/Miami/AET Journey 20261022 Test - 1a25c57d-194c-4c53-9500-b1623886f6e7/`.
+  One 1,805-byte file is ready. An authenticated customer download has the exact
+  SHA-256 of the original; the AI run records that same hash, Dropbox revision,
+  two pages and `basis=documents`.
+- One automatic `gpt-6.1-sol` / `preeval-direct-pages-v3` call returned a
+  hypothetical Bachelor of Science in Computer Science and explicitly noted the
+  document is synthetic. All six saved evidence references match the authored
+  page locations. This functional fixture does not extend the accuracy benchmark.
+- Submission was saved at 16:49:36.428 UTC; upload audit at 16:49:40.006;
+  AI run at 16:49:40.683–16:49:53.010. Upload took 3.58 seconds from save;
+  the persisted AI run took 12.33 seconds, and submission-to-result was 16.58.
+  Usage: 1,166 input + 431 output = 1,597 tokens. These are single-run timings.
+- A fresh customer-only HTTP session, obtained using the Application ID lookup,
+  could download the PDF but received `result=null` before payment. Anonymous
+  application access returned 401. No result email existed while unpaid.
+  The in-app browser already had staff access, which intentionally permits
+  unpaid result review; customer restrictions were therefore checked separately.
+- An exact-ID, guarded synthetic paid-state transition recorded
+  `test.payment_fixture` with `noCharge=true`. Normal `publishIfReady` then
+  completed the application and queued result delivery. No Stripe session,
+  charge or webhook was created or simulated as a provider event.
+- Confirmation receipt `01a16484-a709-7d6c-9fef-8fba9d721f0a` and result receipt
+  `01a16486-034f-7425-acd3-c4f0eabd6bec` both report Resend `delivered`.
+  Each has one attempt, only `errplusone@gmail.com`, no CC/BCC, the correct
+  Application ID and a localhost result link. The result email matches the
+  stored result. Mail-server acceptance is not inbox/open confirmation.
+- Repeated upload completion, publication and authorized reads retained exactly
+  one analysis and one email of each kind. Reload and reopening the result link
+  preserved the output. CRM Test search/detail shows the same applicant,
+  Pre-Evaluation service, one document, Paid/Completed and the AI result.
+- In-app desktop 1280px and mobile 390px result checks passed, including the
+  corrected completed-state copy, full degree title, file row and footer; mobile
+  document width equals viewport width. The full automated suite passed 498
+  tests; TypeScript and whitespace checks passed. No production build was run.
+
+### Retained evidence and remaining boundaries
+
+Private evidence lives in ignored `.local/preeval-journey/2026-10-22/`: original
+and downloaded PDFs, fixture, database/run snapshot, customer unpaid/paid payloads,
+verification assertions, two rendered test emails, Resend receipts and browser
+screenshots. Scripts there are acceptance artifacts, not a production worker.
+The synthetic application and Dropbox file remain available for owner review.
+
+The result is at
+`http://localhost:3022/zh/degree-equivalency-tool/application/success?applicationId=1a25c57d-194c-4c53-9500-b1623886f6e7`.
+Email links require this local server and are not a public deployment. Stripe
+checkout/webhook and hosted Vercel execution remain separate acceptance work;
+this run validates the paid release gate using a fixture, not actual payment.
+The production recipient strategy and deployment cutover remain unchanged.
+
 ## October 21 refinement: US equivalency and physical-page evidence
 
 The current `preeval-direct-pages-v3` prompt returns structured US degree, field
@@ -16,7 +92,7 @@ Implemented October 2, 2026 in `aet-website-2026`, on `dev`. This is the complet
 local pre-evaluation workflow, not a production cutover or formal-evaluation
 migration. The existing AET App remains operational.
 
-## Current cloud preview — updated October 20, 2026
+## Current cloud preview — updated October 22, 2026
 
 The current `aet-website-2026-dev` preview on **3022** connects directly to the
 existing cloud Supabase project using restricted private preview schemas.
@@ -25,8 +101,11 @@ Do not start the local database, Stripe listener or older combined email/payment
 worker for this mode.
 The older pilot payment and email-worker external-service guards remain in
 place. GPT analysis has its own explicit switch and runs inside the existing Next service. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
-share the Status/CRM storage integration. The newer formal intake has its own
-confirmation sender and recorded test delivery; mail is not globally disabled.
+share the Status/CRM storage integration. Pre-evaluation mail is now opt-in through `PREEVAL_EMAIL_ENABLED=true` and requires
+a valid application ID in cloud preview. Submission, authorized reads and the
+managed AI scheduler dispatch only that application's eligible mail to
+`PREEVAL_TEST_EMAIL`; historical recipients and unscoped queue drains are excluded.
+The newer formal intake retains its own confirmation sender.
 Employee migration and staff cutover remain disabled.
 
 See [the active configuration and acceptance procedure](staff-auth.md#cloud-business-preview).
@@ -65,8 +144,11 @@ due or interrupted jobs. The customer result page polls while visible.
 No AI request runs if the switch is disabled or the key is absent. Only the
 `openai` pipeline is eligible; historical `legacy` jobs are not automatically
 processed. An explicit staff retry opts an old pilot application into this pipeline.
-The processor does not invoke Stripe or dispatch email. The old email/payment
-worker remains separate and disabled in the current cloud preview.
+The analysis processor itself does not invoke Stripe or send mail. After it
+returns, the Next scheduler attempts application-scoped delivery; failures remain
+in the outbox and cannot undo a saved analysis. Authorized reads also retry due
+mail within the existing cooldown and attempt limits. The old combined
+email/payment worker remains disabled in cloud preview.
 
 The CLI remains an optional diagnostic tool, not a prerequisite for the website:
 
@@ -165,9 +247,9 @@ node --env-file=.env.local --import ./scripts/register-server-only.mjs --import 
   other failures require customer/staff retry. Customer retries are rate limited.
   This prevents duplicate active jobs, but does not guarantee exactly-once provider
   billing after an ambiguous network failure.
-- Result publication still requires confirmed payment. AI completion cannot
-  dispatch emails; it may enqueue result delivery under the existing rules.
-  An email enqueue failure cannot erase a completed assessment.
+- Result publication still requires confirmed payment. AI completion may enqueue
+  result delivery, and its managed scheduler then attempts scoped email sending.
+  An email enqueue or dispatch failure cannot erase a completed assessment.
 
 ### Verification
 
@@ -371,8 +453,9 @@ Use `.env.example` as the variable reference; secrets belong only in the ignored
 `errplusone@gmail.com`. AI configuration now follows the direct GPT section above. Reuse the configured local database and test services without
 copying secrets into documentation. This guide and its service acceptance require
 `PREEVAL_DATABASE_MODE=local` and the isolated local database on port 55422.
-A separately configured `cloud-preview` mode disables external services and uses
-different business tables; do not run these local fixture scripts against it.
+A separately configured `cloud-preview` mode retains the Stripe/combined-worker
+guards and uses different business tables; Dropbox, GPT and scoped mail have
+independent opt-in switches. Do not run these local fixture scripts against it.
 Do not overwrite another session's environment to switch modes. The local service
 pilot rejects remote database URLs, remote origins, live Stripe keys/events and
 Dropbox roots outside the named test folder.
@@ -480,7 +563,8 @@ cannot be forced through the ordinary retry control.
 Staff use account/password login only. The administrator email template and
 sender have been removed; historical administrator queue entries are rejected
 before rendering or delivery. Customer notifications remain test-contained;
-the cloud-preview worker is still disabled. The historical `access_token` column
+the cloud-preview combined worker is still disabled, while the website can send
+application-scoped mail with its explicit opt-in. The historical `access_token` column
 is unused; no cloud schema or stored records were modified for this removal.
 
 Apply `20261020165103_email_delivery_records.sql` through the local migration

@@ -14,7 +14,7 @@ import {
 } from "@/lib/preeval/auth";
 import {
   applicationEmail,
-  flushEmails,
+  deliverApplicationEmails,
 } from "@/lib/preeval/email";
 import {
   submit,
@@ -95,6 +95,11 @@ async function handler(
       await handleStripeEvent(event);
       await handleFormalEvent(event);
       after(flushFormalEmails);
+      if (event.type.startsWith("checkout.session.")) {
+        const metadata = (event.data.object as { metadata?: Record<string, string> }).metadata;
+        if (metadata?.pilot === "aet-2026-local" && z.uuid().safeParse(metadata.applicationId).success)
+          after(() => deliverApplicationEmails(metadata.applicationId));
+      }
       return response({ received: true });
     }
     const isFileUpload =
@@ -122,7 +127,7 @@ async function handler(
       );
       res.cookies.set(sessionCookie(result.token));
       await scheduleAI(result.app.id);
-      after(flushEmails);
+      after(() => deliverApplicationEmails(result.app.id));
       return res;
     }
     if (endpoint === "access/request" && isPost) {
@@ -134,9 +139,11 @@ async function handler(
         await limit("access:" + body.applicationId, 3, 600);
         const [app] =
           await db()`select * from ${table("preeval.applications")} where id=${body.applicationId}`;
-        if (app) await applicationEmail(app, "access");
+        if (app) {
+          await applicationEmail(app, "access");
+          after(() => deliverApplicationEmails(app.id));
+        }
       }
-      after(flushEmails);
       return response({ ok: true });
     }
     if (endpoint === "access/consume" && isPost) {
@@ -184,6 +191,7 @@ async function handler(
       if (path.length === 2 && !isPost) {
         const app = await application(id, current.role === "admin");
         if (['queued', 'running'].includes(app.ai_status)) await scheduleAI(id);
+        after(() => deliverApplicationEmails(id));
         return response(app);
       }
       if (path[2] === "uploads-complete" && isPost) {
@@ -200,7 +208,7 @@ async function handler(
       if (path[2] === "reconcile" && isPost) {
         await limit("reconcile:" + id, 20, 600);
         await reconcile(id);
-        after(flushEmails);
+        after(() => deliverApplicationEmails(id));
         return response({ ok: true });
       }
       if (path[2] === "cancel" && isPost) {
@@ -224,7 +232,7 @@ async function handler(
         await authorize();
         await staffAction(id, body, current.email);
         if (body.action === "retry_ai") await scheduleAI(id);
-        after(flushEmails);
+        after(() => deliverApplicationEmails(id));
         return response({ ok: true });
       }
     }

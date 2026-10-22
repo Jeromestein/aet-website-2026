@@ -1,5 +1,44 @@
 # AET 2026 Website and App Migration Checklist
 
+## Accepted AI baseline and full customer journey — October 22, 2026
+
+The owner accepts the current four-case result (three full reference matches and
+one partial mapping) as the pre-evaluation baseline. Preserve the fourth-case
+difference; additional degree-mapping policy work is deferred, not a release gate
+for this local acceptance. The accepted model and v3 prompt remain unchanged.
+
+- [x] Record owner acceptance and the end-to-end verification plan before testing.
+- [x] Verify the existing 3022 server and restricted cloud preview schemas; the
+  runtime role cannot insert production applications. Route all test mail only
+  to `errplusone@gmail.com` with an explicit, application-scoped sending switch.
+- [x] Submit one synthetic application and two-page PDF through the in-app browser.
+  Verify the canonical Dropbox `name - application ID` folder and one saved file.
+- [x] Download through the authorized customer endpoint and compare SHA-256/bytes.
+  The automatic v3 GPT run read those same Dropbox revision bytes, saved a result
+  and six evidence references on the correct two physical pages. No OCR or worker terminal.
+- [x] Verify running/completed states, customer-only unpaid result withholding,
+  unauthorized denial, paid result visibility, reload persistence and CRM Test
+  list/detail. Desktop (1280px) and mobile (390px) result-page checks passed.
+- [x] Release using an audited synthetic paid-state fixture without a charge.
+  Confirmation and result emails each sent once to the requested address; both
+  Resend receipts report `delivered`, with the correct ID and working result URL.
+- [x] Repeat upload completion, result publication and reads without another AI run
+  or duplicate email. Record timings, receipts, limitations and retained artifacts.
+
+Application `1a25c57d-194c-4c53-9500-b1623886f6e7`: upload saved 3.58 seconds after
+submission; AI run 12.33 seconds; result saved 16.58 seconds after submission.
+There was one real OpenAI request (1,597 tokens), one Dropbox file and two emails.
+Full regression suite: 498 tests passed; TypeScript and whitespace checks passed.
+See [full journey evidence and boundaries](pre-evaluation-local.md#october-22-full-customer-journey-acceptance).
+
+No historical applicant files, production records, model tuning, deployment or
+push were part of this run. Stripe checkout/webhook was not exercised: restricted
+cloud preview still blocks that integration. The paid fixture verifies release
+behavior, not payment processing. `delivered` confirms recipient mail-server
+acceptance, not inbox placement or that the owner opened the message. The test
+case is retained in preview; private artifacts are ignored under
+`.local/preeval-journey/2026-10-22/`.
+
 ## Degree equivalency and evidence-page refinement — October 21, 2026
 
 Improve the unchanged-model baseline without reading reference answers during
@@ -28,7 +67,7 @@ were absent from the 30 reviewed v3 evidence items. Total time was 57.40 seconds
 repeatable speed or general accuracy. Private comparison:
 `.local/preeval-benchmark/fce-v1/runs/2026-10-21T17-47-55-116Z/comparison.md`.
 
-Follow-up identified by this comparison:
+Optional follow-up, deferred by owner acceptance on October 22:
 - [ ] Establish staff-approved US degree/field/concentration normalization policy
   and validate it on independent examples; do not hardcode benchmark answers.
 

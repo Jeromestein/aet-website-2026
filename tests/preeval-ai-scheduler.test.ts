@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-const m = vi.hoisted(() => ({ after: vi.fn(), due: vi.fn(), process: vi.fn() }));
+const m = vi.hoisted(() => ({ after: vi.fn(), due: vi.fn(), process: vi.fn(), mail: vi.fn() }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/server', () => ({ after: m.after }));
 vi.mock('../lib/preeval/ai-jobs', () => ({ dueAIJobs: m.due }));
 vi.mock('../lib/preeval/ai', () => ({ processAI: m.process }));
+vi.mock('../lib/preeval/email', () => ({ deliverApplicationEmails: m.mail }));
 import { scheduleAI, recoverAIJobs } from '../lib/preeval/ai-scheduler';
 import { GET } from '../app/api/internal/pre-evaluation/process/route';
 beforeEach(() => {
@@ -39,6 +40,8 @@ describe('request-triggered AI execution', () => {
     await Promise.resolve(); expect(completed).toBe(false);
     expect(m.process).toHaveBeenCalledWith('job-1');
     finish(true); await pending; expect(completed).toBe(true);
+    expect(m.mail).toHaveBeenCalledWith("job-1");
+    expect(m.process.mock.invocationCallOrder[0]).toBeLessThan(m.mail.mock.invocationCallOrder[0]);
   });
   it('does not fail a saved submission when eligibility or dispatch fails', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});

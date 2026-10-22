@@ -1,5 +1,26 @@
 # AET Implementation Status
 
+## 2026-10-22 — Verify pre-evaluation upload, GPT and notification journey
+
+- Kept the owner-accepted model/v3 benchmark unchanged and updated the checklist
+  before testing. Used one clearly synthetic PDF/application in restricted cloud
+  preview; all live test mail went only to `errplusone@gmail.com`.
+- Added opt-in application-scoped Resend dispatch to the existing Next request/AI
+  lifecycle. Recipient/scope filters protect historical queue entries; notification
+  outages leave saved applications/results intact. No separate worker is required.
+- Real browser submission, Dropbox save/download byte equality and automatic GPT
+  analysis passed. One two-page document, one 12.33-second AI run, six correct
+  evidence page references and 1,597 tokens; submission-to-result took 16.58 seconds.
+- Verified customer-only unpaid withholding, anonymous denial and paid publication
+  with an audited synthetic paid-state fixture. Confirmation/result emails each
+  sent once and both provider receipts are `delivered`; repeated reads/completion
+  did not duplicate analysis or mail. Stripe checkout/webhook was not exercised.
+- Result-link reload, CRM Test list/detail, desktop 1280px and mobile 390px passed.
+  Corrected completed-result copy that still told paid customers to wait for payment.
+  Full suite: 498 passed; TypeScript and diff checks passed; no build/deploy/push.
+- Retained synthetic case `1a25c57d-194c-4c53-9500-b1623886f6e7` for inspection.
+  See [journey evidence and limits](pre-evaluation-local.md#october-22-full-customer-journey-acceptance).
+
 ## 2026-10-22 — Collapsible CRM sidebar
 
 - Replaced the Visit AET website trailing arrow with a globe icon and theme-orange

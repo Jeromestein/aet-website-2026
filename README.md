@@ -337,7 +337,11 @@ GPT analysis now runs automatically in the Next service after an eligible reques
 using a server-only key. No second local terminal is required. An optional daily
 recovery endpoint fits Hobby scheduling limits; hosted acceptance and commercial
 plan eligibility remain separate. The older payment and email-worker guards stay
-in place. See [AI setup and acceptance](docs/pre-evaluation-local.md#direct-gpt-analysis--october-20-2026).
+in place. Pre-evaluation notifications can now run in that same request lifecycle:
+set `PREEVAL_EMAIL_ENABLED=true` only with the intended `PREEVAL_TEST_EMAIL`.
+Cloud preview sends are scoped to one authorized application; it does not drain
+historical mail globally. See [AI setup and acceptance](docs/pre-evaluation-local.md#direct-gpt-analysis--october-20-2026)
+and [full journey verification](docs/pre-evaluation-local.md#october-22-full-customer-journey-acceptance).
 Both employee migration/cutover switches stay off. The old AET App
 remains the production system until a separately authorized cutover. See
 [cloud preview boundaries](docs/staff-auth.md#cloud-business-preview).

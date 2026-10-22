@@ -2,6 +2,7 @@ import 'server-only';
 import { after } from 'next/server';
 import { dueAIJobs } from './ai-jobs';
 import { processAI } from './ai';
+import { deliverApplicationEmails } from './email';
 
 export function automaticAIEnabled() {
   return process.env.PREEVAL_AI_ENABLED === 'true' && Boolean(process.env.OPENAI_API_KEY?.trim());
@@ -14,7 +15,7 @@ export async function scheduleAI(applicationId: string) {
   try {
     if (!(await dueAIJobs(1, applicationId)).length) return;
     after(async () => {
-      try { await processAI(applicationId); }
+      try { await processAI(applicationId); await deliverApplicationEmails(applicationId); }
       catch { console.error('Pre-evaluation AI dispatch failed; persisted job remains recoverable.'); }
     });
   } catch {
@@ -28,7 +29,11 @@ export async function scheduleAI(applicationId: string) {
 export async function recoverAIJobs() {
   if (!automaticAIEnabled()) return { attempted: 0, dispatchErrors: 0 };
   const ids = await dueAIJobs(3);
-  const results = await Promise.allSettled(ids.map(id => processAI(id)));
+  const results = await Promise.allSettled(ids.map(async id => {
+    const processed = await processAI(id);
+    await deliverApplicationEmails(id);
+    return processed;
+  }));
   return {
     attempted: results.filter(result => result.status === 'fulfilled' && result.value).length,
     dispatchErrors: results.filter(result => result.status === 'rejected').length,

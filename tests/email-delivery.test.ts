@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { deliveryHash, EmailReviewRequired, type OutgoingEmail } from "../lib/email/delivery";
 
 const m = vi.hoisted(() => ({ query: vi.fn(), cloud: false, recipient: "approved@example.invalid" }));
@@ -14,7 +14,7 @@ vi.mock("../lib/preeval/config", () => ({
   required: (key: string) => ({ RESEND_DEFAULT_FROM_NAME: "AET", RESEND_DEFAULT_FROM_ADDRESS: "sender@example.invalid" })[key] || "test-key",
 }));
 vi.mock("../lib/preeval/auth", () => ({ hash: (value: string) => "hashed-" + value }));
-import { applicationEmail, enqueueEmail, flushEmails, renderQueuedEmail } from "../lib/preeval/email";
+import { applicationEmail, enqueueEmail, flushEmails, renderQueuedEmail, deliverApplicationEmails } from "../lib/preeval/email";
 
 const app = {
   id: "264b791e-b806-4b52-b79e-5229b7224df0", first_name: "Current applicant", last_name: "Test",
@@ -34,7 +34,8 @@ function arrange(overrides: Record<string, unknown> = {}) {
     return [];
   });
 }
-beforeEach(() => { vi.resetAllMocks(); m.cloud = false; arrange(); });
+beforeEach(() => { vi.resetAllMocks(); m.cloud = false; vi.stubEnv("PREEVAL_EMAIL_ENABLED", "false"); arrange(); });
+afterEach(() => vi.unstubAllEnvs());
 
 describe("metadata-only delivery queue", () => {
   it("queues a result version without rendering or storing a message", async () => {
@@ -100,6 +101,37 @@ describe("delivery retries", () => {
     await flushEmails(send);
     expect(m.query).not.toHaveBeenCalled();
     expect(send).not.toHaveBeenCalled();
+  });
+  it.each([undefined, "", "not-an-application-id"])("cannot drain the cloud queue without a valid scope: %s", async id => {
+    m.cloud = true; vi.stubEnv("PREEVAL_EMAIL_ENABLED", "true");
+    const send = vi.fn(); await flushEmails(send, id);
+    expect(m.query).not.toHaveBeenCalled(); expect(send).not.toHaveBeenCalled();
+  });
+  it("keeps a scoped cloud send disabled without opt-in", async () => {
+    m.cloud = true;
+    await flushEmails(vi.fn(), app.id);
+    expect(m.query).not.toHaveBeenCalled();
+  });
+  it("scopes cloud claims and stale-lease recovery to the application and recipient", async () => {
+    m.cloud = true; vi.stubEnv("PREEVAL_EMAIL_ENABLED", "true");
+    const base = m.query.getMockImplementation()!;
+    m.query.mockImplementation((query, values) => query.includes("set state='sending'") ? [row] : base(query, values));
+    const send = vi.fn().mockResolvedValue("provider-scoped");
+    await flushEmails(send, app.id);
+    expect(send).toHaveBeenCalledTimes(1);
+    const claims = m.query.mock.calls.filter(([query]) => query.includes("set state='sending'") || query.includes("error='interrupted'"));
+    expect(claims).toHaveLength(2);
+    for (const [query, values] of claims) {
+      expect(query).toContain("application_id="); expect(query).toContain("recipient=");
+      expect(values).toContain(app.id); expect(values).toContain(m.recipient);
+    }
+  });
+  it("contains database dispatch failures without invalidating saved work", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    m.query.mockRejectedValue(new Error("private connection details"));
+    await expect(deliverApplicationEmails(app.id)).resolves.toBeUndefined();
+    expect(JSON.stringify(log.mock.calls)).not.toContain("private connection");
+    log.mockRestore();
   });
   it("sends rendered content but only persists its digest and delivery result", async () => {
     const base = m.query.getMockImplementation()!;

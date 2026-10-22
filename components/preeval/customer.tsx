@@ -510,7 +510,7 @@ export function ApplicationResult({
       {app.status !== 'cancelled' && <section className={s.card} aria-live="polite">
         <h2>{t.analysisTitle}</h2>
         <p>{app.uploads_pending ? t.analysisUploads : app.ai_status === 'failed' ? (app.document_issue ? t.analysisDocuments : t.analysisFailed) :
-          app.ai_status === 'running' ? t.analysisRunning : app.ai_status === 'completed' ? t.analysisComplete : t.analysisQueued}</p>
+          app.ai_status === 'running' ? t.analysisRunning : app.ai_status === 'completed' ? (app.result ? t.analysisResultReady : t.analysisComplete) : t.analysisQueued}</p>
         {app.uploads_pending && <button className={s.secondary} disabled={!!busy} onClick={() => action('uploads-complete')}>{t.finishUploads}</button>}
         {!app.uploads_pending && app.ai_status === 'failed' && <button className={s.secondary} disabled={!!busy} onClick={() => action('retry-ai')}>{t.retryAnalysis}</button>}
       </section>}

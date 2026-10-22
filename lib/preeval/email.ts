@@ -60,15 +60,26 @@ const resendTransport: EmailTransport = async mail => {
   if (error || !data) throw new Error("delivery_failed");
   return data.id;
 };
-export async function flushEmails(transport: EmailTransport = resendTransport) {
-  if (configuration().cloudPreview) return;
+/** Cloud preview only dispatches an explicitly enabled, application-scoped batch. */
+export function emailDispatchEnabled(applicationId?: string) {
+  return !configuration().cloudPreview || (
+    process.env.PREEVAL_EMAIL_ENABLED === "true" &&
+    typeof applicationId === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(applicationId)
+  );
+}
+export async function flushEmails(transport: EmailTransport = resendTransport, applicationId?: string) {
+  if (!emailDispatchEnabled(applicationId)) return;
+  const scope = applicationId || null;
+  const recipient = configuration().recipient;
   const sql = db(), lease = randomUUID();
   await sql`update ${table("preeval.emails")} set state='failed',error='interrupted',locked_at=null,lease=null
-    where state='sending' and locked_at<now()-interval '3 minutes'`;
+    where state='sending' and locked_at<now()-interval '3 minutes'
+      and (${scope}::uuid is null or application_id=${scope}::uuid) and recipient=${recipient}`;
   const rows = await sql`update ${table("preeval.emails")} set state='sending',locked_at=now(),lease=${lease},
     attempts=attempts+1,first_attempt_at=coalesce(first_attempt_at,now()) where id in
     (select id from ${table("preeval.emails")} where
       state in ('queued','failed')
+      and (${scope}::uuid is null or application_id=${scope}::uuid) and recipient=${recipient}
       and attempts<5 and available_at<=now()
       and (first_attempt_at is null or first_attempt_at>now()-interval '23 hours')
       order by created_at limit 5 for update skip locked) returning *`;
@@ -92,4 +103,10 @@ export async function flushEmails(transport: EmailTransport = resendTransport) {
         locked_at=null,lease=null where id=${row.id} and lease=${lease}`;
     }
   }
+}
+
+/** Notification outages must not change a successful save or AI result. */
+export async function deliverApplicationEmails(applicationId: string) {
+  try { await flushEmails(undefined, applicationId); }
+  catch { console.error("Pre-evaluation email dispatch failed; saved delivery remains recoverable."); }
 }
