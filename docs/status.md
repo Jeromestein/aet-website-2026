@@ -1,5 +1,16 @@
 # AET Implementation Status
 
+## 2026-10-22 — Release the standalone payment-expiry Cron
+
+- Added the isolated 48-hour submitted_at worker and Production-only guard.
+- Restricted database and Cron credentials were saved in Vercel Production.
+- Kept dev-only application routes and other uncommitted changes outside this release.
+- The standalone release passed 18 Cron tests, full TypeScript and whitespace checks;
+  the existing dev checkout passed 38 related regression tests.
+- Read-only preflight found 77 eligible applications. The old GitHub scheduler
+  remains disabled. Hosted activation must be verified against this release.
+
+
 ## 2026-10-19 — Show Stripe before office selection
 
 - Show Stripe on the initial Payment form whenever Stripe is enabled and at
