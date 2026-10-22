@@ -1,5 +1,29 @@
 # AET Implementation Status
 
+## 2026-10-22 — Deploy and verify the standalone Production expiry Cron
+
+- Production commit `83357c3` was pushed to `MeiyuTech/aet-website-2026/main`.
+  Vercel deployment `CYoB72snSNcHbj96mqnGRhRvCzMC` is Ready and assigned to
+  the production domain. Dev Cron source is committed as `dff8def`.
+- Released only the independent Cron worker, helper, tests, dependencies and
+  schedule on the existing marketing main branch. Other dev application changes
+  remain outside Production; unrelated working changes were preserved.
+- Vercel Cron is Enabled with `/api/internal/customer-status/expire` scheduled
+  daily at 12:00 UTC (Hobby has a one-hour scheduling window). Three required
+  variables are saved for Production, with expiry enabled.
+- Unauthenticated production GET returned 401 with no-store. A Vercel dashboard
+  Run at 18:45:21 UTC returned 200 and logged `expired: 77, batchFull: false`.
+  A second Run at 18:46:09 UTC returned 200 with `expired: 0, batchFull: false`.
+  Read-only before/after checks found 77 eligible transitions, zero remaining
+  eligible rows and no changes to non-target payments, status or submitted_at.
+- Standalone release: 18 tests, full TypeScript and whitespace checks passed.
+  Existing dev checkout: 38 related tests passed. No local production build.
+- The old GitHub workflow is still disabled_inactivity. This verifies hosted
+  manual execution and registration; the next automatic scheduled delivery is
+  not yet observed. Evidence: `/private/tmp/aet-cron-production-schedule.png`.
+
+
+
 ## 2026-10-22 — Verify pre-evaluation upload, GPT and notification journey
 
 - Kept the owner-accepted model/v3 benchmark unchanged and updated the checklist
