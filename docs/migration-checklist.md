@@ -1,6 +1,7 @@
 # AET Migration Checklist
 
-Current plan as of October 22, 2026; local baseline `dev` at `adc6461`.
+Current plan as of October 22, 2026; code baseline `dev` at `adc6461`,
+with hosted Preview acceptance of `5d10cff`.
 Read [status](status.md) for progress, [architecture](migration-architecture.md)
 for system relationships and the [documentation index](README.md) for guides.
 
@@ -20,14 +21,35 @@ the original route inventory live in the [historical checklist](archive/migratio
   into `dev`, preserving payment/refund, stale-write and email-deduplication guards.
 - [x] Pass the recorded combined 778-test / 51-file suite, TypeScript and i18n.
   See [verification scope](status.md#latest-integrated-verification).
+- [x] Confirm Vercel dev Preview `5d10cff` is Ready and inspect desktop form/review,
+  CRM, existing synthetic Status/results, pricing/language and GPA behavior.
+  See [hosted verification scope and remaining limits](archive/preview-acceptance-2026-10-22.md).
+- [x] Synchronize twelve settings only to dev Preview: shared application names,
+  restricted database/origin, Dropbox pilot root, OpenAI/model and explicit
+  AI/mail/Stripe-test opt-ins. Keep cutover disabled. The temporary listener
+  signing secret was subsequently replaced by the permanent dev test endpoint secret.
+- [x] Resolve the hosted pre-evaluation attachment download failure with the
+  required pilot root; both existing and newly uploaded PDFs return 200 with
+  bytes matching their synthetic fixtures.
+- [x] Complete a controlled hosted synthetic journey using API and desktop browser
+  checks: upload, one GPT analysis, USD 19.88 Sandbox payment, saved result,
+  customer/CRM consistency and two delivered emails. Test unpaid access,
+  concurrent Checkout reuse, paid Checkout rejection and callback replay.
+  The real Stripe test event reached the hosted route through a temporary relay;
+  the relay was stopped and its dev-only access revoked.
 - [ ] Verify both recovery fixes in the authorized hosted setup: fail an upload,
   abandon/replace it, finish the batch and obtain one eligible analysis; after
   a saved paid result's publication failure, an authorized read recovers the
   same result without another AI run or duplicate notification.
-- [ ] Configure and verify the intended hosted **test** webhook and signing
-  secret; test amount/ownership checks, replay, cancellation and reconciliation.
-  Local CLI forwarding is not hosted acceptance. Retest paid/unpaid/refunded
-  result visibility and phone/desktop recovery states.
+- [x] Configure permanent direct Stripe **test** webhook delivery and its own
+  signing secret on dev Preview. A new USD 19.88 Sandbox payment reached the
+  hosted handler directly, completed the application and delivered the result
+  email. Customer and CRM views agree. Only the dev alias has a Vercel protection
+  exception; staff login and Stripe signature checks remain enforced. See the
+  [direct webhook acceptance](archive/preview-acceptance-2026-10-22.md#permanent-direct-test-webhook-acceptance).
+- [ ] Complete amount/ownership negative cases, cancellation/refund visibility
+  and phone/desktop recovery checks; normal paid/unpaid, replay and return
+  reconciliation passed in the earlier controlled hosted run.
 - [ ] Verify hosted AI runtime/timeout/recovery limits and deployment eligibility
   before production use. Confirm real-customer recipients, charging and operating
   policy separately; test acceptance does not authorize live transactions.
