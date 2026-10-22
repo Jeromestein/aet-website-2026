@@ -1,4 +1,5 @@
 "use client";
+import { UploadRecovery } from "@/components/documents/upload-recovery";
 import { ApplicationDate } from "@/components/application-date";
 import { countryOptions, countryLabel } from "@/lib/legacy-application/countries";
 import { useEffect, useRef, useState, type FormEvent } from "react";
@@ -469,6 +470,7 @@ export function ApplicationResult({
     } catch (e) {
       setError(errorText(t, (e as Error).message));
     } finally {
+      await load();
       setBusy("");
       uploading.current = false;
     }
@@ -621,6 +623,9 @@ export function ApplicationResult({
             </li>
           ))}
         </ul>
+        <UploadRecovery endpoint={`/api/pre-evaluation/applications/${id}/upload-recovery`}
+          completeEndpoint={`/api/pre-evaluation/applications/${id}/uploads-complete`} revision={app} disabled={!!busy}
+          onBusyChange={value => setBusy(value ? 'recovery' : '')} onChange={() => { setError(''); void load(); }} />
         {app.status !== "cancelled" && (
           <form onSubmit={upload} className={s.form}>
             <label className={s.field}>

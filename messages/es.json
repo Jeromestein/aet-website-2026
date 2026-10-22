@@ -574,6 +574,13 @@
     }
   },
   "documents": {
+    "recoveryTitle": "Cargas sin finalizar",
+    "recoveryHelp": "Vuelva a cargar el archivo original o abandone la carga pendiente antes de elegir otro archivo. Se detendrá ese intento; los archivos guardados se conservarán.",
+    "abandon": "Abandonar carga",
+    "abandonNamed": "Abandonar carga: {name}",
+    "finishBatch": "Finalizar cargas e iniciar evaluación",
+    "recoveryError": "La carga cambió o no se pudo completar la operación. Actualice e inténtelo de nuevo.",
+    "assessmentQueued": "Su evaluación está en la cola.",
     "title": "Subir documentos",
     "eyebrow": "Documentos de la solicitud",
     "accessTitle": "Busque su solicitud",

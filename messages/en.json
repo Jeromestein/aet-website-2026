@@ -574,6 +574,13 @@
     }
   },
   "documents": {
+    "recoveryTitle": "Unfinished uploads",
+    "recoveryHelp": "Retry the original file, or abandon an unfinished upload before selecting its replacement. Abandoning stops that attempt; saved files are kept.",
+    "abandon": "Abandon upload",
+    "abandonNamed": "Abandon upload: {name}",
+    "finishBatch": "Finish uploads and start assessment",
+    "recoveryError": "The upload changed or recovery could not finish. Refresh and try again.",
+    "assessmentQueued": "Your assessment is queued.",
     "title": "Upload Documents",
     "eyebrow": "Application documents",
     "accessTitle": "Find your application",

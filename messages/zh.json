@@ -574,6 +574,13 @@
     }
   },
   "documents": {
+    "recoveryTitle": "未完成的上传",
+    "recoveryHelp": "您可以重传原文件，或先放弃未完成的上传，再选择替换文件。放弃会停止该次上传，已保存的文件会保留。",
+    "abandon": "放弃上传",
+    "abandonNamed": "放弃上传：{name}",
+    "finishBatch": "完成上传并开始预评估",
+    "recoveryError": "上传状态已变化，或操作未完成。请刷新后重试。",
+    "assessmentQueued": "您的预评估已加入处理队列。",
     "title": "上传资料",
     "eyebrow": "申请文件",
     "accessTitle": "查找您的申请",

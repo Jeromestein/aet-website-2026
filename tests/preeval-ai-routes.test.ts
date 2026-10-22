@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-const m = vi.hoisted(() => ({ schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
+const m = vi.hoisted(() => ({ abandon: vi.fn(), unfinished: vi.fn(), origin: vi.fn(), schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/server', async original => ({ ...await original<typeof import('next/server')>(), after: m.after }));
+vi.mock('../lib/preeval/upload-recovery', () => ({ abandonUpload: m.abandon, unfinishedUploads: m.unfinished }));
 vi.mock('../lib/preeval/ai-scheduler', () => ({ scheduleAI: m.schedule }));
 vi.mock('../lib/preeval/ai-jobs', () => ({ completeUploads: m.complete, retryAnalysis: m.retry, pauseForUpload: m.pause }));
 vi.mock('../lib/preeval/config', () => ({ configuration: () => ({ cloudPreview: m.cloudPreview }), required: () => '' }));
 vi.mock('../lib/preeval/db', () => ({ db: () => m.query, table: (name: string) => name }));
-vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, consumeLink: vi.fn(), sessionCookie: () => ({ name: 'test', value: 'test' }), sameOrigin: vi.fn(), limit: vi.fn(), hash: vi.fn(), COOKIE: 'test' }));
+vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, consumeLink: vi.fn(), sessionCookie: () => ({ name: 'test', value: 'test' }), sameOrigin: m.origin, limit: vi.fn(), hash: vi.fn(), COOKIE: 'test' }));
 vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn(), deliverApplicationEmails: m.mail }));
 vi.mock('../lib/preeval/service', () => ({ submit: m.submit, application: m.application, addFile: vi.fn(), staffAction: m.staff }));
 vi.mock('../lib/preeval/payments', () => ({ checkout: vi.fn(), reconcile: vi.fn(), handleStripeEvent: m.paymentEvent, stripeClient: () => ({ webhooks: { constructEvent: m.construct } }), cancelApplication: vi.fn() }));
@@ -15,6 +16,7 @@ vi.mock('../lib/evaluation-application/payments', () => ({ handleStripeEvent: m.
 vi.mock('../lib/preeval/dropbox', () => ({ downloadFile: vi.fn() }));
 vi.mock('../lib/dropbox/server', () => ({ contextFromRequest: m.context, requireUploadAllowed: m.uploadAllowed, requireEnabled: vi.fn() }));
 import { GET, POST } from '../app/api/pre-evaluation/[...path]/route';
+import { GET as recoveryList, POST as recoveryDiscard } from '../app/api/dropbox/upload-recovery/route';
 import { POST as batch } from '../app/api/dropbox/upload-batch/route';
 import { AppError } from '../lib/preeval/domain';
 import { DocumentError } from '../lib/dropbox/shared';
@@ -150,5 +152,50 @@ describe('signed Stripe callback dispatch', () => {
   it('does not schedule email when event processing fails', async () => {
     m.construct.mockReturnValue(event); m.paymentEvent.mockRejectedValue(new AppError('invalid_payment'));
     expect((await callback()).status).toBe(400); expect(m.after).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('upload recovery authorization boundaries', () => {
+  const selected = { source: 'document', id, version: id };
+  it('authorizes customer recovery reads and writes before querying attempts', async () => {
+    m.unfinished.mockResolvedValue({ uploads: [] }); m.abandon.mockResolvedValue({ removed: true });
+    expect((await call('GET', `applications/${id}/upload-recovery`)).status).toBe(200);
+    expect((await call('POST', `applications/${id}/upload-recovery`, selected)).status).toBe(200);
+    expect(m.abandon).toHaveBeenCalledWith(id, selected, 'synthetic@example.invalid');
+    expect(m.schedule).not.toHaveBeenCalled();
+    m.abandon.mockClear(); m.unfinished.mockClear();
+    m.authorize.mockRejectedValue(new AppError('access_denied', 403));
+    expect((await call('GET', `applications/${id}/upload-recovery`)).status).toBe(403);
+    expect((await call('POST', `applications/${id}/upload-recovery`, selected)).status).toBe(403);
+    expect(m.abandon).not.toHaveBeenCalled(); expect(m.unfinished).not.toHaveBeenCalled();
+  });
+  it('rejects cross-origin customer discard before changing an upload', async () => {
+    m.origin.mockImplementation(() => { throw new AppError('access_denied', 403); });
+    expect((await call('POST', `applications/${id}/upload-recovery`, selected)).status).toBe(403);
+    expect(m.abandon).not.toHaveBeenCalled();
+  });
+  it('binds shared discard to the authorized context, ignoring body application IDs', async () => {
+    m.abandon.mockResolvedValue({ removed: true });
+    expect((await recoveryDiscard(request('POST', 'dropbox/upload-recovery', { ...selected, applicationId: 'foreign' }))).status).toBe(200);
+    expect(m.abandon.mock.calls[0][0]).toBe(id);
+    m.abandon.mockRejectedValue(new AppError('upload_expired', 409));
+    expect((await recoveryDiscard(request('POST', 'dropbox/upload-recovery', selected))).status).toBe(409);
+  });
+  it('rejects shared read-only and forged contexts and cross-origin writes', async () => {
+    m.uploadAllowed.mockImplementation(() => { throw new DocumentError('readOnly', 403); });
+    expect((await recoveryDiscard(request('POST', 'dropbox/upload-recovery', selected))).status).toBe(403);
+    m.uploadAllowed.mockReset();
+    const foreign = new Request(origin + '/api/dropbox/upload-recovery', { method: 'POST', headers: { Origin: 'http://foreign.invalid', 'Content-Type': 'application/json' }, body: JSON.stringify(selected) });
+    expect((await recoveryDiscard(foreign)).status).toBe(403);
+    m.context.mockImplementation(() => { throw new DocumentError('access', 401); });
+    expect((await recoveryList(request('GET', 'dropbox/upload-recovery'))).status).toBe(401);
+    expect(m.abandon).not.toHaveBeenCalled(); expect(m.unfinished).not.toHaveBeenCalled();
+  });
+  it('does not add recovery writes or queries to formal evaluation documents', async () => {
+    m.context.mockReturnValue({ data: { kind: 'evaluation', id } });
+    expect(await (await recoveryList(request('GET', 'dropbox/upload-recovery'))).json()).toMatchObject({ uploads: [], pending: false });
+    expect((await recoveryDiscard(request('POST', 'dropbox/upload-recovery', selected))).status).toBe(400);
+    expect(m.abandon).not.toHaveBeenCalled(); expect(m.unfinished).not.toHaveBeenCalled();
   });
 });

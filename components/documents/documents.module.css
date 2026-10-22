@@ -89,3 +89,5 @@
   .successBanner { padding: 13px; }
   .queue li { padding: 12px; }
 }
+
+.recoveryRow button { flex-shrink: 0; min-height: 44px; }

@@ -8,19 +8,23 @@ import postgres from 'postgres';
 // Real application functions and PostgreSQL transactions; only the connection,
 // Dropbox SDK, storage lookup and OAuth transport are replaced. No .env is read.
 const m = vi.hoisted(() => ({ sql: undefined as unknown as ReturnType<typeof postgres>,
-  finish: vi.fn(), upload: vi.fn(), append: vi.fn(), copy: vi.fn() }));
+  preview: false, start: vi.fn(), finish: vi.fn(), upload: vi.fn(), append: vi.fn(), copy: vi.fn() }));
 vi.mock('server-only', () => ({}));
-vi.mock('../lib/preeval/db', () => ({ db: () => m.sql, table: (name: string) => m.sql(name) }));
+vi.mock('../lib/preeval/db', () => ({ db: () => m.sql, table: (name: string) => m.sql(m.preview ? name.replace('preeval.', 'aet_preview_preeval.') : name) }));
 vi.mock('../lib/dropbox/storage', () => ({ resolveStorage: async () => ({
   write: { office: 'Miami', path: '/synthetic' }, reads: [], archivePath: '/synthetic-archive',
 }) }));
+vi.mock('../lib/preeval/dropbox', () => ({ filePath: async (_: unknown, __: unknown, id: string, name: string) => `/synthetic/${id}-${name}`, officeForStoredPath: () => 'Miami' }));
 vi.mock('dropbox', () => ({ Dropbox: class {
+  filesUploadSessionStart = m.start;
   filesUploadSessionFinish = m.finish;
   filesUpload = m.upload;
   filesUploadSessionAppendV2 = m.append;
   filesCopyV2 = m.copy;
 } }));
-import { completeUploads, finishDocumentUpload, startDocumentUpload } from '../lib/preeval/ai-jobs';
+import { abandonUpload, unfinishedUploads } from '../lib/preeval/upload-recovery';
+import { uploadDocument } from '../lib/preeval/uploads';
+import { completeUploads, finishDocumentUpload, startDocumentUpload, retryAnalysis } from '../lib/preeval/ai-jobs';
 import { continueUpload, seal, uploadSmall, type ApplicationContext } from '../lib/dropbox/server';
 
 // Opt in with PREEVAL_F4_TEST_PG_BIN=/path/to/postgres/bin when running this file.
@@ -67,6 +71,9 @@ describe.skipIf(!bin)('upload attempt fencing (isolated PostgreSQL, mocked Dropb
   });
   beforeEach(async () => {
     vi.clearAllMocks();
+    m.preview = false;
+    vi.stubEnv('DROPBOX_DOCUMENTS_ENABLED', 'true');
+    m.start.mockReset().mockResolvedValue({ result: { session_id: 'synthetic-session' } });
     for (const key of ['KEY', 'SECRET', 'REFRESH_TOKEN', 'NAMESPACE_ID']) vi.stubEnv(`DROPBOX_AET_App_${key}`, 'synthetic-only');
     vi.stubGlobal('fetch', vi.fn(async () => Response.json({ access_token: 'synthetic-token', expires_in: 3600 })));
     m.finish.mockReset().mockResolvedValue({ result: metadata });
@@ -247,4 +254,145 @@ describe.skipIf(!bin)('upload attempt fencing (isolated PostgreSQL, mocked Dropb
     await expect(continueUpload(context, { action: 'finish', uploadKey: uploadKey(null) })).resolves.toMatchObject({ success: true });
     expect(await snapshot()).toEqual(before);
   });
+  const recover = async () => (await unfinishedUploads(id)).uploads;
+  const startCustomer = (hash = 'a', name = 'a.pdf') => uploadDocument(id, { action: 'start', fileName: name,
+    fileSize: 100, mime: 'application/pdf', contentHash: hash.repeat(64) }, 'synthetic');
+  async function finishCustomer(key: string, hash = 'b') {
+    const bytes = Buffer.alloc(100); bytes.write('%PDF-');
+    const appended = await uploadDocument(id, { action: 'append', uploadKey: key, chunkIndex: 0, chunkData: bytes.toString('base64') }, 'synthetic');
+    m.finish.mockResolvedValueOnce({ result: { ...metadata, content_hash: hash.repeat(64) } });
+    return uploadDocument(id, { action: 'finish', uploadKey: appended.uploadKey }, 'synthetic');
+  }
+  it.each(['failed', 'cancelled'])('abandons %s shared A, submits B, and permits staff retry', async state => {
+    const a = await startDocumentUpload(id, 'a.pdf');
+    if (state === 'cancelled') await continueUpload(context, { action: 'cancel', uploadKey: uploadKey(a) });
+    else await finishDocumentUpload(id, a, false);
+    const [selected] = await recover();
+    const b = await startDocumentUpload(id, 'b.pdf');
+    await finishDocumentUpload(id, b, true, { ...file('b'), name: 'b.pdf' });
+    await expect(completeUploads(id)).rejects.toMatchObject({ code: 'uploads_incomplete' });
+    await expect(retryAnalysis(id, true)).rejects.toMatchObject({ code: 'ai_retry_unavailable' });
+    await abandonUpload(id, selected, 'synthetic');
+    await completeUploads(id); await retryAnalysis(id, true);
+    expect((await snapshot()).app[0]).toMatchObject({ uploads_pending: false, ai_status: 'queued', result: null });
+    const before = await snapshot(); const commit = vi.fn(async () => file('late'));
+    expect(await finishDocumentUpload(id, a, true, commit)).toBe(false);
+    expect(await finishDocumentUpload(id, a, false)).toBe(false);
+    expect(commit).not.toHaveBeenCalled(); expect(await snapshot()).toEqual(before);
+  });
+  it('fences an abandoned active shared session before any late provider commit', async () => {
+    const a = await startDocumentUpload(id, 'diploma.pdf');
+    await abandonUpload(id, (await recover())[0], 'synthetic');
+    const b = await startDocumentUpload(id, 'diploma.pdf'); const before = await snapshot();
+    await expect(continueUpload(context, { action: 'finish', uploadKey: uploadKey(a) })).rejects.toMatchObject({ code: 'sequence' });
+    await finishDocumentUpload(id, a, false);
+    expect(m.finish).not.toHaveBeenCalled(); expect(await snapshot()).toEqual(before);
+    await continueUpload(context, { action: 'finish', uploadKey: uploadKey(b) });
+    await completeUploads(id); expect((await snapshot()).files).toHaveLength(1);
+  });
+  it('releases customer file slots and rejects late callbacks after abandonment', async () => {
+    const a = await startCustomer();
+    await uploadDocument(id, { action: 'cancel', uploadKey: a.uploadKey }, 'synthetic');
+    const [selected] = await recover();
+    for (const hash of ['b', 'c', 'd', 'e']) await startCustomer(hash, `${hash}.pdf`);
+    await expect(startCustomer('f')).rejects.toMatchObject({ code: 'file_limit' });
+    await abandonUpload(id, selected, 'synthetic');
+    await startCustomer('f', 'f.pdf');
+    const before = await snapshot();
+    for (const action of ['append', 'finish', 'cancel']) await expect(uploadDocument(id, { action, uploadKey: a.uploadKey }, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    expect(await snapshot()).toEqual(before); expect(m.finish).not.toHaveBeenCalled();
+    await expect(completeUploads(id)).rejects.toMatchObject({ code: 'uploads_incomplete' });
+  });
+  it('recovers a failed customer start without a returned upload key, then completes B', async () => {
+    m.start.mockRejectedValueOnce(new Error('provider unavailable'));
+    await expect(startCustomer()).rejects.toMatchObject({ code: 'upload_failed' });
+    const [selected] = await recover(); expect(selected.state).toBe('failed');
+    await abandonUpload(id, selected, 'synthetic');
+    const b = await startCustomer('b', 'b.pdf'); await finishCustomer(b.uploadKey!);
+    await completeUploads(id);
+    expect((await snapshot()).files).toHaveLength(1);
+    expect((await snapshot()).app[0].ai_status).toBe('queued');
+  });
+  it('fences an abandoned active customer attempt even after reselecting identical content', async () => {
+    const a = await startCustomer(); const [selected] = await recover();
+    await abandonUpload(id, selected, 'synthetic');
+    const retry = await startCustomer();
+    await expect(uploadDocument(id, { action: 'finish', uploadKey: a.uploadKey }, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    await finishCustomer(retry.uploadKey!, 'a'); await completeUploads(id);
+    expect((await snapshot()).files).toHaveLength(1);
+  });
+  it('never abandons a newer customer retry using an older rendered timestamp', async () => {
+    const a = await startCustomer();
+    await uploadDocument(id, { action: 'cancel', uploadKey: a.uploadKey }, 'synthetic');
+    const [selected] = await recover(); const retry = await startCustomer(); const before = await snapshot();
+    await expect(abandonUpload(id, selected, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    expect(await snapshot()).toEqual(before);
+    await finishCustomer(retry.uploadKey!, 'a'); await completeUploads(id);
+  });
+  it('never abandons a newer shared retry or another application attempt', async () => {
+    const a = await startDocumentUpload(id, 'a.pdf'); await finishDocumentUpload(id, a, false);
+    const [selected] = await recover(); const retry = await startDocumentUpload(id, 'a.pdf');
+    await expect(abandonUpload(id, selected, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    const other = randomUUID();
+    await m.sql`insert into preeval.applications(id,request_id,request_hash,email,first_name,last_name,country,locale)
+      values (${other},${randomUUID()},'synthetic','other@example.invalid','Other','Applicant','CN','en')`;
+    const [current] = await recover(); const before = await snapshot();
+    await expect(abandonUpload(other, current, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    expect(await snapshot()).toEqual(before);
+    await finishDocumentUpload(id, retry, true, file()); await completeUploads(id);
+  });
+  it.each(['file', 'document'])('protects cancelled applications and already ready %s records', async source => {
+    const key = source === 'file' ? (await startCustomer()).uploadKey : await startDocumentUpload(id, 'a.pdf');
+    const [selected] = await recover();
+    await m.sql`update preeval.applications set status='cancelled' where id=${id}`;
+    const before = await snapshot();
+    await expect(abandonUpload(id, selected, 'synthetic')).rejects.toMatchObject({ code: 'application_unavailable' });
+    expect(await snapshot()).toEqual(before);
+    await m.sql`update preeval.applications set status='processing' where id=${id}`;
+    if (source === 'file') await finishCustomer(key!, 'a');
+    else await finishDocumentUpload(id, key!, true, file());
+    await completeUploads(id); await publish('openai'); const ready = await snapshot();
+    await expect(abandonUpload(id, selected, 'synthetic')).rejects.toMatchObject({ code: 'upload_expired' });
+    expect(await snapshot()).toEqual(ready);
+  });
+  it('serializes abandonment behind an already committing shared finish and preserves its file', async () => {
+    const a = await startDocumentUpload(id, 'a.pdf'); const [selected] = await recover();
+    const entered = deferred(), release = deferred();
+    const finish = finishDocumentUpload(id, a, true, async () => { entered.resolve(); await release.promise; return file(); });
+    await entered.promise;
+    const discard = abandonUpload(id, selected, 'synthetic').catch(error => error);
+    try { await waitForBlockedClaim(); } finally { release.resolve(); }
+    await finish; expect(await discard).toMatchObject({ code: 'upload_expired' });
+    await completeUploads(id); expect((await snapshot()).files).toHaveLength(1);
+  });
+  it('cannot complete an empty batch after abandoning its only file', async () => {
+    await startCustomer(); await abandonUpload(id, (await recover())[0], 'synthetic');
+    await expect(completeUploads(id)).rejects.toMatchObject({ code: 'uploads_incomplete' });
+    expect((await unfinishedUploads(id)).hasReady).toBe(false);
+  });
+  it('works under the restricted preview role and mapped schema without a migration', async () => {
+    const owner = m.sql;
+    await owner.unsafe('create role aet_preview_runtime login');
+    for (const migration of ['20261002000100_pre_evaluation.sql', '20261020232924_preeval_gpt_analysis.sql']) {
+      let text = readFileSync(new URL(`../supabase/migrations/${migration}`, import.meta.url), 'utf8');
+      text = text.replaceAll(/\bpreeval\b/g, 'aet_preview_preeval');
+      await owner.unsafe(text);
+    }
+    await owner.unsafe('grant usage on schema aet_preview_preeval to aet_preview_runtime; grant select,insert,update,delete on all tables in schema aet_preview_preeval to aet_preview_runtime; grant usage,select on all sequences in schema aet_preview_preeval to aet_preview_runtime');
+    for (const name of ['applications', 'files', 'audit']) await owner.unsafe(`create policy preview_server on aet_preview_preeval.${name} for all to aet_preview_runtime using (true) with check (true)`);
+    const runtime = postgres({ path: join(root, '.s.PGSQL.55474'), port: 55474, user: 'aet_preview_runtime', database: 'postgres', max: 3 });
+    m.sql = runtime; m.preview = true;
+    try {
+      await runtime`insert into aet_preview_preeval.applications(id,request_id,request_hash,email,first_name,last_name,country,locale)
+        values (${id},${randomUUID()},'synthetic','test@example.invalid','Test','Applicant','CN','en')`;
+      const a = await startDocumentUpload(id, 'a.pdf'); await finishDocumentUpload(id, a, false);
+      await abandonUpload(id, (await recover())[0], 'synthetic');
+      const failed = await startCustomer(); await uploadDocument(id, { action: 'cancel', uploadKey: failed.uploadKey }, 'synthetic');
+      await abandonUpload(id, (await recover())[0], 'synthetic');
+      const b = await startCustomer('b'); await finishCustomer(b.uploadKey!); await completeUploads(id);
+      expect(await recover()).toEqual([]);
+      expect((await runtime`select ai_status from aet_preview_preeval.applications where id=${id}`)[0].ai_status).toBe('queued');
+    } finally { m.sql = owner; m.preview = false; await runtime.end(); }
+  });
+
 });
