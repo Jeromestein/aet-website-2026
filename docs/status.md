@@ -1,5 +1,21 @@
 # AET Implementation Status
 
+## 2026-10-22 — Integrate result publication recovery into dev
+
+- Confirmed `dev` was clean at `9ce7210` before merging
+  `x/preeval-result-publication` (`0d9a496`). Resolved the status-document
+  conflict by retaining both sets of records. Runtime code merged without text
+  conflicts; the shared environment names and command-line-only legacy test
+  actors remain intact. The upload-recovery branch was not part of this merge.
+- The combined result passed all 759 tests across 51 files with every opt-in
+  PostgreSQL suite enabled, including 26 publication recovery tests. Databases
+  were disposable local clusters, providers were simulated, and the clusters
+  were stopped and removed after testing. No business database was used.
+- Full TypeScript using the existing generated route types, i18n (586 messages
+  per language) and whitespace checks passed. No frontend changes or browser
+  acceptance, production build, server restart, push or deployment. Hosted
+  acceptance remains pending; F5 scheduler work remains deferred.
+
 ## 2026-10-22 — Audit environment names, defaults and documentation scopes
 
 - Audited the current dev worktree's environment files, runtime readers, scripts,
@@ -126,6 +142,36 @@
 - Both files passed Next environment parsing, duplicate-key and whitespace checks.
   No runtime code, service state or Vercel configuration was changed. Local
   configuration remains Git-ignored with mode 0600. No build or deployment.
+
+## 2026-10-22 — Recover saved pre-evaluation result publication
+
+- Authorized customer/staff detail reads now retry `publishIfReady` before
+  loading a fresh application snapshot. A paid result saved with completed AI
+  but processing application status can recover after a transient publication
+  failure, including cloud preview without a local worker. No AI regeneration,
+  scheduled recovery or new external request is involved.
+- Existing publication eligibility is rechecked under the application row lock;
+  result versions and email dedupe keys are preserved. Customer projections
+  additionally require completed AI and no pending uploads. An enqueue failure
+  after publication cannot hide the committed result; later reads can retry the
+  missing enqueue. Existing email dispatch and review rules remain unchanged.
+- Added 26 real temporary-PostgreSQL tests with simulated AI/Stripe/email and
+  database triggers that reject publication/enqueue. Verified repeated failures,
+  concurrent reads, both payment orders, unpaid/pending/refund withholding,
+  cancellation/information/upload gates, staff corrections, superseded AI runs,
+  stale emails and deterministic row-lock races with refunds/uploads/corrections.
+  Route tests also verify authorization precedes the recovery-capable read.
+- Verification: 645 tests passed in the full run with publication, information
+  and upload PostgreSQL suites enabled; the remaining 87 refund/email database
+  tests passed separately against disposable loopback databases (732 total).
+  Full TypeScript, i18n (586 messages per language) and whitespace checks passed.
+  No production build, live provider calls, real email/payment or deployment.
+- Backend-only change; no browser/UI acceptance was performed. Hosted fault
+  recovery still requires acceptance after an authorized integration/deployment.
+  Recovery requires a subsequent authorized detail read and database availability;
+  unattended/email scheduler work remains deferred under F5. At feature
+  validation, the branch remained isolated while `dev` had unrelated local work;
+  the subsequent integration is recorded above.
 
 ## 2026-10-22 — Deploy and verify the standalone Production expiry Cron
 

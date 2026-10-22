@@ -13,6 +13,25 @@ boundaries. This checklist tracks implementation and acceptance separately.
   Existing F5 code is retained; this decision does not schedule email monitoring
   or change the separate payment-expiry job.
 
+## Pre-evaluation result publication recovery — October 22, 2026
+
+- [x] Recover a saved paid result on the next authorized detail read when the
+  separate publication step failed; reuse the stored result and version.
+- [x] Verify real PostgreSQL failure/lock behavior for repeated reads, payment
+  before/after AI, refunds, cancellation, information requests, pending uploads
+  and staff corrections. Preserve same-version email deduplication and keep a
+  published result visible when email enqueue/delivery fails.
+- [x] Pass all 732 tests (including opt-in isolated database suites), full
+  TypeScript and i18n. See [verification scope](status.md#2026-10-22--recover-saved-pre-evaluation-result-publication).
+- [x] Integrate `x/preeval-result-publication` (`0d9a496`) into clean `dev`
+  (`9ce7210`), preserve the configuration refactor and both status records, and
+  pass all 759 combined tests, full TypeScript and i18n.
+- [ ] Perform authorized hosted acceptance. No live recovery or deployment is
+  claimed by these local tests; the separate upload-recovery branch is not
+  included in this integration.
+- F5 remains deferred. This fix uses existing authorized requests and does not
+  add or activate a scheduler, background mail monitor or provider retry system.
+
 ## Pre-evaluation Stripe test checkout — October 22, 2026
 
 - [x] Record the plan before implementation. Use a new synthetic application in

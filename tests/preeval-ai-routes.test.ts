@@ -65,12 +65,14 @@ describe('application dispatch boundaries', () => {
   it.each(['idle', 'completed', 'failed'])('does not auto-retry %s reads', async ai_status => {
     m.application.mockResolvedValue({ ai_status });
     expect((await call('GET', `applications/${id}`)).status).toBe(200);
+    expect(m.authorize.mock.invocationCallOrder[0]).toBeLessThan(m.application.mock.invocationCallOrder[0]);
     expect(m.schedule).not.toHaveBeenCalled();
     await m.after.mock.calls[0][0](); expect(m.mail).toHaveBeenCalledWith(id);
   });
   it.each(['', '/uploads-complete', '/retry-ai', '/staff'])('never dispatches for unauthorized access %s', async suffix => {
     m.authorize.mockRejectedValue(new AppError('unauthorized', 401));
     expect((await call(suffix ? 'POST' : 'GET', `applications/${id}${suffix}`, { action: 'retry_ai' })).status).toBe(401);
+    expect(m.application).not.toHaveBeenCalled();
     expect(m.schedule).not.toHaveBeenCalled(); expect(m.complete).not.toHaveBeenCalled(); expect(m.retry).not.toHaveBeenCalled(); expect(m.after).not.toHaveBeenCalled();
   });
   it('requires the staff grant before regeneration', async () => {

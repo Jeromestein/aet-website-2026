@@ -86,6 +86,9 @@ export async function processAI(applicationId?: string, dependencies: Partial<AI
   } finally { clearInterval(heartbeat); }
   // Email enqueue is separate from generation; a notification failure must never
   // erase a completed assessment. The AI worker does not dispatch any emails.
-  if (saved) { try { await deps.publish(app.id); } catch { /* Reconciled by the delivery worker. */ } }
+  if (saved) {
+    try { await deps.publish(app.id); }
+    catch { console.error("Pre-evaluation publication incomplete; the next authorized read will retry."); }
+  }
   return true;
 }
