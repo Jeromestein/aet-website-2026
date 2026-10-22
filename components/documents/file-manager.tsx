@@ -5,6 +5,8 @@ import { Check, CircleCheck, UploadCloud, Info } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { CHUNK_SIZE, ACCEPTED_FILES, formatFileSize, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
 import styles from './documents.module.css';
+import type { UploadRecovery as Recovery } from '@/lib/preeval/upload-recovery';
+import { UploadRecovery } from './upload-recovery';
 import { contentHash, base64 } from '@/lib/dropbox/upload-client';
 
 type Status = 'pending' | 'hashing' | 'uploading' | 'saving' | 'success' | 'failed' | 'cancelled';
@@ -45,7 +47,11 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   const [selectionError, setSelectionError] = useState<ErrorCode | null>(null);
   const [busy, setBusy] = useState(false);
   const [batchError, setBatchError] = useState<ErrorCode | null>(null);
+  const [recoveryRevision, setRecoveryRevision] = useState(0);
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const [recoveryPending, setRecoveryPending] = useState(true);
   const [dragging, setDragging] = useState(false);
+  const recovery = useRef<Recovery | null>(null);
   const cancelled = useRef(new Set<string>());
   const active = useRef<AbortController | null>(null);
   const listController = useRef<AbortController | null>(null);
@@ -75,7 +81,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   }, [token]);
 
   function select(selected: FileList | null) {
-    if (busy || !selected) return;
+    if (busy || recoveryBusy || !selected) return;
     try {
       const incoming = Array.from(selected);
       incoming.forEach(file => validateFile(file.name, file.size, file.type));
@@ -89,7 +95,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     setQueue(previous => previous.map(row => row.id === id ? { ...row, ...patch } : row));
   }
   async function upload() {
-    if (busy || !canUpload) return;
+    if (busy || recoveryBusy || !canUpload) return;
     // Unlock audio during the upload click; sound failure must never block saving.
     try {
       completionAudio.current ??= new AudioContext();
@@ -98,6 +104,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     const pending = queue.filter(item => item.status === 'pending' || item.status === 'failed' || item.status === 'cancelled');
     let saved = 0;
     setBatchError(null);
+    recovery.current = null;
     setBusy(true); onBusyChange?.(true);
     const batch = (action: string) => request('/api/dropbox/upload-batch', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action }),
@@ -105,6 +112,7 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     try { if (pending.length) await batch('start'); }
     catch (error) {
       for (const row of pending) update(row.id, { status: 'failed', error: errorCode(error) });
+      setRecoveryRevision(value => value + 1);
       setBusy(false); onBusyChange?.(false); return;
     }
     cancelled.current.clear();
@@ -201,19 +209,40 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
         }
       }
       await refresh();
+      setRecoveryRevision(value => value + 1);
     }
+  }
+  async function remove(row: QueueFile) {
+    if (busy || recoveryBusy) return;
+    setRecoveryBusy(true); onBusyChange?.(true);
+    try {
+      if (['failed', 'cancelled'].includes(row.status)) {
+        // Use the rendered attempt snapshot, never a newly discovered retry.
+        if (!recovery.current) throw new Error('recovery_unavailable');
+        const matches = recovery.current.uploads.filter(upload => upload.source === 'document' && upload.name === row.file.name);
+        // A different tab may have retried this name. An active attempt must
+        // be explicitly abandoned from the persisted list, not an old queue row.
+        if (matches.some(upload => upload.state !== 'failed')) throw new Error('upload_in_progress');
+        for (const upload of matches) {
+          await request('/api/dropbox/upload-recovery', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(upload) }, token);
+        }
+      }
+      setQueue(previous => previous.filter(item => item.id !== row.id));
+    } catch { setBatchError('upstream'); }
+    finally { setRecoveryRevision(value => value + 1); setRecoveryBusy(false); onBusyChange?.(false); }
   }
   function cancel(row: QueueFile) {
     cancelled.current.add(row.id);
     if (row.status === 'hashing' || row.status === 'uploading') active.current?.abort();
     update(row.id, { status: 'cancelled' });
   }
-  const allSaved = !batchError && queue.length > 0 && queue.every(row => row.status === 'success');
+  const allSaved = !busy && !recoveryBusy && !recoveryPending && !batchError && queue.length > 0 && queue.every(row => row.status === 'success');
   const formatSize = (size: number) => formatFileSize(size, locale);
   return <div className={embedded ? `${styles.manager} ${styles.embedded}` : styles.manager} aria-busy={busy}>
     <section aria-labelledby="uploaded-title" className={styles.panel}>
       <div className={styles.headingRow}><h2 id="uploaded-title">{t('files')}</h2>
-        <button type="button" onClick={() => void refresh()} disabled={listBusy}>{t('refresh')}</button></div>
+        <button type="button" onClick={() => { void refresh(); setRecoveryRevision(value => value + 1); }} disabled={listBusy}>{t('refresh')}</button></div>
       {listBusy && <p role="status">{t('loading')}</p>}
       {listError && <p className={styles.error} role="alert">{t(`errors.${listError}`)}</p>}
       {!listBusy && !listError && !files.length && <p>{t('empty')}</p>}
@@ -226,6 +255,10 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
       </li>)}</ul>}
       {nextCursor && <button type="button" disabled={listBusy} onClick={() => void refresh(nextCursor)}>{t('more')}</button>}
     </section>
+    {canUpload && <UploadRecovery endpoint="/api/dropbox/upload-recovery" completeEndpoint="/api/dropbox/upload-batch" token={token}
+      revision={recoveryRevision} disabled={busy || recoveryBusy} onList={value => { recovery.current = value; setRecoveryPending(value.pending); }} onBusyChange={value => { setRecoveryBusy(value); onBusyChange?.(value); }}
+      onAbandon={name => setQueue(previous => previous.filter(row => row.file.name !== name || !['failed', 'cancelled'].includes(row.status)))}
+      onChange={() => { setBatchError(null); void refresh(); }} />}
     {canUpload ? <section className={styles.panel} aria-labelledby="upload-title">
       <h2 id="upload-title">{t('uploadTitle')}</h2>
       <div id="file-rules" className={styles.rules}><span>PDF · JPG · PNG · DOC(X)</span><span>{t('limits')}</span><span>{t('chunks')}</span></div>
@@ -235,8 +268,8 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
         onDrop={event => { event.preventDefault(); setDragging(false); select(event.dataTransfer.files); }}>
         <UploadCloud className={styles.uploadIcon} size={32} aria-hidden="true"/>
         <p>{t('drop')}</p>
-        <button type="button" className={styles.chooseButton} disabled={busy} onClick={() => input.current?.click()}>{t('choose')}</button>
-        <input hidden id="document-files" ref={input} type="file" multiple accept={ACCEPTED_FILES} disabled={busy}
+        <button type="button" className={styles.chooseButton} disabled={busy || recoveryBusy} onClick={() => input.current?.click()}>{t('choose')}</button>
+        <input hidden id="document-files" ref={input} type="file" multiple accept={ACCEPTED_FILES} disabled={busy || recoveryBusy}
           aria-describedby="file-rules" aria-label={t('choose')} onChange={event => select(event.target.files)} />
       </div>
       <aside className={styles.uploadHelp}>
@@ -251,14 +284,14 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
       {selectionError && <p className={styles.error} role="alert">{t(`errors.${selectionError}`)}</p>}
       {!!queue.length && <ul className={styles.queue}>{queue.map(row => <li key={row.id} className={row.status === 'success' ? styles.successRow : undefined}>
         <div className={styles.headingRow}><strong className={styles.fileName}>{row.file.name}</strong>
-          {!busy ? <button type="button" onClick={() => setQueue(previous => previous.filter(item => item.id !== row.id))} aria-label={t('removeNamed', { name: row.file.name })}>{t('remove')}</button>
+          {!busy ? <button type="button" disabled={recoveryBusy} onClick={() => void remove(row)} aria-label={t('removeNamed', { name: row.file.name })}>{t('remove')}</button>
             : ['pending', 'hashing', 'uploading'].includes(row.status) && <button type="button" onClick={() => cancel(row)} aria-label={t('cancelNamed', { name: row.file.name })}>{t('cancel')}</button>}</div>
         <div className={styles.fileDetails}><span>{formatSize(row.file.size)}</span><span role="status" className={row.status === 'success' ? styles.successBadge : undefined}>{row.status === 'success' && <Check size={15} aria-hidden="true"/>}{t(`status.${row.status}`)} {row.percent > 0 && `${row.percent}%`}</span></div>
         <progress value={row.percent} max={100} aria-label={t('progressNamed', { name: row.file.name })} />
         {row.error && <p className={styles.error} role="alert">{t(`errors.${row.error}`)}</p>}
         {row.archiveFailed && <p className={styles.warning} role="status">{t('archiveFailed')}</p>}
       </li>)}</ul>}
-      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || (!batchError && !queue.some(row => row.status !== 'success'))} onClick={() => void upload()}>
+      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || recoveryBusy || (!batchError && !queue.some(row => row.status !== 'success'))} onClick={() => void upload()}>
         {allSaved && <Check size={19} aria-hidden="true"/>}{busy ? t('uploading') : allSaved ? t('complete') : t('upload')}
       </button>
       {!allSaved && <p className={styles.note}>{t('keepOpen')}</p>}

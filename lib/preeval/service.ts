@@ -121,7 +121,8 @@ export async function addFile(id: string, file: File, actor: string) {
   const name = file.name.replace(/[\\/\x00-\x1f]/g, "_").slice(0, 180),
     digest = hash(data.toString("base64"));
   const record = await db().begin(async (tx) => {
-    await tx`select id from ${table("preeval.applications")} where id=${id} for update`;
+    const [locked] = await tx`select status from ${table("preeval.applications")} where id=${id} for update`;
+    if (!locked || locked.status === "cancelled") throw new AppError("application_cancelled", 409);
     const [existing] =
       await tx`select * from ${table("preeval.files")} where application_id=${id} and sha256=${digest}`;
     if (existing?.state === "ready") return existing;
@@ -141,20 +142,29 @@ export async function addFile(id: string, file: File, actor: string) {
       path = existing?.dropbox_path || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
     const [row] =
       await tx`insert into ${table("preeval.files")}(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},${name},${file.type},${data.length},${digest},${path})
-      on conflict(application_id,sha256) do update set state='uploading',created_at=now() returning *`;
+      on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;
     return row;
   });
   if (record.state === "ready") return;
   try {
-    await uploadFile(record.dropbox_path, data);
-  } catch {
-    await db()`update ${table("preeval.files")} set state='failed' where id=${record.id}`;
-    throw new AppError("upload_failed", 502);
+    await db().begin(async tx => {
+      const [locked] = await tx`select status from ${table("preeval.applications")} where id=${id} for update`;
+      if (!locked || locked.status === 'cancelled') throw new AppError('application_cancelled', 409);
+      const [current] = await tx`select id from ${table("preeval.files")} where id=${record.id}
+        and created_at=${record.version}::text::timestamptz and state='uploading' for update`;
+      if (!current) throw new AppError('upload_expired', 409);
+      // Keep the claim through storage so an abandoned/retried attempt cannot
+      // overwrite a newer file or revive its index through a late callback.
+      await uploadFile(record.dropbox_path, data);
+      await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
+      await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
+    });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    await db()`update ${table("preeval.files")} set state='failed' where id=${record.id}
+      and created_at=${record.version}::text::timestamptz and state='uploading'`;
+    throw new AppError('upload_failed', 502);
   }
-  await db().begin(async (tx) => {
-    await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
-    await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
-  });
 }
 export async function staffAction(id: string, body: Row, actor: string) {
   if (body.action === "notes") {

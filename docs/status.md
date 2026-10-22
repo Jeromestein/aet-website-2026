@@ -1,5 +1,23 @@
 # AET Implementation Status
 
+## 2026-10-22 — Integrate upload recovery into dev
+
+- Confirmed `dev` was clean at `00689cf`, after the environment configuration
+  updates and result-publication recovery merge. Merged
+  `x/preeval-upload-recovery` (`476413c`). Runtime code merged automatically;
+  resolved the status-document conflict by retaining both sets of records.
+- All 778 tests across 51 files passed with every opt-in PostgreSQL suite enabled,
+  including upload fencing/recovery, information resubmission, publication
+  recovery and refund/email regressions. Tests used disposable local databases
+  and mocked providers; temporary clusters were stopped and removed afterward.
+- Full TypeScript, i18n (593 messages per language) and whitespace checks passed.
+  The owner-run port 3022 server displayed the pre-evaluation application lookup
+  page correctly in the Codex in-app browser. This integration check did not
+  exercise uploads against business data; the feature's isolated desktop/mobile
+  recovery verification remains recorded below.
+- Preserved the shared environment names and command-line-only legacy test
+  identities. No production build, owner-server restart, push or deployment.
+
 ## 2026-10-22 — Integrate result publication recovery into dev
 
 - Confirmed `dev` was clean at `9ce7210` before merging
@@ -172,6 +190,47 @@
   unattended/email scheduler work remains deferred under F5. At feature
   validation, the branch remained isolated while `dev` had unrelated local work;
   the subsequent integration is recorded above.
+
+## 2026-10-22 — Recover abandoned pre-evaluation uploads
+
+- Added authorized, persistent unfinished-upload lists and explicit abandonment
+  to the customer pre-evaluation page and shared FileManager. Failed/cancelled
+  queue removal now abandons the matching server attempt before removing the
+  browser row. A refreshed page can recover attempts even without an upload key.
+- Abandonment locks the application, matches the exact file timestamp or shared
+  attempt ID, removes only an unfinished reservation and records an audit event.
+  It releases file quota, invalidates prior AI inputs/results and keeps the batch
+  pending. Ready files, newer retries, foreign attempts and cancelled applications
+  remain protected. Active uploads still block completion and staff AI retry;
+  an empty abandoned batch must receive a replacement before completion.
+- Preserved same-file retry and fenced stale callbacks before provider commits.
+  Customer chunk tokens now bind timestamp text before PostgreSQL casting to
+  retain microseconds; the driver's default timestamp serializer otherwise
+  truncates them. The older pre-evaluation multipart endpoint also holds its
+  attempt claim through storage/indexing. Formal evaluation behavior is unchanged.
+- No database migration is needed: deletion uses the existing server role's
+  SELECT/INSERT/UPDATE/DELETE grants and private-schema RLS policy. A disposable
+  PostgreSQL test exercised the restricted role and mapped preview schema without
+  adding columns or widening grants. No cloud database was changed.
+- Regression coverage uses disposable PostgreSQL and mocked Dropbox/AI, including
+  failure/cancel A -> abandon -> B -> complete -> retry, same-file retry, active
+  blockers, quota release, microsecond fencing, concurrent commit/abandonment,
+  old success/failure callbacks, authorization/origin checks, cancellation and a
+  regenerated paid result. Full suite: 725 tests passed without skips; typecheck,
+  i18n and whitespace checks passed. No production build was run.
+- Visual acceptance: Codex in-app browser exercised customer abandonment and
+  requeue in a temporary isolated harness. Playwright exercised the shared
+  failure/remove/replacement flow at 390px and inspected the actual customer
+  success route at 390px/1280px, including a synthetic completed result. No
+  horizontal overflow. Only Dropbox transport was simulated in the shared UI;
+  recovery and completion APIs wrote to the disposable local database. The result
+  display fixture did not call a real AI provider. Screenshots are under
+  `output/playwright/`; temporary routes/configuration and the 3033 server were
+  removed/stopped after verification. Ports 3021/3022 were not changed.
+- Kept on `x/preeval-upload-recovery` for sequential integration: `dev` contains
+  another conversation's uncommitted changes. Live provider/hosted acceptance
+  remains pending. No push, deployment, real mail, charge, or new Cron.
+
 
 ## 2026-10-22 — Deploy and verify the standalone Production expiry Cron
 

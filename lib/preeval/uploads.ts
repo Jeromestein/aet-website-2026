@@ -51,7 +51,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
         offset: 0, size: fileSize, mime, hash: contentHash, path: record.dropbox_path };
       return { uploadKey: seal(accountForOffice(office), purpose, upload, Date.now() + lifetime), offset: 0 };
     } catch {
-      await db()`update ${table('preeval.files')} set state='failed' where id=${record.id} and created_at=${record.version}::timestamptz and state='uploading'`;
+      await db()`update ${table('preeval.files')} set state='failed' where id=${record.id} and created_at=${record.version}::text::timestamptz and state='uploading'`;
       throw new AppError('upload_failed', 502);
     }
   }
@@ -59,11 +59,12 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
   if (upload.id !== id) throw new AppError('access_denied', 403);
   if (!['append', 'finish', 'cancel'].includes(String(data.action))) throw new AppError('invalid_request');
   // Lock in the same order as start/complete. A replacement attempt cannot race
-  // an old finish into a new index/result; timestamps are compared in PostgreSQL.
+  // an old finish into a new index/result. Bind timestamp text before casting
+  // in PostgreSQL; the driver timestamp serializer truncates microseconds.
   return db().begin(async tx => {
     const [app] = await tx`select id,status from ${table('preeval.applications')} where id=${id} for update`;
     if (!app || app.status === 'cancelled') throw new AppError('application_cancelled', 409);
-    const [file] = await tx`select * from ${table('preeval.files')} where id=${upload.fileId} and application_id=${id} and created_at=${upload.version}::timestamptz for update`;
+    const [file] = await tx`select * from ${table('preeval.files')} where id=${upload.fileId} and application_id=${id} and created_at=${upload.version}::text::timestamptz for update`;
     if (!file || file.state === 'failed') throw new AppError('upload_expired', 409);
     if (file.state === 'ready') {
       if (data.action === 'finish') return { complete: true };

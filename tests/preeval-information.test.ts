@@ -32,6 +32,7 @@ vi.mock('../lib/preeval/ai-documents', () => ({
   documentManifest: async () => [], loadDocuments: async () => [],
   manifestHash: (manifest: unknown) => JSON.stringify(manifest),
 }));
+import { abandonUpload, unfinishedUploads } from '../lib/preeval/upload-recovery';
 import { addFile, application, staffAction } from '../lib/preeval/service';
 import { completeUploads, dueAIJobs, finishDocumentUpload, pauseForUpload, retryAnalysis, startDocumentUpload } from '../lib/preeval/ai-jobs';
 import { processAI, type AIDependencies } from '../lib/preeval/ai';
@@ -231,4 +232,19 @@ describe.skipIf(!pgBin)('F3 information request/resubmission (isolated PostgreSQ
     expect(await process()).toBe(true);
     expect((await row()).result_version).toBe(2);
   });
+  it('abandons failed A, replaces it with B, requeues and displays the new paid result', async () => {
+    const a = await startDocumentUpload(id, 'a.pdf'); await finishDocumentUpload(id, a, false);
+    const [failed] = (await unfinishedUploads(id)).uploads;
+    await abandonUpload(id, failed, 'synthetic-customer');
+    const b = await startDocumentUpload(id, 'b.pdf');
+    await finishDocumentUpload(id, b, true, { name: 'b.pdf', path: `/synthetic/${id}/b.pdf`, size: 50, contentHash: id });
+    expect(await process()).toBe(false); expect((await application(id)).result).toBeNull();
+    await completeUploads(id); expect(await process()).toBe(true);
+    expect((await application(id)).result).toEqual({ result: generated.analysis.result, reasoning: generated.analysis.reasoning });
+    expect((await row()).result_version).toBe(2);
+    await finishDocumentUpload(id, a, true, { name: 'a.pdf', path: `/synthetic/${id}/a.pdf`, size: 50, contentHash: 'old' });
+    expect((await application(id)).files).toHaveLength(1);
+    expect((await row()).ai_status).toBe('completed');
+  });
+
 });

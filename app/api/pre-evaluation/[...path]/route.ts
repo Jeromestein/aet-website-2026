@@ -31,6 +31,7 @@ import {
 } from "@/lib/preeval/payments";
 import { flushFormalEmails } from '@/lib/evaluation-application/email';
 import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-application/payments';
+import { abandonUpload, unfinishedUploads } from "@/lib/preeval/upload-recovery";
 import { completeUploads, retryAnalysis } from "@/lib/preeval/ai-jobs";
 import { scheduleAI } from "@/lib/preeval/ai-scheduler";
 import { downloadFile } from "@/lib/preeval/dropbox";
@@ -196,6 +197,10 @@ async function handler(
         if (['queued', 'running'].includes(app.ai_status)) await scheduleAI(id);
         after(() => deliverApplicationEmails(id));
         return response(app);
+      }
+      if (path[2] === "upload-recovery") {
+        if (isPost) return response(await abandonUpload(id, body, current.email));
+        return response(await unfinishedUploads(id));
       }
       if (path[2] === "uploads-complete" && isPost) {
         await completeUploads(id); await scheduleAI(id); return response({ ok: true });
