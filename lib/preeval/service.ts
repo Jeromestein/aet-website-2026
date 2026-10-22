@@ -12,7 +12,7 @@ import {
 } from "./domain";
 import { applicationEmail } from "./email";
 import { uploadFile, filePath } from "./dropbox";
-import { publishIfReady, cancelApplication } from "./payments";
+import { publishIfReady, cancelApplication, canVerifyPreEvaluationPayment } from "./payments";
 
 export async function submit(input: unknown) {
   const value = applicationSchema.safeParse(input);
@@ -86,6 +86,7 @@ export async function application(id: string, staff = false) {
     updated_at: app.updated_at,
   };
   if (staff) {
+    response.payment_verification_enabled = canVerifyPreEvaluationPayment();
     response.office = app.office;
     response.notes = app.notes;
     response.ai_error = app.ai_error;

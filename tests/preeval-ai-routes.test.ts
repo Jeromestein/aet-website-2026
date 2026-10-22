@@ -1,17 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-const m = vi.hoisted(() => ({ schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn() }));
+const m = vi.hoisted(() => ({ schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
 vi.mock('server-only', () => ({}));
 vi.mock('next/server', async original => ({ ...await original<typeof import('next/server')>(), after: m.after }));
 vi.mock('../lib/preeval/ai-scheduler', () => ({ scheduleAI: m.schedule }));
 vi.mock('../lib/preeval/ai-jobs', () => ({ completeUploads: m.complete, retryAnalysis: m.retry, pauseForUpload: m.pause }));
-vi.mock('../lib/preeval/config', () => ({ configuration: () => ({}), required: () => '' }));
+vi.mock('../lib/preeval/config', () => ({ configuration: () => ({ cloudPreview: m.cloudPreview }), required: () => '' }));
 vi.mock('../lib/preeval/db', () => ({ db: () => m.query, table: (name: string) => name }));
 vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, consumeLink: vi.fn(), sessionCookie: () => ({ name: 'test', value: 'test' }), sameOrigin: vi.fn(), limit: vi.fn(), hash: vi.fn(), COOKIE: 'test' }));
-vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), deliverApplicationEmails: m.mail }));
+vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn(), deliverApplicationEmails: m.mail }));
 vi.mock('../lib/preeval/service', () => ({ submit: m.submit, application: m.application, addFile: vi.fn(), staffAction: m.staff }));
-vi.mock('../lib/preeval/payments', () => ({ checkout: vi.fn(), reconcile: vi.fn(), handleStripeEvent: vi.fn(), stripeClient: vi.fn(), cancelApplication: vi.fn() }));
-vi.mock('../lib/evaluation-application/email', () => ({ flushFormalEmails: vi.fn() }));
-vi.mock('../lib/evaluation-application/payments', () => ({ handleStripeEvent: vi.fn() }));
+vi.mock('../lib/preeval/payments', () => ({ checkout: vi.fn(), reconcile: vi.fn(), handleStripeEvent: m.paymentEvent, stripeClient: () => ({ webhooks: { constructEvent: m.construct } }), cancelApplication: vi.fn() }));
+vi.mock('../lib/evaluation-application/email', () => ({ flushFormalEmails: m.formalMail }));
+vi.mock('../lib/evaluation-application/payments', () => ({ handleStripeEvent: m.formalEvent }));
 vi.mock('../lib/preeval/dropbox', () => ({ downloadFile: vi.fn() }));
 vi.mock('../lib/dropbox/server', () => ({ contextFromRequest: m.context, requireUploadAllowed: m.uploadAllowed, requireEnabled: vi.fn() }));
 import { GET, POST } from '../app/api/pre-evaluation/[...path]/route';
@@ -28,6 +28,7 @@ function call(method: 'GET' | 'POST', path: string, body = {}) {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  m.cloudPreview = false;
   m.authorize.mockResolvedValue({ role: 'customer', email: 'synthetic@example.invalid' });
   m.submit.mockResolvedValue({ app: { id, locale: 'en' }, token: 'test' });
   m.application.mockResolvedValue({ ai_status: 'queued' });
@@ -117,5 +118,37 @@ describe('shared Dropbox batch dispatch', () => {
     m.complete.mockRejectedValue(new AppError('uploads_incomplete', 409));
     expect((await batch(request('POST', 'dropbox/upload-batch', { action: 'complete' }))).status).toBe(502);
     expect(m.schedule).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('signed Stripe callback dispatch', () => {
+  const event = { id: 'evt_synthetic', livemode: false, type: 'checkout.session.completed', data: { object: { metadata: { pilot: 'aet-2026-local', applicationId: id } } } };
+  const callback = (signature = 'test-signature') => POST(new Request(origin + '/api/pre-evaluation/stripe-webhook', {
+    method: 'POST', body: '{"signed":"body"}', headers: { 'stripe-signature': signature },
+  }), { params: Promise.resolve({ path: ['stripe-webhook'] }) });
+  it('dispatches only pre-evaluation and its scoped mail in cloud preview', async () => {
+    m.cloudPreview = true; m.construct.mockReturnValue(event);
+    expect((await callback()).status).toBe(200);
+    expect(m.paymentEvent).toHaveBeenCalledWith(event);
+    expect(m.formalEvent).not.toHaveBeenCalled(); expect(m.formalMail).not.toHaveBeenCalled();
+    expect(m.after).toHaveBeenCalledTimes(1);
+    await m.after.mock.calls[0][0](); expect(m.mail).toHaveBeenCalledWith(id);
+    expect(Buffer.from(m.construct.mock.calls[0][0]).toString()).toBe('{"signed":"body"}');
+  });
+  it('preserves the local combined handler', async () => {
+    m.construct.mockReturnValue(event);
+    expect((await callback()).status).toBe(200);
+    expect(m.formalEvent).toHaveBeenCalledWith(event);
+    expect(m.after).toHaveBeenCalledWith(m.formalMail);
+  });
+  it.each(['', 'incorrect'])('rejects a missing or invalid signature (%s)', async signature => {
+    m.construct.mockImplementation(() => { throw new Error('bad signature'); });
+    expect((await callback(signature)).status).toBe(400);
+    expect(m.paymentEvent).not.toHaveBeenCalled(); expect(m.after).not.toHaveBeenCalled();
+  });
+  it('does not schedule email when event processing fails', async () => {
+    m.construct.mockReturnValue(event); m.paymentEvent.mockRejectedValue(new AppError('invalid_payment'));
+    expect((await callback()).status).toBe(400); expect(m.after).not.toHaveBeenCalled();
   });
 });

@@ -84,7 +84,7 @@ async function handler(
       if (!signature) throw new AppError("invalid_signature");
       let event;
       try {
-        event = stripeClient().webhooks.constructEvent(
+        event = stripeClient("pre-evaluation").webhooks.constructEvent(
           raw,
           signature,
           required("STRIPE_TEST_WEBHOOK_SECRET"),
@@ -93,8 +93,11 @@ async function handler(
         throw new AppError("invalid_signature");
       }
       await handleStripeEvent(event);
-      await handleFormalEvent(event);
-      after(flushFormalEmails);
+      // The preview opt-in authorizes pre-evaluation payments only.
+      if (!configuration().cloudPreview) {
+        await handleFormalEvent(event);
+        after(flushFormalEmails);
+      }
       if (event.type.startsWith("checkout.session.")) {
         const metadata = (event.data.object as { metadata?: Record<string, string> }).metadata;
         if (metadata?.pilot === "aet-2026-local" && z.uuid().safeParse(metadata.applicationId).success)

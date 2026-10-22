@@ -5,12 +5,25 @@ import { required, configuration, requireExternalServices } from "./config";
 import { TOTAL_CENTS, AppError, resultPath } from "./domain";
 import { applicationEmail } from "./email";
 
-export function stripeClient() {
-  requireExternalServices();
+// Existing formal-evaluation callers retain the cloud-preview restriction.
+export function stripeClient(scope: "pre-evaluation" | "formal-evaluation" = "formal-evaluation") {
+  if (scope !== "pre-evaluation" || process.env.PREEVAL_STRIPE_TEST_ENABLED !== "true")
+    requireExternalServices();
+  else
+    configuration();
   const key = required("STRIPE_TEST_SECRET_KEY");
   if (!key.startsWith("sk_test_") && !key.startsWith("rk_test_"))
     throw new Error("Only Stripe test keys are permitted.");
   return new Stripe(key, { maxNetworkRetries: 2, timeout: 20000 });
+}
+// Report the same capability enforced by payment actions without exposing configuration.
+export function canVerifyPreEvaluationPayment(): boolean {
+  try {
+    stripeClient("pre-evaluation");
+    return true;
+  } catch {
+    return false;
+  }
 }
 export async function publishIfReady(id: string) {
   const [app] = await db().begin(async (tx) => {
@@ -24,7 +37,7 @@ export async function publishIfReady(id: string) {
 }
 export async function checkout(id: string) {
   const sql = db();
-  const stripe = stripeClient();
+  const stripe = stripeClient("pre-evaluation");
   return await sql.begin(async (tx) => {
     const [app] =
       await tx`select * from ${table("preeval.applications")} where id=${id} for update`;
@@ -107,7 +120,7 @@ export async function applyCheckout(
       payment.amount_cents !== TOTAL_CENTS
     )
       throw new AppError("invalid_payment");
-    const refunded = await syncCheckoutRefund(tx, "preeval", payment, session, () => stripeClient());
+    const refunded = await syncCheckoutRefund(tx, "preeval", payment, session, () => stripeClient("pre-evaluation"));
     const event =
       await tx`insert into ${table("preeval.payment_events")}(id,type) values (${eventId},${eventType}) on conflict do nothing returning id`;
     if (!event.length || refunded) return;
@@ -139,7 +152,7 @@ export async function reconcile(id: string) {
   const rows =
     await db()`select session_id from ${table("preeval.payments")} where application_id=${id} and status in ('open','paid','partially_refunded') order by created_at desc limit 3`;
   for (const row of rows) {
-    const s = await stripeClient().checkout.sessions.retrieve(row.session_id);
+    const s = await stripeClient("pre-evaluation").checkout.sessions.retrieve(row.session_id);
     await applyCheckout(
       s,
       `reconcile:${s.id}:${s.status}:${s.payment_status}`,
@@ -163,7 +176,7 @@ export async function handleStripeEvent(event: Stripe.Event) {
       event.type,
     );
   } else if (event.type === "charge.refunded") {
-    await applyChargeRefund(event, "preeval", "aet-2026-local", () => stripeClient());
+    await applyChargeRefund(event, "preeval", "aet-2026-local", () => stripeClient("pre-evaluation"));
   }
 }
 export async function cancelApplication(id: string, actor: string) {
@@ -175,12 +188,12 @@ export async function cancelApplication(id: string, actor: string) {
       throw new AppError("contact_for_cancellation", 409);
     if (app.status === "cancelled") return null;
     for (const payment of await tx`select session_id from ${table("preeval.payments")} where application_id=${id} and status='open'`) {
-      const session = await stripeClient().checkout.sessions.retrieve(
+      const session = await stripeClient("pre-evaluation").checkout.sessions.retrieve(
         payment.session_id,
       );
       if (session.payment_status === "paid") return session;
       if (session.status === "open")
-        await stripeClient().checkout.sessions.expire(payment.session_id);
+        await stripeClient("pre-evaluation").checkout.sessions.expire(payment.session_id);
       await tx`update ${table("preeval.payments")} set status='expired',updated_at=now() where session_id=${payment.session_id}`;
     }
     await tx`update ${table("preeval.applications")} set status='cancelled',payment_status=case when payment_status='pending' then 'unpaid' else payment_status end,updated_at=now() where id=${id}`;
