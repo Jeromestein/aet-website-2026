@@ -360,6 +360,7 @@ Legacy checkout and four standalone CRM tool URLs remain open work. See the
 
 ## Documentation
 
+- [Migration architecture](docs/migration-architecture.md): English Mermaid diagrams of AET 2026 and legacy AET App, shared data boundaries, and remaining integration work.
 - [Design baseline](docs/design.md): brand, fixed copy, logo, palette, typography, homepage composition, and responsive behavior.
 - [Form/database compatibility](docs/legacy-form-compatibility.md): original field mappings, website price snapshots, local setup and cutover limits.
 - [Blog article structure](docs/blog-requirements.md): search-focused titles, reader questions, direct answers, and AI links near the top.

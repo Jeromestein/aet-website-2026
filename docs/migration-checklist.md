@@ -1,5 +1,9 @@
 # AET 2026 Website and App Migration Checklist
 
+See [migration architecture](migration-architecture.md) for the English Mermaid
+diagrams of AET 2026 and legacy AET App, including shared data and integration
+boundaries. This checklist tracks implementation and acceptance separately.
+
 ## Accepted AI baseline and full customer journey — October 22, 2026
 
 The owner accepts the current four-case result (three full reference matches and
