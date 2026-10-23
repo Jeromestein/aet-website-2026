@@ -1,5 +1,19 @@
 # AET Implementation Status
 
+## 2026-10-23 — Contact directory correction
+
+- Removed the duplicate New York card from the shared Other contacts section
+  across locales. The main New York office card and its certified translation,
+  credential evaluation and interpretation service note remain unchanged.
+- Preserved the `other-contact` fragment on the remaining contact grid.
+- Verified Chinese Contact in the Codex in-app browser at desktop and 390px
+  mobile widths, including the Other contacts navigation link and Taiyuan card.
+- Route type generation, TypeScript and whitespace checks passed. Initial stale
+  generated route types were refreshed. The temporary polling/webpack preview
+  on port 3021 resolved file watcher limits and was stopped after verification.
+- No production build, commit, push or deployment.
+
+
 ## 2026-10-19 — Show Stripe before office selection
 
 - Show Stripe on the initial Payment form whenever Stripe is enabled and at
