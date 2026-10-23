@@ -1,5 +1,13 @@
 # AET Implementation Status
 
+## 2026-10-23 — Synchronize main branches
+
+- Merged the standalone payment-expiry release with the Contact correction,
+  preserving both histories and both status entries. Only this log conflicted.
+- All 18 expiry tests, payment regression checks, full TypeScript, i18n and
+  whitespace checks passed. Contact source is unchanged from its verified fix.
+- No production build or live database execution was performed.
+
 ## 2026-10-23 — Contact directory correction
 
 - Removed the duplicate New York card from the shared Other contacts section
@@ -12,6 +20,16 @@
   generated route types were refreshed. The temporary polling/webpack preview
   on port 3021 resolved file watcher limits and was stopped after verification.
 - No production build, commit, push or deployment.
+
+## 2026-10-22 — Release the standalone payment-expiry Cron
+
+- Added the isolated 48-hour submitted_at worker and Production-only guard.
+- Restricted database and Cron credentials were saved in Vercel Production.
+- Kept dev-only application routes and other uncommitted changes outside this release.
+- The standalone release passed 18 Cron tests, full TypeScript and whitespace checks;
+  the existing dev checkout passed 38 related regression tests.
+- Read-only preflight found 77 eligible applications. The old GitHub scheduler
+  remains disabled. Hosted activation must be verified against this release.
 
 
 ## 2026-10-19 — Show Stripe before office selection
