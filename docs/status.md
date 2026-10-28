@@ -1946,3 +1946,16 @@ implementation and checks, not production deployment or accessibility certificat
   and 390px mobile widths; the address wraps correctly and the directions URL uses #419.
 - Used a temporary local preview on port 3021 with Watchpack polling because native
   file watching exceeded the environment limit. No production build or deployment.
+
+## 2026-10-28 — About membership copy
+
+- Removed the NACAC timeline entry from English, Chinese, and Spanish About content.
+- Updated each existing ATA corporate-membership highlight with member number
+  M-100390, without validity dates or certificate details. Updated the design
+  guidance to reflect the owner's explicit request to display this number.
+- Passed JSON/content assertions for all three locales, `pnpm check:i18n`, and
+  `git diff --check`. No production build was run.
+- Visual verification was blocked: the temporary `pnpm dev` server on port 3021
+  repeatedly reported `EMFILE: too many open files` and restarted; the Codex
+  in-app browser returned `ERR_EMPTY_RESPONSE` for `/about#highlights`. Desktop
+  and mobile rendering remain unverified. The temporary server was stopped.
