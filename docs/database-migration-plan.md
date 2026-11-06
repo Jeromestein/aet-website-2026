@@ -1,17 +1,17 @@
 # Database convergence plan
 
 Code review: November 6, 2026, `dev` at `fab4733`.
-**Phase 1 implemented and rehearsed locally on November 6, 2026.** The additive
-migration creates five private `aet` tables in a disposable PostgreSQL database.
-Hosted Preview and Production are unchanged. Runtime readers/writers still use
-the existing schemas; see the [rehearsal guide](database-rehearsal.md) and
-[isolated evidence](archive/database-phase1-rehearsal-2026-11-06.md).
+**Phases 1–3 are verified locally, and new pre-evaluation applications now use
+five private `aet_preview_core` tables in hosted dev Preview at `b003139`.**
+Production, historical records and old tables are unchanged. Operational upload,
+AI, email, access and payment-event records remain in their existing Preview schemas.
+See the [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md) and
+[rehearsal guide](database-rehearsal.md).
 
 This plan compares the accepted [five-table business model](database-architecture.md#3-proposed-shared-database-model)
-with the current readers, writers, migration SQL, and recovery tests. It reuses
-the November 6 schema inventory; it does not claim a new live database audit,
-row-count reconciliation, or runtime acceptance. Owner-approved planning
-decisions are marked below; additional recommendations remain for review.
+with readers, writers, migration SQL and recovery tests. The initial inventory and
+field audit remain the migration baseline; hosted acceptance covers only the
+explicit new pre-evaluation cohort, not historical or cross-service convergence.
 
 ## Recommendation
 
@@ -36,19 +36,19 @@ table. Fixed-price services use the shared price configuration; staff can enter
 the amount for custom work. Payments preserve the amount used by Checkout.
 Store the service's current delivery content, document references and release
 metadata in nullable `aet_service_detail.result` JSONB; do not create an
-`aet_deliverables` table. The additive phase-one schema implements these fields; runtime cutover remains
-pending. Documents hold file identities. Reuse existing operational
-records and history.
+`aet_deliverables` table. The additive phase-one schema implements these fields.
+New Preview pre-evaluation uses them; other services remain pending. Documents
+hold file identities. Reuse existing operational records and history.
 
 ## 1. What the code does today
 
 | Area | Actual behavior | Migration consequence |
 | --- | --- | --- |
-| Dedicated pre-evaluation | `submit()` writes workflow application/education plus same-ID legacy projections; reads can prefer legacy names and education | Preserve the IDs and explicitly choose which mutable fields win; changing table names alone is insufficient |
+| Dedicated pre-evaluation | New dev Preview applications write canonical core application/education; old cohorts retain compatible legacy reads; operational workflows remain | Preserve IDs and one authoritative writer; historical migration still requires reconciliation |
 | Unified formal intake | Saves the submitted `data.intake` snapshot, server quote, same-ID `fce_*` projections, audit and confirmation-email record in a transaction | Preserve the full submitted snapshot and education-ID mapping, not just the columns shown in the target diagram |
 | Formal workflow | Older pilot implements quote, payment, report release and private staff notes; v2 intake is explicitly blocked from that action route | Schema convergence does not make v2 fulfillment implemented; do not remove the guard as a migration shortcut |
 | CRM Live | Reads four legacy record families; core applications are unconditionally displayed as pre-evaluation | Do not insert formal/translation records into the live public master until all such readers are adapted |
-| CRM Preview | Joins workflow tables to legacy projections and combines them into one response | Replace this assembly behind the same response contract, with office permissions preserved |
+| CRM Preview | Combines canonical core records with old pre-evaluation/formal projections, excluding duplicate workflow projections | Mixed-cohort filtering, pagination and office scope must remain consistent |
 | Customer Status | Legacy formal projection and v2 intake projection are different; v2 currently reports pending payment | Replace the placeholder with verified shared payment truth when that journey is connected |
 | Files | Shared folder access, formal files, pre-evaluation files and upload attempts coexist | A successful-file index cannot replace unfinished-upload recovery or report-release checks |
 | Payments | Workflow ledgers keep Checkout/PaymentIntent IDs, refunds and event deduplication; legacy rows are summaries | Do not collapse a ledger into `due_amount` and `payment_status` |
@@ -74,8 +74,9 @@ cloud Preview. Live CRM uses a different restricted connection to actual public
 tables. A branch does not isolate these data stores or provider accounts.
 See [schema routing](../lib/preeval/config.ts) and [Live connection](../lib/crm/live-db.ts).
 
-For rehearsal, use a separate private target namespace, such as
-`aet_preview_core`, with the five accepted table names. For eventual production,
+Hosted dev Preview now uses the separate private `aet_preview_core` namespace
+with the five accepted table names and restricted `aet_preview_runtime` login.
+It is schema isolation within the existing project, not a separate project. For eventual production,
 recommend a private canonical namespace, such as `aet_core`, while old `public`
 tables remain compatibility surfaces. **The final namespace needs approval.**
 Copying the same IDs into a temporary target is not creating new application
@@ -462,12 +463,14 @@ simulated; no hosted cutover or full CRM/Status shadow adapter is claimed. See t
 Phase-two pre-evaluation read adapters and scoped comparisons are now verified
 in the same disposable environment; see [evidence and remaining differences](archive/database-phase2-reads-2026-11-06.md).
 The CRM education-date discrepancy is corrected and regression-tested; complete
-remaining historical/File ID reconciliation before a historical or hosted write cutover.
+remaining historical/File ID reconciliation before migrating historical records.
 Phase three now passes for a fresh isolated pre-evaluation cohort: canonical
 application/education writes, File ID recording, actual business reads and atomic
 service/payment projections, retaining operational state and ledger authority.
 See [phase-three evidence and boundaries](archive/database-phase3-runtime-2026-11-06.md).
-This is not a hosted activation, public-table rename or general-intake migration.
+The subsequent [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md)
+activates this path for new dev Preview applications with real providers. It does
+not rename public tables, migrate historical records or connect general intake.
 Pre-evaluation can ship on the shared master while retaining its proven runtime
 tables; launching it does not require migrating every historical record first.
 Calendar estimates should follow phase 0 counts and reconciliation findings.

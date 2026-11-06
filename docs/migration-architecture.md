@@ -3,7 +3,8 @@
 This document is the architecture reference for the migration from the legacy
 public website and AET App to AET 2026. Keep the two diagrams here; the README
 and migration checklist link to this page. Proposed data-model changes are kept
-in a separate, explicitly unimplemented section below.
+in a separate target-model section below; current implementation boundaries are
+recorded in status and the dated acceptance evidence.
 
 The diagrams originate from the October 22, 2026 review of `dev` at `1d431ac`
 and the accompanying working tree. They describe component relationships, not
@@ -14,8 +15,8 @@ are preserved in the [dated archives](README.md#historical-evidence).
 
 For database tables and individual fields, use the separate
 [legacy/current/proposed database comparison](database-architecture.md).
-Its proposed view is a discussion model, not an implemented extension of the
-system diagrams below.
+Its shared model now serves new dev Preview pre-evaluation applications; the
+original component diagrams below are not a full physical-schema inventory.
 The [database convergence plan](database-migration-plan.md) reviews code-level
 gaps in that model and proposes implementation phases, compatibility and rollback
 rules. Its additional fields/tables are recommendations pending review.
@@ -143,8 +144,8 @@ use English. Omit `locale` from the target application and do not replace it wit
 a notification-language preference elsewhere. Page language is selected through
 the URL/browser; translation source and target languages remain service inputs.
 See the [email language policy](email-templates.md#planned-language-policy).
-Existing locale columns and runtime behavior are unchanged until their consumers
-are updated in a separately implemented migration.
+New core pre-evaluation confirmation/result emails now use English. Existing
+locale columns are retained for old cohorts; other service consumers still need migration.
 
 The application master has no storage fields. The target uses
 `aet_documents` for files only: each row stores its application link, storage

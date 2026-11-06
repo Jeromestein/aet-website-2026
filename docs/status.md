@@ -1,8 +1,7 @@
 # AET Implementation Status
 
-Updated November 6, 2026 with the isolated database phase-one through phase-three rehearsals below.
-Hosted acceptance remains the October 22 record at `5d10cff`; it was not rerun. This is the current
-summary, not a release log.
+Updated November 6, 2026 after isolated phases one through three and the authorized
+hosted dev Preview core activation at `b003139`. This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
@@ -22,8 +21,8 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| Shared database | Five private `aet` tables; guarded pre-evaluation runtime writes/reads now pass on a fresh disposable cohort, alongside backfill and shadow-read tests | Hosted activation, historical/mixed-cohort reconciliation and eventual operational-ledger retirement |
-| Dedicated pre-evaluation | October 22 hosted synthetic journey passed: upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered emails | Hosted failure-recovery scenarios, production configuration and charging |
+| Shared database | Five shared business tables now serve new pre-evaluation applications in private `aet_preview_core`; old Preview applications remain readable | Historical reconciliation/backfill, other service writers, Production activation and eventual compatibility retirement |
+| Dedicated pre-evaluation | November 6 hosted core journey passed: chunked upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted failure-recovery scenarios, production configuration and charging |
 | Failure recovery | Abandoned-upload recovery and saved-result publication recovery both merged into `dev` | Exercise both fixes in the authorized hosted environment |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
 | Status and documents | Formal lookup, ordinary/chunked uploads, saved Dropbox locations and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
@@ -34,47 +33,45 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 
 ## Latest hosted acceptance
 
-Vercel dev Preview is **Ready** at `5d10cff`, deployment
-`dpl_GusfM9qw56wGk3n8kzDeHazfXC9t`. The twelve Preview/dev settings added during
-the earlier acceptance remain in place; its temporary listener signing secret
-has now been replaced by the permanent Stripe **test** endpoint's secret.
+Vercel dev Preview is **Ready** at `b003139`, deployment
+`dpl_9CErCogfTCmRHUbR38t3KHJGwfdF`. New pre-evaluation applications use
+`aet_preview_core`; existing applications continue through their compatible
+readers. Isolation uses private schemas and a restricted login in the existing
+Supabase project, not a separate Supabase project.
 
-A new synthetic application completed upload, one GPT analysis and USD 19.88
-Stripe Sandbox Checkout. Stripe delivered `checkout.session.completed` directly
-to the dev webhook: payment became paid, the saved result was published and both
-confirmation/result emails were delivered. Customer result and CRM payment views
-agree. No relay or application-code change was needed. The earlier hosted run
-also checked matching download bytes, unpaid-result hiding, concurrent Checkout
-reuse and callback replay without duplicate payment, analysis or email.
+A new synthetic application completed a real Dropbox chunked upload and matching
+byte download, one OpenAI analysis, USD 19.88 Stripe **Sandbox** Checkout, direct
+permanent test-webhook delivery, result release and two English Resend emails
+confirmed delivered. Customer results and CRM Test agree. The CRM retains all
+nine test applications, and an older paid application's result remains accessible.
+The explicit synthetic credential correctly produced “Unable to determine”; this
+is workflow evidence, not an assessment-quality benchmark.
 
-Only the stable **dev alias** has a Vercel protection exception, allowing direct
-Stripe delivery without Vercel login. App-level staff authentication still returns
-401 when unauthenticated, and an unsigned webhook returns 400. Other aliases and
-global protection were unchanged. The direct-webhook follow-up verified unchanged
-Production variables, deployment and all five Production alias mappings.
+Unauthenticated protected API access returned 401 and an unsigned webhook returned
+400. The runtime role has no production-table write grants. Production remains at
+`fc1ab0d`, deployment `dpl_3NCtp1ZJBRYxi2puGVLg2eCuQJZR`; no Production settings,
+main branch, old tables or historical records were changed.
 
+See the [November 6 acceptance record](archive/database-preview-acceptance-2026-11-06.md).
 Hosted failure injection, cancellation/refund, mobile recovery and production
-charging remain open. The earlier temporary-relay run had a default-alias
-reassignment that was restored; preserve that historical distinction in the
-[full acceptance record](archive/preview-acceptance-2026-10-22.md). The latest
-[direct webhook evidence](archive/preview-acceptance-2026-10-22.md#permanent-direct-test-webhook-acceptance)
-supersedes its outstanding webhook setup item.
+charging remain open. Earlier replay/concurrency and direct-webhook checks remain
+in the [October 22 record](archive/preview-acceptance-2026-10-22.md).
 
 ## Latest isolated database verification
 
-Phase-three [runtime acceptance](archive/database-phase3-runtime-2026-11-06.md)
-passes on a fresh isolated pre-evaluation cohort: application/education ownership,
-File ID uploads/reads, real service transitions and atomic service/payment
-projections. CRM, Status, AI and English emails use canonical business data.
-117 focused tests and TypeScript pass. Operational AI/upload/email/session tables
-and the payment ledger remain intentionally retained; no historical or hosted
-cutover is claimed.
+The final focused suite passes **160 tests across 12 files**, with all selected
+PostgreSQL fixtures enabled, plus TypeScript. It covers phase-one backfill,
+phase-two scoped reads, phase-three runtime transitions, hosted schema/role
+mapping, mixed old/new cohorts, chunked upload indexing, recovery and deduplication.
+These tests use disposable databases and simulated providers; the real-provider
+hosted acceptance above is separate evidence.
 
-The [phase-two comparisons](archive/database-phase2-reads-2026-11-06.md) and
-[phase-one rehearsal](archive/database-phase1-rehearsal-2026-11-06.md) remain
-regression coverage. All clusters are disposable and external providers are
-simulated. Default application startup does not activate core writes; Preview,
-Production, credentials and real customer data were not changed.
+The [phase-three runtime record](archive/database-phase3-runtime-2026-11-06.md),
+[phase-two comparisons](archive/database-phase2-reads-2026-11-06.md) and
+[phase-one rehearsal](archive/database-phase1-rehearsal-2026-11-06.md) retain their
+original scopes. Operational AI/upload/email/session tables and the payment ledger
+remain necessary. Historical backfill and Production cutover have not occurred.
+The explicit core opt-in is enabled only for dev Preview.
 
 ## Latest integrated verification
 
@@ -87,9 +84,9 @@ Production, credentials and real customer data were not changed.
 - Upload recovery had isolated desktop and 390px mobile interaction checks.
   The earlier integration-time browser check covered the pre-evaluation lookup
   page only; the later hosted primary journey is recorded separately above.
-- The earlier October 22 provider acceptance exercised real Dropbox, OpenAI,
-  Resend and **Stripe Sandbox** with synthetic applications. It did not establish
-  production charging or hosted delivery of the latest recovery fixes.
+- The November 6 provider acceptance exercised real Dropbox, OpenAI, Resend and
+  **Stripe Sandbox** on the deployed core runtime. Hosted failure injection and
+  production charging are still unverified; happy-path success does not prove them.
 - The October 20 hosted acceptance predates later dev changes. A local commit
   is not proof that the same version is running on Vercel.
 
@@ -118,9 +115,9 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Resolve remaining identity/File-ID/price exceptions, then prepare one
-   pre-evaluation cohort with one authoritative writer.
-   Isolated shared reads pass; runtime authority remains unchanged.
+1. Reconcile historical identity/File-ID/price exceptions and prepare a reversible
+   historical migration. New dev Preview pre-evaluation applications already use
+   the core writer; keep existing records and operational tables intact.
 2. Exercise both integrated pre-evaluation recovery fixes in dev Preview,
    refund/cancellation visibility and mobile recovery states. Direct test-webhook
    delivery is verified; keep production charging/configuration separate.

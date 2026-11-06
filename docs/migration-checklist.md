@@ -1,14 +1,14 @@
 # AET Migration Checklist
 
-Planning updated November 6, 2026. Implementation evidence remains the
-October 22 `dev` baseline at `adc6461`, with hosted Preview acceptance of `5d10cff`.
-New planning items do not imply implementation or fresh runtime verification.
+Updated November 6, 2026. Isolated phases one through three and hosted dev Preview
+core acceptance at `b003139` are verified. Production and historical cohorts remain
+unchanged; unchecked target-model capabilities are not implied by this activation.
 Read [status](status.md) for progress, [architecture](migration-architecture.md)
 for system relationships and the [documentation index](README.md) for guides.
 The [database comparison](database-architecture.md) maps legacy, current and
-proposed tables/fields; its target structure remains a plan, not a migration.
+proposed tables/fields; the five-table model now serves new Preview pre-evaluation applications.
 The [database convergence plan](database-migration-plan.md) adds a code-backed
-field audit and staged migration gates; its recommendations await review.
+field audit, implemented stages and remaining migration gates.
 
 Checked means the stated implementation or verification is complete, not that
 the whole feature is deployed. Keep current work here; dated test output and
@@ -116,10 +116,18 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Verify the complete service flow without backfill, upload/publication recovery,
   refunds, deduplication, private fields, office scope and failed-write rollback.
   117 focused tests and TypeScript pass; see [evidence and ownership boundaries](archive/database-phase3-runtime-2026-11-06.md).
-  Activation is test-harness-only; payment/AI/email/attempt compatibility remains.
+  This original phase-three record covers the test harness; hosted activation is recorded below.
+- [x] **Hosted dev Preview core activation (November 6, 2026):** create only
+  `aet_preview_core`, enable the guarded core writer for new dedicated pre-evaluation
+  applications and retain all old tables/readers. Real chunked Dropbox upload and
+  matching download, one OpenAI analysis, USD 19.88 Stripe Sandbox direct webhook,
+  released result, customer/CRM agreement and two delivered English emails pass.
+  Old and new applications coexist. Final focused regression: 160 tests/12 files
+  plus TypeScript. Production is unchanged. See [acceptance evidence](archive/database-preview-acceptance-2026-11-06.md).
 - [ ] **TODO — Complete cohort cutover reconciliation:** file creation timestamps
-  remain an explicit unknown; finish real File ID/history reconciliation and
-  mixed-cohort comparisons before replacing hosted runtime reads. The fresh isolated cohort is verified; keep one authoritative writer.
+  remain an explicit unknown; finish real File ID and history reconciliation
+  before migrating historical records. Mixed old/new Preview reads
+  are verified; keep one authoritative writer per application.
 - [ ] **TODO — Historical contract and source reconciliation:** verify missing
   original submissions, File IDs/revisions, release/education timestamps, pricing
   provenance, provider accounts and standalone/legacy identities against authorized
@@ -131,12 +139,12 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Preserve upload/publication recovery, refunds and email deduplication; connect
   formal v2 staff/payment/release deliberately, then translation. Retire legacy
   tables/bridges only after all readers, writers and callbacks are reconciled.
-  Local phases one through three are verified; hosted migration, production cutover and
-  new scheduling remain unapproved.
+  Local phases one through three and new-cohort hosted dev Preview activation are
+  verified. Production cutover, historical migration and new scheduling remain unapproved.
 - [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
   and `aet_payments` in the target design. Actual legacy/current tables retain
   `aet_core_educations` and `aet_core_payments`; private phase-one tables now exist
-  in the migration and disposable rehearsal, but runtime cutover is still pending;
+  in migrations, disposable rehearsals and the activated Preview core runtime;
   preserve records/IDs and do not treat a rename as payment-ledger unification.
 - [ ] **TODO — Application recipient address and pronouns (November 6, 2026):**
   implement the [application field definitions](migration-architecture.md#planned-application-contact-and-recipient-fields)
@@ -148,7 +156,7 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Preserve each application's submitted address independently of future account
   profiles. Map verified recipient values without inventing legacy data; verify
   confirmation, CRM and Status reads for evaluation and translation. The nullable
-  columns are rehearsed locally; these runtime adapters remain TODO.
+  columns exist in the Preview core schema; formal/translation runtime adapters remain TODO.
 - [ ] **TODO — Shared payment timestamps (November 6, 2026):** implement the
   [three timestamp definitions](migration-architecture.md#planned-payment-timestamps)
   in shared runtime writers. Phase-one SQL adds `created_at` and `updated_at` to `aet_payments`
@@ -158,7 +166,8 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   timestamps and keep unknown legacy history distinguishable; finalize the
   nullable/backfill policy before migration. Acceptance must cover unpaid creation,
   payment success, refund updates and webhook replay. Isolated legacy-to-target
-  mapping now passes these cases; shared runtime writers and historical gaps remain TODO.
+  mapping and pre-evaluation runtime tests pass these cases; the real Preview payment
+  has all three timestamps. Cross-service adoption and historical gaps remain TODO.
 - [ ] **TODO — English business emails and no application locale (November 6, 2026):**
   follow the [language policy](email-templates.md#planned-language-policy). The
   target application omits `locale`; do not add a replacement business-language
@@ -169,8 +178,9 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   consumers before any later schema removal. Acceptance must cover submissions
   from English/Chinese/Spanish pages, delayed/retried emails without a browser,
   valid access links and continued frontend language switching.
-  The phase-one master/snapshot omits locale; existing email consumers still need
-  this change. No runtime email or hosted database change in the rehearsal.
+  The core master/snapshot omits locale; new core pre-evaluation confirmation/result
+  emails are English and were delivered from a Chinese-page hosted journey. Other
+  services, old cohorts and the full language/access-mail matrix remain TODO.
 - [ ] **TODO — Service details and translation fulfillment (plan recorded November 6, 2026):**
   implement the [planned `aet_service_detail` model](migration-architecture.md#planned-service-details)
   in runtime adapters. The phase-one table/constraints exist; use typed/validated `details`

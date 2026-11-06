@@ -2,8 +2,11 @@
 
 Legacy/current inventory captured November 6, 2026 from read-only metadata and
 `dev` at `90076a3`; no customer rows were read for that comparison. The target
-view now reflects the additive phase-one SQL, tested only in disposable local
-PostgreSQL. No hosted database change, file move or deployment was performed.
+view reflects the additive shared schema. On November 6, new dev Preview
+pre-evaluation applications began using private `aet_preview_core`; see the
+[hosted acceptance](archive/database-preview-acceptance-2026-11-06.md). Production
+and old tables remain unchanged. The original legacy/current diagrams are the
+pre-cutover inventory, not a claim that all runtime paths still use those tables.
 
 Use the [visual viewer](diagrams/database-architecture.html) to switch between
 the three diagrams and zoom. This file is the editable Mermaid source and field
@@ -12,8 +15,8 @@ crosswalk; the SVGs/viewer are generated companions, not separate specifications
 The [code-backed migration plan](database-migration-plan.md) records field and
 supporting-record decisions, staged cutover and rollback gates. The target diagram
 now includes all columns in the five phase-one tables. Operational records remain
-outside that target view; shared runtime integration and historical reconciliation
-are still pending. See the [rehearsal guide](database-rehearsal.md).
+outside that target view; new Preview pre-evaluation runtime integration is verified,
+while historical reconciliation and other service integrations remain pending. See the [rehearsal guide](database-rehearsal.md).
 
 ## Reading order and scope
 
@@ -21,8 +24,8 @@ are still pending. See the [rehearsal guide](database-rehearsal.md).
 2. **Current:** separate pre-evaluation/evaluation workflow schemas plus legacy
    compatibility projections. CRM Live still uses the old public tables.
 3. **Proposed:** one shared application identity, optional service details, shared
-   File ID records, and retained workflow machinery. Schema/mapping rehearsed
-   locally; application readers/writers have not switched.
+   File ID records, and retained workflow machinery. New Preview pre-evaluation
+   reads/writes now use this model; other cohorts remain on compatible paths.
 
 This comparison covers application, education, payment, file, AI, email, staff
 and audit data. Payload content/version/media tables, Supabase-managed `auth.*`
@@ -368,8 +371,8 @@ education IDs; these arrays are not foreign keys.
 
 ## 3. Proposed shared database model
 
-**Phase-one target, locally rehearsed.** Hosted databases and runtime readers are
-unchanged. The diagram below includes every column in the
+**Shared target, activated for new dev Preview pre-evaluation applications.**
+Production and old cohorts are unchanged. The diagram below includes every column in the
 [additive migration](../supabase/migrations/20261106220126_shared_application_core.sql);
 see [rehearsal scope](database-rehearsal.md). The selected target names are `aet_education`, `aet_payments`,
 `aet_service_detail` and `aet_documents`, linked to `aet_core_applications`.

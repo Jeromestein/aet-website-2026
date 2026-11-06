@@ -80,6 +80,7 @@ follow the current checklist and module guide before acting on them.
 
 | Record | Contents |
 | --- | --- |
+| [November 6 Preview core acceptance](archive/database-preview-acceptance-2026-11-06.md) | New shared-schema activation, real-provider journey and Production/legacy preservation |
 | [Implementation log through October 22](archive/status-through-2026-10-22.md) | Original implementation history, verification scopes and integration evidence |
 | [Migration checklist snapshot](archive/migration-checklist-2026-10-22.md) | Earlier checkpoints, complete page inventory and original decisions |
 | [October 22 code review](archive/dev-code-review-2026-10-22.md) | Baseline findings, original diagrams and subsequent F1–F5 dispositions |
