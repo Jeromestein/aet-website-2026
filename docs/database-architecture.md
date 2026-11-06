@@ -9,6 +9,12 @@ Use the [visual viewer](diagrams/database-architecture.html) to switch between
 the three diagrams and zoom. This file is the editable Mermaid source and field
 crosswalk; the SVGs/viewer are generated companions, not separate specifications.
 
+The [code-backed migration plan](database-migration-plan.md) identifies additional
+fields and supporting records needed before implementation, with staged cutover
+and rollback gates. The proposed diagram includes the accepted simple service
+pricing fields and delivery `result`. Other recommendations await review; this
+business overview is not a complete runtime schema.
+
 ## Reading order and scope
 
 1. **Legacy:** two independent application families in `public`.
@@ -431,6 +437,10 @@ erDiagram
     text service_type UK "Evaluation, pre-evaluation, translation"
     jsonb details "Validated schema for each service type"
     text notes "Optional customer notes for this service"
+    integer amount_cents "Service price; null means not priced"
+    text currency "USD initially"
+    text pricing_source "Automatic or manual; nullable if unknown"
+    jsonb result "Nullable output, file refs and release metadata"
     timestamptz created_at
     timestamptz updated_at
   }
@@ -478,6 +488,19 @@ erDiagram
   Optional customer remarks belong in `aet_service_detail.notes`, not a duplicate
   `details.instructions` key. Keep each service's notes separate from internal
   staff notes and payment notes; retain historical submitted snapshots.
+- Service pricing uses `amount_cents`, `currency` and `pricing_source`; no `quote`
+  JSON or `aet_quotes` table is required. The server calculates fixed prices from
+  the shared catalog, or staff enter the final amount. `null` means not priced;
+  zero is an explicit known price. Save prices instead of recalculating history
+  against a changed catalog. Sum service amounts in one currency and charge
+  shared shipping once. Payments preserve the amount actually used at Checkout.
+- Nullable `aet_service_detail.result` holds the current text/structured output,
+  delivered document references and release status/time. File references point
+  to `aet_documents.id` and pin the delivered revisions; File IDs and storage
+  metadata stay on documents. No `aet_deliverables` table is needed. Preserve
+  relevant input/result versions and existing release/payment/access checks.
+  See the [delivery contract](database-migration-plan.md#service-delivery-result).
+  The result is not an unlimited history list or permission to expose drafts.
 - `storage_location` plus `storage_file_id` is a **composite** unique reference in
   documents; neither column alone is unique. File bytes stay in Dropbox.
 - For a new application, derive the initial upload directory from office,
@@ -549,7 +572,7 @@ a migration already performed. `intake.*` means `eval_applications.data.intake.*
 | `school_name` | pre_educations.school_name / intake.educations[].school | `aet_education.school_name`; preserve identity and multiple degrees |
 | `study_start_date` | pre_educations.start_date / intake.educations[].start; YYYY-MM → {year, month} | `aet_education.study_start_date`; preserve identity and multiple degrees |
 | `study_end_date` | pre_educations.end_date / intake.educations[].end; YYYY-MM → {year, month} | `aet_education.study_end_date`; preserve identity and multiple degrees |
-| `ai_output` | pre_applications.result → legacy JSON string; full history in pre.ai_runs | Retain legacy result projection; keep structured result/history in pre-evaluation workflow |
+| `ai_output` | pre_applications.result → legacy JSON string; full history in pre.ai_runs | Retain read-only compatibility output; current output moves to the pre-evaluation service `result` after verified cutover, with AI history retained |
 
 </details>
 
@@ -667,6 +690,10 @@ a migration already performed. `intake.*` means `eval_applications.data.intake.*
 | `aet_service_detail.service_type` | `intake.service`, dedicated pre-evaluation route, evaluation translation add-on | One row per application/service type initially |
 | `aet_service_detail.details` | Current service-specific intake fields and requirements | JSONB with an explicit server-validated schema per service type; preserve snapshots/workflow state |
 | `aet_service_detail.notes` | `intake.notes`; v2 compatibility `fce_applications.purpose_other` | Optional customer notes for the corresponding service; plain text, initially up to 3000 characters; preserve snapshots and do not duplicate into every service row |
+| `aet_service_detail.amount_cents` | Server-calculated fixed price, verified legacy final amount or authorized staff input | Nullable nonnegative integer cents; `null` is not priced, `0` is explicitly zero-priced; reconcile application-wide totals before splitting across services |
+| `aet_service_detail.currency` | Shared price configuration or verified historical payment currency | `USD` initially; reject mixed-currency totals in one Checkout |
+| `aet_service_detail.pricing_source` | Calculation path or authorized staff edit | `automatic` / `manual`; nullable for unpriced or unknown historical provenance; do not guess |
+| `aet_service_detail.result` | `pre_applications.result` and result/input versions; formal `eval_applications.released_file_id` plus existing file/release records | Nullable JSONB for the current service output, document/revision references and release metadata; validate same-application IDs, preserve history and release guards; no deliverable table |
 | `details.source_language` / `details.target_language` | General-form `sourceLanguage` / `targetLanguage` draft fields | Translation payload; not separate SQL columns |
 | `details.translation_type` | General-form `translationType` draft field | Translation payload; align catalog values |
 | `details.purpose` | Service-specific intended use | Optional translation payload; do not blindly copy evaluation purpose; free-text remarks use the separate `notes` column |

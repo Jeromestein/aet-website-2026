@@ -7,6 +7,8 @@ Read [status](status.md) for progress, [architecture](migration-architecture.md)
 for system relationships and the [documentation index](README.md) for guides.
 The [database comparison](database-architecture.md) maps legacy, current and
 proposed tables/fields; its target structure remains a plan, not a migration.
+The [database convergence plan](database-migration-plan.md) adds a code-backed
+field audit and staged migration gates; its recommendations await review.
 
 Checked means the stated implementation or verification is complete, not that
 the whole feature is deployed. Keep current work here; dated test output and
@@ -79,8 +81,8 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   intake: request missing material, confirm fees and advance status. Acceptance:
   CRM and customer Status agree after reload; stale/cross-office writes fail.
 - [ ] Connect application-linked Stripe test checkout, verified webhook and
-  reconciliation to the saved quote; expose the same payment truth in Status/CRM
-  and send one receipt. Replayed events must not create another effective payment.
+  reconciliation to saved service amounts and the fixed Checkout amount; expose
+  the same payment truth in Status/CRM and send one receipt. Replayed events must not create another effective payment.
 - [ ] Define manual/external payments, adjustments, refunds and needed additional
   payment methods before their production acceptance. Standalone `/payment` and
   older pilot behavior do not establish support in this new intake.
@@ -89,6 +91,32 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
   entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
+- [ ] **TODO — Review the database convergence contract (November 6, 2026):**
+  review the [field audit](database-migration-plan.md#2-field-audit-of-the-five-core-entities)
+  and [simple pricing, delivery and operational-record plan](database-migration-plan.md#3-additional-tables-and-records).
+  Decide missing birth/residence/submission/version fields, per-service workflow
+  fields, document access/revision metadata and payment-ledger completeness.
+  Use `aet_service_detail.amount_cents`, `currency` and `pricing_source` for
+  automatically calculated or staff-entered prices; no service `quote` JSON or
+  separate `aet_quotes` table. Freeze the amount/currency on the payment record.
+  Keep current delivery information in nullable `aet_service_detail.result`;
+  do not create `aet_deliverables`.
+  Preserve existing history and resolve namespace/historical exceptions before
+  SQL implementation. The proposed diagram now includes simple pricing fields
+  and `result`; other proposed field additions remain under review.
+- [ ] **TODO — Rehearse a reversible database migration:** follow
+  [phases 0–2](database-migration-plan.md#5-delivery-phases-and-acceptance-gates)
+  in disposable/Preview storage after implementation is authorized. Preserve
+  identities, map all writers, validate backfill/permissions and compare CRM/Status
+  reads with no provider side effects. Do not merge formal/translation rows into
+  live public core tables while old readers assume every row is pre-evaluation.
+- [ ] **TODO — Migrate by tested cohort:** use the
+  [pre-evaluation-first sequence](database-migration-plan.md#5-delivery-phases-and-acceptance-gates)
+  and [rollback rules](database-migration-plan.md#6-cutover-rollback-and-permissions).
+  Preserve upload/publication recovery, refunds and email deduplication; connect
+  formal v2 staff/payment/release deliberately, then translation. Retire legacy
+  tables/bridges only after all readers, writers and callbacks are reconciled.
+  Planning only: no database change, production cutover or new scheduler now.
 - [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
   and `aet_payments` in the target design. Actual legacy/current tables retain
   `aet_core_educations` and `aet_core_payments` until a separately planned migration;
@@ -136,7 +164,18 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   being copied into unrelated service rows.
   Evaluation plus translation use separate service rows under the same Application
   ID; pure translation creates no education rows and shares documents/payments.
-  Resolve the master-table/legacy mapping, then connect requirements, staff quote,
+  Add `amount_cents` (nullable), `currency` and `pricing_source` for simple pricing.
+  Verify server-side automatic calculation, authorized manual entry, unknown vs.
+  zero amounts, single-counted shared shipping, unchanged historical prices,
+  preservation of manual amounts, and locked open/paid Checkout amounts.
+  Add nullable JSONB `result` for current output, document references and release
+  metadata, following the [delivery contract](database-migration-plan.md#service-delivery-result).
+  Verify text-only pre-evaluation, evaluation PDF and multi-file translation;
+  null/draft results stay private, same-application document references and exact
+  delivered revisions are validated, and payment/current-input guards remain.
+  Preserve old release history and verify publication/email retries do not
+  regenerate output or duplicate notifications. No separate deliverable table.
+  Resolve the master-table/legacy mapping, then connect requirements, staff pricing,
   payment and delivery to CRM/Status. Acceptance must cover pure translation and
   combined service requests. This item authorizes no database changes now.
 

@@ -16,6 +16,9 @@ For database tables and individual fields, use the separate
 [legacy/current/proposed database comparison](database-architecture.md).
 Its proposed view is a discussion model, not an implemented extension of the
 system diagrams below.
+The [database convergence plan](database-migration-plan.md) reviews code-level
+gaps in that model and proposes implementation phases, compatibility and rollback
+rules. Its additional fields/tables are recommendations pending review.
 
 ## AET 2026 architecture
 
@@ -122,7 +125,7 @@ or authorize a rewrite, backfill or cutover.
 | --- | --- |
 | Application master | Shared client/organization, contact, evaluee pronouns/name, application mailing address, office and state; no storage configuration or persisted UI locale |
 | `aet_education` | Planned name for the shared education table; preserve existing education rows/IDs and 1:N application relationships; pure translation creates no placeholder row |
-| `aet_service_detail` | Zero or more service detail rows with optional customer notes; initially at most one row per application/service type |
+| `aet_service_detail` | Service requirements, customer notes, saved service amounts and current delivery `result`; initially at most one row per application/service type |
 | `aet_documents` | Zero or more shared file records per application; details in the [Dropbox design](dropbox.md#planned-shared-document-records) |
 | `aet_payments` | Preserve existing records/application links; add `created_at` and `updated_at`, retain `paid_at`; do not duplicate payment state in service details |
 
@@ -235,6 +238,10 @@ behavior remain unchanged by this documentation update.
 | `service_type` | Initial types: `pre-evaluation`, `evaluation`, `translation` |
 | `details` | JSONB with a defined, server-validated field schema for each service type |
 | `notes` | Nullable plain-text customer remarks for this service; initially up to 3000 characters, matching the current form limit |
+| `amount_cents` | Nullable nonnegative integer cents for this service; `null` means not priced, `0` means explicitly zero-priced |
+| `currency` | `USD` initially; one currency per combined Checkout |
+| `pricing_source` | `automatic` or `manual`; nullable while unpriced or when historical provenance is unknown |
+| `result` | Nullable JSONB for the current conclusion and/or document references, with release status/time and relevant input/result versions; no separate deliverable table |
 | `created_at` | Record creation time |
 | `updated_at` | Last update time |
 
@@ -250,6 +257,35 @@ required fields and types before implementation, including deadline semantics.
 Validate referenced education IDs against the same application; a JSON ID is
 not a database foreign key. JSON flexibility does not mean arbitrary fields or
 unvalidated client-controlled pricing.
+
+**Simple pricing decision — November 6, 2026; not implemented.** Fixed-price
+services use server-side shared catalog calculation; staff may enter a final
+amount for custom work or adjustments. Save that amount on the service row; no
+`quote` JSON, `aet_quotes` table or quote approval/version workflow is required.
+Keep actor/time and before/after values in existing staff audit records. Unknown
+prices block Checkout; zero is a separate explicit no-charge case. Do not silently
+reprice saved applications when the catalog changes, or overwrite a manual amount
+when requirements change. Recalculate or obtain staff confirmation explicitly.
+
+Sum service amounts in one currency, with shared shipping charged once. A staff
+adjustment to an application total must reconcile to its service amounts. Freeze
+the payment amount/currency at Checkout and preserve paid transaction history.
+See the [migration pricing rules](database-migration-plan.md#simple-service-pricing-and-delivery-data)
+for legacy backfill and Checkout edit guards.
+
+**Delivery result decision — November 6, 2026; not implemented.** Keep current
+delivery information in nullable `aet_service_detail.result`; do not create
+`aet_deliverables`. Pre-evaluation can store a text/structured conclusion; evaluation
+and translation can reference one or more `aet_documents.id` values. Keep file
+storage metadata on documents and record the exact delivered revisions in the
+result. A null result means no prepared output; prepared drafts are not public.
+
+Use `content`, `documents`, `status` and `released_at` for the common payload,
+with existing result/input versions retained where relevant. Only an authorized,
+current, released result meeting payment requirements is customer-visible.
+Keep prior releases/actors in existing audit/AI history, and reuse publication
+recovery and email deduplication. See the [delivery contract](database-migration-plan.md#service-delivery-result)
+for field semantics and legacy mapping. This decision records a design only.
 
 **Customer notes decision — November 6, 2026; not implemented.** Put optional
 customer remarks in the separate `notes` column, replacing the earlier proposed

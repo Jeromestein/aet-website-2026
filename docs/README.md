@@ -13,6 +13,7 @@ not additional active task lists.
 | [Migration checklist](migration-checklist.md) | Active tasks, acceptance gates and explicitly deferred work |
 | [Migration architecture](migration-architecture.md) | The two maintained English diagrams and the planned shared application/service-detail model |
 | [Database architecture comparison](database-architecture.md) | Three Mermaid database views, a zoomable viewer and field-by-field legacy/current/proposed mapping |
+| [Database convergence plan](database-migration-plan.md) | Code-backed field gaps, recommended supporting records, migration phases and rollback gates; proposals pending review |
 | [Development and configuration](development.md) | Worktrees, environment names, deployment boundaries and shared website data |
 
 ## Applications and business operations
@@ -82,7 +83,8 @@ follow the current checklist and module guide before acting on them.
 | [Migration checklist snapshot](archive/migration-checklist-2026-10-22.md) | Earlier checkpoints, complete page inventory and original decisions |
 | [October 22 code review](archive/dev-code-review-2026-10-22.md) | Baseline findings, original diagrams and subsequent F1–F5 dispositions |
 
-The maintained diagrams live only in [migration architecture](migration-architecture.md).
+System diagrams live in [migration architecture](migration-architecture.md);
+database views live in the [database comparison](database-architecture.md).
 Diagrams inside the archived review are historical snapshots.
 
 ## How to maintain these documents
