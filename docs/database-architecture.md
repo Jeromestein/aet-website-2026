@@ -1,19 +1,19 @@
 # Database architecture: legacy, current and proposed
 
-Verified November 6, 2026 against read-only column/constraint/index metadata in
-the configured Supabase project and `dev` at `90076a3` plus the current planning
-documents. No customer rows were read for this comparison. No database change,
-data migration, file move or deployment was performed.
+Legacy/current inventory captured November 6, 2026 from read-only metadata and
+`dev` at `90076a3`; no customer rows were read for that comparison. The target
+view now reflects the additive phase-one SQL, tested only in disposable local
+PostgreSQL. No hosted database change, file move or deployment was performed.
 
 Use the [visual viewer](diagrams/database-architecture.html) to switch between
 the three diagrams and zoom. This file is the editable Mermaid source and field
 crosswalk; the SVGs/viewer are generated companions, not separate specifications.
 
-The [code-backed migration plan](database-migration-plan.md) identifies additional
-fields and supporting records needed before implementation, with staged cutover
-and rollback gates. The proposed diagram includes the accepted simple service
-pricing fields and delivery `result`. Other recommendations await review; this
-business overview is not a complete runtime schema.
+The [code-backed migration plan](database-migration-plan.md) records field and
+supporting-record decisions, staged cutover and rollback gates. The target diagram
+now includes all columns in the five phase-one tables. Operational records remain
+outside that target view; shared runtime integration and historical reconciliation
+are still pending. See the [rehearsal guide](database-rehearsal.md).
 
 ## Reading order and scope
 
@@ -21,7 +21,8 @@ business overview is not a complete runtime schema.
 2. **Current:** separate pre-evaluation/evaluation workflow schemas plus legacy
    compatibility projections. CRM Live still uses the old public tables.
 3. **Proposed:** one shared application identity, optional service details, shared
-   File ID records, and retained workflow machinery. This is not implemented.
+   File ID records, and retained workflow machinery. Schema/mapping rehearsed
+   locally; application readers/writers have not switched.
 
 This comparison covers application, education, payment, file, AI, email, staff
 and audit data. Payload content/version/media tables, Supabase-managed `auth.*`
@@ -367,7 +368,10 @@ education IDs; these arrays are not foreign keys.
 
 ## 3. Proposed shared database model
 
-**Plan only.** The selected target names are `aet_education`, `aet_payments`,
+**Phase-one target, locally rehearsed.** Hosted databases and runtime readers are
+unchanged. The diagram below includes every column in the
+[additive migration](../supabase/migrations/20261106220126_shared_application_core.sql);
+see [rehearsal scope](database-rehearsal.md). The selected target names are `aet_education`, `aet_payments`,
 `aet_service_detail` and `aet_documents`, linked to `aet_core_applications`.
 The application master has **no storage fields**. `aet_documents` records files
 only, identified by storage connection plus Dropbox **File ID**. The target has
@@ -389,13 +393,13 @@ the master. See the [directory resolution rules](dropbox.md#directory-resolution
 This diagram shows the **five shared business tables**. Existing formal and
 pre-evaluation workflow records, AI, email, provider-payment events, sessions and
 audit remain supporting records. The current location registry remains a migration
-dependency, not a target entity; no actual table is removed by this proposal.
+dependency, not a target entity; no existing table is removed by the additive migration.
 Actual fields are preserved in the inventory below.
 
 The target names replace `aet_core_educations` and `aet_core_payments` in the
-future view only; legacy/current diagrams retain actual names. The shared contact,
-phone, office and primary-service fields, nullable evaluee names and exact
-workflow integration remain design proposals requiring implementation review.
+private phase-one schema; legacy/current diagrams retain runtime names. The
+shared contact, phone, office, primary-service and nullable evaluee fields exist
+in the migration. Runtime integration and form/read adapters remain pending.
 In particular, legacy first/last names are currently required; translation for an
 organization must not invent an evaluee. The deadline payload format/time-zone policy
 still needs confirmation. Customer accounts remain deferred.
@@ -408,16 +412,25 @@ erDiagram
     text contact_name "Client or organization"
     text email
     text phone
-    jsonb mailing_address "Recipient address for this application"
+    jsonb mailing_address "Recipient address"
     text office
     text primary_service
-    text pronouns "Evaluee; optional for translation"
+    text pronouns
     text first_name "Evaluee; optional for translation"
     text middle_name
     text last_name "Evaluee; optional for translation"
+    date date_of_birth
+    text residence_country
     text purpose
     text source
     text status
+    uuid request_id UK
+    text request_hash
+    integer request_hash_version "0 preserves legacy hashing"
+    integer submission_version
+    jsonb submitted_snapshot "Immutable original business inputs"
+    timestamptz submitted_at
+    integer version
     timestamptz created_at
     timestamptz updated_at
   }
@@ -427,45 +440,66 @@ erDiagram
     text school_name
     text country_of_study
     text degree_obtained
-    jsonb study_start_date
-    jsonb study_end_date
-    jsonb ai_output "Legacy result projection"
+    jsonb study_start_date "Month precision"
+    jsonb study_end_date "Month precision"
+    integer sort_order
+    jsonb ai_output "Compatibility projection"
+    timestamptz created_at
+    timestamptz updated_at
   }
   aet_service_detail {
     uuid id PK
     uuid application_id FK,UK "Composite unique with service_type"
-    text service_type UK "Evaluation, pre-evaluation, translation"
-    jsonb details "Validated schema for each service type"
-    text notes "Optional customer notes for this service"
-    integer amount_cents "Service price; null means not priced"
-    text currency "USD initially"
-    text pricing_source "Automatic or manual; nullable if unknown"
-    jsonb result "Nullable output, file refs and release metadata"
+    text service_type UK
+    jsonb details
+    integer details_version
+    text status
+    integer input_version
+    text notes "Customer notes on service; private on payment"
+    text staff_notes
+    text customer_message
+    integer amount_cents "Service price or payment total; distinct"
+    text currency
+    text pricing_source "Automatic or manual; nullable"
+    jsonb result "Content, file refs and release metadata"
     timestamptz created_at
     timestamptz updated_at
   }
   aet_documents {
-    uuid id PK "AET record ID"
+    uuid id PK
     uuid application_id FK
-    text storage_location UK "Composite unique with file ID"
+    text storage_location UK "Composite unique with File ID"
     text storage_file_id UK "Dropbox File ID"
-    text storage_path "Last observed file path"
+    text storage_path "Cached path; not identity"
+    text storage_rev "Current file revision"
+    text storage_content_hash
     text original_filename
     text mime_type
     bigint size_bytes
+    text access_scope "Customer input or staff only"
     timestamptz created_at
+    timestamptz updated_at
   }
   aet_payments {
-    text id PK "Preserve existing IDs"
-    uuid application_id FK "Nullable for standalone payments"
-    numeric due_amount "Dollars"
+    text id PK
+    uuid application_id FK
+    integer amount_cents "Service price or payment total; distinct"
+    text currency
+    integer refunded_cents
+    numeric due_amount "Generated from amount_cents"
     text payment_status
-    timestamptz paid_at
+    text provider
+    text provider_account
+    text provider_mode
+    text checkout_session_id
+    text payment_intent_id
     text payment_id
     text source
-    text notes
-    timestamptz created_at "Payment record created"
-    timestamptz updated_at "Last payment record change"
+    text notes "Customer notes on service; private on payment"
+    jsonb payer_snapshot "Standalone payer metadata"
+    timestamptz paid_at "Unknown historical values remain NULL"
+    timestamptz created_at
+    timestamptz updated_at
   }
   aet_core_applications ||--o{ aet_education : "has optional education records"
   aet_core_applications ||--o{ aet_service_detail : "contains service details"

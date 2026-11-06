@@ -91,57 +91,59 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
   entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
-- [ ] **TODO — Review the database convergence contract (November 6, 2026):**
-  review the [field audit](database-migration-plan.md#2-field-audit-of-the-five-core-entities)
-  and [simple pricing, delivery and operational-record plan](database-migration-plan.md#3-additional-tables-and-records).
-  Decide missing birth/residence/submission/version fields, per-service workflow
-  fields, document access/revision metadata and payment-ledger completeness.
-  Use `aet_service_detail.amount_cents`, `currency` and `pricing_source` for
-  automatically calculated or staff-entered prices; no service `quote` JSON or
-  separate `aet_quotes` table. Freeze the amount/currency on the payment record.
-  Keep current delivery information in nullable `aet_service_detail.result`;
-  do not create `aet_deliverables`.
-  Preserve existing history and resolve namespace/historical exceptions before
-  SQL implementation. The proposed diagram now includes simple pricing fields
-  and `result`; other proposed field additions remain under review.
-- [ ] **TODO — Rehearse a reversible database migration:** follow
-  [phases 0–2](database-migration-plan.md#5-delivery-phases-and-acceptance-gates)
-  in disposable/Preview storage after implementation is authorized. Preserve
-  identities, map all writers, validate backfill/permissions and compare CRM/Status
-  reads with no provider side effects. Do not merge formal/translation rows into
-  live public core tables while old readers assume every row is pre-evaluation.
+- [x] **Phase 1 — Additive shared schema and isolated rehearsal (November 6, 2026):**
+  add the five tables in private `aet`, including birth/residence/submission/version
+  fields, service pricing/result/workflow fields, document access/revisions and
+  payment-ledger timestamps/provider references. Keep source tables and runtime
+  readers untouched. Rehearse same-ID transactional backfill, explicit exceptions,
+  constraints/client access denial, target-only rollback and replay. The existing
+  pre-evaluation submission/upload/AI/payment/result/email service flow passes with
+  synthetic data and mocked providers. See the [guide](database-rehearsal.md) and
+  [evidence](archive/database-phase1-rehearsal-2026-11-06.md). No hosted database changes.
+- [ ] **TODO — Phase 2 shared access and read comparison:** add canonical repositories
+  and compare CRM/Status/customer projections, office scope, notes privacy, prices,
+  stable File IDs and result visibility against existing readers. Keep one writer
+  until equivalence is proved. The phase-one snapshots are not a live dual-write
+  or automatic synchronization mechanism.
+- [ ] **TODO — Historical contract and source reconciliation:** verify missing
+  original submissions, File IDs/revisions, release/education timestamps, pricing
+  provenance, provider accounts and standalone/legacy identities against authorized
+  sources. Retain unresolved records and history; do not fabricate values or put
+  formal/translation rows into public core tables while old readers assume pre-evaluation.
 - [ ] **TODO — Migrate by tested cohort:** use the
   [pre-evaluation-first sequence](database-migration-plan.md#5-delivery-phases-and-acceptance-gates)
   and [rollback rules](database-migration-plan.md#6-cutover-rollback-and-permissions).
   Preserve upload/publication recovery, refunds and email deduplication; connect
   formal v2 staff/payment/release deliberately, then translation. Retire legacy
   tables/bridges only after all readers, writers and callbacks are reconciled.
-  Planning only: no database change, production cutover or new scheduler now.
+  Local phase-one rehearsal is complete; hosted migration, production cutover and
+  new scheduling remain unapproved.
 - [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
   and `aet_payments` in the target design. Actual legacy/current tables retain
-  `aet_core_educations` and `aet_core_payments` until a separately planned migration;
+  `aet_core_educations` and `aet_core_payments`; private phase-one tables now exist
+  in the migration and disposable rehearsal, but runtime cutover is still pending;
   preserve records/IDs and do not treat a rename as payment-ledger unification.
 - [ ] **TODO — Application recipient address and pronouns (November 6, 2026):**
   implement the [application field definitions](migration-architecture.md#planned-application-contact-and-recipient-fields)
-  in a later authorized phase. Add nullable `mailing_address` JSONB with `name`,
+  in the form/read adapters. Phase-one SQL adds nullable `mailing_address` JSONB with `name`,
   `country`, `street`, `street2`, `city`, `region`, `postal`, plus nullable text
   `pronouns` to `aet_core_applications`. Require a valid address for physical
   delivery and retain evaluation pronoun validation; digital-only applications
   need no mailing address and translation need not supply evaluee pronouns.
   Preserve each application's submitted address independently of future account
   profiles. Map verified recipient values without inventing legacy data; verify
-  confirmation, CRM and Status reads for evaluation and translation. Plan only;
-  no database or runtime changes now.
+  confirmation, CRM and Status reads for evaluation and translation. The nullable
+  columns are rehearsed locally; these runtime adapters remain TODO.
 - [ ] **TODO — Shared payment timestamps (November 6, 2026):** implement the
   [three timestamp definitions](migration-architecture.md#planned-payment-timestamps)
-  in a later authorized phase. Add `created_at` and `updated_at` to `aet_payments`
+  in shared runtime writers. Phase-one SQL adds `created_at` and `updated_at` to `aet_payments`
   while retaining `paid_at`. Initialize creation/update times for new records;
   maintain `updated_at` on actual changes. Preserve `created_at` and successful
   `paid_at` through refunds and duplicate events. Map trustworthy existing payment
   timestamps and keep unknown legacy history distinguishable; finalize the
   nullable/backfill policy before migration. Acceptance must cover unpaid creation,
-  payment success, refund updates and webhook replay. Plan only; no database or
-  runtime changes now.
+  payment success, refund updates and webhook replay. Isolated legacy-to-target
+  mapping now passes these cases; shared runtime writers and historical gaps remain TODO.
 - [ ] **TODO — English business emails and no application locale (November 6, 2026):**
   follow the [language policy](email-templates.md#planned-language-policy). The
   target application omits `locale`; do not add a replacement business-language
@@ -152,10 +154,11 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   consumers before any later schema removal. Acceptance must cover submissions
   from English/Chinese/Spanish pages, delayed/retried emails without a browser,
   valid access links and continued frontend language switching.
-  Decision recorded only; no runtime change, database migration or deployment now.
+  The phase-one master/snapshot omits locale; existing email consumers still need
+  this change. No runtime email or hosted database change in the rehearsal.
 - [ ] **TODO — Service details and translation fulfillment (plan recorded November 6, 2026):**
   implement the [planned `aet_service_detail` model](migration-architecture.md#planned-service-details)
-  only in a later authorized implementation phase. Use typed/validated `details`
+  in runtime adapters. The phase-one table/constraints exist; use typed/validated `details`
   payloads and composite uniqueness on `(application_id, service_type)` initially.
   Add optional text `notes` for customer remarks per service (initial 3000-character
   limit); use it instead of `details.instructions`. Preserve the original single
@@ -177,7 +180,8 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   regenerate output or duplicate notifications. No separate deliverable table.
   Resolve the master-table/legacy mapping, then connect requirements, staff pricing,
   payment and delivery to CRM/Status. Acceptance must cover pure translation and
-  combined service requests. This item authorizes no database changes now.
+  combined service requests. Basic zero-education and combined-service storage
+  passed locally; end-to-end translation/formal fulfillment is still TODO.
 
 Guides: [intake acceptance](credential-intake-testing.md),
 [earlier formal pilot](evaluation-application.md), [email](email-templates.md).
@@ -191,7 +195,8 @@ Do not remove v2 workflow guards merely to expose older pilot actions.
   reads across profile edits. Keep existing customer folders intact.
 - [ ] **TODO — Shared `aet_documents` and Dropbox ID tracking (plan recorded November 6, 2026):**
   implement the [file-only index and scan-on-open design](dropbox.md#planned-shared-document-records)
-  in a later authorized phase. Keep only file rows, identified by storage connection
+  in runtime upload/lookup/scan adapters. The phase-one index and explicit metadata
+  import are rehearsed; keep only file rows, identified by storage connection
   plus Dropbox File ID. No Folder ID, folder rows, location `kind`, `is_folder` or
   `document_locations` in the target; no storage fields on the application master.
   Omit `document_type` and `deleted_at`; file paths remain cached metadata.
@@ -205,7 +210,9 @@ Do not remove v2 workflow guards merely to expose older pilot actions.
   staff directory confirmation, File ID search, unknown/inaccessible IDs, direct
   Dropbox additions, pagination, repeat scans without duplicates and controlled
   customer/report access. Reconcile current registry/legacy readers before cutover.
-  This is a plan only: no database changes, backfill, file moves or background sync.
+  Schema and explicit test-metadata backfill are rehearsed locally. Automatic
+  discovery/lookup/scan adapters, hosted backfill and cutover remain TODO; no real
+  file moves or background synchronization were performed.
 - [ ] Enable the East Dropbox app's required read permission and refresh its
   authorization as needed; recheck Boston/New York download bytes. Apply the
   existing location-registry migration wherever current code requires it; this

@@ -13,13 +13,14 @@ not additional active task lists.
 | [Migration checklist](migration-checklist.md) | Active tasks, acceptance gates and explicitly deferred work |
 | [Migration architecture](migration-architecture.md) | The two maintained English diagrams and the planned shared application/service-detail model |
 | [Database architecture comparison](database-architecture.md) | Three Mermaid database views, a zoomable viewer and field-by-field legacy/current/proposed mapping |
-| [Database convergence plan](database-migration-plan.md) | Code-backed field gaps, recommended supporting records, migration phases and rollback gates; proposals pending review |
+| [Database convergence plan](database-migration-plan.md) | Code-backed field gaps, recommended supporting records, migration phases and rollback gates; phase-one schema rehearsed, runtime cutover pending |
 | [Development and configuration](development.md) | Worktrees, environment names, deployment boundaries and shared website data |
 
 ## Applications and business operations
 
 | Document | Scope |
 | --- | --- |
+| [Database rehearsal](database-rehearsal.md) | Disposable phase-one PostgreSQL setup, same-ID backfill, exceptions and target-only rollback |
 | [Pre-evaluation](pre-evaluation-local.md) | Current setup and execution; dated acceptance is below the setup sections |
 | [Credential intake acceptance](credential-intake-testing.md) | New `/application` persistence, Status and confirmation email |
 | [Formal evaluation pilot](evaluation-application.md) | Earlier separate local workflow; not proof of v2 intake fulfillment |

@@ -1,7 +1,11 @@
 # Database convergence plan
 
 Code review: November 6, 2026, `dev` at `fab4733`.
-**Planning only. No database changes, migrations, provider calls, or deployment.**
+**Phase 1 implemented and rehearsed locally on November 6, 2026.** The additive
+migration creates five private `aet` tables in a disposable PostgreSQL database.
+Hosted Preview and Production are unchanged. Runtime readers/writers still use
+the existing schemas; see the [rehearsal guide](database-rehearsal.md) and
+[isolated evidence](archive/database-phase1-rehearsal-2026-11-06.md).
 
 This plan compares the accepted [five-table business model](database-architecture.md#3-proposed-shared-database-model)
 with the current readers, writers, migration SQL, and recovery tests. It reuses
@@ -32,8 +36,8 @@ table. Fixed-price services use the shared price configuration; staff can enter
 the amount for custom work. Payments preserve the amount used by Checkout.
 Store the service's current delivery content, document references and release
 metadata in nullable `aet_service_detail.result` JSONB; do not create an
-`aet_deliverables` table. This is the owner-approved design direction, not an
-implemented migration. Documents hold file identities. Reuse existing operational
+`aet_deliverables` table. The additive phase-one schema implements these fields; runtime cutover remains
+pending. Documents hold file identities. Reuse existing operational
 records and history.
 
 ## 1. What the code does today
@@ -79,6 +83,26 @@ identities. It avoids prematurely mixing new service types into old public
 queries. Do not automatically promote Preview test records into production.
 
 ## 2. Field audit of the five core entities
+
+### Phase-one implementation boundary
+
+The migration uses the private `aet` schema and does not rename or alter existing
+public/workflow tables. There are exactly five new business tables, no quotes,
+deliverables, applicant, user or location tables. Client roles have no access.
+Server/office policies are deliberately deferred until the shared access layer.
+
+The rehearsal mapping preserves application, education, document-index and payment
+IDs; service IDs are new and retained on repeated backfills. Its returned report
+provides the tested cohort's identity crosswalk and unresolved evidence. A general
+historical identity map is still needed for ambiguous/standalone sources; no new
+permanent mapping table is justified by this same-ID cohort alone.
+
+`request_hash_version = 0` preserves the existing locale-inclusive hash while
+new captured business snapshots omit locale. Missing snapshots are not recreated
+from mutable values. `payer_snapshot` preserves room for standalone payer data;
+standalone import itself is not implemented. Education/document creation times
+remain NULL when absent from the source. Service price must be explicitly verified;
+the payment total, which may include fees, is never treated as the service price.
 
 ### Application master
 
@@ -215,8 +239,9 @@ Evidence: [AI manifest/revision loading](../lib/preeval/ai-documents.ts),
 
 ### Payments
 
-The diagram currently describes a legacy summary. It needs a ledger contract
-before it can replace `preeval.payments` and `evaluation.payments`.
+The phase-one target diagram and SQL now include the ledger fields below.
+Replacing `preeval.payments` and `evaluation.payments` still requires shared payment
+adapters, event routing and production reconciliation.
 
 | Field/contract | Recommendation |
 | --- | --- |
@@ -428,7 +453,13 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
 | 7. Retire compatibility | Disable obsolete readers/writers/bridges after observation and approval; archive historical contracts/data | No active dependency remains; rollback window and retention rules are satisfied before any table/column removal |
 
-Start with phases 0–2. The first implementation deliverable should be a reversible
+**Phase 1 evidence:** the disposable rehearsal passes schema constraints, client
+access denial, same-ID backfill, complete existing pre-evaluation service flow,
+refund/recovery scenarios, and target-only rollback/replay. External providers are
+simulated; no hosted cutover or full CRM/Status shadow adapter is claimed. See the
+[rehearsal record](archive/database-phase1-rehearsal-2026-11-06.md).
+
+Continue with phase 2. The first implementation deliverable is a reversible
 schema-and-mapping rehearsal, not a public-table rename or a new production form.
 Pre-evaluation can ship on the shared master while retaining its proven runtime
 tables; launching it does not require migrating every historical record first.

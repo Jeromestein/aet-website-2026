@@ -20,7 +20,8 @@
     "test:email:records": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-records.mts",
     "test:intake:integration": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/application/intake-integration.mts",
     "test:email:formal": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/email/verify-formal-records.mts",
-    "preeval:ai": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/ai-worker.ts"
+    "preeval:ai": "node --env-file=.env.local --import ./scripts/register-server-only.mjs --import tsx scripts/preeval/ai-worker.ts",
+    "test:database:rehearsal": "node scripts/database/rehearse.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",

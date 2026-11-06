@@ -1,7 +1,7 @@
 # AET Implementation Status
 
-Updated October 22, 2026 from the `dev` code baseline at `adc6461`, documentation
-commit `5d10cff`, and the hosted Preview acceptance below. This is the current
+Updated November 6, 2026 with the isolated database phase-one rehearsal below.
+Hosted acceptance remains the October 22 record at `5d10cff`; it was not rerun. This is the current
 summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
@@ -22,6 +22,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
+| Shared database | Five private `aet` tables, same-ID pre-evaluation backfill and target-only rollback rehearsed on disposable PostgreSQL; source/runtime untouched | Shared repositories and CRM/Status comparisons, historical reconciliation, then one-cohort cutover |
 | Dedicated pre-evaluation | October 22 hosted synthetic journey passed: upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered emails | Hosted failure-recovery scenarios, production configuration and charging |
 | Failure recovery | Abandoned-upload recovery and saved-result publication recovery both merged into `dev` | Exercise both fixes in the authorized hosted environment |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
@@ -58,6 +59,16 @@ reassignment that was restored; preserve that historical distinction in the
 [full acceptance record](archive/preview-acceptance-2026-10-22.md). The latest
 [direct webhook evidence](archive/preview-acceptance-2026-10-22.md#permanent-direct-test-webhook-acceptance)
 supersedes its outstanding webhook setup item.
+
+## Latest isolated database verification
+
+The [phase-one rehearsal](archive/database-phase1-rehearsal-2026-11-06.md) validates
+the additive schema, pre-evaluation data mapping, actual service/database flow,
+refund/recovery handling and rollback. Only providers are simulated. No hosted
+connection, customer data, real charge, email delivery or AI request is involved.
+The five new tables are in a private `aet` namespace; existing runtime readers,
+writers and the operational AI/email/upload/payment-event tables remain intact.
+This is phase 1, not a completed runtime database cutover.
 
 ## Latest integrated verification
 
@@ -101,13 +112,16 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Exercise both integrated pre-evaluation recovery fixes in dev Preview,
+1. Implement phase-two shared access and CRM/Status shadow comparisons; resolve
+   identity/File-ID/timestamp/price exceptions before switching one pre-evaluation
+   cohort. The first schema/mapping rehearsal passed; runtime authority stays put.
+2. Exercise both integrated pre-evaluation recovery fixes in dev Preview,
    refund/cancellation visibility and mobile recovery states. Direct test-webhook
    delivery is verified; keep production charging/configuration separate.
-2. Make one unified formal intake operable by staff: documents, missing-material
+3. Make one unified formal intake operable by staff: documents, missing-material
    requests, confirmed quote and audited status changes.
-3. Connect that intake to payment, then report release and notifications.
-4. Extend the general application to the other services, then rehearse cutover.
+4. Connect that intake to payment, then report release and notifications.
+5. Extend the general application to the other services, then rehearse cutover.
 
 Detailed acceptance criteria and deferred work belong only in the
 [active checklist](migration-checklist.md), not a second task list here.
