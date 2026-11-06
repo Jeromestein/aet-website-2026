@@ -1,5 +1,6 @@
+import { coreTable } from '../application-core/connection';
 import 'server-only';
-import { coreRuntimeEnabled } from '../application-core/runtime';
+import { isCoreApplication } from '../application-core/runtime';
 import { coreFileMetadata, officeForConnection } from '../application-core/documents';
 import { downloadBytes } from '../dropbox/download';
 import { PDFDocument } from 'pdf-lib';
@@ -14,10 +15,10 @@ import type { Office } from '../dropbox/shared';
 export type ManifestEntry = { id: string; path: string; office: Office; revision: string; contentHash: string; size: number; mime: string };
 export async function documentManifest(app: Row): Promise<ManifestEntry[]> {
   requireEnabled();
-  const rows = await db()`select * from ${table('preeval.files')} where application_id=${app.id} order by created_at`;
+  const rows = await db()`select * from ${table("preeval.files")} where application_id=${app.id} order by created_at`;
   if (rows.some(f => f.state !== 'ready')) throw new AIError('uploads_incomplete');
-  if (coreRuntimeEnabled()) {
-    const files=await db()`select * from aet.aet_documents where application_id=${app.id} and access_scope='customer_input' order by id`;
+  if (await isCoreApplication(app.id)) {
+    const files=await db()`select * from ${coreTable(db(),'aet_documents')} where application_id=${app.id} and access_scope='customer_input' order by id`;
     if (files.length!==rows.length) throw new AIError('document_mapping_incomplete');
     if (files.length>MAX_DOCUMENTS) throw new AIError('document_count_limit');
     const entries: ManifestEntry[]=[];

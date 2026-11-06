@@ -34,7 +34,7 @@ import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-applica
 import { abandonUpload, unfinishedUploads } from "@/lib/preeval/upload-recovery";
 import { completeUploads, retryAnalysis } from "@/lib/preeval/ai-jobs";
 import { scheduleAI } from "@/lib/preeval/ai-scheduler";
-import { coreRuntimeEnabled, coreAdminApplications } from "@/lib/application-core/runtime";
+import { coreRuntimeEnabled, isCoreApplication, coreAdminApplications } from "@/lib/application-core/runtime";
 import { downloadCoreFile } from "@/lib/application-core/documents";
 import { downloadFile } from "@/lib/preeval/dropbox";
 
@@ -252,7 +252,7 @@ async function handler(
         await db()`select * from ${table("preeval.files")} where id=${id} and state='ready'`;
       if (!file) throw new AppError("not_found", 404);
       await authorize(file.application_id);
-      const content = coreRuntimeEnabled() ? await downloadCoreFile(file.application_id,file.id) : await downloadFile(file.dropbox_path);
+      const content = await isCoreApplication(file.application_id) ? await downloadCoreFile(file.application_id,file.id) : await downloadFile(file.dropbox_path);
       return new NextResponse(new Uint8Array(content), {
         headers: {
           "Content-Type": file.mime_type,

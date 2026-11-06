@@ -1,4 +1,5 @@
-import { coreRuntimeEnabled, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
+import { coreTable } from '../application-core/connection';
+import { coreRuntimeEnabled, isCoreApplication, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
 import { createCoreShadowReader } from '../application-core/reader';
 import { saveLegacyPreeval } from "../legacy-application/store";
 import { pauseForUpload, retryAnalysis } from "./ai-jobs";
@@ -43,6 +44,7 @@ export async function submit(input: unknown) {
   return { app, token: await makeSession(app.id, "customer", app.email) };
 }
 export async function application(id: string, staff = false) {
+  const core = await isCoreApplication(id);
   // Callers authorize this application before reading it. Recover a saved result
   // without another AI run, including in preview where no delivery worker runs.
   // Publication rechecks eligibility under the application lock. Always read a
@@ -51,11 +53,11 @@ export async function application(id: string, staff = false) {
   catch { console.error("Pre-evaluation publication incomplete; the next authorized read will retry."); }
   // Email enqueue happens after the publication commit. Its failure must not
   // hide a successfully published result or fail the customer's status read.
-  const [app] = coreRuntimeEnabled()
+  const [app] = core
     ? await db()`select * from ${table("preeval.applications")} where id=${id}`
     : await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
-  const [legacy] = coreRuntimeEnabled() ? [] : await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
+  const [legacy] = core ? [] : await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
   if (legacy) {
     app.first_name = legacy.first_name; app.middle_name = legacy.middle_name || '';
     app.last_name = legacy.last_name; app.email = legacy.email;
@@ -64,7 +66,7 @@ export async function application(id: string, staff = false) {
       start_date: `${education.study_start_date.year}-${education.study_start_date.month}`,
       end_date: `${education.study_end_date.year}-${education.study_end_date.month}` };
   }
-  if (coreRuntimeEnabled()) Object.assign(app,await coreProfile(db(),id));
+  if (core) Object.assign(app,await coreProfile(db(),id));
   const files =
     await db()`select id,name,mime_type,bytes,state,created_at from ${table("preeval.files")} where application_id=${id} order by created_at`;
   const visible =
@@ -99,15 +101,15 @@ export async function application(id: string, staff = false) {
     created_at: app.created_at,
     updated_at: app.updated_at,
   };
-  if (coreRuntimeEnabled()) {
+  if (core) {
     // Keep recoverable failed/uploading attempts; successful files and released
     // results come from canonical records and their strict version/payment gate.
     const canonical = await (await createCoreShadowReader(db())).status(id,{role:'customer',applicationId:id});
     Object.assign(response,canonical,{locale:app.locale,files:[...canonical.files,...files.filter(f=>f.state!=='ready')]});
   }
   if (staff) {
-    if (coreRuntimeEnabled()) {
-      const [service]=await db()`select result from aet.aet_service_detail where application_id=${id} and service_type='pre-evaluation'`;
+    if (core) {
+      const [service]=await db()`select result from ${coreTable(db(),'aet_service_detail')} where application_id=${id} and service_type='pre-evaluation'`;
       response.result=service?.result?.content ?? null;
       response.result_version=service?.result?.version ?? 0;
     }
@@ -155,7 +157,7 @@ export async function addFile(id: string, file: File, actor: string) {
       throw new AppError("file_limit");
     await pauseForUpload(id, tx);
     const fileId = existing?.id || randomUUID(),
-      path = (!coreRuntimeEnabled() && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
+      path = (!await isCoreApplication(id,tx) && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
     const [row] =
       await tx`insert into ${table("preeval.files")}(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},${name},${file.type},${data.length},${digest},${path})
       on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;

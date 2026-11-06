@@ -1,4 +1,4 @@
-import { coreRuntimeEnabled } from '../application-core/runtime';
+import { isCoreApplication } from '../application-core/runtime';
 import { coreUploadPath } from '../application-core/documents';
 import type { TransactionSql } from 'postgres';
 import { downloadBytes } from '../dropbox/download';
@@ -13,7 +13,7 @@ import { accountForOffice, offices, safeSegment, type Office, type ApplicationKi
  * Original names remain in file metadata; a UUID avoids overwriting another upload.
  * Unreleased formal reports stay in a non-listed child directory. */
 export async function filePath(row: Record<string, string | null>, kind: ApplicationKind, fileId: string, name: string, report = false, tx?: TransactionSql) {
-  if (kind==='pre-evaluation' && coreRuntimeEnabled()) return coreUploadPath(row.id!,fileId,name,tx);
+  if (kind==='pre-evaluation' && await isCoreApplication(row.id!)) return coreUploadPath(row.id!,fileId,name,tx);
   const context = contextFor(row, kind);
   const storage = await resolveStorage(context, tx);
   return `${storage.write.path}/${report ? '_reports/' : ''}${safeSegment(fileId)}-${safeSegment(name)}`;

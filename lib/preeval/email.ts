@@ -1,4 +1,4 @@
-import { coreRuntimeEnabled, coreProfile } from "../application-core/runtime";
+import { isCoreApplication, coreProfile } from "../application-core/runtime";
 import { createCoreShadowReader } from "../application-core/reader";
 import { randomUUID } from "node:crypto";
 import { Resend } from "resend";
@@ -43,7 +43,7 @@ export async function renderQueuedEmail(row: Row) {
     row.result_version !== app.result_version || app.payment_status !== "paid" || !app.result ||
     ["cancelled", "needs_information"].includes(app.status)
   )) throw new EmailReviewRequired("result_superseded_or_withheld");
-  if (coreRuntimeEnabled()) {
+  if (await isCoreApplication(app.id)) {
     Object.assign(app,await coreProfile(db(),app.id),{locale:'en'});
     if (row.kind === 'result') {
       const result=await (await createCoreShadowReader(db())).status(app.id,{role:'customer',applicationId:app.id});
@@ -58,7 +58,7 @@ export async function renderQueuedEmail(row: Row) {
     if (!request?.message) throw new EmailReviewRequired("information_request_missing");
     message = request.message;
   }
-  const [education] = coreRuntimeEnabled() ? [app.education] : await db()`select school_name,degree_obtained,country_of_study,start_date,end_date from ${table("preeval.educations")}
+  const [education] = await isCoreApplication(app.id) ? [app.education] : await db()`select school_name,degree_obtained,country_of_study,start_date,end_date from ${table("preeval.educations")}
     where application_id=${app.id} order by id limit 1`;
   return customerEmail(app as EmailApplication, education as EmailEducation | undefined, row.kind, config.origin, message);
 }

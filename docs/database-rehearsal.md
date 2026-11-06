@@ -124,3 +124,28 @@ was added. The legacy backfill rejects new authoritative records; do not drop th
 core schema or silently switch these records back to legacy writers. Recreate the
 complete owned test fixture for rollback. Historical and hosted migration still
 require explicit reconciliation and authorization.
+
+## Hosted dev Preview activation
+
+The hosted opt-in uses `APPLICATION_CORE_MODE=preview` and the verified Stripe
+**test** account in `APPLICATION_CORE_PROVIDER_ACCOUNT`, scoped only to Vercel
+Preview / `dev`. It requires the existing `aet_preview_runtime` connection,
+approved branch origin, and disabled employee migration/cutover. The runtime also
+checks the actual database role and rejects write privileges on production tables.
+
+Apply only `20261106230843_preview_application_core.sql` to the authorized project.
+It creates five private tables in `aet_preview_core`, enables RLS and grants access
+only to the existing restricted Preview runtime. Never run the local fixture or
+all historical migrations against the hosted project. Existing Preview schemas,
+production schemas and old rows remain intact.
+
+New dedicated pre-evaluations use the five core tables plus the retained operational
+workflow tables. Existing pre-evaluations continue using their old business records;
+CRM combines both cohorts and retained formal evaluations before office scoping,
+filtering and pagination. Old submission retries retain their original identity.
+No historical backfill or table retirement occurs during this activation.
+
+After the first new core application, do not roll back to a deployment predating
+this adapter or simply remove the flag: that would hide canonical education/results
+from the old reader. Retain this compatible reader and pause new submissions while
+investigating; preserve both table sets and provider event records.

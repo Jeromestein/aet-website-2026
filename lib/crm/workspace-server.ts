@@ -28,7 +28,7 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
   return projectWorkspaceRecords(sql, legacyRecords(sql), raw, staff, configuration().cloudPreview);
 }
 
-function legacyRecords(sql: Sql) {
+export function legacyRecords(sql: Sql | TransactionSql) {
   return sql`
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
         case lower(rtrim(coalesce(l.pronouns,a.data->'evaluee'->>'title'),'.')) when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else nullif(trim(coalesce(l.pronouns,a.data->'evaluee'->>'title')),'') end,

@@ -1,3 +1,5 @@
+import { corePreviewConfiguration } from '../lib/application-core/connection';
+vi.mock('server-only', () => ({}));
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { applicationPilotOrigin, cloudBusinessEnvironmentAllowed, requestMatchesApplicationOrigin } from "../lib/preview-environment";
 import { configuration, CLOUD_PROJECT, PREVIEW_ROLE } from "../lib/preeval/config";
@@ -59,5 +61,22 @@ describe("dev Preview environment boundaries", () => {
     expect(cloudBusinessEnvironmentAllowed()).toBe(true);
     expect(staffCookieOptions().secure).toBe(false);
     expect(requestMatchesApplicationOrigin(deployment, "http://localhost:3022")).toBe(false);
+  });
+});
+
+describe('core Preview opt-in', () => {
+  it('stays disabled unless explicitly configured', () => {
+    vi.stubEnv('APPLICATION_CORE_MODE','');
+    expect(corePreviewConfiguration()).toBeNull();
+  });
+  it('requires both a verified account and hosted dev Preview', () => {
+    vi.stubEnv('APPLICATION_CORE_MODE','preview');
+    vi.stubEnv('APPLICATION_CORE_PROVIDER_ACCOUNT','acct_synthetic');
+    expect(corePreviewConfiguration()).toEqual({providerAccount:'acct_synthetic'});
+    vi.stubEnv('VERCEL_GIT_COMMIT_REF','main');
+    expect(corePreviewConfiguration).toThrow();
+  });
+  it.each(['production','unknown'])('rejects mode %s', mode => {
+    vi.stubEnv('APPLICATION_CORE_MODE',mode);expect(corePreviewConfiguration).toThrow();
   });
 });

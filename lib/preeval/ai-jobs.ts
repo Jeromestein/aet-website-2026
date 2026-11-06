@@ -1,5 +1,5 @@
 import 'server-only';
-import { coreRuntimeEnabled, syncCoreWorkflow, workflowMutation, recordCoreFile, type CoreFileMetadata } from '../application-core/runtime';
+import { isCoreApplication, syncCoreWorkflow, workflowMutation, recordCoreFile, type CoreFileMetadata } from '../application-core/runtime';
 import { randomUUID } from 'node:crypto';
 import { db, table } from './db';
 import { AppError } from './domain';
@@ -74,7 +74,7 @@ export async function finishDocumentUpload(id: string, attempt: string | null, s
       await tx`insert into ${table('preeval.files')}(id,application_id,name,mime_type,bytes,sha256,dropbox_path,state)
         values (${randomUUID()},${id},${file.name},${mime},${file.size},${'dropbox:'+file.contentHash},${file.path},'ready')
         on conflict do nothing`;
-      if (coreRuntimeEnabled()) {
+      if (await isCoreApplication(id)) {
         const [indexed] = await tx`select * from ${table('preeval.files')} where application_id=${id} and dropbox_path=${file.path}`;
         if (!indexed) throw new Error('Missing completed upload index');
         await recordCoreFile(tx,indexed,{...file,content_hash:file.contentHash,path_display:file.path});

@@ -1,5 +1,5 @@
 import 'server-only';
-import { coreRuntimeEnabled, coreEducation, syncCoreWorkflow } from '../application-core/runtime';
+import { isCoreApplication, coreEducation, syncCoreWorkflow } from '../application-core/runtime';
 import { randomUUID } from 'node:crypto';
 import { table, db, type Row } from './db';
 import { publishIfReady } from './payments';
@@ -8,7 +8,7 @@ import { documentManifest, loadDocuments, manifestHash } from './ai-documents';
 import { AIError, digest, PROMPT_VERSION, type AcademicInput } from './ai-contract';
 
 async function educationFor(id: string): Promise<AcademicInput> {
-  if (coreRuntimeEnabled()) {
+  if (await isCoreApplication(id)) {
     const e=await coreEducation(db(),id);
     return {school:e.school_name,country:e.country_of_study,degree:e.degree_obtained,start:e.start_date,end:e.end_date};
   }

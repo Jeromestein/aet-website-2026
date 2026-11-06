@@ -1,3 +1,4 @@
+import { coreTable } from './connection';
 import 'server-only';
 import type { TransactionSql } from 'postgres';
 import { db, type Row } from '../preeval/db';
@@ -28,7 +29,7 @@ export async function coreFileMetadata(file: Row) {
 export async function coreUploadPath(id: string, fileId: string, name: string, tx?: TransactionSql) {
   const sql=tx || db();
   const profile=await coreProfile(sql,id);
-  const documents=await sql`select * from aet.aet_documents where application_id=${id} and access_scope='customer_input'`;
+  const documents=await sql`select * from ${coreTable(sql,'aet_documents')} where application_id=${id} and access_scope='customer_input'`;
   const locations=new Set<string>();
   for (const file of documents) {
     const metadata=await coreFileMetadata(file);
@@ -52,7 +53,7 @@ export async function coreUploadPath(id: string, fileId: string, name: string, t
 }
 /** Authorization of applicationId occurs in the caller. A File ID is never a token. */
 export async function downloadCoreFile(applicationId: string, recordId: string) {
-  const [file]=await db()`select * from aet.aet_documents where id=${recordId} and application_id=${applicationId} and access_scope='customer_input'`;
+  const [file]=await db()`select * from ${coreTable(db(),'aet_documents')} where id=${recordId} and application_id=${applicationId} and access_scope='customer_input'`;
   if (!file) throw new AppError('not_found',404);
   const metadata=await coreFileMetadata(file);
   const client=await clientForOffice(officeForConnection(file.storage_location));
