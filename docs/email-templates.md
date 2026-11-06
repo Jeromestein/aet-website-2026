@@ -19,6 +19,28 @@ Legacy templates were checked in `aet-app/src/app/(frontend)/(aet-app)/component
 Thanksgiving/Christmas promotional templates are excluded at the owner's request.
 Staff email-link login and password recovery remain removed.
 
+## Planned language policy
+
+**Owner decision — November 6, 2026; implementation pending.** All automatic
+business emails use English, including confirmation, payment, fee updates,
+results, additional-information requests and application-access messages.
+Email subjects, template copy and actions do not depend on the selected form
+language or an account preference. Submitted names/content and the requested
+translation source/target languages are not rewritten by this policy.
+
+The proposed shared application table has no `locale`. Do not persist a substitute
+notification-language preference in service JSON or another business table.
+Users select website language through localized URLs/browser preferences; automatic
+mail must also render in English when no browser is present, such as webhook
+delivery or a retry. Mail links need no per-application language setting; preserve
+valid access tokens and compatibility with existing localized URLs.
+
+This section records the target policy, not a completed renderer or database
+change. Current workflow/token locale columns and their consumers remain intact
+until a later implementation updates them. Preserve delivery deduplication,
+content-digest review on retry and historical email references during that work.
+Track acceptance in the [migration checklist](migration-checklist.md#unified-application-and-fulfillment).
+
 ## Visual design
 
 Business emails use the blue-gradient design approved on 2026-10-20.

@@ -1,9 +1,12 @@
 # AET Migration Checklist
 
-Current plan as of October 22, 2026; code baseline `dev` at `adc6461`,
-with hosted Preview acceptance of `5d10cff`.
+Planning updated November 6, 2026. Implementation evidence remains the
+October 22 `dev` baseline at `adc6461`, with hosted Preview acceptance of `5d10cff`.
+New planning items do not imply implementation or fresh runtime verification.
 Read [status](status.md) for progress, [architecture](migration-architecture.md)
 for system relationships and the [documentation index](README.md) for guides.
+The [database comparison](database-architecture.md) maps legacy, current and
+proposed tables/fields; its target structure remains a plan, not a migration.
 
 Checked means the stated implementation or verification is complete, not that
 the whole feature is deployed. Keep current work here; dated test output and
@@ -84,9 +87,58 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect current-version report approval/release, eligible customer access,
   quote/payment/result notifications and paper dispatch/tracking.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
-  entry, then implement translation-specific persistence and fulfillment.
-  Evolve shared contracts as these services connect; no broad database rewrite
+  entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
+- [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
+  and `aet_payments` in the target design. Actual legacy/current tables retain
+  `aet_core_educations` and `aet_core_payments` until a separately planned migration;
+  preserve records/IDs and do not treat a rename as payment-ledger unification.
+- [ ] **TODO — Application recipient address and pronouns (November 6, 2026):**
+  implement the [application field definitions](migration-architecture.md#planned-application-contact-and-recipient-fields)
+  in a later authorized phase. Add nullable `mailing_address` JSONB with `name`,
+  `country`, `street`, `street2`, `city`, `region`, `postal`, plus nullable text
+  `pronouns` to `aet_core_applications`. Require a valid address for physical
+  delivery and retain evaluation pronoun validation; digital-only applications
+  need no mailing address and translation need not supply evaluee pronouns.
+  Preserve each application's submitted address independently of future account
+  profiles. Map verified recipient values without inventing legacy data; verify
+  confirmation, CRM and Status reads for evaluation and translation. Plan only;
+  no database or runtime changes now.
+- [ ] **TODO — Shared payment timestamps (November 6, 2026):** implement the
+  [three timestamp definitions](migration-architecture.md#planned-payment-timestamps)
+  in a later authorized phase. Add `created_at` and `updated_at` to `aet_payments`
+  while retaining `paid_at`. Initialize creation/update times for new records;
+  maintain `updated_at` on actual changes. Preserve `created_at` and successful
+  `paid_at` through refunds and duplicate events. Map trustworthy existing payment
+  timestamps and keep unknown legacy history distinguishable; finalize the
+  nullable/backfill policy before migration. Acceptance must cover unpaid creation,
+  payment success, refund updates and webhook replay. Plan only; no database or
+  runtime changes now.
+- [ ] **TODO — English business emails and no application locale (November 6, 2026):**
+  follow the [language policy](email-templates.md#planned-language-policy). The
+  target application omits `locale`; do not add a replacement business-language
+  preference. Automatic confirmation, payment, fee-update, result, information
+  request and access emails use English, independently of the form language.
+  Page language stays in URL/browser preferences; translation source/target
+  languages remain business requirements. Update existing locale-dependent
+  consumers before any later schema removal. Acceptance must cover submissions
+  from English/Chinese/Spanish pages, delayed/retried emails without a browser,
+  valid access links and continued frontend language switching.
+  Decision recorded only; no runtime change, database migration or deployment now.
+- [ ] **TODO — Service details and translation fulfillment (plan recorded November 6, 2026):**
+  implement the [planned `aet_service_detail` model](migration-architecture.md#planned-service-details)
+  only in a later authorized implementation phase. Use typed/validated `details`
+  payloads and composite uniqueness on `(application_id, service_type)` initially.
+  Add optional text `notes` for customer remarks per service (initial 3000-character
+  limit); use it instead of `details.instructions`. Preserve the original single
+  intake note on its primary service row and keep staff/payment notes separate.
+  Verify notes survive confirmation, persistence and CRM/Status reads without
+  being copied into unrelated service rows.
+  Evaluation plus translation use separate service rows under the same Application
+  ID; pure translation creates no education rows and shares documents/payments.
+  Resolve the master-table/legacy mapping, then connect requirements, staff quote,
+  payment and delivery to CRM/Status. Acceptance must cover pure translation and
+  combined service requests. This item authorizes no database changes now.
 
 Guides: [intake acceptance](credential-intake-testing.md),
 [earlier formal pilot](evaluation-application.md), [email](email-templates.md).
@@ -98,9 +150,27 @@ Do not remove v2 workflow guards merely to expose older pilot actions.
   CRM edits, Test views and document/payment details; retain the restored GPA URL.
 - [x] Persist office/application Dropbox locations and preserve historical file
   reads across profile edits. Keep existing customer folders intact.
+- [ ] **TODO — Shared `aet_documents` and Dropbox ID tracking (plan recorded November 6, 2026):**
+  implement the [file-only index and scan-on-open design](dropbox.md#planned-shared-document-records)
+  in a later authorized phase. Keep only file rows, identified by storage connection
+  plus Dropbox File ID. No Folder ID, folder rows, location `kind`, `is_folder` or
+  `document_locations` in the target; no storage fields on the application master.
+  Omit `document_type` and `deleted_at`; file paths remain cached metadata.
+  Support authorized [File ID lookup](dropbox.md#file-id-lookup). Derive candidate
+  scan directories from current file metadata; follow the [staff-confirmation rules](dropbox.md#directory-resolution-without-folder-ids)
+  for empty/existing applications, unavailable IDs, changed paths, conflicting
+  parents or uncertain scope. Do not automatically associate a shared directory's
+  other files with the application. Derive the first-upload path for new applications
+  from office, Application ID and applicant name; register returned File IDs.
+  Acceptance must cover whole-folder moves, a single file moved to a shared folder,
+  staff directory confirmation, File ID search, unknown/inaccessible IDs, direct
+  Dropbox additions, pagination, repeat scans without duplicates and controlled
+  customer/report access. Reconcile current registry/legacy readers before cutover.
+  This is a plan only: no database changes, backfill, file moves or background sync.
 - [ ] Enable the East Dropbox app's required read permission and refresh its
   authorization as needed; recheck Boston/New York download bytes. Apply the
-  location-registry migration in every intended deployment database.
+  existing location-registry migration wherever current code requires it; this
+  current-runtime dependency is separate from the file-only target design.
 - [ ] Verify the latest document counts, file sizes, upload/email copy and staff
   interactions at the actual hosted commit. October 20 acceptance predates fixes.
 - [ ] Verify the first automatic Production payment-expiry execution. Its recorded
@@ -155,6 +225,25 @@ working destinations when the old public host is replaced.
 
 ## Deferred by owner
 
+- [ ] **TODO — Customer accounts and application ownership (November 6, 2026):**
+  revisit only when a customer account system is needed; this is not a current
+  release gate. No user tables, ownership columns, migrations or login features
+  are to be implemented for this planning item now.
+  The intended starting model is one customer user owning multiple applications.
+  Prefer adding a nullable `customer_user_id` foreign key to the application
+  master table when implementing accounts; guest and existing applications may
+  remain unlinked. Preserve existing Application IDs and dependent file/payment
+  links; do not store an array of application IDs on the user record. An explicit
+  user/application association table remains an alternative if shared ownership
+  becomes a requirement; organization/member access is deferred.
+  Use a stable user ID for ownership, not an email address. Preserve the submitted
+  application contact email separately from the changeable account email, and
+  do not make application email unique. Keep customer ownership distinct from
+  the evaluated person's identity and staff activity. Future implementation must
+  include authenticated ownership assignment, verified claiming of guest
+  applications and server-side access checks; matching a supplied email alone
+  must never grant access. Choose the account/auth table integration at that time;
+  do not assume the existing Payload or staff user tables are customer accounts.
 - [ ] **TODO — F5 email automation:** reconsider only when operational checks show
   a substantial unsent-email backlog or recurring failures. No further design,
   implementation, scheduler activation or new monitoring now. Existing code is

@@ -11,7 +11,8 @@ not additional active task lists.
 | [Project README](../README.md) | What the project is, quick start and key entry points |
 | [Current status](status.md) | Current capability, verified boundary and next milestone |
 | [Migration checklist](migration-checklist.md) | Active tasks, acceptance gates and explicitly deferred work |
-| [Migration architecture](migration-architecture.md) | The two maintained English Mermaid diagrams |
+| [Migration architecture](migration-architecture.md) | The two maintained English diagrams and the planned shared application/service-detail model |
+| [Database architecture comparison](database-architecture.md) | Three Mermaid database views, a zoomable viewer and field-by-field legacy/current/proposed mapping |
 | [Development and configuration](development.md) | Worktrees, environment names, deployment boundaries and shared website data |
 
 ## Applications and business operations
@@ -22,8 +23,8 @@ not additional active task lists.
 | [Credential intake acceptance](credential-intake-testing.md) | New `/application` persistence, Status and confirmation email |
 | [Formal evaluation pilot](evaluation-application.md) | Earlier separate local workflow; not proof of v2 intake fulfillment |
 | [Staff authentication and CRM](staff-auth.md) | Password login, office grants, live records and migration switches |
-| [Dropbox](dropbox.md) | Folder rules, historical compatibility, uploads and access boundaries |
-| [Email templates](email-templates.md) | Email visual design, recipient rules and metadata-only delivery history |
+| [Dropbox](dropbox.md) | Current access rules and the planned file-only `aet_documents` index, File ID lookup and staff-confirmed directory scans |
+| [Email templates](email-templates.md) | Email visual design, planned English-only delivery, recipient rules and metadata-only delivery history |
 | [Payment configuration](../content/payment/README.md) | Standalone Payment, merchant routing and test/live boundaries |
 | [Payment expiry](payment-expiry.md) | Separate formal 48-hour expiry worker and recorded activation |
 | [Refund ordering](payment-refund-ordering.md) | Payment-event ordering and regression procedure |

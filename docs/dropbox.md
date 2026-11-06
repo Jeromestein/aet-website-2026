@@ -86,6 +86,130 @@ metadata. Formal pilot reports go under `_reports/`, which the customer document
 list does not recurse into. Report release remains controlled by its existing
 workflow. Status uploads retain their original names and Dropbox autorename.
 
+## Planned shared document records
+
+**Planning decision — November 6, 2026; not implemented.** Use `aet_documents`
+as the shared file index for translation, pre-evaluation and formal evaluation.
+Each row represents a file, never a folder. The target uses Dropbox File IDs;
+it has no Folder ID, `document_locations`, location `kind`, `is_folder`,
+`document_type` or `deleted_at`. The application master has no storage fields.
+The existing database and its location registry remain unchanged. See the
+[application relationships](migration-architecture.md#planned-shared-application-model)
+and [implementation TODO](migration-checklist.md#shared-operations-and-compatibility).
+
+### Proposed fields and identity
+
+| Field | Intended meaning |
+| --- | --- |
+| `id` | AET-generated UUID for the file record; neither Dropbox ID nor an access secret |
+| `application_id` | Required foreign key to the application master; index for file listings |
+| `storage_location` | Server-controlled connection key, such as `dropbox_ca` or `dropbox_boston`; not a folder path or credentials |
+| `storage_file_id` | Dropbox File ID used for exact lookup, current metadata, preview and download |
+| `storage_path` | Last observed file path; refreshed cache/display metadata, not identity or a permanent scan root |
+| `original_filename` | Name at upload or first discovery; current display name comes from Dropbox metadata |
+| `mime_type` | Known/validated media type; may be unknown for externally discovered files |
+| `size_bytes` | Last observed file size |
+| `created_at` | AET record creation time, not an assumed original Dropbox creation time |
+
+Use `(storage_location, storage_file_id)` as the composite unique provider
+reference. Repeated uploads/listings of the same provider file update one record;
+names and paths are not identifiers. The initial model gives a file one application
+owner. A conflicting application association requires staff resolution, never
+automatic reassignment. Preserve the AET UUID through ordinary renames/moves.
+File bytes remain in Dropbox; store no tokens or temporary download URLs here.
+Map connection labels to existing account/namespace configuration before use.
+
+### Directory resolution without Folder IDs
+
+Use File ID lookup to fetch a known file's current metadata and path. Its parent
+path is a **candidate scan directory**, not a permanent application-folder link.
+No Folder ID or folder record is persisted, and no separate location table is
+part of the target design.
+
+- For a genuinely new application's first upload, derive the destination from
+  office, Application ID and applicant name. Register the returned File ID after
+  a successful upload. Do not treat a missing/inaccessible existing file as a new
+  application or silently recreate an old directory at the computed path.
+- When accessible known files establish an unchanged, unambiguous application
+  directory within the permitted scope, use its current path to scan on open or
+  refresh. Refresh metadata before reusing a cached path.
+- Ask staff to select or confirm the directory when there are no usable File IDs,
+  paths have changed, files point to different parents, or the association is
+  otherwise uncertain. An existing empty directory also requires confirmation
+  because this design keeps no folder identity. Staff can supply an authorized
+  directory or locate a known file by File ID to propose its parent.
+- Confirm the selected directory for the current operation/session and revalidate
+  it on subsequent operations; do not introduce a persistent folder mapping behind
+  this design. A single file moved into a shared directory does not make that
+  directory's other files part of the application. Newly discovered associations
+  must use a directory confirmed as belonging to the application or explicit
+  staff selection of the relevant files. Customers cannot choose arbitrary paths.
+
+This intentionally trades automatic folder recovery for a simpler file model.
+An empty folder moved elsewhere cannot be rediscovered from absent File IDs;
+staff must resolve that case. Existing files remain individually addressable
+when directories are uncertain, subject to current permissions. Upload to an
+existing application must also wait for resolution if its destination is unclear.
+
+### File ID lookup
+
+Allow staff to search the authorized AET file index by `storage_file_id`, using
+the appropriate storage connection when needed. For a known record, authorize
+its application before returning metadata. A direct provider lookup uses File ID
+to obtain the current filename/path and may suggest a scan directory. This is
+an exact lookup, not a recursive search through every Dropbox folder.
+
+If the File ID is not indexed, show only results accessible to that staff member;
+verify that the result is a file and require explicit association with the selected
+application. Do not attach it automatically, bypass report-release rules, or
+reassign an existing record belonging to another application. A File ID is not
+an access credential. Unknown/inaccessible IDs must be reported without deleting
+records or guessing a replacement based on filename.
+
+### Scan on open and refresh
+
+Preserve the staff workflow with an explicit confirmation step when required:
+
+1. Authorize the application and load its `aet_documents` rows. Resolve known
+   File IDs to refresh metadata and identify candidate parent directories.
+2. Apply the directory-resolution rules above. If uncertain, show known files
+   and request staff confirmation; do not silently scan or import from a guess.
+3. List the permitted contents of each resolved/confirmed directory **by path**,
+   consuming all result pages. Listing supplies File IDs, names, paths and sizes.
+   Preserve customer/staff visibility and report hiding; no blanket recursion into
+   `_reports/` or unreleased output is authorized. Ignore folder entries as records.
+4. Upsert matching File IDs and register newly discovered files only within the
+   confirmed application scope. Refresh paths/sizes/current display names without
+   overwriting original names. A changed path never changes `application_id`.
+5. For an indexed file absent from a complete listing, look it up by File ID.
+   Distinguish a move, a scope conflict and an unavailable file. API errors or
+   partial listings are not proof of deletion. Report discrepancies to staff;
+   do not expose unresolved/out-of-scope files to customers or delete their rows.
+6. Preview/download uses File ID with current application, office/storage and
+   report-release checks. Cached metadata or a staff-supplied ID cannot bypass them.
+
+Synchronization is on demand. Failed refreshes must not be presented as an empty
+folder or fresh data. No cron job, Dropbox webhook or background scan is part of
+this phase. Ordinary moves/renames retain File ID while the connection has access;
+copies or delete-and-recreate operations must not be assumed to retain it. A move
+between independent storage accounts needs explicit connection/File ID reconciliation.
+
+### Existing registry and migration boundary
+
+The current `evaluation.document_locations` table and its `(application_id, kind)`
+key remain documented in the current-system section above. They are **not part of
+the target model**, but this planning update does not delete the table or change
+any callers. Before an authorized cutover, reconcile legacy application identities
+and historical write/read/archive paths, list their authorized files and capture
+File IDs. Keep historical readers working until that reconciliation is verified.
+Preserve upload recovery, AI input versions and controlled report release; do not
+discard workflow metadata merely because the shared file index omits it.
+
+Provider references checked November 6, 2026:
+[File access and identifiers](https://docs.dropboxapi.com/dropbox-api/docs/file-access),
+[change detection](https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes),
+[performance](https://docs.dropboxapi.com/dropbox-api/docs/performance).
+
 ## Serverless and access boundaries
 
 Node route handlers proxy Dropbox requests. Browser bundles never receive
