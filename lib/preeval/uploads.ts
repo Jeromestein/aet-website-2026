@@ -1,3 +1,4 @@
+import { isCoreApplication, recordCoreFile } from '../application-core/runtime';
 import 'server-only';
 import { randomUUID } from 'node:crypto';
 import { clientForOffice, dropboxHash, seal, unseal, requireEnabled } from '../dropbox/server';
@@ -36,7 +37,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
       if (!existing && (await tx`select id from ${table('preeval.files')} where application_id=${id}`).length >= 5) throw new AppError('file_limit');
       await pauseForUpload(id, tx);
       const fileId = existing?.id || randomUUID();
-      const path = existing?.dropbox_path || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, fileName, false, tx);
+      const path = (!await isCoreApplication(id,tx) && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, fileName, false, tx);
       const [row] = await tx`insert into ${table('preeval.files')}(id,application_id,name,mime_type,bytes,sha256,dropbox_path)
         values (${fileId},${id},${fileName},${mime},${fileSize},${'dropbox:' + contentHash},${path})
         on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;
@@ -102,6 +103,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
       catch { throw new AppError('upload_failed', 502); }
     }
     if (!('size' in saved) || saved.size !== upload.size || saved.content_hash !== upload.hash) throw new AppError('upload_failed', 502);
+    await recordCoreFile(tx,file,{...saved,storageLocation:accountForOffice(office)});
     await tx`update ${table('preeval.files')} set state='ready' where id=${file.id}`;
     await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: file.id })})`;
     return { complete: true };

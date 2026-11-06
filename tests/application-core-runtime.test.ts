@@ -8,18 +8,21 @@ import postgres from 'postgres';
 import { PDFDocument } from 'pdf-lib';
 import type Stripe from 'stripe';
 const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
-  upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
+  start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
 vi.mock('../lib/preeval/db',()=>({db:()=>m.sql!,table:(name:string)=>m.sql!(name),
   audit:async(id:string,actor:string,action:string)=>{await m.sql!`insert into preeval.audit(application_id,actor,action) values (${id},${actor},${action})`;}}));
 vi.mock('../lib/preeval/config',()=>({configuration:()=>({origin:'http://localhost:3022',recipient:'synthetic@example.invalid',cloudPreview:true}),
   required:(key:string)=>key==='STRIPE_TEST_SECRET_KEY'?'sk_test_synthetic':'synthetic@example.invalid',requireExternalServices:()=>{}}));
 vi.mock('stripe',()=>({default:class { checkout={sessions:{create:m.create,retrieve:m.retrieve}};paymentIntents={retrieve:m.intent}; }}));
-vi.mock('../lib/dropbox/server',()=>({requireEnabled:()=>{},clientForOffice:async()=>({filesUpload:m.upload,filesGetMetadata:m.metadata,filesDownload:m.download}),
+vi.mock('../lib/dropbox/server',()=>({requireEnabled:()=>{},clientForOffice:async()=>({filesUpload:m.upload,filesGetMetadata:m.metadata,filesDownload:m.download,filesUploadSessionStart:m.start,filesUploadSessionAppendV2:m.append,filesUploadSessionFinish:m.finish}),
+  seal:(account:string,_purpose:string,data:unknown,expires:number)=>JSON.stringify({account,data,expires}),
+  unseal:(value:string)=>JSON.parse(value),
   dropboxHash:(bytes:Buffer)=>createHash('sha256').update(bytes).digest('hex')}));
 import { activateCoreRehearsal,coreRuntimeEnabled,updateCoreEducation,coreAdminApplications } from '../lib/application-core/runtime';
 import { createCoreShadowReader } from '../lib/application-core/reader';
 import { downloadCoreFile,coreUploadPath } from '../lib/application-core/documents';
+import { uploadDocument } from '../lib/preeval/uploads';
 import { submit,addFile,application,staffAction } from '../lib/preeval/service';
 import { completeUploads,startDocumentUpload,finishDocumentUpload } from '../lib/preeval/ai-jobs';
 import { unfinishedUploads,abandonUpload } from '../lib/preeval/upload-recovery';
@@ -90,6 +93,23 @@ describe.skipIf(!pgBin)('phase 3 actual core runtime (owned PostgreSQL; no backf
     });
     m.create.mockReset().mockImplementation(async({client_reference_id:id}:{client_reference_id:string})=>({id:`cs_${id}`,status:'open',url:'https://checkout.example.invalid/test'}));
     m.retrieve.mockReset().mockResolvedValue({status:'open',url:'https://checkout.example.invalid/test'});
+  });
+  it('indexes customer chunk uploads by File ID atomically and accepts an idempotent finish',async()=>{
+    const {app}=await submit(input());
+    const hash=createHash('sha256').update(pdf).digest('hex');
+    m.start.mockResolvedValue({result:{session_id:'synthetic-session'}});
+    m.append.mockResolvedValue({});
+    m.finish.mockImplementation(async({commit}:{commit:{path:string}})=>m.upload({path:commit.path,contents:pdf}));
+    const start=await uploadDocument(app.id,{action:'start',fileName:'chunked.pdf',fileSize:pdf.length,mime:'application/pdf',contentHash:hash},'customer');
+    const append=await uploadDocument(app.id,{action:'append',uploadKey:start.uploadKey,chunkIndex:0,chunkData:pdf.toString('base64')},'customer');
+    expect(await uploadDocument(app.id,{action:'finish',uploadKey:append.uploadKey},'customer')).toEqual({complete:true});
+    expect(await uploadDocument(app.id,{action:'finish',uploadKey:append.uploadKey},'customer')).toEqual({complete:true});
+    expect(m.finish).toHaveBeenCalledTimes(1);
+    const docs=await sql()`select * from aet.aet_documents where application_id=${app.id}`;
+    expect(docs).toHaveLength(1);expect(docs[0].storage_file_id).toMatch(/^id:/);
+    expect(await downloadCoreFile(app.id,docs[0].id)).toEqual(pdf);
+    await completeUploads(app.id);await ai(app.id);await paid(app.id);
+    expect((await application(app.id)).result).toEqual(result);
   });
   it('writes new applications directly to core, rejects conflicting replays and reads core for AI, Status, CRM and English mail',async()=>{
     const original=input();const submissions=await Promise.all([submit(original),submit(original)]);const id=submissions[0].app.id;
