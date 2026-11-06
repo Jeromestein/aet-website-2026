@@ -80,6 +80,7 @@ follow the current checklist and module guide before acting on them.
 
 | Record | Contents |
 | --- | --- |
+| [November 6 hosted recovery acceptance](archive/preview-recovery-acceptance-2026-11-06.md) | Failed-upload replacement, paid-result recovery, direct webhook replay and fault cleanup |
 | [November 6 Preview core acceptance](archive/database-preview-acceptance-2026-11-06.md) | New shared-schema activation, real-provider journey and Production/legacy preservation |
 | [Implementation log through October 22](archive/status-through-2026-10-22.md) | Original implementation history, verification scopes and integration evidence |
 | [Migration checklist snapshot](archive/migration-checklist-2026-10-22.md) | Earlier checkpoints, complete page inventory and original decisions |

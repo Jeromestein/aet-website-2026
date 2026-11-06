@@ -42,10 +42,16 @@ the original route inventory live in the [historical checklist](archive/migratio
   concurrent Checkout reuse, paid Checkout rejection and callback replay.
   The real Stripe test event reached the hosted route through a temporary relay;
   the relay was stopped and its dev-only access revoked.
-- [ ] Verify both recovery fixes in the authorized hosted setup: fail an upload,
-  abandon/replace it, finish the batch and obtain one eligible analysis; after
-  a saved paid result's publication failure, an authorized read recovers the
-  same result without another AI run or duplicate notification.
+- [x] **Hosted recovery acceptance (November 6, 2026, `b003139`):** force a
+  chunked-upload hash mismatch (502), preserve the failed attempt across a page
+  load, abandon it through the customer UI, upload a replacement and complete one
+  eligible AI run. Reject the obsolete finish request with 409. After a targeted
+  publication outage, retain the paid ledger and saved AI result; three concurrent
+  authorized reads recover the same result and enqueue one result email. Direct
+  Stripe test-event redelivery completes with no pending webhook and no duplicate
+  payment, analysis or result notification. Customer/CRM views agree. The temporary
+  Preview-only trigger/function were removed; Production is unchanged. See
+  [recovery evidence](archive/preview-recovery-acceptance-2026-11-06.md).
 - [x] Configure permanent direct Stripe **test** webhook delivery and its own
   signing secret on dev Preview. A new USD 19.88 Sandbox payment reached the
   hosted handler directly, completed the application and delivered the result
@@ -53,8 +59,8 @@ the original route inventory live in the [historical checklist](archive/migratio
   exception; staff login and Stripe signature checks remain enforced. See the
   [direct webhook acceptance](archive/preview-acceptance-2026-10-22.md#permanent-direct-test-webhook-acceptance).
 - [ ] Complete amount/ownership negative cases, cancellation/refund visibility
-  and phone/desktop recovery checks; normal paid/unpaid, replay and return
-  reconciliation passed in the earlier controlled hosted run.
+  and phone recovery checks. Desktop upload/publication recovery and direct event
+  replay passed November 6; normal paid/unpaid and return reconciliation also pass.
 - [ ] Verify hosted AI runtime/timeout/recovery limits and deployment eligibility
   before production use. Confirm real-customer recipients, charging and operating
   policy separately; test acceptance does not authorize live transactions.

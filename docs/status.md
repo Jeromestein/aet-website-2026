@@ -1,7 +1,8 @@
 # AET Implementation Status
 
 Updated November 6, 2026 after isolated phases one through three and the authorized
-hosted dev Preview core activation at `b003139`. This is the current summary, not a release log.
+hosted dev Preview core activation and upload/publication recovery at `b003139`.
+This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
@@ -22,8 +23,8 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | Shared database | Five shared business tables now serve new pre-evaluation applications in private `aet_preview_core`; old Preview applications remain readable | Historical reconciliation/backfill, other service writers, Production activation and eventual compatibility retirement |
-| Dedicated pre-evaluation | November 6 hosted core journey passed: chunked upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted failure-recovery scenarios, production configuration and charging |
-| Failure recovery | Abandoned-upload recovery and saved-result publication recovery both merged into `dev` | Exercise both fixes in the authorized hosted environment |
+| Dedicated pre-evaluation | November 6 hosted core journey passed: chunked upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
+| Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
 | Status and documents | Formal lookup, ordinary/chunked uploads, saved Dropbox locations and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
@@ -42,8 +43,8 @@ Supabase project, not a separate Supabase project.
 A new synthetic application completed a real Dropbox chunked upload and matching
 byte download, one OpenAI analysis, USD 19.88 Stripe **Sandbox** Checkout, direct
 permanent test-webhook delivery, result release and two English Resend emails
-confirmed delivered. Customer results and CRM Test agree. The CRM retains all
-nine test applications, and an older paid application's result remains accessible.
+confirmed delivered. Customer results and CRM Test agree. The initial activation run retained all
+nine test applications, and an older paid application's result remained accessible.
 The explicit synthetic credential correctly produced “Unable to determine”; this
 is workflow evidence, not an assessment-quality benchmark.
 
@@ -52,10 +53,18 @@ Unauthenticated protected API access returned 401 and an unsigned webhook return
 `fc1ab0d`, deployment `dpl_3NCtp1ZJBRYxi2puGVLg2eCuQJZR`; no Production settings,
 main branch, old tables or historical records were changed.
 
-See the [November 6 acceptance record](archive/database-preview-acceptance-2026-11-06.md).
-Hosted failure injection, cancellation/refund, mobile recovery and production
-charging remain open. Earlier replay/concurrency and direct-webhook checks remain
-in the [October 22 record](archive/preview-acceptance-2026-10-22.md).
+See the [November 6 activation record](archive/database-preview-acceptance-2026-11-06.md).
+The subsequent [hosted recovery run](archive/preview-recovery-acceptance-2026-11-06.md)
+verified a real failed upload followed by browser replacement and one AI run.
+A synthetic application-specific database fault then blocked publication after
+payment without losing the saved result. Once removed, normal authorized reads
+published the same result and one delivered result email; direct Stripe event
+redelivery left no pending webhook or duplicate payment/analysis/mail. CRM Test
+now contains 10 applications, including the recovered completed application.
+No runtime patch, redeployment, cron, provider-setting change or production change
+was needed. Cancellation/refund, mobile recovery, broader provider outages and
+production charging remain open. Earlier checks remain in the
+[October 22 record](archive/preview-acceptance-2026-10-22.md).
 
 ## Latest isolated database verification
 
@@ -85,8 +94,8 @@ The explicit core opt-in is enabled only for dev Preview.
   The earlier integration-time browser check covered the pre-evaluation lookup
   page only; the later hosted primary journey is recorded separately above.
 - The November 6 provider acceptance exercised real Dropbox, OpenAI, Resend and
-  **Stripe Sandbox** on the deployed core runtime. Hosted failure injection and
-  production charging are still unverified; happy-path success does not prove them.
+  **Stripe Sandbox** on the deployed core runtime. A follow-up also verified hosted
+  upload/publication failure recovery. Production charging remains unverified.
 - The October 20 hosted acceptance predates later dev changes. A local commit
   is not proof that the same version is running on Vercel.
 
@@ -118,9 +127,9 @@ These are existing records; documentation cleanup did not rerun those checks.
 1. Reconcile historical identity/File-ID/price exceptions and prepare a reversible
    historical migration. New dev Preview pre-evaluation applications already use
    the core writer; keep existing records and operational tables intact.
-2. Exercise both integrated pre-evaluation recovery fixes in dev Preview,
-   refund/cancellation visibility and mobile recovery states. Direct test-webhook
-   delivery is verified; keep production charging/configuration separate.
+2. Verify hosted refund/cancellation visibility, mobile recovery and AI timeout
+   handling. Desktop upload/publication recovery and direct test-webhook replay
+   now pass; keep production charging/configuration separate.
 3. Make one unified formal intake operable by staff: documents, missing-material
    requests, confirmed quote and audited status changes.
 4. Connect that intake to payment, then report release and notifications.

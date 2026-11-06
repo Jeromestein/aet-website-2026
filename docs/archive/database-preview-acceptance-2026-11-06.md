@@ -100,6 +100,13 @@ This correction was deployed before creating the accepted cloud application.
 - TypeScript and whitespace checks passed. No local production build was run.
 - Provider mocks in regression tests are distinct from the real hosted acceptance above.
 
+## Follow-up evidence
+
+The later [hosted recovery acceptance](preview-recovery-acceptance-2026-11-06.md)
+verifies upload replacement and paid-result publication recovery on the same
+`b003139` deployment. Its synthetic application brings CRM Test to 10 records.
+The original run's limits and counts below remain its historical scope.
+
 ## Remaining boundaries and rollback
 
 Historical reconciliation/backfill, formal/translation core writers, general
