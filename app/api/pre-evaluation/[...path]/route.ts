@@ -34,6 +34,8 @@ import { handleStripeEvent as handleFormalEvent } from '@/lib/evaluation-applica
 import { abandonUpload, unfinishedUploads } from "@/lib/preeval/upload-recovery";
 import { completeUploads, retryAnalysis } from "@/lib/preeval/ai-jobs";
 import { scheduleAI } from "@/lib/preeval/ai-scheduler";
+import { coreRuntimeEnabled, coreAdminApplications } from "@/lib/application-core/runtime";
+import { downloadCoreFile } from "@/lib/application-core/documents";
 import { downloadFile } from "@/lib/preeval/dropbox";
 
 export const runtime = "nodejs";
@@ -177,7 +179,7 @@ async function handler(
         1,
         Math.min(10000, Number(url.searchParams.get("page")) || 1),
       );
-      const rows =
+      const rows = coreRuntimeEnabled() ? await coreAdminApplications(search,status,page,current) :
         await db()`select a.id,a.first_name,a.last_name,a.email,a.status,a.payment_status,a.ai_status,a.created_at,a.updated_at,e.school_name,e.degree_obtained,
         (select count(*)::int from ${table("preeval.files")} f where f.application_id=a.id and f.state='ready') file_count,
         (select count(*)::int from ${table("preeval.emails")} m where m.application_id=a.id and m.state='failed') email_failures,
@@ -250,7 +252,7 @@ async function handler(
         await db()`select * from ${table("preeval.files")} where id=${id} and state='ready'`;
       if (!file) throw new AppError("not_found", 404);
       await authorize(file.application_id);
-      const content = await downloadFile(file.dropbox_path);
+      const content = coreRuntimeEnabled() ? await downloadCoreFile(file.application_id,file.id) : await downloadFile(file.dropbox_path);
       return new NextResponse(new Uint8Array(content), {
         headers: {
           "Content-Type": file.mime_type,

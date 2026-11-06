@@ -110,9 +110,16 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   matching legacy education's edited start/end dates; retain workflow fallback
   when that record is absent. Isolated tests confirm CRM, Status and core-read
   parity, date search and export, without rewriting workflow education values.
+- [x] **Phase 3 — Isolated pre-evaluation runtime cutover (November 6, 2026):**
+  create canonical applications/education directly, route business reads through
+  core, capture File IDs and atomically project retained workflow/payment state.
+  Verify the complete service flow without backfill, upload/publication recovery,
+  refunds, deduplication, private fields, office scope and failed-write rollback.
+  117 focused tests and TypeScript pass; see [evidence and ownership boundaries](archive/database-phase3-runtime-2026-11-06.md).
+  Activation is test-harness-only; payment/AI/email/attempt compatibility remains.
 - [ ] **TODO — Complete cohort cutover reconciliation:** file creation timestamps
   remain an explicit unknown; finish real File ID/history reconciliation and
-  mixed-cohort comparisons before replacing runtime reads. Keep one authoritative writer.
+  mixed-cohort comparisons before replacing hosted runtime reads. The fresh isolated cohort is verified; keep one authoritative writer.
 - [ ] **TODO — Historical contract and source reconciliation:** verify missing
   original submissions, File IDs/revisions, release/education timestamps, pricing
   provenance, provider accounts and standalone/legacy identities against authorized
@@ -124,7 +131,7 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Preserve upload/publication recovery, refunds and email deduplication; connect
   formal v2 staff/payment/release deliberately, then translation. Retire legacy
   tables/bridges only after all readers, writers and callbacks are reconciled.
-  Local phase-one rehearsal is complete; hosted migration, production cutover and
+  Local phases one through three are verified; hosted migration, production cutover and
   new scheduling remain unapproved.
 - [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
   and `aet_payments` in the target design. Actual legacy/current tables retain

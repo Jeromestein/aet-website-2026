@@ -159,7 +159,7 @@ async function startAIUpload(context: ApplicationContext, key: string) {
 }
 async function finishAIUpload(context: ApplicationContext, attempt: string | null | undefined, success: boolean, file?: files.FileMetadata) {
   if (attempt) await finishDocumentUpload(context.id, attempt, success,
-    file ? { name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev } : undefined);
+    file ? { id:file.id, rev:file.rev, storageLocation:accountForOffice(context.office), name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev } : undefined);
 }
 async function commitAIUpload(context: ApplicationContext, attempt: string | null | undefined,
   commit: () => Promise<files.FileMetadata>) {
@@ -169,7 +169,7 @@ async function commitAIUpload(context: ApplicationContext, attempt: string | nul
   try {
     accepted = await finishDocumentUpload(context.id, attempt, true, async () => {
       file = await commit();
-      return { name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev };
+      return { id:file.id, rev:file.rev, storageLocation:accountForOffice(context.office), name: file.name, path: file.path_display!, size: file.size, contentHash: file.content_hash || file.rev };
     });
   } catch (error) {
     // The claim rolled back. Failure is fenced too, in case a new attempt won

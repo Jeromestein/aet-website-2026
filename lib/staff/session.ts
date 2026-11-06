@@ -1,4 +1,5 @@
 import "server-only";
+import { coreRuntimeEnabled } from "../application-core/runtime";
 import { cookies } from "next/headers";
 import { staffCookieName } from "./config";
 import { staffClient } from "./client";
@@ -59,7 +60,9 @@ export async function requireStaffApplication(
     kind === "formal"
       ? await db()`select case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office
       from ${table("evaluation.applications")} a left join ${table("public.fce_applications")} l on l.id=a.id where a.id=${id}`
-      : await db()`select office from ${table("preeval.applications")} where id=${id}`;
+      : coreRuntimeEnabled()
+        ? await db()`select a.office from aet.aet_core_applications a join preeval.applications w on w.id=a.id and a.office is not distinct from w.office where a.id=${id}`
+        : await db()`select office from ${table("preeval.applications")} where id=${id}`;
   if (!rows[0] || !canAccessOffice(current, rows[0].office))
     throw new AppError("access_denied", 403);
   return current;

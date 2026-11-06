@@ -1,4 +1,5 @@
 import 'server-only';
+import { coreRuntimeEnabled, coreEducation, syncCoreWorkflow } from '../application-core/runtime';
 import { randomUUID } from 'node:crypto';
 import { table, db, type Row } from './db';
 import { publishIfReady } from './payments';
@@ -7,6 +8,10 @@ import { documentManifest, loadDocuments, manifestHash } from './ai-documents';
 import { AIError, digest, PROMPT_VERSION, type AcademicInput } from './ai-contract';
 
 async function educationFor(id: string): Promise<AcademicInput> {
+  if (coreRuntimeEnabled()) {
+    const e=await coreEducation(db(),id);
+    return {school:e.school_name,country:e.country_of_study,degree:e.degree_obtained,start:e.start_date,end:e.end_date};
+  }
   const [education] = await db()`select * from ${table('preeval.educations')} where application_id=${id}`;
   if (!education) throw new AIError('education_missing');
   const [legacy] = await db()`select * from ${table('public.aet_core_educations')} where id=${education.id} and application_id=${id}`;
@@ -38,6 +43,7 @@ export async function processAI(applicationId?: string, dependencies: Partial<AI
       order by ai_available_at limit 1 for update skip locked) returning *`;
     if (claimed) await tx`insert into ${table('preeval.ai_runs')}(id,application_id,input_version,input,model,prompt_version)
       values (${runId},${claimed.id},${claimed.input_version},'{}'::jsonb,${model},${PROMPT_VERSION})`;
+    if (claimed) await syncCoreWorkflow(tx,claimed.id);
     return claimed;
   });
   if (!app) return false;
@@ -71,6 +77,7 @@ export async function processAI(applicationId?: string, dependencies: Partial<AI
       await tx`update ${table('preeval.ai_runs')} set output=${tx.json(generated.analysis)},model=${generated.model},response_id=${generated.responseId},usage=${tx.json(generated.usage)},
         state=${current.length ? 'completed' : 'superseded'},completed_at=now() where id=${runId}`;
       if (current.length) await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${app.id},'ai','result.generated',${tx.json({ runId, model: generated.model, promptVersion: PROMPT_VERSION })})`;
+      if (current.length) await syncCoreWorkflow(tx,app.id);
       return Boolean(current.length);
     });
   } catch (error) {

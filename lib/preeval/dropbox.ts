@@ -1,3 +1,5 @@
+import { coreRuntimeEnabled } from '../application-core/runtime';
+import { coreUploadPath } from '../application-core/documents';
 import type { TransactionSql } from 'postgres';
 import { downloadBytes } from '../dropbox/download';
 import { required } from './config';
@@ -5,12 +7,13 @@ import { clientForOffice, requireEnabled } from '../dropbox/server';
 import { contextFor } from '../dropbox/application';
 import { resolveStorage } from '../dropbox/storage';
 import { basePathFor } from '../dropbox/paths';
-import { offices, safeSegment, type Office, type ApplicationKind } from '../dropbox/shared';
+import { accountForOffice, offices, safeSegment, type Office, type ApplicationKind } from '../dropbox/shared';
 
 /** New pilot files use the same application folders as Status and CRM.
  * Original names remain in file metadata; a UUID avoids overwriting another upload.
  * Unreleased formal reports stay in a non-listed child directory. */
 export async function filePath(row: Record<string, string | null>, kind: ApplicationKind, fileId: string, name: string, report = false, tx?: TransactionSql) {
+  if (kind==='pre-evaluation' && coreRuntimeEnabled()) return coreUploadPath(row.id!,fileId,name,tx);
   const context = contextFor(row, kind);
   const storage = await resolveStorage(context, tx);
   return `${storage.write.path}/${report ? '_reports/' : ''}${safeSegment(fileId)}-${safeSegment(name)}`;
@@ -35,7 +38,8 @@ export function officeForStoredPath(path: string): Office {
 export async function uploadFile(path: string, data: Buffer) {
   requireEnabled();
   const dbx = await clientForOffice(officeForStoredPath(path));
-  return (await dbx.filesUpload({ path, contents: data, mode: { '.tag': 'overwrite' }, autorename: false, mute: true })).result;
+  const result=(await dbx.filesUpload({ path, contents: data, mode: { '.tag': 'overwrite' }, autorename: false, mute: true })).result;
+  return {...result,storageLocation:accountForOffice(officeForStoredPath(path))};
 }
 /** The caller first authorizes the application/file row. Read its saved path,
  * including historical isolated-pilot paths; never rebuild it from current names. */

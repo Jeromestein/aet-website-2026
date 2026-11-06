@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { syncCoreWorkflow } from "../application-core/runtime";
 import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
 import { table, db } from "./db";
 import { required, configuration, requireExternalServices } from "./config";
@@ -31,6 +32,7 @@ export async function publishIfReady(id: string) {
       await tx`select * from ${table("preeval.applications")} where id=${id} and payment_status='paid' and result is not null and ai_status='completed' and not uploads_pending and status not in ('cancelled','needs_information') for update`;
     if (ready[0] && ready[0].status !== "completed")
       await tx`update ${table("preeval.applications")} set status='completed',updated_at=now() where id=${id}`;
+    if (ready[0]) await syncCoreWorkflow(tx,id);
     return ready;
   });
   if (app) await applicationEmail(app, "result");
@@ -96,6 +98,7 @@ export async function checkout(id: string) {
     );
     await tx`update ${table("preeval.payments")} set session_id=${session.id},status='open',updated_at=now() where id=${payment.id}`;
     await tx`update ${table("preeval.applications")} set payment_status='pending',updated_at=now() where id=${id}`;
+    await syncCoreWorkflow(tx,id);
     return session.url!;
   });
 }
@@ -123,7 +126,7 @@ export async function applyCheckout(
     const refunded = await syncCheckoutRefund(tx, "preeval", payment, session, () => stripeClient("pre-evaluation"));
     const event =
       await tx`insert into ${table("preeval.payment_events")}(id,type) values (${eventId},${eventType}) on conflict do nothing returning id`;
-    if (!event.length || refunded) return;
+    if (!event.length || refunded) { await syncCoreWorkflow(tx,id); return; }
     if (
       session.payment_status === "paid" &&
       !["refunded", "partially_refunded"].includes(payment.status)
@@ -144,6 +147,7 @@ export async function applyCheckout(
       await tx`update ${table("preeval.applications")} set payment_status='unpaid',updated_at=now() where id=${id} and payment_status='pending'
         and not exists(select 1 from ${table("preeval.payments")} where application_id=${id} and status in ('paid','open','creating'))`;
     }
+    await syncCoreWorkflow(tx,id);
     await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},'stripe',${eventType},${tx.json({ session: session.id, paymentStatus: session.payment_status })})`;
   });
   await publishIfReady(id);
@@ -198,6 +202,7 @@ export async function cancelApplication(id: string, actor: string) {
     }
     await tx`update ${table("preeval.applications")} set status='cancelled',payment_status=case when payment_status='pending' then 'unpaid' else payment_status end,updated_at=now() where id=${id}`;
     await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${id},${actor},'application.cancelled')`;
+    await syncCoreWorkflow(tx,id);
     return null;
   });
   if (paid) {

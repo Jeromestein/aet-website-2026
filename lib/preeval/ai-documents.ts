@@ -1,4 +1,6 @@
 import 'server-only';
+import { coreRuntimeEnabled } from '../application-core/runtime';
+import { coreFileMetadata, officeForConnection } from '../application-core/documents';
 import { downloadBytes } from '../dropbox/download';
 import { PDFDocument } from 'pdf-lib';
 import { table, db, type Row } from './db';
@@ -14,6 +16,23 @@ export async function documentManifest(app: Row): Promise<ManifestEntry[]> {
   requireEnabled();
   const rows = await db()`select * from ${table('preeval.files')} where application_id=${app.id} order by created_at`;
   if (rows.some(f => f.state !== 'ready')) throw new AIError('uploads_incomplete');
+  if (coreRuntimeEnabled()) {
+    const files=await db()`select * from aet.aet_documents where application_id=${app.id} and access_scope='customer_input' order by id`;
+    if (files.length!==rows.length) throw new AIError('document_mapping_incomplete');
+    if (files.length>MAX_DOCUMENTS) throw new AIError('document_count_limit');
+    const entries: ManifestEntry[]=[];
+    for (const file of files) {
+      let metadata;
+      try { metadata=await coreFileMetadata(file); } catch { throw new AIError('document_unavailable'); }
+      const mime=/\.pdf$/i.test(metadata.name) ? 'application/pdf' : /\.png$/i.test(metadata.name) ? 'image/png' : /\.jpe?g$/i.test(metadata.name) ? 'image/jpeg' : '';
+      if (!mime) throw new AIError('unsupported_document');
+      if (!metadata.size || metadata.size>20*1024*1024) throw new AIError('document_size_limit');
+      entries.push({id:metadata.id,path:metadata.path_display!,office:officeForConnection(file.storage_location),revision:metadata.rev,
+        contentHash:metadata.content_hash || '',size:metadata.size,mime});
+    }
+    if (entries.reduce((sum,f)=>sum+f.size,0)>MAX_TOTAL_BYTES) throw new AIError('document_total_size_limit');
+    return entries;
+  }
   const context = contextFor({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation');
   const storage = await resolveStorage(context);
   const paths = new Map<string, string>();

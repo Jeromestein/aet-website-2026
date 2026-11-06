@@ -1,3 +1,5 @@
+import { coreRuntimeEnabled, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
+import { createCoreShadowReader } from '../application-core/reader';
 import { saveLegacyPreeval } from "../legacy-application/store";
 import { pauseForUpload, retryAnalysis } from "./ai-jobs";
 import { randomUUID } from "node:crypto";
@@ -20,6 +22,7 @@ export async function submit(input: unknown) {
   const v = value.data,
     fingerprint = hash(JSON.stringify(v));
   const app = await db().begin(async (tx) => {
+    if (coreRuntimeEnabled()) return submitCore(tx,v);
     const [created] =
       await tx`insert into ${table("preeval.applications")}(request_id,request_hash,email,first_name,middle_name,last_name,country,locale,ai_status,ai_pipeline,uploads_pending)
       values (${v.requestId},${fingerprint},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},${v.locale},${v.uploadsPending ? 'idle' : 'queued'},'openai',${Boolean(v.uploadsPending)}) on conflict(request_id) do nothing returning *`;
@@ -48,10 +51,11 @@ export async function application(id: string, staff = false) {
   catch { console.error("Pre-evaluation publication incomplete; the next authorized read will retry."); }
   // Email enqueue happens after the publication commit. Its failure must not
   // hide a successfully published result or fail the customer's status read.
-  const [app] =
-    await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
+  const [app] = coreRuntimeEnabled()
+    ? await db()`select * from ${table("preeval.applications")} where id=${id}`
+    : await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
-  const [legacy] = await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
+  const [legacy] = coreRuntimeEnabled() ? [] : await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
   if (legacy) {
     app.first_name = legacy.first_name; app.middle_name = legacy.middle_name || '';
     app.last_name = legacy.last_name; app.email = legacy.email;
@@ -60,6 +64,7 @@ export async function application(id: string, staff = false) {
       start_date: `${education.study_start_date.year}-${education.study_start_date.month}`,
       end_date: `${education.study_end_date.year}-${education.study_end_date.month}` };
   }
+  if (coreRuntimeEnabled()) Object.assign(app,await coreProfile(db(),id));
   const files =
     await db()`select id,name,mime_type,bytes,state,created_at from ${table("preeval.files")} where application_id=${id} order by created_at`;
   const visible =
@@ -94,7 +99,18 @@ export async function application(id: string, staff = false) {
     created_at: app.created_at,
     updated_at: app.updated_at,
   };
+  if (coreRuntimeEnabled()) {
+    // Keep recoverable failed/uploading attempts; successful files and released
+    // results come from canonical records and their strict version/payment gate.
+    const canonical = await (await createCoreShadowReader(db())).status(id,{role:'customer',applicationId:id});
+    Object.assign(response,canonical,{locale:app.locale,files:[...canonical.files,...files.filter(f=>f.state!=='ready')]});
+  }
   if (staff) {
+    if (coreRuntimeEnabled()) {
+      const [service]=await db()`select result from aet.aet_service_detail where application_id=${id} and service_type='pre-evaluation'`;
+      response.result=service?.result?.content ?? null;
+      response.result_version=service?.result?.version ?? 0;
+    }
     response.payment_verification_enabled = canVerifyPreEvaluationPayment();
     response.office = app.office;
     response.notes = app.notes;
@@ -139,7 +155,7 @@ export async function addFile(id: string, file: File, actor: string) {
       throw new AppError("file_limit");
     await pauseForUpload(id, tx);
     const fileId = existing?.id || randomUUID(),
-      path = existing?.dropbox_path || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
+      path = (!coreRuntimeEnabled() && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
     const [row] =
       await tx`insert into ${table("preeval.files")}(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},${name},${file.type},${data.length},${digest},${path})
       on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;
@@ -155,7 +171,8 @@ export async function addFile(id: string, file: File, actor: string) {
       if (!current) throw new AppError('upload_expired', 409);
       // Keep the claim through storage so an abandoned/retried attempt cannot
       // overwrite a newer file or revive its index through a late callback.
-      await uploadFile(record.dropbox_path, data);
+      const metadata = await uploadFile(record.dropbox_path, data);
+      await recordCoreFile(tx,record,metadata);
       await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
       await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
     });
@@ -170,13 +187,13 @@ export async function staffAction(id: string, body: Row, actor: string) {
   if (body.action === "notes") {
     if (typeof body.notes !== "string" || body.notes.length > 5000)
       throw new AppError("invalid_request");
-    await db()`update ${table("preeval.applications")} set notes=${body.notes},updated_at=now() where id=${id}`;
+    await workflowMutation(id, async tx => { await tx`update ${table("preeval.applications")} set notes=${body.notes},updated_at=now() where id=${id}`; });
     await audit(id, actor, "notes.updated");
   } else if (body.action === "result") {
     const result = resultSchema.safeParse(body.result);
     if (!result.success) throw new AppError("invalid_result");
     const updated =
-      await db()`update ${table("preeval.applications")} set result=${db().json(result.data)},result_version=result_version+1,result_source='staff',ai_active_run=null,ai_locked_at=null,ai_status='completed',status='processing',input_version=input_version+1,updated_at=now() where id=${id} and status<>'cancelled' and not uploads_pending returning id`;
+      await workflowMutation(id, async tx => tx`update ${table("preeval.applications")} set result=${tx.json(result.data)},result_version=result_version+1,result_source='staff',ai_active_run=null,ai_locked_at=null,ai_status='completed',status='processing',input_version=input_version+1,updated_at=now() where id=${id} and status<>'cancelled' and not uploads_pending returning id`);
     if (!updated.length) throw new AppError("application_cancelled", 409);
     await audit(id, actor, "result.corrected");
     await publishIfReady(id);
@@ -198,8 +215,8 @@ export async function staffAction(id: string, body: Row, actor: string) {
     )
       throw new AppError("invalid_request");
     const [app] =
-      await db()`update ${table("preeval.applications")} set status='needs_information',input_version=input_version+1,result=null,
-        ai_status='idle',ai_active_run=null,ai_locked_at=null,ai_error=null,ai_attempts=0,updated_at=now() where id=${id} and status<>'cancelled' returning *`;
+      await workflowMutation(id, async tx => tx`update ${table("preeval.applications")} set status='needs_information',input_version=input_version+1,result=null,
+        ai_status='idle',ai_active_run=null,ai_locked_at=null,ai_error=null,ai_attempts=0,updated_at=now() where id=${id} and status<>'cancelled' returning *`);
     if (!app) throw new AppError("application_cancelled", 409);
     const [request] = await db()`insert into ${table("preeval.audit")}(application_id,actor,action,detail)
       values (${id},${actor},'information.requested',${db().json({message:body.message})}) returning id`;

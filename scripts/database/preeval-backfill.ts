@@ -51,7 +51,8 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
     const [app] = await tx`select *,created_at::text as created_at,updated_at::text as updated_at from preeval.applications where id=${applicationId} for update`;
     if (!app) throw new Error('Pre-evaluation application not found');
     const [legacy] = await tx`select * from public.aet_core_applications where id=${applicationId}`;
-    const [existing] = await tx`select primary_service,request_id from aet.aet_core_applications where id=${applicationId}`;
+    const [existing] = await tx`select primary_service,request_id,request_hash_version from aet.aet_core_applications where id=${applicationId}`;
+    if (existing?.request_hash_version === 1) throw new Error('Cannot backfill an authoritative core application');
     if (existing && (existing.primary_service !== 'pre-evaluation' || existing.request_id !== app.request_id))
       throw new Error('Target application identity conflict');
     const report: RehearsalReport = { applicationId, serviceId: '', educationIds: [], documentIds: [], paymentIds: [], exceptions: [] };

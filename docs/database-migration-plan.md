@@ -462,9 +462,12 @@ simulated; no hosted cutover or full CRM/Status shadow adapter is claimed. See t
 Phase-two pre-evaluation read adapters and scoped comparisons are now verified
 in the same disposable environment; see [evidence and remaining differences](archive/database-phase2-reads-2026-11-06.md).
 The CRM education-date discrepancy is corrected and regression-tested; complete
-remaining historical/File ID reconciliation before phase-three write cutover.
-The first implementation deliverable remains a reversible
-schema-and-mapping rehearsal, not a public-table rename or a new production form.
+remaining historical/File ID reconciliation before a historical or hosted write cutover.
+Phase three now passes for a fresh isolated pre-evaluation cohort: canonical
+application/education writes, File ID recording, actual business reads and atomic
+service/payment projections, retaining operational state and ledger authority.
+See [phase-three evidence and boundaries](archive/database-phase3-runtime-2026-11-06.md).
+This is not a hosted activation, public-table rename or general-intake migration.
 Pre-evaluation can ship on the shared master while retaining its proven runtime
 tables; launching it does not require migrating every historical record first.
 Calendar estimates should follow phase 0 counts and reconciliation findings.

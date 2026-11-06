@@ -1,3 +1,4 @@
+import { syncCoreWorkflow } from "../application-core/runtime";
 import type Stripe from "stripe";
 import type postgres from "postgres";
 import { db, table, type Row } from "./db";
@@ -27,6 +28,7 @@ async function recordRefund(tx: postgres.TransactionSql, scope: Scope, payment: 
   } else {
     await tx`update ${table("preeval.applications")} set payment_status=${status},updated_at=now() where id=${payment.application_id}`;
   }
+  if (scope === "preeval") await syncCoreWorkflow(tx,payment.application_id);
   await tx`insert into ${table(`${scope}.audit`)}(application_id,actor,action) values (${payment.application_id},'stripe',${status})`;
 }
 

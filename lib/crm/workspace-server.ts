@@ -1,4 +1,5 @@
 import 'server-only';
+import { coreRuntimeEnabled } from '../application-core/runtime';
 import type { Sql, TransactionSql, PendingQuery } from 'postgres';
 import { z } from 'zod';
 import { db, table, type Row } from '../preeval/db';
@@ -19,6 +20,11 @@ export const workspaceQuery = z.object({
 /** Scope the entire dataset before computing metrics, lists, files or exports. */
 export async function workspaceSnapshot(raw: Record<string,string>, staff: Row): Promise<WorkspaceSnapshot> {
   const sql = db();
+  if (coreRuntimeEnabled()) {
+    const { createCoreShadowReader } = await import('../application-core/reader');
+    return (await createCoreShadowReader(sql)).workspace(raw,{role:'staff',email:staff.email,
+      offices:staff.offices || officeNames,includeUnassigned:staff.offices ? Boolean(staff.include_unassigned) : true});
+  }
   return projectWorkspaceRecords(sql, legacyRecords(sql), raw, staff, configuration().cloudPreview);
 }
 

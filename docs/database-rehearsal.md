@@ -1,16 +1,18 @@
 # Shared database rehearsal
 
-Phases 1–2 create and test the five shared business tables without changing the
+Phases 1–3 create and test the five shared business tables without changing the
 running application or any hosted database. The target is the private `aet`
 schema. Existing public, `preeval` and `evaluation` records remain intact.
 
-This is a **schema and mapping rehearsal**, not a cutover. The integration suite
-executes the existing pre-evaluation services against real PostgreSQL, projects
-each checkpoint into the new tables, and compares identities, amounts and state.
+The phase-one/two suite performs **schema, mapping and shadow-read rehearsal**.
+The separate phase-three suite switches actual application/education ownership
+and business reads for a fresh disposable cohort; it does not call backfill.
+Both execute real pre-evaluation services and PostgreSQL. Neither activates a
+hosted cutover.
 Stripe, Dropbox, AI and email transport use synthetic responses. It neither
 charges a card nor sends an email, and it does not test browser screens or hosted
 provider delivery. The [phase sequence](database-migration-plan.md#5-delivery-phases-and-acceptance-gates)
-keeps shared repositories and CRM/Status shadow comparisons next.
+keeps historical/hosted cutover and later services behind separate acceptance gates.
 
 ## Run safely
 
@@ -90,7 +92,8 @@ requirements, mailing-address validation, aggregate versions/statuses, mutation
 timestamps and new English-only email handling must be enforced by those writers.
 Database defaults do not automatically advance `updated_at` or aggregate `version`.
 
-Automatic File ID lookup/scanning, changed-revision download behavior, real
+Phase-three File ID metadata lookup and revision-pinned analysis are verified
+with simulated storage. Core on-open scanning/staff directory confirmation, real
 historical backfill, all-service fulfillment and hosted acceptance remain open.
 The old folder registry and operational tables cannot be removed yet. No account,
 applicant, quotation, deliverable, Folder ID or new scheduler is introduced.
@@ -104,3 +107,20 @@ but production continues to use its existing source. See the
 fields, permission tests and the resolved legacy education-date discrepancy.
 The guard rejects hosted/existing databases. No shadow reads trigger payment,
 publication, AI, upload or email side effects.
+
+## Phase-three actual runtime
+
+The runner also executes [the core runtime suite](../tests/application-core-runtime.test.ts).
+Its explicit activation function accepts only the disposable database/role/Unix
+socket. Submission writes core first; canonical education edits and profile reads
+are real runtime adapters. Successful files store File IDs immediately, and service
+results/payment projections commit with their operational transition. No backfill
+repairs test checkpoints. New core emails are English while UI language stays a
+presentation concern.
+
+See [phase-three acceptance](archive/database-phase3-runtime-2026-11-06.md) for
+ownership, failure injection and retained tables. No production environment flag
+was added. The legacy backfill rejects new authoritative records; do not drop the
+core schema or silently switch these records back to legacy writers. Recreate the
+complete owned test fixture for rollback. Historical and hosted migration still
+require explicit reconciliation and authorization.
