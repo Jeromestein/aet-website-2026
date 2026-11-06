@@ -34,6 +34,9 @@ vi.mock('../lib/preeval/ai-documents', () => ({
   manifestHash: (manifest: unknown) => JSON.stringify(manifest),
 }));
 
+import { createCoreShadowReader } from '../lib/application-core/reader';
+import { statusComparison, differingPaths } from '../lib/application-core/compare';
+import { workspaceSnapshot } from '../lib/crm/workspace-server';
 import { submit, addFile, application, staffAction } from '../lib/preeval/service';
 import { completeUploads } from '../lib/preeval/ai-jobs';
 import { abandonUpload, unfinishedUploads } from '../lib/preeval/upload-recovery';
@@ -54,7 +57,7 @@ const image = (name = 'degree.png', extra = 1) => new File([
   new Uint8Array([137,80,78,71,13,10,26,10,extra]),
 ], name, { type: 'image/png' });
 
-describe.skipIf(!pgBin)('shared core phase 1 (owned PostgreSQL cluster)', () => {
+describe.skipIf(!pgBin)('shared core phases 1–2 (owned PostgreSQL cluster)', () => {
   let directory: string;
   let started = false;
   const sql = () => m.sql!;
@@ -130,6 +133,73 @@ describe.skipIf(!pgBin)('shared core phase 1 (owned PostgreSQL cluster)', () => 
     m.retrieveCheckout.mockReset().mockResolvedValue({ status: 'open', url: 'https://checkout.example.invalid/synthetic' });
   });
 
+  it('compares scoped CRM queries and customer Status through the shared read layer without writes', async () => {
+    const reader = await createCoreShadowReader(sql());
+    const cohort = [];
+    for (const office of ['Boston','Los Angeles',null]) {
+      const original = input(); const { app } = await submit(original);
+      await sql()`update preeval.applications set office=${office} where id=${app.id}`;
+      const metadata = office === 'Boston' ? [await upload(app.id)] : [];
+      if (office === 'Boston') await checkout(app.id);
+      await project(app.id, original, metadata);
+      cohort.push(app.id as string);
+    }
+    for (let n=0;n<23;n++) {
+      const original=input(); const {app}=await submit(original);
+      await sql()`update preeval.applications set office='Boston' where id=${app.id}`;
+      await project(app.id,original);
+    }
+    const actor = { role: 'staff' as const, email: 'synthetic@example.invalid', offices: ['Boston'], includeUnassigned: false };
+    for (const query of [{}, {view:'equivalency'}, {view:'documents'}, {view:'payments'}, {view:'formal'},
+      {filter:'attention'}, {filter:'completed'}, {sort:'name'}, {sort:'oldest'}, {page:'2'}, {page:'999'},
+      {q:'BOS'}, {q:'%'}, {export:'csv'}] as Record<string,string>[]) {
+      const old = await workspaceSnapshot(query,{email:actor.email,offices:actor.offices,include_unassigned:false});
+      expect(differingPaths(old,await reader.workspace(query,actor))).toEqual([]);
+    }
+    expect((await reader.workspace({},actor)).stats.total).toBe(24);
+    expect((await reader.workspace({}, {...actor,includeUnassigned:true})).stats.total).toBe(25);
+    expect((await reader.workspace({}, {...actor,offices:[]})).stats.total).toBe(0);
+    await expect(reader.workspace({office:'Los Angeles'},actor)).rejects.toMatchObject({code:'access_denied'});
+    await expect(reader.status(cohort[1],actor)).rejects.toMatchObject({code:'not_found'});
+    await expect(reader.status(cohort[2],actor)).rejects.toMatchObject({code:'not_found'});
+    await expect(reader.status(cohort[0],{role:'customer',applicationId:cohort[1]})).rejects.toMatchObject({code:'access_denied'});
+    const primary = await application(cohort[0]);
+    const before = await sql()`select (select count(*) from preeval.audit)::int audit,(select count(*) from preeval.emails)::int emails,(select count(*) from preeval.ai_runs)::int runs`;
+    const status = await reader.status(cohort[0],{role:'customer',applicationId:cohort[0]});
+    expect(statusComparison(primary,status)).toEqual([]);
+    await sql()`update preeval.applications set office='Los Angeles' where id=${cohort[0]}`;
+    await expect(reader.status(cohort[0],actor)).rejects.toMatchObject({code:'not_found'});
+    expect((await reader.workspace({},actor)).total).toBe(23);
+    await sql()`update preeval.applications set office='Boston' where id=${cohort[0]}`;
+    expect(status).not.toHaveProperty('staff_notes'); expect(status).not.toHaveProperty('locale');
+    expect(status).not.toHaveProperty('ai_error');
+    expect(await sql()`select (select count(*) from preeval.audit)::int audit,(select count(*) from preeval.emails)::int emails,(select count(*) from preeval.ai_runs)::int runs`).toEqual(before);
+    // Staff-edited legacy dates must agree in CRM, customer Status, exports,
+    // search and the core projection. Workflow dates remain unchanged.
+    await sql()`update public.aet_core_educations set study_start_date='{"year":"2017","month":"09"}',
+      study_end_date='{"year":"2021","month":"06"}' where application_id=${cohort[0]}`;
+    await project(cohort[0]);
+    const staff = {email:actor.email,offices:actor.offices};
+    const edited = await application(cohort[0]);
+    expect(edited.education).toMatchObject({start_date:'2017-09',end_date:'2021-06'});
+    expect(statusComparison(edited,await reader.status(cohort[0],{role:'customer',applicationId:cohort[0]}))).toEqual([]);
+    for (const query of [{q:cohort[0]}, {q:cohort[0],export:'csv'}, {q:'2017-09'}, {q:'2021-06'}] as Record<string,string>[]) {
+      const legacy = await workspaceSnapshot(query,staff);
+      expect(legacy.rows).toHaveLength(1);
+      expect(legacy.rows[0].educations[0]).toMatchObject({start:'2017-09',end:'2021-06'});
+      expect(differingPaths(legacy,await reader.workspace(query,actor))).toEqual([]);
+    }
+    expect(await sql()`select start_date,end_date from preeval.educations where application_id=${cohort[0]}`)
+      .toEqual([{start_date:'2018-09',end_date:'2022-06'}]);
+    // Applications without a matching legacy education retain workflow fallback.
+    await sql()`delete from public.aet_core_educations where application_id=${cohort[0]}`;
+    await project(cohort[0]);
+    const fallback = await workspaceSnapshot({q:cohort[0]},staff);
+    expect(fallback.rows[0].educations[0]).toMatchObject({start:'2018-09',end:'2022-06'});
+    expect(differingPaths(fallback,await reader.workspace({q:cohort[0]},actor))).toEqual([]);
+    expect(statusComparison(await application(cohort[0]),await reader.status(cohort[0],{role:'customer',applicationId:cohort[0]}))).toEqual([]);
+  });
+
   it('runs submit, upload, AI, Checkout, callback recovery and email; reconciles every checkpoint', async () => {
     const original = input();
     const { app, token } = await submit(original);
@@ -166,6 +236,12 @@ describe.skipIf(!pgBin)('shared core phase 1 (owned PostgreSQL cluster)', () => 
     expect(report.serviceId).toBe(first.serviceId);
     expect(report.documentIds).toEqual([file.legacyFileId]);
     const coreService = await service(app.id);
+    const shadow = await createCoreShadowReader(sql());
+    expect(statusComparison(await application(app.id),await shadow.status(app.id,{role:'customer',applicationId:app.id}))).toEqual([]);
+    // Operational state can advance before backfill: never expose stale output.
+    await sql()`update preeval.applications set input_version=input_version+1 where id=${app.id}`;
+    expect((await shadow.status(app.id,{role:'customer',applicationId:app.id})).result).toBeNull();
+    await sql()`update preeval.applications set input_version=input_version-1 where id=${app.id}`;
     expect(coreService).toMatchObject({ notes: null, staff_notes: 'Private staff note', amount_cents: BASE_CENTS,
       result: { status: 'released', released_at: null, version: 1 } });
     expect(await sql()`select amount_cents,refunded_cents,payment_status from aet.aet_payments where application_id=${app.id}`)

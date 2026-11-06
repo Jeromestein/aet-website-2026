@@ -1,4 +1,5 @@
 import 'server-only';
+import type { Sql, TransactionSql, PendingQuery } from 'postgres';
 import { z } from 'zod';
 import { db, table, type Row } from '../preeval/db';
 import { configuration } from '../preeval/config';
@@ -17,14 +18,12 @@ export const workspaceQuery = z.object({
 
 /** Scope the entire dataset before computing metrics, lists, files or exports. */
 export async function workspaceSnapshot(raw: Record<string,string>, staff: Row): Promise<WorkspaceSnapshot> {
-  const query = workspaceQuery.parse(raw), sql = db();
-  const allowedOffices: string[] = staff.offices || officeNames;
-  const includeUnassigned = staff.offices ? Boolean(staff.include_unassigned) : true;
-  if (query.office !== 'all' && !(query.office === 'unassigned' ? includeUnassigned : allowedOffices.includes(query.office))) throw new AppError('access_denied',403);
-  const pattern = '%' + query.q.replace(/[\\%_]/g,'\\$&') + '%';
-  const pageSize = query.export ? 5000 : WORKSPACE_PAGE_SIZE;
-  const [result] = await sql`
-    with records as (
+  const sql = db();
+  return projectWorkspaceRecords(sql, legacyRecords(sql), raw, staff, configuration().cloudPreview);
+}
+
+function legacyRecords(sql: Sql) {
+  return sql`
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
         case lower(rtrim(coalesce(l.pronouns,a.data->'evaluee'->>'title'),'.')) when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else nullif(trim(coalesce(l.pronouns,a.data->'evaluee'->>'title')),'') end,
         nullif(trim(coalesce(l.first_name,a.data->'evaluee'->>'first')),''),
@@ -50,11 +49,23 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
       union all
       select 'preeval',a.id,concat_ws(' ',coalesce(l.first_name,a.first_name),nullif(trim(coalesce(l.middle_name,a.middle_name)),''),coalesce(l.last_name,a.last_name)),coalesce(l.email,a.email),a.office,
         1,a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,${TOTAL_CENTS},'Pre-Evaluation',false,
-        coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',p.start_date,'end',p.end_date) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),
+        coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',case when e.id is not null then concat(e.study_start_date->>'year','-',e.study_start_date->>'month') else p.start_date end,'end',case when e.id is not null then concat(e.study_end_date->>'year','-',e.study_end_date->>'month') else p.end_date end) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind','document','name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('preeval.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('preeval.payments')} p where p.application_id=a.id),'[]'::jsonb)
       from ${table('preeval.applications')} a left join ${table('public.aet_core_applications')} l on l.id=a.id
-    ), scoped as (
+`;
+}
+
+/** Shared query engine: scope before metrics, filters, pagination and export. */
+export async function projectWorkspaceRecords(sql: Sql | TransactionSql, records: PendingQuery<Row[]>, raw: Record<string,string>, staff: Row, cloudPreview: boolean): Promise<WorkspaceSnapshot> {
+  const query = workspaceQuery.parse(raw);
+  const allowedOffices: string[] = staff.offices || officeNames;
+  const includeUnassigned = staff.offices ? Boolean(staff.include_unassigned) : true;
+  if (query.office !== 'all' && !(query.office === 'unassigned' ? includeUnassigned : allowedOffices.includes(query.office))) throw new AppError('access_denied',403);
+  const pattern = '%' + query.q.replace(/[\\%_]/g,'\\$&') + '%';
+  const pageSize = query.export ? 5000 : WORKSPACE_PAGE_SIZE;
+  const [result] = await sql`
+    with records as (${records}    ), scoped as (
       select *, status not in ('completed','cancelled') and (status in ('submitted','reviewing','needs_information') or payment_status in ('unpaid','pending') or (kind='formal' and jsonb_array_length(files)=0)) attention
       from records where (office=any(${allowedOffices}::text[]) or (office is null and ${includeUnassigned}))
         and (${query.office}='all' or office=${query.office} or (${query.office}='unassigned' and office is null))
@@ -76,5 +87,5 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
         'unquoted',count(*) filter(where amount is null and status<>'cancelled'),
         'documents',coalesce(sum(jsonb_array_length(files)),0)) from scoped) stats`;
   if (query.export && result.total > pageSize) throw new AppError('export_too_large',413);
-  return { ...result, pageSize, staff: { email: staff.email, offices: allowedOffices, includeUnassigned }, cloudPreview: configuration().cloudPreview } as WorkspaceSnapshot;
+  return { ...result, pageSize, staff: { email: staff.email, offices: allowedOffices, includeUnassigned }, cloudPreview } as WorkspaceSnapshot;
 }

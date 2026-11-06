@@ -1,6 +1,6 @@
 # Shared database rehearsal
 
-Phase 1 creates and tests the five shared business tables without changing the
+Phases 1–2 create and test the five shared business tables without changing the
 running application or any hosted database. The target is the private `aet`
 schema. Existing public, `preeval` and `evaluation` records remain intact.
 
@@ -94,3 +94,13 @@ Automatic File ID lookup/scanning, changed-revision download behavior, real
 historical backfill, all-service fulfillment and hosted acceptance remain open.
 The old folder registry and operational tables cannot be removed yet. No account,
 applicant, quotation, deliverable, Folder ID or new scheduler is introduced.
+
+## Phase-two shared reads
+
+The same isolated command now verifies [core read adapters](../lib/application-core/reader.ts)
+against existing pre-evaluation Status and CRM. The CRM query engine is shared,
+but production continues to use its existing source. See the
+[phase-two evidence](archive/database-phase2-reads-2026-11-06.md) for comparison
+fields, permission tests and the resolved legacy education-date discrepancy.
+The guard rejects hosted/existing databases. No shadow reads trigger payment,
+publication, AI, upload or email side effects.

@@ -48,7 +48,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
     if (price && (!Number.isSafeInteger(price.amountCents) || price.amountCents < 0 ||
         !/^[A-Z]{3}$/.test(price.currency) || !['automatic','manual'].includes(price.source)))
       throw new Error('Invalid verified service price');
-    const [app] = await tx`select * from preeval.applications where id=${applicationId} for update`;
+    const [app] = await tx`select *,created_at::text as created_at,updated_at::text as updated_at from preeval.applications where id=${applicationId} for update`;
     if (!app) throw new Error('Pre-evaluation application not found');
     const [legacy] = await tx`select * from public.aet_core_applications where id=${applicationId}`;
     const [existing] = await tx`select primary_service,request_id from aet.aet_core_applications where id=${applicationId}`;
@@ -65,7 +65,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
       const { locale: _locale, ...businessInputs } = parsed;
       snapshot = businessInputs;
     } else issue('preeval.applications', applicationId, 'original_submission_unavailable');
-    const [submitted] = await tx`select min(created_at) as at from preeval.audit
+    const [submitted] = await tx`select min(created_at)::text as at from preeval.audit
       where application_id=${applicationId} and action='application.submitted'`;
     const first = legacy?.first_name ?? app.first_name;
     const middle = legacy?.middle_name ?? app.middle_name;
@@ -75,7 +75,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
        request_id,request_hash,request_hash_version,submission_version,submitted_snapshot,submitted_at,created_at,updated_at)
       values (${applicationId},${legacy?.email ?? app.email},${app.office},'pre-evaluation',${first},${middle},${last},${app.country},
         ${legacy?.purpose ?? null},${legacy?.source ?? null},${app.status},${app.request_id},${app.request_hash},0,
-        ${snapshot ? 1 : null},${snapshot ? tx.json(snapshot as never) : null},${submitted?.at ?? null},${app.created_at},${app.updated_at})
+        ${snapshot ? 1 : null},${snapshot ? tx.json(snapshot as never) : null},${submitted?.at ?? null}::text::timestamptz,${app.created_at}::text::timestamptz,${app.updated_at}::text::timestamptz)
       on conflict(id) do update set email=excluded.email,office=excluded.office,first_name=excluded.first_name,
         middle_name=excluded.middle_name,last_name=excluded.last_name,residence_country=excluded.residence_country,
         purpose=excluded.purpose,source=excluded.source,status=excluded.status,updated_at=excluded.updated_at,
@@ -137,7 +137,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
             then now() else aet.aet_documents.updated_at end`;
       report.documentIds.push(file.id);
     }
-    const payments = await tx`select p.*,l.application_id as legacy_application_id,l.payment_id,l.source,l.notes,l.paid_at
+    const payments = await tx`select p.*,l.application_id as legacy_application_id,l.payment_id,l.source,l.notes,l.paid_at::text as paid_at,p.created_at::text as created_at,p.updated_at::text as updated_at
       from preeval.payments p left join public.aet_core_payments l on l.id=p.id::text
       where p.application_id=${applicationId} order by p.created_at,p.id`;
     for (const payment of payments) {
@@ -153,7 +153,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
         provider,provider_account,provider_mode,checkout_session_id,payment_intent_id,payment_id,source,notes,paid_at,created_at,updated_at)
         values (${payment.id},${applicationId},${payment.amount_cents},${payment.currency.toUpperCase()},${payment.refunded_cents},
           ${payment.status},'stripe',${options.providerAccount},'test',${payment.session_id},${payment.payment_intent},
-          ${payment.payment_id ?? null},${payment.source ?? null},${payment.notes ?? null},${payment.paid_at ?? null},${payment.created_at},${payment.updated_at})
+          ${payment.payment_id ?? null},${payment.source ?? null},${payment.notes ?? null},${payment.paid_at ?? null}::text::timestamptz,${payment.created_at}::text::timestamptz,${payment.updated_at}::text::timestamptz)
         on conflict(id) do update set amount_cents=excluded.amount_cents,currency=excluded.currency,
           refunded_cents=excluded.refunded_cents,payment_status=excluded.payment_status,
           checkout_session_id=excluded.checkout_session_id,payment_intent_id=excluded.payment_intent_id,
@@ -171,7 +171,7 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
     const [service] = await tx`insert into aet.aet_service_detail(application_id,service_type,details,status,input_version,
       staff_notes,amount_cents,currency,pricing_source,result,created_at,updated_at)
       values (${applicationId},'pre-evaluation',${tx.json({ education_ids: report.educationIds })},${app.status},${app.input_version},
-        ${app.notes},${price?.amountCents ?? null},${price?.currency ?? 'USD'},${price?.source ?? null},${result ? tx.json(result) : null},${app.created_at},${app.updated_at})
+        ${app.notes},${price?.amountCents ?? null},${price?.currency ?? 'USD'},${price?.source ?? null},${result ? tx.json(result) : null},${app.created_at}::text::timestamptz,${app.updated_at}::text::timestamptz)
       on conflict(application_id,service_type) do update set details=excluded.details,status=excluded.status,
         input_version=excluded.input_version,staff_notes=excluded.staff_notes,amount_cents=excluded.amount_cents,
         currency=excluded.currency,pricing_source=excluded.pricing_source,result=excluded.result,updated_at=excluded.updated_at returning id`;

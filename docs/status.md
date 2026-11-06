@@ -1,6 +1,6 @@
 # AET Implementation Status
 
-Updated November 6, 2026 with the isolated database phase-one rehearsal below.
+Updated November 6, 2026 with the isolated database phase-one and phase-two rehearsals below.
 Hosted acceptance remains the October 22 record at `5d10cff`; it was not rerun. This is the current
 summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
@@ -22,7 +22,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| Shared database | Five private `aet` tables, same-ID pre-evaluation backfill and target-only rollback rehearsed on disposable PostgreSQL; source/runtime untouched | Shared repositories and CRM/Status comparisons, historical reconciliation, then one-cohort cutover |
+| Shared database | Five private `aet` tables, same-ID pre-evaluation backfill and target-only rollback rehearsed on disposable PostgreSQL; source/runtime untouched | Historical/File ID reconciliation, then one-cohort cutover |
 | Dedicated pre-evaluation | October 22 hosted synthetic journey passed: upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered emails | Hosted failure-recovery scenarios, production configuration and charging |
 | Failure recovery | Abandoned-upload recovery and saved-result publication recovery both merged into `dev` | Exercise both fixes in the authorized hosted environment |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
@@ -61,6 +61,14 @@ reassignment that was restored; preserve that historical distinction in the
 supersedes its outstanding webhook setup item.
 
 ## Latest isolated database verification
+
+Phase-two [shared-read acceptance](archive/database-phase2-reads-2026-11-06.md)
+passes for the isolated pre-evaluation cohort: scoped CRM filters/counts/export and
+customer Status reads, including private fields and stale-result guards. The
+legacy CRM education-date discrepancy is fixed: CRM and Status prefer matching
+legacy edits and retain workflow fallback. No runtime source
+switch or formal/translation read migration has occurred.
+
 
 The [phase-one rehearsal](archive/database-phase1-rehearsal-2026-11-06.md) validates
 the additive schema, pre-evaluation data mapping, actual service/database flow,
@@ -112,9 +120,9 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Implement phase-two shared access and CRM/Status shadow comparisons; resolve
-   identity/File-ID/timestamp/price exceptions before switching one pre-evaluation
-   cohort. The first schema/mapping rehearsal passed; runtime authority stays put.
+1. Resolve remaining identity/File-ID/price exceptions, then prepare one
+   pre-evaluation cohort with one authoritative writer.
+   Isolated shared reads pass; runtime authority remains unchanged.
 2. Exercise both integrated pre-evaluation recovery fixes in dev Preview,
    refund/cancellation visibility and mobile recovery states. Direct test-webhook
    delivery is verified; keep production charging/configuration separate.

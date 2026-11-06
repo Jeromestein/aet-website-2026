@@ -459,7 +459,11 @@ refund/recovery scenarios, and target-only rollback/replay. External providers a
 simulated; no hosted cutover or full CRM/Status shadow adapter is claimed. See the
 [rehearsal record](archive/database-phase1-rehearsal-2026-11-06.md).
 
-Continue with phase 2. The first implementation deliverable is a reversible
+Phase-two pre-evaluation read adapters and scoped comparisons are now verified
+in the same disposable environment; see [evidence and remaining differences](archive/database-phase2-reads-2026-11-06.md).
+The CRM education-date discrepancy is corrected and regression-tested; complete
+remaining historical/File ID reconciliation before phase-three write cutover.
+The first implementation deliverable remains a reversible
 schema-and-mapping rehearsal, not a public-table rename or a new production form.
 Pre-evaluation can ship on the shared master while retaining its proven runtime
 tables; launching it does not require migrating every historical record first.

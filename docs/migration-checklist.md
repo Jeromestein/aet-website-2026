@@ -100,11 +100,19 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   pre-evaluation submission/upload/AI/payment/result/email service flow passes with
   synthetic data and mocked providers. See the [guide](database-rehearsal.md) and
   [evidence](archive/database-phase1-rehearsal-2026-11-06.md). No hosted database changes.
-- [ ] **TODO — Phase 2 shared access and read comparison:** add canonical repositories
-  and compare CRM/Status/customer projections, office scope, notes privacy, prices,
-  stable File IDs and result visibility against existing readers. Keep one writer
-  until equivalence is proved. The phase-one snapshots are not a live dual-write
-  or automatic synchronization mechanism.
+- [x] **Phase 2 — Isolated pre-evaluation shared reads (November 6, 2026):**
+  add guarded read-only core Status/CRM adapters and a shared scoped CRM query
+  engine. Verify customer/office access, unassigned records, filters, pagination,
+  statistics/export, private fields and stale-result suppression. Preserve full
+  PostgreSQL timestamp precision in backfill. See [evidence and scope](archive/database-phase2-reads-2026-11-06.md).
+  Runtime sources remain unchanged; formal/translation projections are not included.
+- [x] **Align CRM education dates with Status (November 6, 2026):** prefer the
+  matching legacy education's edited start/end dates; retain workflow fallback
+  when that record is absent. Isolated tests confirm CRM, Status and core-read
+  parity, date search and export, without rewriting workflow education values.
+- [ ] **TODO — Complete cohort cutover reconciliation:** file creation timestamps
+  remain an explicit unknown; finish real File ID/history reconciliation and
+  mixed-cohort comparisons before replacing runtime reads. Keep one authoritative writer.
 - [ ] **TODO — Historical contract and source reconciliation:** verify missing
   original submissions, File IDs/revisions, release/education timestamps, pricing
   provenance, provider accounts and standalone/legacy identities against authorized
