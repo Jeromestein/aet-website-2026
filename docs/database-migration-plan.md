@@ -3,7 +3,9 @@
 Code review: November 6, 2026, `dev` at `fab4733`.
 **Phases 1–3 are verified locally, and new pre-evaluation applications now use
 five private `aet_preview_core` tables in hosted dev Preview at `b003139`.**
-Production, historical records and old tables are unchanged. Operational upload,
+Production, hosted historical records and old tables are unchanged. Local copies
+of three reconciled old Preview records now pass migration and callback checks;
+see the [historical rehearsal](archive/database-historical-cohort-2026-11-06.md). Operational upload,
 AI, email, access and payment-event records remain in their existing Preview schemas.
 See the [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md) and
 [rehearsal guide](database-rehearsal.md).

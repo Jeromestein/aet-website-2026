@@ -2,7 +2,8 @@
 
 Updated November 6, 2026. Isolated phases one through three and hosted dev Preview
 core acceptance at `b003139` are verified. Production and historical cohorts remain
-unchanged; unchecked target-model capabilities are not implied by this activation.
+unchanged. A local copy of the old Preview cohort has also been rehearsed;
+this is not hosted historical activation. Unchecked capabilities remain open.
 Read [status](status.md) for progress, [architecture](migration-architecture.md)
 for system relationships and the [documentation index](README.md) for guides.
 The [database comparison](database-architecture.md) maps legacy, current and
@@ -130,9 +131,23 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   released result, customer/CRM agreement and two delivered English emails pass.
   Old and new applications coexist. Final focused regression: 160 tests/12 files
   plus TypeScript. Production is unchanged. See [acceptance evidence](archive/database-preview-acceptance-2026-11-06.md).
+- [x] **Isolated historical Preview cohort rehearsal (November 6, 2026):**
+  copy four existing synthetic Preview applications into a disposable database;
+  reconcile four Dropbox File IDs and three Stripe Sandbox payments read-only.
+  Migrate three supported records without source changes; CRM projections, customer
+  results, old access/lookup routes, signed callback replay and stale-after-refund
+  behavior pass. Preserve the fourth no-charge paid-state test fixture on its old
+  path. Fix v0 submission retries; 30 database tests plus six captured-cohort tests
+  and TypeScript pass. See [scope and evidence](archive/database-historical-cohort-2026-11-06.md).
+- [ ] **TODO — Hosted historical Preview cutover:** deploy the v0 retry fix first,
+  prepare the restricted migration entry point, revalidate sources/provider evidence
+  and rerun browser/direct-webhook acceptance after migration. The current hosted
+  four-record old cohort remains unchanged; retain the no-charge fixture and all old
+  tables. Production cutover and real business-history migration remain separate.
 - [ ] **TODO — Complete cohort cutover reconciliation:** file creation timestamps
   remain an explicit unknown; finish real File ID and history reconciliation
-  before migrating historical records. Mixed old/new Preview reads
+  before migrating hosted historical records. Three old Preview records passed
+  local-copy migration; original submission/release-time gaps remain explicit. Mixed old/new Preview reads
   are verified; keep one authoritative writer per application.
 - [ ] **TODO — Historical contract and source reconciliation:** verify missing
   original submissions, File IDs/revisions, release/education timestamps, pricing

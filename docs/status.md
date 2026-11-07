@@ -2,7 +2,8 @@
 
 Updated November 6, 2026 after isolated phases one through three and the authorized
 hosted dev Preview core activation and upload/publication recovery at `b003139`.
-This is the current summary, not a release log.
+The old Preview cohort has subsequently passed local-copy migration rehearsal;
+hosted historical records remain unchanged. This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
@@ -22,7 +23,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| Shared database | Five shared business tables now serve new pre-evaluation applications in private `aet_preview_core`; old Preview applications remain readable | Historical reconciliation/backfill, other service writers, Production activation and eventual compatibility retirement |
+| Shared database | Five shared business tables now serve new pre-evaluation applications in private `aet_preview_core`; old Preview applications remain readable | Hosted historical cutover after the local three-record rehearsal, other service writers, Production activation and compatibility retirement |
 | Dedicated pre-evaluation | November 6 hosted core journey passed: chunked upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
@@ -79,8 +80,18 @@ The [phase-three runtime record](archive/database-phase3-runtime-2026-11-06.md),
 [phase-two comparisons](archive/database-phase2-reads-2026-11-06.md) and
 [phase-one rehearsal](archive/database-phase1-rehearsal-2026-11-06.md) retain their
 original scopes. Operational AI/upload/email/session tables and the payment ledger
-remain necessary. Historical backfill and Production cutover have not occurred.
+remain necessary. Hosted historical backfill and Production cutover have not occurred.
 The explicit core opt-in is enabled only for dev Preview.
+
+The [historical cohort rehearsal](archive/database-historical-cohort-2026-11-06.md)
+used local copies of four existing synthetic Preview applications. Three with
+verified Stripe payments migrated with CRM/customer/old-link parity and signed
+callback/refund replay; the fourth is an audited no-charge paid-state test fixture
+and remains on its old path. Four Dropbox files were reconciled read-only. The
+runner now passes 30 tests across four database files, plus six tests using the
+captured cohort; TypeScript passes. A v0 request-hash retry fix is local, not yet
+deployed. All hosted source records and the two hosted core applications are
+unchanged; this does not establish hosted historical acceptance.
 
 ## Latest integrated verification
 
@@ -124,8 +135,9 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Reconcile historical identity/File-ID/price exceptions and prepare a reversible
-   historical migration. New dev Preview pre-evaluation applications already use
+1. Deploy the verified v0 retry compatibility fix before separately authorized
+   hosted historical migration; retain the no-charge test fixture and reconcile
+   remaining real-history exceptions. New dev Preview pre-evaluation applications already use
    the core writer; keep existing records and operational tables intact.
 2. Verify hosted refund/cancellation visibility, mobile recovery and AI timeout
    handling. Desktop upload/publication recovery and direct test-webhook replay

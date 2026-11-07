@@ -53,8 +53,12 @@ export async function submitCore(tx: TransactionSql, v: z.infer<typeof applicati
       'pre-evaluation','Preliminary degree equivalency','dedicated-pre-evaluation','submitted',
       ${v.requestId},${fingerprint},1,1,${tx.json(snapshot)},now()) on conflict(request_id) do nothing returning *`;
   if (!created) {
-    const [existing] = await tx`select id,request_hash from ${coreTable(tx,'aet_core_applications')} where request_id=${v.requestId}`;
-    if (!existing || existing.request_hash !== fingerprint) throw new AppError('duplicate_conflict',409);
+    const [existing] = await tx`select id,request_hash,request_hash_version from ${coreTable(tx,'aet_core_applications')} where request_id=${v.requestId}`;
+    // Migrated requests retain the original v0 hash, which includes locale.
+    const expected = existing?.request_hash_version === 0
+      ? createHash('sha256').update(JSON.stringify(v)).digest('hex') : fingerprint;
+    if (!existing || ![0,1].includes(existing.request_hash_version) || existing.request_hash !== expected)
+      throw new AppError('duplicate_conflict',409);
     const [workflow] = await tx`select * from ${table("preeval.applications")} where id=${existing.id}`;
     if (!workflow) throw new Error('Missing core workflow mapping');
     return { ...workflow, ...await coreProfile(tx,existing.id), locale:v.locale };

@@ -149,3 +149,19 @@ After the first new core application, do not roll back to a deployment predating
 this adapter or simply remove the flag: that would hide canonical education/results
 from the old reader. Retain this compatible reader and pause new submissions while
 investigating; preserve both table sets and provider event records.
+
+## Historical Preview cohort copies
+
+The [November 6 historical rehearsal](archive/database-historical-cohort-2026-11-06.md)
+adds a local copy of the Preview schema layout and one-time cutover evidence gates.
+`previewLayout: true` does not permit a hosted connection: the disposable database,
+owner and Unix-socket checks still apply. `requireCutoverReady: true` rejects an
+existing target, unsettled work, inconsistent payment state, missing ready File IDs
+and size mismatches. It must be used for cutover rehearsal rather than refreshing
+an already-authoritative v0 record with the snapshot mode.
+
+The normal runner now includes phase-one/two, runtime, Preview-layout and cohort
+suites. The private captured-cohort option is described in the acceptance record;
+it is not loaded by default. Hosted backfill requires a separate restricted entry
+point and a deployment containing the verified old-request retry fix. No old table
+is removed by these tools.
