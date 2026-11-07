@@ -1,3 +1,4 @@
+import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { table, db } from "@/lib/preeval/db";
@@ -144,7 +145,7 @@ async function handler(
       ) {
         await limit("access:" + body.applicationId, 3, 600);
         const [app] =
-          await db()`select * from ${table("preeval.applications")} where id=${body.applicationId}`;
+          await workflowRows(db(), body.applicationId, false);
         if (app) {
           await applicationEmail(app, "access");
           after(() => deliverApplicationEmails(app.id));

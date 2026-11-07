@@ -1,3 +1,5 @@
+import { converged,recoveryConverged } from "../application-core/converged-store";
+import { workflowRows } from "../application-core/converged-store";
 import 'server-only';
 import { z } from 'zod';
 import { db, table } from './db';
@@ -14,7 +16,8 @@ const selection = z.discriminatedUnion('source', [
 /** Read both transports so interrupted uploads remain recoverable after reload.
  * Keep PostgreSQL timestamp precision: JS Date would weaken attempt fencing. */
 export async function unfinishedUploads(id: string): Promise<UploadRecovery> {
-  const [app] = await db()`select status,uploads_pending from ${table('preeval.applications')} where id=${id}`;
+  if (converged()) return await recoveryConverged(id) as UploadRecovery;
+  const [app] = await workflowRows(db(), id, false);
   if (!app) return { uploads: [], pending: false, hasReady: false, canModify: false };
   const uploads = await db()`select 'file' as source,id::text,created_at::text as version,name,state
     from ${table('preeval.files')} where application_id=${id} and state<>'ready'
@@ -33,8 +36,9 @@ export async function abandonUpload(id: string, data: unknown, actor: string) {
   const parsed = selection.safeParse(data);
   if (!parsed.success) throw new AppError('invalid_request');
   const upload = parsed.data;
+  if (converged() && upload.source !== "file") throw new AppError("upload_expired",409);
   return db().begin(async tx => {
-    const [app] = await tx`select status from ${table('preeval.applications')} where id=${id} for update`;
+    const [app] = await workflowRows(tx, id, true);
     if (!app || app.status === 'cancelled') throw new AppError('application_unavailable', 409);
     const removed = upload.source === 'file'
       ? await tx`delete from ${table('preeval.files')} where application_id=${id} and id=${upload.id}

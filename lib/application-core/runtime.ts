@@ -1,3 +1,4 @@
+import { converged,workflowRows,queueInput,adminConverged } from "./converged-store";
 import { coreTable, assertCoreConnection, corePreviewConfiguration } from './connection';
 import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
@@ -22,7 +23,7 @@ export async function activateCoreRehearsal(sql: Sql, providerAccount: string) {
   if (missing.length) throw new Error('Existing cohort requires reconciliation before activation');
   enabled.set(sql, { providerAccount });
 }
-export const coreRuntimeEnabled = () => enabled.has(db()) || Boolean(corePreviewConfiguration());
+export const coreRuntimeEnabled = () => converged() || enabled.has(db()) || Boolean(corePreviewConfiguration());
 export async function isCoreApplication(id: string, sql: DB = db()) {
   if (!coreRuntimeEnabled()) return false;
   await assertCoreConnection(sql);
@@ -97,6 +98,7 @@ export async function coreProfile(sql: DB, id: string): Promise<Row> {
  * phase 3; core is the customer/CRM projection for service results and payments.
  * Never copy workflow names/education back over the canonical business fields. */
 export async function syncCoreWorkflow(tx: TransactionSql, id: string) {
+  if (converged()) return;
   const config = enabled.get(db()) || corePreviewConfiguration();
   if (!config || !await isCoreApplication(id,tx)) return;
   const [app] = await tx`select *,updated_at::text as updated_at from ${table("preeval.applications")} where id=${id} for update`;
@@ -158,13 +160,19 @@ export async function updateCoreEducation(id: string, educationId: string, input
   if (!coreRuntimeEnabled()) throw new Error('Core runtime is not enabled');
   const v=educationPatch.parse(input);
   return db().begin(async tx=>{
-    const [workflow]=await tx`select id from ${table("preeval.applications")} where id=${id} for update`;
+    const [workflow]=await workflowRows(tx,id,true);
     const [app]=await tx`select * from ${coreTable(tx,'aet_core_applications')} where id=${id} for update`;
     if (!workflow || !app || !(app.office===null ? actor.includeUnassigned : actor.offices.includes(app.office))) throw new AppError('access_denied',403);
     if (app.version!==version) throw new AppError('stale_application',409);
     const rows=await tx`update ${coreTable(tx,'aet_education')} set school_name=${v.schoolName},country_of_study=${v.countryOfStudy},degree_obtained=${v.degreeObtained},
       study_start_date=${tx.json(month(v.startDate))},study_end_date=${tx.json(month(v.endDate))},updated_at=now() where id=${educationId} and application_id=${id} returning id`;
     if (!rows.length) throw new AppError('not_found',404);
+    if (converged()) {
+      if(workflow.status==='cancelled')throw new AppError('application_cancelled',409);
+      await queueInput(tx,id,workflow.uploads_pending?'idle':'queued',workflow.uploads_pending);
+      await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor.email},'education.updated',${tx.json({educationId})})`;
+      return;
+    }
     const changed=await tx`update ${table("preeval.applications")} set result=null,input_version=input_version+1,status='processing',
       ai_status=case when uploads_pending then 'idle' else 'queued' end,ai_active_run=null,ai_locked_at=null,ai_attempts=0,ai_error=null,ai_available_at=now(),updated_at=clock_timestamp()
       where id=${id} and status<>'cancelled' returning id`;
@@ -175,6 +183,7 @@ export async function updateCoreEducation(id: string, educationId: string, input
 }
 
 export async function coreAdminApplications(search:string,status:string,page:number,staff:Row) {
+  if(converged())return adminConverged(search,status,page,staff);
   const pattern='%'+search.replace(/[\\%_]/g,'\\$&')+'%';
   await assertCoreConnection(db());
   return db()`with records as (

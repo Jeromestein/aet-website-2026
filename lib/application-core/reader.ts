@@ -1,3 +1,5 @@
+import { convergedPaymentState, testPaymentExemption } from './converged-payment-state';
+import { converged,statusConverged } from "./converged-store";
 import { table } from '../preeval/db';
 import { coreTable, assertCoreConnection } from './connection';
 import 'server-only';
@@ -10,7 +12,7 @@ import { projectWorkspaceRecords, legacyRecords } from '../crm/workspace-server'
 export type CoreActor = { role: 'customer'; applicationId: string } |
   { role: 'staff'; email: string; offices: string[]; includeUnassigned: boolean };
 type DB = Sql | TransactionSql;
-const paymentState = (sql: DB) => sql`case
+const paymentState = (sql: DB) => converged() ? convergedPaymentState(sql) : sql`case
   when exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id and p.payment_status='refunded') then 'refunded'
   when exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id and p.payment_status='partially_refunded') then 'partially_refunded'
   when exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id and p.payment_status='paid') then 'paid'
@@ -25,6 +27,7 @@ export async function createCoreShadowReader(sql: Sql) {
     async status(id: string, actor: CoreActor) {
       z.uuid().parse(id);
       if (actor.role === 'customer' && actor.applicationId !== id) throw new AppError('access_denied',403);
+      if (converged()) return statusConverged(sql,id,actor);
       return sql.begin('isolation level repeatable read read only', async tx => {
         const [app] = await tx`select a.id,a.first_name,a.middle_name,a.last_name,a.email,a.residence_country as country,
           a.status,a.created_at,a.updated_at,${paymentState(tx)} as payment_status,
@@ -66,7 +69,7 @@ export async function createCoreShadowReader(sql: Sql) {
         const records = tx`select 'preeval'::text kind,a.id,concat_ws(' ',a.first_name,nullif(trim(a.middle_name),''),a.last_name) name,
           a.email,a.office,1 as "intakeVersion",a.status,${paymentState(tx)} as payment_status,a.created_at,a.updated_at,
           'Preliminary degree equivalency'::text purpose,a.residence_country as country,
-          coalesce((select p.amount_cents from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id order by p.created_at desc nulls last,p.id limit 1),${TOTAL_CENTS}) amount,
+          case when ${converged() ? testPaymentExemption(tx) : tx`false`} then 0 else coalesce((select p.amount_cents from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id order by p.created_at desc nulls last,p.id limit 1),${TOTAL_CENTS}) end amount,
           'Pre-Evaluation'::text service,false as "mailDelivery",
           coalesce((select jsonb_agg(jsonb_build_object('degree',e.degree_obtained,'school',e.school_name,'country',e.country_of_study,
             'start',concat(e.study_start_date->>'year','-',lpad(e.study_start_date->>'month',2,'0')),
@@ -77,10 +80,9 @@ export async function createCoreShadowReader(sql: Sql) {
           coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.checkout_session_id,'amount_cents',p.amount_cents,
             'status',p.payment_status,'created_at',p.created_at) order by p.created_at desc,p.id)
             from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments
-          from ${coreTable(tx,'aet_core_applications')} a join ${table("preeval.applications")} w on w.id=a.id
-            and a.office is not distinct from w.office where a.primary_service='pre-evaluation'
+          from ${coreTable(tx,'aet_core_applications')} a ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'
             and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
-        const combined = tx`${records} union all select l.* from (${legacyRecords(tx)}) l
+        const combined = converged() ? records : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
         return projectWorkspaceRecords(tx, combined, raw, { email: actor.email, offices: actor.offices,
           include_unassigned: actor.includeUnassigned }, true);

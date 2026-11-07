@@ -1,3 +1,4 @@
+import { converged,pauseConverged,completeConverged,retryConverged,startSharedConverged,finishSharedConverged,dueConverged } from "../application-core/converged-store";
 import 'server-only';
 import { isCoreApplication, syncCoreWorkflow, workflowMutation, recordCoreFile, type CoreFileMetadata } from '../application-core/runtime';
 import { randomUUID } from 'node:crypto';
@@ -6,6 +7,7 @@ import { AppError } from './domain';
 import type { TransactionSql } from 'postgres';
 export async function pauseForUpload(id: string, tx?: TransactionSql): Promise<void> {
   if (!tx) return workflowMutation(id, inner => pauseForUpload(id,inner));
+  if (converged()) return pauseConverged(id,tx);
   const sql = tx;
   const rows = await sql`update ${table('preeval.applications')} set uploads_pending=true,input_version=input_version+1,
     ai_pipeline='openai',ai_status='idle',ai_active_run=null,ai_locked_at=null,ai_error=null,ai_attempts=0,
@@ -14,6 +16,7 @@ export async function pauseForUpload(id: string, tx?: TransactionSql): Promise<v
   await syncCoreWorkflow(tx,id);
 }
 export async function completeUploads(id: string) {
+  if (converged()) return completeConverged(id);
   return db().begin(async tx => {
     const [app] = await tx`select * from ${table('preeval.applications')} where id=${id} for update`;
     // A customer must start a supplemental batch; only staff can resume a
@@ -29,6 +32,7 @@ export async function completeUploads(id: string) {
   });
 }
 export async function retryAnalysis(id: string, staff = false) {
+  if (converged()) return retryConverged(id,staff);
   const rows = await workflowMutation(id, async tx => tx`update ${table('preeval.applications')} set ai_status='queued',ai_pipeline='openai',ai_active_run=null,
     ai_attempts=0,ai_error=null,ai_locked_at=null,ai_available_at=now(),input_version=input_version+1,result=null,status='processing',updated_at=now()
     where id=${id} and not uploads_pending and status<>'cancelled' and (${staff} or (ai_status='failed' and status<>'needs_information'))
@@ -39,6 +43,7 @@ export async function retryAnalysis(id: string, staff = false) {
 /** Shared uploader uses attempt IDs to fence concurrent retries. Legacy-only
  * records and FCE continue storing files without entering the preview AI queue. */
 export async function startDocumentUpload(id: string, fileKey: string) {
+  if (converged()) return startSharedConverged(id,fileKey);
   return db().begin(async tx => {
     const [app] = await tx`select id from ${table('preeval.applications')} where id=${id} for update`;
     if (!app) return null;
@@ -54,6 +59,7 @@ export async function startDocumentUpload(id: string, fileKey: string) {
 type DocumentUploadFile = CoreFileMetadata & { name: string; path: string; size: number; contentHash: string };
 export async function finishDocumentUpload(id: string, attempt: string | null, success: boolean,
   savedFile?: DocumentUploadFile | (() => Promise<DocumentUploadFile>)) {
+  if (converged()) return finishSharedConverged(id,attempt,success,savedFile);
   if (!attempt) return false;
   return db().begin(async tx => {
     // Match startDocumentUpload's lock order. Keep the lock through an optional
@@ -86,6 +92,7 @@ export async function finishDocumentUpload(id: string, attempt: string | null, s
 
 /** Read-only eligibility check. processAI repeats the check under its atomic claim. */
 export async function dueAIJobs(limit = 1, applicationId?: string): Promise<string[]> {
+  if (converged()) return dueConverged(limit,applicationId);
   const count = Math.max(1, Math.min(3, Math.floor(limit) || 1));
   const rows = await db()`select id from ${table('preeval.applications')}
     where ai_pipeline='openai' and not uploads_pending and status not in ('cancelled','needs_information')

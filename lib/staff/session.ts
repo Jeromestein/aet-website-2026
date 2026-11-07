@@ -1,3 +1,4 @@
+import { converged } from "../application-core/converged-store";
 import { coreTable } from '../application-core/connection';
 import "server-only";
 import { isCoreApplication } from "../application-core/runtime";
@@ -62,7 +63,7 @@ export async function requireStaffApplication(
       ? await db()`select case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office
       from ${table("evaluation.applications")} a left join ${table("public.fce_applications")} l on l.id=a.id where a.id=${id}`
       : await isCoreApplication(id)
-        ? await db()`select a.office from ${coreTable(db(),'aet_core_applications')} a join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office where a.id=${id}`
+        ? await db()`select a.office from ${coreTable(db(),'aet_core_applications')} a ${converged()?db()``:db()`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.id=${id}`
         : await db()`select office from ${table("preeval.applications")} where id=${id}`;
   if (!rows[0] || !canAccessOffice(current, rows[0].office))
     throw new AppError("access_denied", 403);

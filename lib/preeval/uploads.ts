@@ -1,3 +1,4 @@
+import { workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, recordCoreFile } from '../application-core/runtime';
 import 'server-only';
 import { randomUUID } from 'node:crypto';
@@ -29,7 +30,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
       typeof contentHash !== 'string' || !/^[a-f0-9]{64}$/.test(contentHash)) throw new AppError('invalid_file');
     validateFile(fileName, fileSize, mime);
     const record = await db().begin(async tx => {
-      const [app] = await tx`select * from ${table('preeval.applications')} where id=${id} for update`;
+      const [app] = await workflowRows(tx, id, true);
       if (!app || app.status === 'cancelled') throw new AppError('application_cancelled', 409);
       const [existing] = await tx`select *,created_at::text as version from ${table('preeval.files')} where application_id=${id} and sha256=${'dropbox:' + contentHash}`;
       if (existing?.state === 'ready') return existing;
@@ -63,7 +64,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
   // an old finish into a new index/result. Bind timestamp text before casting
   // in PostgreSQL; the driver timestamp serializer truncates microseconds.
   return db().begin(async tx => {
-    const [app] = await tx`select id,status from ${table('preeval.applications')} where id=${id} for update`;
+    const [app] = await workflowRows(tx, id, true);
     if (!app || app.status === 'cancelled') throw new AppError('application_cancelled', 409);
     const [file] = await tx`select * from ${table('preeval.files')} where id=${upload.fileId} and application_id=${id} and created_at=${upload.version}::text::timestamptz for update`;
     if (!file || file.state === 'failed') throw new AppError('upload_expired', 409);

@@ -98,6 +98,56 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
   entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
+- [x] **Approve the 13-table convergence target (November 6, 2026):** five business
+  tables plus eight shared operational tables; see the [target and boundaries](database-migration-plan.md#approved-convergence-target-13-tables).
+  The 32-table baseline covers only the four private Preview business schemas.
+  Staff authentication, legacy CMS and unrelated public tables are excluded.
+- [x] **Isolated pre-evaluation convergence (November 6, 2026):** actual entry
+  points use five canonical tables and eight shared operational tables. Move
+  operational tables, combine upload tracking, and physically drop seven redundant
+  empty source tables in an owned disposable database; all old `preeval` table
+  names and three public pre-evaluation projections are absent, with no replacement
+  views. Twenty post-deletion tests cover submission, chunked/shared uploads,
+  recovery, concurrent AI, signed callbacks/refunds, guest links, CRM/Status and
+  English email. Combined regression: 329 tests / 19 files; TypeScript passes.
+  See [acceptance and exclusions](archive/database-preeval-convergence-2026-11-06.md).
+  Hosted Preview and Production remain unchanged; this is a new synthetic cohort.
+- [x] **Populated-copy convergence rehearsal (November 6, 2026):** an atomic
+  importer reconciles the entire disposable source cohort and preserves business
+  IDs, frozen payments, AI history, email receipts, access tokens/sessions and
+  upload attempts before physically dropping seven old tables. Three synthetic
+  cases and copies of three payment-backed historical Preview applications pass
+  six acceptance tests each, including rollback after DROP, CRM/Status parity,
+  existing access links, signed callback replay and result-version continuity.
+  Combined regression: 335 tests / 20 files; TypeScript passes.
+  See [historical retirement evidence](archive/database-preeval-history-convergence-2026-11-06.md).
+- [x] **Isolated mixed-cohort convergence (November 6, 2026):** migrate all four
+  captured old synthetic records, including the audited no-charge fixture, beside
+  two applications created through the core-v1 writer. Preserve every existing
+  canonical row, ignore stale workflow profile copies, retain v0/v1 retry rules,
+  and resume a queued core AI job after physical retirement. Test exemption uses
+  service details plus original audit evidence: zero amount, `waived` projection,
+  no fabricated payment and no Checkout. CRM/Status change only the exemption's
+  payment label/amount; access, results, email and callback checks pass.
+  Combined regression: 343 tests / 20 files; the captured-copy suite passes
+  14 tests (6 old-only plus 8 mixed). TypeScript passes. See the
+  [mixed-cohort evidence](archive/database-preeval-history-convergence-2026-11-06.md#mixed-cohort-extension).
+- [ ] **Complete hosted-snapshot reconciliation:** repeat with a fresh complete
+  old/core snapshot and refreshed provider evidence. Current mixed fixtures use
+  four captured old records plus two locally generated core applications, not
+  copies of every hosted core row. Resolve non-v1/other-service/ambiguous records;
+  stop active uploads, AI and mail before retirement. Keep the empty-fixture SQL
+  separate. Verify the test-exemption display before any hosted activation; this
+  is not a general customer discount or free-service feature.
+- [ ] **Hosted convergence activation:** after historical reconciliation, prepare
+  restricted hosted grants/migration and explicit rollout/rollback. The current
+  convergence activation only accepts the owned local Unix-socket database;
+  there is no hosted environment flag for this new stage.
+- [ ] **Cross-service convergence to 13 tables:** migrate formal/translation
+  writers and merge operational email/access/audit/payment-event contracts;
+  reconcile historical IDs and provider references before retiring each source.
+  Do not create another service-specific table family or a migration table that
+  becomes a permanent fourteenth runtime table.
 - [x] **Phase 1 — Additive shared schema and isolated rehearsal (November 6, 2026):**
   add the five tables in private `aet`, including birth/residence/submission/version
   fields, service pricing/result/workflow fields, document access/revisions and

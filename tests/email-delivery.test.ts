@@ -1,3 +1,4 @@
+vi.mock('server-only',()=>({}));
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { deliveryHash, EmailReviewRequired, type OutgoingEmail } from "../lib/email/delivery";
 

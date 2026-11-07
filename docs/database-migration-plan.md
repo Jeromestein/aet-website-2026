@@ -15,6 +15,67 @@ with readers, writers, migration SQL and recovery tests. The initial inventory a
 field audit remain the migration baseline; hosted acceptance covers only the
 explicit new pre-evaluation cohort, not historical or cross-service convergence.
 
+The isolated pre-evaluation retirement gate is verified for both new requests
+and a reconciled populated copy; see the [new-cohort acceptance](archive/database-preeval-convergence-2026-11-06.md)
+and [historical retirement acceptance](archive/database-preeval-history-convergence-2026-11-06.md).
+The latest mixed gate migrates all four captured old synthetic Preview records
+beside two locally generated core-v1 applications, retaining canonical rows and
+operational history before dropping seven tables in one transaction. Every source
+application must be reconciled. The no-charge test fixture retains original audit
+evidence in service details and projects `waived`, with zero amount and no payment
+row; this is not a general free-service feature. Fresh complete hosted snapshots,
+provider reconciliation and cross-service adoption remain gates. Hosted runtime
+and historical records retain the boundaries above.
+
+## Approved convergence target: 13 tables
+
+The November 6 inventory contains 32 physical tables across the four private
+Preview business schemas: core 5, pre-evaluation 12, evaluation 10, legacy 5.
+The final business/runtime target is **13 physical tables**, not five:
+
+| Ownership | Target tables |
+| --- | --- |
+| Business (5) | `aet_core_applications`, `aet_education`, `aet_service_detail`, `aet_documents`, `aet_payments` |
+| Shared operations (8) | `aet_uploads`, `aet_ai_runs`, `aet_emails`, `aet_payment_events`, `aet_access_tokens`, `aet_sessions`, `aet_audit`, `aet_rate_limits` |
+
+Staff authentication (three existing private tables), the legacy CMS, unrelated
+public tables, and future account-provider tables are outside this budget. The
+CRM audit should ultimately join the shared audit contract. A new service must
+reuse these records rather than create another application/payment/email family.
+No quote, deliverable, applicant, folder-location or scheduled-recovery table is
+approved. Future account ownership is a nullable account link on applications;
+contact/evaluee/submission snapshots remain application-specific.
+
+Convergence is now a prerequisite to expanding service writers. Retire duplicate
+business storage per verified cohort instead of postponing all retirement until
+phase 7. Core application owns identity/contact/submission; education owns academic
+history; service detail owns requirements, price and the current result; documents
+own completed File IDs; payments own payment/refund truth. AI scheduling belongs
+in AI run records, unfinished storage work in upload records. No mirrored workflow
+application or second payment ledger may remain in the converged path.
+
+### Immediate isolated pre-evaluation gate
+
+1. Keep all hosted settings, data and Production unchanged. Enable convergence
+   only through an explicit connection-identity-checked disposable test harness.
+2. Wire the actual pre-evaluation entry points to canonical records; preserve
+   upload fencing, AI input versions/leases, payment ordering and mail deduplication.
+3. In a disposable database, physically drop the retired pre-evaluation business
+   tables and legacy projections after checking the fixture cohort. Do not hide
+   them behind same-name tables or views or use `DROP ... CASCADE` to mask dependencies.
+4. Run submission/retry, ordinary and chunked uploads, failed-file replacement,
+   AI/result recovery, Checkout/callback/refunds, guest access, CRM/Status and email
+   checks after the drop. Prove table absence and foreign-key integrity.
+5. Record exactly which tables/records were retired and whether providers were
+   mocked. A clean synthetic rehearsal does not approve historical or hosted drops.
+6. Repeat the verified mixed-cohort importer on a fresh complete hosted snapshot.
+   Core-v1 rows are preserved, not backfilled; inconsistent identity, results,
+   prices, files or payment references reject the entire transaction. A queued
+   job can resume after cutover, while running AI, uploads and leased mail require
+   quiescence. Refresh provider evidence and verify exemption display before
+   hosted activation. Then adopt shared operations for formal evaluation and
+   translation. Preview and Production cutovers need separate authorization.
+
 ## Recommendation
 
 Keep the five core entities: application, education, service detail, document,
@@ -22,8 +83,9 @@ and payment. Make them the common business records for evaluation and translatio
 Keep operational records for AI, uploads, email, access, payment events, and audit.
 Those records protect behavior already implemented and tested.
 
-Use an additive migration with one authoritative writer for each migrated
-application. Preserve Application IDs and provider references. Introduce a shared
+The additive foundation is complete for the tested pre-evaluation cohort.
+Now converge its runtime and retire verified duplicate storage before expanding
+service writers, retaining one authoritative writer for each application. Preserve Application IDs and provider references. Introduce a shared
 data-access layer, prove equivalence in Preview, migrate pre-evaluation first,
 then formal evaluation and translation. Retire legacy projections only after
 their readers, writers, callbacks, and old URLs have been accounted for.
@@ -293,7 +355,7 @@ verified destinations. Its initial access hash belongs with retained guest-acces
 records, never in a public snapshot. Its child files/payments/emails/audit/token
 FKs must be retargeted or mapped before the parent can be removed. Operational
 records retain their own event history; they do not remain independent business
-applications. This cleanup is phase 7, not the first backfill.
+applications. Retire this dependency per service after the isolated physical-drop gate; do not wait for all services to finish before removing proven duplicate storage.
 
 ## 3. Additional tables and records
 
@@ -395,7 +457,7 @@ plan, not a database change.
 | Existing email delivery records | Retain now; merge queue shapes only as a later focused change | IDs, dedupe key, recipient, business-event reference, provider receipt, payload hash, lease/attempts and timestamps |
 | Existing payment events | Retain now; later attach to the consolidated ledger | Provider-scoped event ID, event type, receipt time and processing result; preserve reconciliation-generated IDs separately from provider events |
 | Existing audit, sessions, tokens, rate limits and staff accounts | Retain, with explicit canonical links where needed | Original IDs/expiry/consumption, actor and historical event semantics; preserve office and customer authorization |
-| Private migration identity map | Add as transition tooling, not a sixth customer-facing entity | Environment/source relation/source ID, target relation/ID, mapping status, source version/hash and migration time; unique source identity |
+| Migration identity report | Keep in rehearsal output and reviewed migration artifacts; not another permanent runtime table | Environment/source relation/source ID, target relation/ID, mapping status, source version/hash and migration time; unique source identity |
 
 Do not create parallel new AI/email/audit tables solely to rename them. No new
 quote, deliverable, applicant/profile, address-book, document-location,
@@ -448,13 +510,14 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | Phase | Concrete change | Exit gate |
 | --- | --- | --- |
 | 0. Confirm the contract | Review field additions, approved simple service pricing/result contracts, canonical namespace, statuses, permissions and migration identity rules; collect read-only counts/constraints and unresolved sources | Every current field has a destination or retained location; no unexplained dropping or assumed identities |
-| 1. Rehearse additive schema | Prepare migration SQL only after approval; add target fields/tables and identity map in disposable/Preview storage; keep source tables/readers untouched | Constraints, RLS/grants and idempotent backfill pass on representative synthetic fixtures; restore procedure proven |
+| 1. Rehearse additive schema | Prepare migration SQL only after approval; add target fields/tables in disposable/Preview storage and retain an external identity report; keep source tables/readers untouched | Constraints, RLS/grants and idempotent backfill pass on representative synthetic fixtures; restore procedure proven |
 | 2. Build shared access and shadow reads | Add repositories for applications, services, education, documents and payments; adapt response projections without moving authority; compare per-source reads | CRM, Status and receipts agree on IDs, office scope, names, degrees, prices, notes and visibility; shadow code has no side effects |
 | 3. Move one pre-evaluation cohort | Switch application/education ownership first, reuse AI/email/upload/payment machinery with explicit mappings; preserve dedicated entry before connecting general entry | Existing happy path and upload/publication recovery pass, including refund and stale callback cases; no duplicate application/AI/payment/email |
-| 4. Connect formal intake | Move intake to canonical records; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
+| 3b. Converge pre-evaluation | Remove duplicate workflow application/education/payment ownership; move eight operational record types under core; physically delete retired tables in a disposable database before running the actual services | Verified for new requests (20 tests), old-only migration (6) and mixed old/core-v1 migration including audited no-charge handling (8); captured-copy variant passes 14 tests. No replacement views. Fresh full hosted-snapshot and hosted cutover remain separate |
+| 4. Connect formal intake | Move intake to canonical records and reuse the eight shared operational tables; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
 | 5. Connect translation and combinations | Permit translation submission with no education/evaluee requirement; use service amounts, shared payments/files and per-service notes/status | Pure translation and evaluation-plus-translation both complete; completing one service cannot close the other; no double shipping charge |
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
-| 7. Retire compatibility | Disable obsolete readers/writers/bridges after observation and approval; archive historical contracts/data | No active dependency remains; rollback window and retention rules are satisfied before any table/column removal |
+| 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 13 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |
 
 **Phase 1 evidence:** the disposable rehearsal passes schema constraints, client
 access denial, same-ID backfill, complete existing pre-evaluation service flow,

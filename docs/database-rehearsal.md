@@ -2,7 +2,8 @@
 
 Phases 1–3 create and test the five shared business tables without changing the
 running application or any hosted database. The target is the private `aet`
-schema. Existing public, `preeval` and `evaluation` records remain intact.
+schema. Those original phases retain source tables. A separate convergence suite
+now retires empty pre-evaluation sources inside its own disposable database.
 
 The phase-one/two suite performs **schema, mapping and shadow-read rehearsal**.
 The separate phase-three suite switches actual application/education ownership
@@ -165,3 +166,77 @@ suites. The private captured-cohort option is described in the acceptance record
 it is not loaded by default. Hosted backfill requires a separate restricted entry
 point and a deployment containing the verified old-request retry fix. No old table
 is removed by these tools.
+
+## Pre-evaluation physical retirement gate
+
+The same runner includes `tests/application-core-convergence.test.ts`. It starts
+with the existing schemas, proves a populated-source guard rejects retirement,
+then moves eight operational tables into `aet` and drops seven redundant empty
+tables using `scripts/database/converge-preeval-rehearsal.sql` in one transaction.
+There is no `CASCADE` or same-name compatibility view. It asserts exactly 13
+canonical/runtime tables and all validated FKs before submitting new applications.
+The formal fixture remains separate; it is not evidence of formal convergence.
+
+`activateConvergenceRehearsal` checks the database name, login, Unix-socket
+connection and retirement state. Activation is held per connection in memory;
+no environment variable, web request or hosted deployment enables it. Existing
+Preview and legacy paths keep their prior behavior.
+
+The suite exercises the production service/route functions with the converged
+adapter, real local PostgreSQL and simulated providers. It includes ordinary,
+chunked and shared upload tracking, stale attempts, input fencing, AI retry,
+payment/refund ordering, real Stripe signature validation on synthetic callbacks,
+transaction-failure publication recovery, scoped customer routes/CRM and email
+idempotency. It does not send live messages or charge cards. See the
+[acceptance record](archive/database-preeval-convergence-2026-11-06.md).
+
+This first script requires **empty source and target business rows**. It is not
+an importer for the existing hosted cohort and must never be placed in automatic
+Supabase migration discovery. The populated-copy importer below is a separate
+entry point. Hosted grants/cutover remain separate checklist items. The prior
+backfill scripts continue testing the prior runtime; they do not activate the
+new 13-table path.
+
+## Populated historical retirement gate
+
+`scripts/database/converge-preeval-history.ts` exports
+`convergeHistoricalPreevaluation`. It verifies the same owned Unix-socket database,
+locks source and target rows/tables, and migrates the entire source cohort plus
+operational history in one serializable transaction. Existing core-v1
+pre-evaluation rows are preserved exactly after identity/state/price/file/payment
+reconciliation; other target cohorts reject migration. Supply explicit service
+amounts, verified Dropbox File ID metadata and
+one verified provider payment record for each ledger row. Application state must
+agree with the ledger; missing evidence, orphan rows and active upload/AI/mail
+work reject migration. No environment files or network providers are consulted.
+
+The importer shares the operational DDL with the empty-source gate, then retargets
+FKs and drops seven old tables only after reconciliation. Original operational
+fields remain intact; payment-event IDs gain account/test scope with an explicit
+mapping in the report. Immutable retired business snapshots are kept in existing
+`aet_audit` as migration evidence, never as another mutable runtime profile. A
+result-version floor prevents reusing an old result-email key. Any failed check,
+including a check after DROP, rolls back both data and schema.
+
+The standard runner now includes `tests/application-core-history.test.ts`. To
+repeat the captured-copy variant, set `APPLICATION_CORE_HISTORY_SNAPSHOT` to the
+private synthetic snapshot file; its directory must also contain `verified.json`.
+The test only accepts the previously captured four-record synthetic cohort.
+It runs both the original three-record payment-backed case and a mixed case with
+all four old records plus two applications generated through the current core-v1
+writer. The latter covers a paid result and a queued unpaid AI job. Access tokens
+and sessions are created locally before migration; hosted credentials are not
+copied. Provider responses use saved evidence, not live API calls.
+
+For the no-charge synthetic fixture, explicitly supply `noChargeAuditId`. The
+importer requires the matching original `test.payment_fixture` event, its
+`synthetic-e2e-test` actor, `synthetic`/`noCharge` flags and reason, plus no payment
+ledger. It records confirmation in `aet_audit` and an exemption reference in
+`aet_service_detail.details`, with zero amount and manual pricing. The guarded
+runtime derives `waived` only while both audit references remain valid and no
+payment exists. Zero price alone never unlocks a result; Checkout is blocked for
+this fixture. No payment row, paid timestamp or fourteenth table is invented.
+
+This is not a hosted migration command: schema names are the local fixture
+layout, non-v1 target cohorts are rejected, and no runtime deployment switch is
+introduced. See the [acceptance scope and remaining gates](archive/database-preeval-history-convergence-2026-11-06.md).

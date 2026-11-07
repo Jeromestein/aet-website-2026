@@ -1,3 +1,5 @@
+import { converged } from "../application-core/converged-store";
+import { processConvergedAI } from "../application-core/converged-ai";
 import 'server-only';
 import { isCoreApplication, coreEducation, syncCoreWorkflow } from '../application-core/runtime';
 import { randomUUID } from 'node:crypto';
@@ -29,6 +31,7 @@ export type AIDependencies = {
 const defaults: AIDependencies = { analyze: analyzeDocuments, manifest: documentManifest, load: loadDocuments, configured: aiConfiguration, publish: publishIfReady };
 export async function processAI(applicationId?: string, dependencies: Partial<AIDependencies> = {}) {
   const deps = { ...defaults, ...dependencies };
+  if (converged()) return processConvergedAI(applicationId,deps);
   const { model } = deps.configured(); // Missing key/disabled configuration never consumes a job.
   const runId = randomUUID();
   const app = await db().begin(async tx => {

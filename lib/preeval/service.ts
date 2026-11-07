@@ -1,3 +1,4 @@
+import { converged,submitConverged,staffConverged,workflowRows } from "../application-core/converged-store";
 import { coreTable } from '../application-core/connection';
 import { coreRuntimeEnabled, isCoreApplication, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
 import { createCoreShadowReader } from '../application-core/reader';
@@ -22,7 +23,7 @@ export async function submit(input: unknown) {
   if (!value.success) throw new AppError("invalid_application");
   const v = value.data,
     fingerprint = hash(JSON.stringify(v));
-  const app = await db().begin(async (tx) => {
+  const app = converged() ? await submitConverged(v) : await db().begin(async (tx) => {
     if (coreRuntimeEnabled()) return submitCore(tx,v);
     const [created] =
       await tx`insert into ${table("preeval.applications")}(request_id,request_hash,email,first_name,middle_name,last_name,country,locale,ai_status,ai_pipeline,uploads_pending)
@@ -44,7 +45,7 @@ export async function submit(input: unknown) {
   return { app, token: await makeSession(app.id, "customer", app.email) };
 }
 export async function application(id: string, staff = false) {
-  const core = await isCoreApplication(id);
+  const core = converged() || await isCoreApplication(id);
   // Callers authorize this application before reading it. Recover a saved result
   // without another AI run, including in preview where no delivery worker runs.
   // Publication rechecks eligibility under the application lock. Always read a
@@ -54,7 +55,7 @@ export async function application(id: string, staff = false) {
   // Email enqueue happens after the publication commit. Its failure must not
   // hide a successfully published result or fail the customer's status read.
   const [app] = core
-    ? await db()`select * from ${table("preeval.applications")} where id=${id}`
+    ? await workflowRows(db(), id, false)
     : await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
   const [legacy] = core ? [] : await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
@@ -123,7 +124,7 @@ export async function application(id: string, staff = false) {
     response.audit =
       await db()`select actor,action,detail,created_at from ${table("preeval.audit")} where application_id=${id} order by created_at desc limit 50`;
     response.payments =
-      await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
+      converged() ? await db()`select checkout_session_id as session_id,amount_cents,payment_status as status,refunded_cents,created_at from aet.aet_payments where application_id=${id} order by created_at desc` : await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
     response.runs =
       await db()`select id,input_version,input,output,state,error,created_at,model,response_id,usage,prompt_version from ${table("preeval.ai_runs")} where application_id=${id} order by created_at desc limit 10`;
   }
@@ -131,7 +132,7 @@ export async function application(id: string, staff = false) {
 }
 export async function addFile(id: string, file: File, actor: string) {
   const [app] =
-    await db()`select * from ${table("preeval.applications")} where id=${id}`;
+    await workflowRows(db(), id, false);
   if (!app || app.status === "cancelled")
     throw new AppError("application_cancelled", 409);
   const data = Buffer.from(await file.arrayBuffer());
@@ -139,7 +140,7 @@ export async function addFile(id: string, file: File, actor: string) {
   const name = file.name.replace(/[\\/\x00-\x1f]/g, "_").slice(0, 180),
     digest = hash(data.toString("base64"));
   const record = await db().begin(async (tx) => {
-    const [locked] = await tx`select status from ${table("preeval.applications")} where id=${id} for update`;
+    const [locked] = await workflowRows(tx, id, true);
     if (!locked || locked.status === "cancelled") throw new AppError("application_cancelled", 409);
     const [existing] =
       await tx`select * from ${table("preeval.files")} where application_id=${id} and sha256=${digest}`;
@@ -166,7 +167,7 @@ export async function addFile(id: string, file: File, actor: string) {
   if (record.state === "ready") return;
   try {
     await db().begin(async tx => {
-      const [locked] = await tx`select status from ${table("preeval.applications")} where id=${id} for update`;
+      const [locked] = await workflowRows(tx, id, true);
       if (!locked || locked.status === 'cancelled') throw new AppError('application_cancelled', 409);
       const [current] = await tx`select id from ${table("preeval.files")} where id=${record.id}
         and created_at=${record.version}::text::timestamptz and state='uploading' for update`;
@@ -186,6 +187,7 @@ export async function addFile(id: string, file: File, actor: string) {
   }
 }
 export async function staffAction(id: string, body: Row, actor: string) {
+  if (converged() && body.action !== "retry_email") return staffConverged(id,body,actor);
   if (body.action === "notes") {
     if (typeof body.notes !== "string" || body.notes.length > 5000)
       throw new AppError("invalid_request");

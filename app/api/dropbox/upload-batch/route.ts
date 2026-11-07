@@ -1,3 +1,4 @@
+import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { contextFromRequest, requireUploadAllowed } from '@/lib/dropbox/server';
 import { handle, json, jsonBody, requireSameOrigin } from '@/lib/dropbox/http';
 import { DocumentError } from '@/lib/dropbox/shared';
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
     const data = await jsonBody(request, 1024);
     if (!['start','complete'].includes(String(data.action))) throw new DocumentError('invalid');
     if (context.kind === 'pre-evaluation') {
-      const [app] = await db()`select id from ${table('preeval.applications')} where id=${context.id}`;
+      const [app] = await workflowRows(db(), context.id, false);
       if (app) {
         if (data.action === 'start') await pauseForUpload(context.id);
         else { await completeUploads(context.id); await scheduleAI(context.id); }

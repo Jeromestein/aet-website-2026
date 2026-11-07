@@ -45,7 +45,11 @@ export async function assertRehearsalDatabase(sql: Sql | TransactionSql) {
  * source deletions, provider calls or automatic production connection. Re-running
  * refreshes this rehearsal projection; it must not run after target cutover. */
 export async function rehearsePreevaluation(sql: Sql, applicationId: string, options: Options): Promise<RehearsalReport> {
-  return sql.begin('isolation level repeatable read', async tx => {
+  return sql.begin('isolation level repeatable read', tx => backfillPreevaluation(tx,applicationId,options));
+}
+
+/** Reuse the same verified mapping inside an atomic local retirement transaction. */
+export async function backfillPreevaluation(tx: TransactionSql, applicationId: string, options: Options): Promise<RehearsalReport> {
     await assertRehearsalDatabase(tx);
     const relation = (name: string) => {
       if (!options.previewLayout) return name;
@@ -201,5 +205,4 @@ export async function rehearsePreevaluation(sql: Sql, applicationId: string, opt
         currency=excluded.currency,pricing_source=excluded.pricing_source,result=excluded.result,updated_at=excluded.updated_at returning id`;
     report.serviceId = service.id;
     return report;
-  });
 }

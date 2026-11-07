@@ -1,3 +1,4 @@
+import { convergedTableName } from "../application-core/convergence-mode";
 import postgres from "postgres";
 import { configuration, required, businessTableName } from "./config";
 const state = globalThis as typeof globalThis & {
@@ -31,4 +32,4 @@ export async function audit(
 }
 
 /** Quote identifiers through Postgres; never interpolate request-supplied SQL. */
-export function table(name: string) { return db()(businessTableName(name)); }
+export function table(name: string) { return db()(convergedTableName(db(), name) || businessTableName(name)); }

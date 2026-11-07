@@ -1,3 +1,4 @@
+import { converged, workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, coreProfile } from "../application-core/runtime";
 import { createCoreShadowReader } from "../application-core/reader";
 import { randomUUID } from "node:crypto";
@@ -37,10 +38,10 @@ export async function renderQueuedEmail(row: Row) {
   const config = configuration();
   if (row.recipient !== config.recipient) throw new EmailReviewRequired("recipient_changed");
   if (!["confirmation", "result", "access", "information"].includes(row.kind)) throw new EmailReviewRequired("unknown_email_kind");
-  const [app] = await db()`select * from ${table("preeval.applications")} where id=${row.application_id}`;
+  const [app] = await workflowRows(db(), row.application_id, false);
   if (!app) throw new EmailReviewRequired("application_missing");
   if (row.kind === "result" && (
-    row.result_version !== app.result_version || app.payment_status !== "paid" || !app.result ||
+    row.result_version !== app.result_version || (app.payment_status !== "paid" && !(converged() && app.payment_status === "waived")) || !app.result ||
     ["cancelled", "needs_information"].includes(app.status)
   )) throw new EmailReviewRequired("result_superseded_or_withheld");
   if (await isCoreApplication(app.id)) {

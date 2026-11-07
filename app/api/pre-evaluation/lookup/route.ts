@@ -1,3 +1,4 @@
+import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextRequest, NextResponse } from "next/server";
 import { table, db } from "@/lib/preeval/db";
 import { limit, makeSession, sameOrigin, sessionCookie } from "@/lib/preeval/auth";
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
     const parsed = customerLookupSchema.safeParse(body);
     if (!parsed.success) throw new AppError("invalid_application_id");
     const { applicationId, locale } = parsed.data;
-    const [app] = await db()`select id,email from ${table("preeval.applications")} where id=${applicationId}`;
+    const [app] = await workflowRows(db(), applicationId, false);
     if (!app) throw new AppError("not_found", 404);
     // Keep API/file authorization scoped to this application without customer accounts.
     const token = await makeSession(app.id, "customer", app.email);

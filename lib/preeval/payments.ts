@@ -1,3 +1,5 @@
+import { converged,publishConverged } from "../application-core/converged-store";
+import { checkoutConverged,applyConvergedCheckout,reconcileConverged,refundConverged,cancelConverged } from "../application-core/converged-payments";
 import Stripe from "stripe";
 import { syncCoreWorkflow } from "../application-core/runtime";
 import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
@@ -27,6 +29,7 @@ export function canVerifyPreEvaluationPayment(): boolean {
   }
 }
 export async function publishIfReady(id: string) {
+  if (converged()) return publishConverged(id);
   const [app] = await db().begin(async (tx) => {
     const ready =
       await tx`select * from ${table("preeval.applications")} where id=${id} and payment_status='paid' and result is not null and ai_status='completed' and not uploads_pending and status not in ('cancelled','needs_information') for update`;
@@ -38,6 +41,7 @@ export async function publishIfReady(id: string) {
   if (app) await applicationEmail(app, "result");
 }
 export async function checkout(id: string) {
+  if (converged()) return checkoutConverged(id);
   const sql = db();
   const stripe = stripeClient("pre-evaluation");
   return await sql.begin(async (tx) => {
@@ -107,6 +111,7 @@ export async function applyCheckout(
   eventId: string,
   eventType: string,
 ) {
+  if (converged()) return applyConvergedCheckout(session,eventId,eventType);
   if (session.livemode || session.metadata?.pilot !== "aet-2026-local") return;
   const id = session.metadata?.applicationId;
   if (!id) throw new AppError("invalid_payment");
@@ -153,6 +158,7 @@ export async function applyCheckout(
   await publishIfReady(id);
 }
 export async function reconcile(id: string) {
+  if (converged()) return reconcileConverged(id);
   const rows =
     await db()`select session_id from ${table("preeval.payments")} where application_id=${id} and status in ('open','paid','partially_refunded') order by created_at desc limit 3`;
   for (const row of rows) {
@@ -180,10 +186,12 @@ export async function handleStripeEvent(event: Stripe.Event) {
       event.type,
     );
   } else if (event.type === "charge.refunded") {
+    if (converged()) return refundConverged(event);
     await applyChargeRefund(event, "preeval", "aet-2026-local", () => stripeClient("pre-evaluation"));
   }
 }
 export async function cancelApplication(id: string, actor: string) {
+  if (converged()) return cancelConverged(id,actor);
   const paid = await db().begin(async (tx) => {
     const [app] =
       await tx`select * from ${table("preeval.applications")} where id=${id} for update`;

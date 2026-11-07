@@ -1,3 +1,4 @@
+vi.mock('server-only',()=>({}));
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('../lib/preeval/db', () => ({ db: vi.fn(), table: (name: string) => name }));
 vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn() }));
