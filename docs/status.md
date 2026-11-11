@@ -1,5 +1,16 @@
 # AET Implementation Status
 
+## 2026-11-11 — ChatGPT Ads Pixel
+
+- Applied only the Pixel component, page tracker and boundary tests from `dev`
+  to the production branch; retained the existing production GA4 integration.
+- Public marketing pages send page views with pathname-only content IDs.
+  Local/preview hosts and application, payment, customer and staff routes are excluded.
+- Production publication and received events must be verified separately;
+  no completed-lead events or Ads Manager conversion goals are created here.
+- Four tracking tests and TypeScript passed after refreshing stale route types.
+  Chinese Contact passed desktop and 390px mobile checks in the in-app browser.
+
 ## 2026-10-23 — Synchronize main branches
 
 - Merged the standalone payment-expiry release with the Contact correction,

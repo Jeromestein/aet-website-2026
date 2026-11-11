@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { OpenAiAdsPixel } from "@/components/openai-ads-pixel";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -47,6 +48,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale === "zh" ? "zh-Hans" : locale}>
       <body>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <OpenAiAdsPixel />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];

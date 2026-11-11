@@ -39,6 +39,15 @@ Deployment is intentionally left to the owner.
 
 ## Analytics
 
+ChatGPT Ads uses the AET Website Pixel through `OpenAiAdsPixel`. Public marketing
+page visits and client-side navigation send `page_viewed`, with pathname-only
+content IDs. Local/preview hosts and application, payment, status, document and
+staff routes do not send measurement events. No completed-lead events are emitted.
+The SDK handles the incoming `oppref` reference; debug logging is disabled.
+Run `pnpm exec vitest run tests/openai-ads.test.ts` for the tracking boundaries.
+Production receipt and Ads Manager conversion-goal configuration require separate
+verification after publication.
+
 The shared locale layout loads Google tag `G-7SF10M7GBE` with `next/script`
 after hydration on all English, Chinese, and Spanish pages. Keep a single
 installation. GA4 enhanced measurement must include browser-history page changes
