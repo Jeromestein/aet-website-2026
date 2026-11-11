@@ -25,7 +25,12 @@ choice is not an equivalent implementation.
 - [x] Read consistent customer and CRM data from the six shared tables.
 - [x] Retire obsolete Preview business tables and schemas after backed-up rehearsal.
 
-Evidence: [six-table pre-evaluation](archive/database-six-preview-2026-11-10.md),
+Latest runtime: [November 11 hosted journey](archive/preeval-runtime-preview-2026-11-11.md)
+passed at `d6d4aa2`, including desktop results, mobile result/status lookup and
+official Stripe test-event replay without duplicates. Full mobile intake/payment
+and recovery/refund scenarios remain open.
+
+Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-11-10.md),
 [latest shared-table acceptance](archive/database-formal-six-preview-2026-11-11.md),
 [upload/publication recovery](archive/preview-recovery-acceptance-2026-11-06.md).
 
@@ -49,8 +54,9 @@ These checks do not activate hosted Production.
   verify grants and backups. Existing AET App records stay in the old system.
 - [ ] Configure the chosen public origin, Production-only secrets, direct live
   webhook and document location; verify email sender and AI runtime limits.
-- [ ] Validate the final dev Preview on desktop and phone: apply/upload/payment/
-  result/email, unpaid access, replacement upload, refund and retry behavior.
+- [ ] Finish final Preview acceptance: full mobile intake/upload/payment, mobile
+  replacement/retry and refund behavior. The latest desktop happy path, unpaid
+  result gating, mobile result/status lookup and webhook replay have passed.
 - [ ] Confirm the operating owner can find applications/documents and handle
   exceptional cases manually; publish contact/refund and service expectations.
 - [ ] Route public pre-evaluation links to the new flow; keep unfinished formal

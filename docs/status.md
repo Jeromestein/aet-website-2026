@@ -2,8 +2,9 @@
 
 Updated November 11, 2026. The release scope is now **dedicated pre-evaluation
 first**. Its Production-capable runtime is implemented and tested on `dev`, but
-has not been deployed or activated. Hosted Preview continues to use six shared
-tables. Formal fulfillment and translation remain later releases.
+has not been activated in Production. The code is deployed and verified on dev
+Preview, which continues to use six shared tables. Formal fulfillment and
+translation remain later releases.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
@@ -12,8 +13,9 @@ See the [active checklist](migration-checklist.md) for tasks and
 
 **Pre-evaluation is in release preparation.** The existing Preview journey works;
 new dev code adds isolated Production configuration, applicant-address mail,
-live-mode payment verification and separate document folders. Offline tests pass.
-Production database provisioning, hosted configuration and final launch acceptance
+live-mode payment verification and separate document folders. Offline tests and
+the updated hosted Preview happy path pass. Production database provisioning,
+hosted configuration and final launch acceptance
 remain open. The old AET App remains available for services outside this release.
 
 The dedicated pre-evaluation journey and the pre-evaluation choice inside the
@@ -28,7 +30,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | AET Website Pixel configured in dev for public page views; four boundary tests and TypeScript passed; Chinese Contact desktop/mobile checked in the in-app browser with no local SDK load | Production publication, real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the empty Production target for new orders; history migration and translation are deferred |
-| Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Final hosted/mobile acceptance, Production provisioning/configuration and authorized live acceptance |
+| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Full mobile intake/payment and recovery/refund acceptance, Production provisioning/configuration and authorized live acceptance |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
@@ -46,13 +48,22 @@ closed in Production. Staff membership and office authorization are retained.
 
 Local regression: **764 passed, 174 optional cases skipped**. The new Production
 mode suite includes 34 checks, with eight cases using an owned local PostgreSQL
-cluster and mocked providers. TypeScript passes. No hosted environment, live
-charge, real mail, customer document or production record was touched.
+cluster and mocked providers. TypeScript passes. That offline run used no hosted
+providers. The subsequent
+hosted run below used synthetic Preview data and test payments only.
 
-See [runtime acceptance and exclusions](archive/preeval-production-runtime-2026-11-11.md)
+Hosted dev Preview at `d6d4aa2` subsequently passed the complete synthetic
+application/upload/AI/Sandbox-payment/result/email journey. Confirmation and result
+mail were delivered to the controlled test recipient; CRM agrees with the customer
+page. A direct official Stripe event replay left payment, AI, result version and
+mail unchanged. Desktop result and 390 px mobile result/status lookup passed.
+Production configuration, live payments and real-customer mail remain untested
+and unchanged. See [hosted runtime acceptance](archive/preeval-runtime-preview-2026-11-11.md).
+
+See [offline runtime acceptance and exclusions](archive/preeval-production-runtime-2026-11-11.md)
 and [configuration guide](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated).
 
-## Current hosted acceptance — November 11
+## Earlier shared-table hosted acceptance — November 11
 
 Dev Preview is **Ready** with formal evaluation and pre-evaluation on the six
 `aet_preview_shared` tables. `APPLICATION_CORE_MODE=six-preview` remains scoped to
