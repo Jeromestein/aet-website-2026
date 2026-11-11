@@ -1,9 +1,29 @@
 import 'server-only';
 import type { Sql } from 'postgres';
+import { corePreviewConfiguration, assertCoreConnection } from './connection';
 
-// Deliberately no environment switch or HTTP entry point. Only an owned local
-// cluster can activate this stage; hosted Preview keeps its existing runtime.
-const active = new WeakMap<Sql, { providerAccount: string; compact?: boolean; paymentStateOnly?: boolean; minimal?: boolean }>();
+// Shared across Next.js server bundles; each server instance verifies its own pool.
+type Mode = { providerAccount: string; compact?: boolean; paymentStateOnly?: boolean; minimal?: boolean; schema?: string };
+const runtime = globalThis as typeof globalThis & { aetConvergenceModes?: WeakMap<Sql,Mode> };
+const active = runtime.aetConvergenceModes ??= new WeakMap<Sql,Mode>();
+
+export async function activateSixTablePreview(sql: Sql) {
+  const config = corePreviewConfiguration();
+  if (!config?.sixTables) throw new Error('Six-table Preview opt-in required');
+  await assertCoreConnection(sql);
+  const tables = (await sql`select tablename from pg_tables where schemaname='aet_preview_shared' order by tablename`).map(r=>r.tablename);
+  const expected = ['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments','aet_ai_runs'].sort();
+  if (JSON.stringify(tables)!==JSON.stringify(expected)) throw new Error('Six-table Preview migration incomplete');
+  await sql`select notification_state,result_version from aet_preview_shared.aet_service_detail limit 0`;
+  await sql`select upload_state,upload_version,upload_context from aet_preview_shared.aet_documents limit 0`;
+  const [privileges] = await sql`select bool_and(c.relrowsecurity and has_table_privilege(session_user,c.oid,'SELECT,INSERT,UPDATE,DELETE')
+    and not has_table_privilege('anon',c.oid,'SELECT,INSERT,UPDATE,DELETE')
+    and not has_table_privilege('authenticated',c.oid,'SELECT,INSERT,UPDATE,DELETE')) valid
+    from pg_class c join pg_namespace n on n.oid=c.relnamespace
+    where n.nspname='aet_preview_shared' and c.relkind='r'`;
+  if (!privileges.valid) throw new Error('Six-table Preview grants are not ready');
+  active.set(sql,{providerAccount:config.providerAccount,compact:true,paymentStateOnly:true,minimal:true,schema:'aet_preview_shared'});
+}
 export async function activateConvergenceRehearsal(sql: Sql, providerAccount: string) {
   const [r] = await sql`select current_database() name,session_user owner,inet_server_addr() address`;
   if (r.name !== 'aet_core_rehearsal' || r.owner !== 'core_rehearsal' || r.address !== null)
@@ -31,9 +51,13 @@ async function activateCompactRehearsal(sql: Sql, providerAccount: string, payme
 export const sixTableMode = (sql: Sql) => Boolean(active.get(sql)?.minimal);
 export const paymentStateOnlyMode = (sql: Sql) => Boolean(active.get(sql)?.paymentStateOnly);
 export const nineTableMode = (sql: Sql) => Boolean(active.get(sql)?.compact);
-export const convergenceConfiguration = (sql: Sql) => active.get(sql);
+export const convergenceConfiguration = (sql: Sql) => {
+  if (process.env.APPLICATION_CORE_MODE === 'six-preview' && !active.has(sql))
+    throw new Error('Six-table Preview startup verification has not completed');
+  return active.get(sql);
+};
 export const convergedTableName = (sql: Sql, name: string) => {
-  if (!active.has(sql)) return null;
+  if (!convergenceConfiguration(sql)) return null;
   const names: Record<string,string> = {
     'preeval.files':'aet_uploads', 'preeval.ai_runs':'aet_ai_runs',
     'preeval.emails':'aet_emails', 'preeval.payment_events':'aet_payment_events',
@@ -46,7 +70,7 @@ export const convergedTableName = (sql: Sql, name: string) => {
     throw new Error('Retired payment events requested');
   if (sixTableMode(sql) && ['preeval.audit','preeval.rate_limits'].includes(name))
     throw new Error('Retired audit/rate-limit relation requested: '+name);
-  if (names[name]) return 'aet.' + names[name];
+  if (names[name]) return (active.get(sql)?.schema || 'aet') + '.' + names[name];
   if (name.startsWith('preeval.') || /^public.aet_core_/.test(name))
     throw new Error('Retired relation requested: ' + name);
   return null;

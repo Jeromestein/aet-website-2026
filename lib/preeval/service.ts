@@ -1,8 +1,8 @@
+import { coreTable } from '../application-core/connection';
 import { sixTableMode } from '../application-core/convergence-mode';
 import { compactNotificationRows,retryCompactNotification } from '../application-core/compact-notifications';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { converged,submitConverged,staffConverged,workflowRows } from "../application-core/converged-store";
-import { coreTable } from '../application-core/connection';
 import { coreRuntimeEnabled, isCoreApplication, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
 import { createCoreShadowReader } from '../application-core/reader';
 import { saveLegacyPreeval } from "../legacy-application/store";
@@ -128,7 +128,7 @@ export async function application(id: string, staff = false) {
     response.audit = sixTableMode(db()) ? [] :
       await db()`select actor,action,detail,created_at from ${table("preeval.audit")} where application_id=${id} order by created_at desc limit 50`;
     response.payments =
-      converged() ? await db()`select checkout_session_id as session_id,amount_cents,payment_status as status,refunded_cents,created_at from aet.aet_payments where application_id=${id} order by created_at desc` : await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
+      converged() ? await db()`select checkout_session_id as session_id,amount_cents,payment_status as status,refunded_cents,created_at from ${coreTable(db(),'aet_payments')} where application_id=${id} order by created_at desc` : await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
     response.runs =
       await db()`select id,input_version,input,output,state,error,created_at,model,response_id,usage,prompt_version from ${table("preeval.ai_runs")} where application_id=${id} order by created_at desc limit 10`;
   }
@@ -157,7 +157,7 @@ export async function addFile(id: string, file: File, actor: string) {
       throw new AppError("upload_in_progress", 409);
     if (
       !existing &&
-      (compact() ? await tx`select id from aet.aet_documents where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table("preeval.files")} where application_id=${id}`)
+      (compact() ? await tx`select id from ${coreTable(tx,'aet_documents')} where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table("preeval.files")} where application_id=${id}`)
         .length >= 5
     )
       throw new AppError("file_limit");
@@ -174,7 +174,7 @@ export async function addFile(id: string, file: File, actor: string) {
     await db().begin(async tx => {
       const [locked] = await workflowRows(tx, id, true);
       if (!locked || locked.status === 'cancelled') throw new AppError('application_cancelled', 409);
-      const [current] = compact() ? await tx`select id from aet.aet_documents where id=${record.id} and application_id=${id} and upload_version::text=${record.version} and upload_state='uploading' for update` : await tx`select id from ${table("preeval.files")} where id=${record.id}
+      const [current] = compact() ? await tx`select id from ${coreTable(tx,'aet_documents')} where id=${record.id} and application_id=${id} and upload_version::text=${record.version} and upload_state='uploading' for update` : await tx`select id from ${table("preeval.files")} where id=${record.id}
         and created_at=${record.version}::text::timestamptz and state='uploading' for update`;
       if (!current) throw new AppError('upload_expired', 409);
       // Keep the claim through storage so an abandoned/retried attempt cannot

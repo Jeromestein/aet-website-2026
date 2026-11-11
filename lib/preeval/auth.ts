@@ -1,3 +1,4 @@
+import { coreTable } from '../application-core/connection';
 import { sixTableMode } from '../application-core/convergence-mode';
 import { compact } from '../application-core/compact-files';
 import { z } from 'zod';
@@ -26,7 +27,7 @@ export async function session() {
 export async function authorize(id?: string) {
   const current = await session();
   if(compact() && !current && id && z.uuid().safeParse(id).success){
-    const [app]=await db()`select id,email from aet.aet_core_applications where id=${id} and primary_service='pre-evaluation'`;
+    const [app]=await db()`select id,email from ${coreTable(db(),'aet_core_applications')} where id=${id} and primary_service='pre-evaluation'`;
     if(app)return {role:'customer',application_id:id,email:app.email};
   }
   if (

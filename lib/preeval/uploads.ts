@@ -1,3 +1,4 @@
+import { coreTable } from '../application-core/connection';
 import { sixTableMode } from '../application-core/convergence-mode';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { workflowRows } from "../application-core/converged-store";
@@ -37,7 +38,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
       const [existing] = compact() ? await tx`select * from (${compactFileRecords(tx)}) f where application_id=${id} and sha256=${'dropbox:'+contentHash}` : await tx`select *,created_at::text as version from ${table('preeval.files')} where application_id=${id} and sha256=${'dropbox:' + contentHash}`;
       if (existing?.state === 'ready') return existing;
       if (existing?.state === 'uploading' && Date.now() - new Date(existing.created_at).getTime() < staleAfter) throw new AppError('upload_in_progress', 409);
-      if (!existing && (compact() ? await tx`select id from aet.aet_documents where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table('preeval.files')} where application_id=${id}`).length >= 5) throw new AppError('file_limit');
+      if (!existing && (compact() ? await tx`select id from ${coreTable(tx,'aet_documents')} where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table('preeval.files')} where application_id=${id}`).length >= 5) throw new AppError('file_limit');
       await pauseForUpload(id, tx);
       const fileId = existing?.id || randomUUID();
       const path = (!await isCoreApplication(id,tx) && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, fileName, false, tx);

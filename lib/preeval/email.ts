@@ -1,3 +1,4 @@
+import { coreTable } from '../application-core/connection';
 import { compact } from '../application-core/compact-files';
 import { enqueueCompact,flushCompactNotifications } from '../application-core/compact-notifications';
 import { converged, workflowRows } from "../application-core/converged-store";
@@ -57,7 +58,7 @@ export async function renderQueuedEmail(row: Row) {
   }
   let message = "";
   if (row.kind === "information") {
-    const [request] = compact()?await db()`select customer_message as message from aet.aet_service_detail where application_id=${app.id} and service_type='pre-evaluation' and details->'information_request'->>'id'=${String(row.information_request_id)}`:await db()`select detail->>'message' as message from ${table("preeval.audit")}
+    const [request] = compact()?await db()`select customer_message as message from ${coreTable(db(),'aet_service_detail')} where application_id=${app.id} and service_type='pre-evaluation' and details->'information_request'->>'id'=${String(row.information_request_id)}`:await db()`select detail->>'message' as message from ${table("preeval.audit")}
       where id=${row.information_request_id} and application_id=${app.id} and action='information.requested'`;
     if (!request?.message) throw new EmailReviewRequired("information_request_missing");
     message = request.message;
