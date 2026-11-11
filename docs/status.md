@@ -1,10 +1,9 @@
 # AET Implementation Status
 
-Updated November 10, 2026 after complete Preview-copy reconciliation and isolated
-six-table pre-evaluation implementation. Hosted dev Preview activation/recovery
-remains the November 6 acceptance at `b003139`; no hosted retirement has occurred.
-The revised pre-evaluation runtime retires event, audit and request-counter tables locally;
-formal/translation convergence and hosted activation remain open.
+Updated November 11, 2026 after hosted dev Preview six-table activation and
+retirement of twenty verified Preview pre-evaluation source tables. The actual
+Preview business inventory is now eighteen tables; Production remains unchanged.
+Formal/translation convergence remains open.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
@@ -25,8 +24,8 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| Shared database | Five shared business tables now serve new pre-evaluation applications in private `aet_preview_core`; old Preview applications remain readable | Hosted historical cutover after the local three-record rehearsal, other service writers, Production activation and compatibility retirement |
-| Dedicated pre-evaluation | November 6 hosted core journey passed: chunked upload/download, GPT analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
+| Shared database | Six shared tables serve all Preview pre-evaluation records; twenty old Preview tables retired after acceptance | Converge twelve retained formal tables and translation; reconcile real history and activate Production |
+| Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
 | Status and documents | Formal lookup, ordinary/chunked uploads, saved Dropbox locations and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
@@ -35,7 +34,27 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Email | Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | New-intake lifecycle notifications and real-customer routing; scheduled mail recovery is deferred |
 | Fulfillment and migration | Delivery choices saved; older formal pilot can release a PDF; legacy GPA route restored | New-intake report/paper fulfillment, old links, domain/data reconciliation and old-app retirement |
 
-## Latest hosted acceptance
+## Current hosted acceptance — November 11
+
+Dev Preview is **Ready** at runtime commit `3128a83`, deployment
+`G2XntQqf6NKy2vV2Fqd9nq9mdf6D`. `APPLICATION_CORE_MODE=six-preview` is scoped to
+Preview/dev only. Six historical pre-evaluations now use `aet_preview_shared`.
+
+The real synthetic journey passed Dropbox upload/download hash verification,
+OpenAI analysis, USD 19.88 Stripe Sandbox payment, permanent webhook delivery,
+result release and two delivered English Resend emails. The customer page and
+CRM Test agree; customer API requests without staff cookies enforce the unpaid
+result gate. All six old links, including the explicit no-charge test, still work.
+
+With explicit owner confirmation and a restored-backup rehearsal, **twenty old
+Preview tables were deleted**. The actual inventory is **18 = 6 shared + 12 formal**.
+Post-deletion old/new reads, new submission/cancellation, duplicate submission and
+official Stripe event replay pass. The twelve retained formal tables are unchanged.
+The runtime has no Production write grants; Production remains on `fc1ab0d`.
+
+See [hosted six-table acceptance](archive/database-six-preview-2026-11-10.md).
+
+## Earlier hosted core acceptance — November 6
 
 Vercel dev Preview is **Ready** at `b003139`, deployment
 `dpl_9CErCogfTCmRHUbR38t3KHJGwfdF`. New pre-evaluation applications use
@@ -94,10 +113,10 @@ Advanced mail/payment tracking, scheduled retries and monitoring remain deferred
 Optional operation history and request limiting may be reconsidered only if future
 needs justify them, without making them current launch work.
 
-Only the owned local Unix-socket database can activate this mode. **Online Preview
-retains 32 tables; zero hosted tables were deleted.** Production and Preview data,
-configuration and deployments are unchanged. Hosted rollout and formal/translation
-migration remain separate steps.
+The original six-table acceptance was local-only. The November 11 hosted
+acceptance above supersedes that deployment boundary: pre-evaluation is activated
+and its twenty old Preview tables are retired. Formal/translation convergence and
+Production cutover remain incomplete.
 
 ## Earlier isolated database verification
 

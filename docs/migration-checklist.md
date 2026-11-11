@@ -141,9 +141,23 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   file limits, payment duplicate protection and recovery remain. **389 tests / 22
   files and TypeScript pass.** Complete isolated copy: **18 = 6 shared + 12 formal**. See
   [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
-- [ ] **Prepare hosted six-table acceptance:** fresh snapshot/quiescence,
-  recoverable backup/restore, restricted roles, usable old-link compatibility and
-  full customer/staff Preview journey. Local tests do not authorize hosted deletion.
+- [x] **Prepare the hosted six-table target (November 10):** refreshed all 32
+  Preview source tables and provider evidence; the 17-case full-copy migration
+  passes. A Preview-only backup restores all 32 tables locally. Created six empty
+  private RLS tables in `aet_preview_shared`, with restricted-runtime grants.
+  Startup verification, schema mapping and guarded import code are prepared.
+- [x] **Import the verified Preview history:** owner-approved maintenance allowed
+  a transactional import of six applications and their related records; all typed
+  rows match. Timestamp offsets are normalized without discarding precision.
+- [x] **Complete Preview cutover (November 11):** deployed `3128a83` with
+  Preview/dev-only `six-preview`; real upload, AI, Sandbox payment, permanent
+  webhook, result and delivered English mail pass. Six historical links work.
+- [x] **Retire verified Preview pre-evaluation sources (November 11):** owner
+  confirmed deletion; the exact guarded SQL passed restored-backup rehearsal,
+  then removed twenty old tables. Hosted inventory is **18 = 6 shared + 12 formal**.
+  Post-deletion new submission/cancellation, retry, old/new reads and official
+  Stripe replay pass. Twelve retained formal tables are unchanged; Production
+  remains untouched. See [acceptance](archive/database-six-preview-2026-11-10.md).
 - [ ] **Converge formal/translation to the same six:** retire the twelve remaining
   formal workflow/projection tables only after readers/writers and history pass
   the shared file/payment/notification/access contracts.
@@ -258,16 +272,11 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   behavior pass. Preserve the fourth no-charge paid-state test fixture on its old
   path. Fix v0 submission retries; 30 database tests plus six captured-cohort tests
   and TypeScript pass. See [scope and evidence](archive/database-historical-cohort-2026-11-06.md).
-- [ ] **TODO — Hosted historical Preview cutover:** deploy the v0 retry fix first,
-  prepare the restricted migration entry point, revalidate sources/provider evidence
-  and rerun browser/direct-webhook acceptance after migration. The current hosted
-  four-record old cohort remains unchanged; retain the no-charge fixture and all old
-  tables. Production cutover and real business-history migration remain separate.
-- [ ] **TODO — Complete cohort cutover reconciliation:** file creation timestamps
-  remain an explicit unknown; finish real File ID and history reconciliation
-  before migrating hosted historical records. Three old Preview records passed
-  local-copy migration; original submission/release-time gaps remain explicit. Mixed old/new Preview reads
-  are verified; keep one authoritative writer per application.
+- [x] **Hosted historical Preview cutover and reconciliation (November 11):**
+  migrated all six synthetic pre-evaluations, including the explicitly waived
+  no-charge fixture. File IDs/revisions, payment evidence and old links reconcile;
+  original unknown historical values remain explicit rather than fabricated.
+  Twenty superseded Preview tables are retired. See [hosted evidence](archive/database-six-preview-2026-11-10.md).
 - [ ] **TODO — Historical contract and source reconciliation:** verify missing
   original submissions, File IDs/revisions, release/education timestamps, pricing
   provenance, provider accounts and standalone/legacy identities against authorized
@@ -279,8 +288,9 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Preserve upload/publication recovery, refunds and email deduplication; connect
   formal v2 staff/payment/release deliberately, then translation. Retire legacy
   tables/bridges only after all readers, writers and callbacks are reconciled.
-  Local phases one through three and new-cohort hosted dev Preview activation are
-  verified. Production cutover, historical migration and new scheduling remain unapproved.
+  Local phases one through three and complete synthetic pre-evaluation Preview
+  cutover are verified. Production cutover, real business-history migration and
+  new scheduling remain unapproved.
 - [ ] **TODO — Shared table naming (November 6, 2026):** use `aet_education`
   and `aet_payments` in the target design. Actual legacy/current tables retain
   `aet_core_educations` and `aet_core_payments`; private phase-one tables now exist

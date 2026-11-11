@@ -1,35 +1,18 @@
 # Database convergence plan
 
-Code review: November 6, 2026, `dev` at `fab4733`.
-**Phases 1–3 are verified locally, and new pre-evaluation applications now use
-five private `aet_preview_core` tables in hosted dev Preview at `b003139`.**
-Production, hosted historical records and old tables are unchanged. Local copies
-of three reconciled old Preview records now pass migration and callback checks;
-see the [historical rehearsal](archive/database-historical-cohort-2026-11-06.md). Operational upload,
-AI, email, access and payment-event records remain in their existing Preview schemas.
-See the [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md) and
-[rehearsal guide](database-rehearsal.md).
+Updated November 11, 2026. **Hosted dev Preview pre-evaluation now uses six
+private `aet_preview_shared` tables at `3128a83`, including all six historical
+test applications. Twenty superseded Preview tables have been retired.**
+The actual Preview inventory is **18 = 6 shared + 12 retained formal tables**.
+Production remains unchanged; real business history and formal/translation
+convergence still require separate work.
 
-This plan compares the accepted [five-table business model](database-architecture.md#3-proposed-shared-database-model)
-with readers, writers, migration SQL and recovery tests. The initial inventory and
-field audit remain the migration baseline; hosted acceptance covers only the
-explicit new pre-evaluation cohort, not historical or cross-service convergence.
-
-The isolated pre-evaluation retirement gate is verified for both new requests
-and a reconciled populated copy; see the [new-cohort acceptance](archive/database-preeval-convergence-2026-11-06.md)
-and [historical retirement acceptance](archive/database-preeval-history-convergence-2026-11-06.md).
-The November 10 full-snapshot gate restores all 32 Preview tables from a fresh
-read-only snapshot, including four old and two existing core pre-evaluations plus
-four formal applications. Provider references were refreshed read-only. Seven
-redundant tables are dropped locally; existing canonical rows and formal records
-are retained. Converged CRM now includes formal rows, with all 10 applications
-reconciled. Seven full-snapshot tests and 350 combined regression tests pass.
-See [complete snapshot evidence](archive/database-full-preview-convergence-2026-11-10.md).
-That first local stage has 25 tables; later nine- and eight-table stages reduce
-the copy to 21 and then 20. Online Preview still has 32. The no-charge fixture
-retains its original audit evidence and projects `waived`, with zero amount and
-no payment row. Cross-service convergence and hosted cutover remain separate
-gates; a new cutover-time snapshot and quiescence checks will still be required.
+See [hosted cutover acceptance](archive/database-six-preview-2026-11-10.md),
+[active checklist](migration-checklist.md) and [rehearsal guide](database-rehearsal.md).
+The initial field audit below remains the migration baseline. Historical local
+stages had 25, 21, 20 and then 18 tables; those counts are evidence of successive
+rehearsals, not today's hosted inventory. The explicit no-charge test fixture
+projects `waived` and has no fabricated payment record.
 
 ## Approved convergence target: 6 tables
 
@@ -38,8 +21,8 @@ from the eight-table target. Do not record who changed an application or enforce
 application request-frequency quotas in this phase. No replacement log, actor
 history array, counter table or external rate-limiting service is introduced.
 The earlier thirteen-, nine- and eight-table results remain historical evidence.
-The complete local copy now has **18 tables = 6 shared + 12 formal**; hosted
-Preview remains at 32. See [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
+Both the complete local copy and hosted dev Preview now have **18 tables =
+6 shared + 12 formal**. See [hosted acceptance](archive/database-six-preview-2026-11-10.md).
 
 | Ownership | Target tables |
 | --- | --- |
@@ -51,7 +34,7 @@ state stay on the application/service records. Staff reads return no operation
 history. Staff authentication/office scope, customer application scope, input
 validation, payment duplicate protection and file size/type/count constraints
 remain. Staff auth, legacy CMS, unrelated public tables and future accounts are
-outside this table count. Formal/translation convergence and hosted activation
+outside this table count. Formal/translation convergence and Production activation
 remain separate work.
 
 ### Payment handling required for launch
@@ -131,12 +114,15 @@ The service owns the monotonic result version, current material request and
 explicit confirmed test exemption. Retired audit rows may be archived outside the
 runtime for migration reconciliation; no new operation history is recorded. AI
 jobs remain in their own table. Request-frequency tracking is disabled only in
-the explicitly activated six-table isolated runtime; existing hosted behavior is
-unchanged until a separate cutover.
+the explicitly activated six-table runtime, including the authorized dev Preview
+cutover. Production behavior is unchanged.
 
-### Immediate isolated pre-evaluation gate
+### Completed isolated pre-evaluation gate (historical prerequisites)
 
-1. Keep all hosted settings, data and Production unchanged. Enable convergence
+These prerequisites passed before the separately authorized November 11 hosted
+cutover. Retain them for future cohort rehearsals.
+
+1. Keep all hosted settings, data and Production unchanged during rehearsal. Enable convergence
    only through an explicit connection-identity-checked disposable test harness.
 2. Wire the actual pre-evaluation entry points to canonical records; preserve
    upload fencing, AI input versions/leases, payment ordering and mail deduplication.
@@ -598,9 +584,9 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | 2. Build shared access and shadow reads | Add repositories for applications, services, education, documents and payments; adapt response projections without moving authority; compare per-source reads | CRM, Status and receipts agree on IDs, office scope, names, degrees, prices, notes and visibility; shadow code has no side effects |
 | 3. Move one pre-evaluation cohort | Switch application/education ownership first, reuse AI/email/upload/payment machinery with explicit mappings; preserve dedicated entry before connecting general entry | Existing happy path and upload/publication recovery pass, including refund and stale callback cases; no duplicate application/AI/payment/email |
 | 3b. Converge pre-evaluation | Remove duplicate workflow application/education/payment ownership; move eight operational record types under core; physically delete retired tables in a disposable database before running the actual services | Verified for new requests (20 tests), old-only migration (6) and mixed old/core-v1 migration including audited no-charge handling (8); captured-copy variant passes 14 tests. No replacement views. Fresh full hosted-snapshot also passes 7 tests with all 10 CRM records retained; hosted cutover remains separate |
-| 3c. Simplify to nine tables | Merge current upload state into documents, delegate mail history to Resend, replace customer sessions/tokens with application-ID access and remove audit business dependencies | Verified locally: 25 runtime cases + 11 full-snapshot cases, physical four-table retirement and DDL rollback; 379 combined tests / 22 files and TypeScript pass. Complete isolated copy: 21 tables; hosted remains 32. See [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md) |
+| 3c. Simplify to nine tables | Merge current upload state into documents, delegate mail history to Resend, replace customer sessions/tokens with application-ID access and remove audit business dependencies | Verified locally: 25 runtime cases + 11 full-snapshot cases, physical four-table retirement and DDL rollback; 379 combined tests / 22 files and TypeScript pass. Complete isolated copy at this stage: 21 tables; hosted was then 32. See [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md) |
 | 3d. Simplify payments to eight tables | Retire the event table; retain Stripe webhook and payment-state duplicate protection | Verified in isolation; see [acceptance](archive/database-eight-table-rehearsal-2026-11-10.md). Hosted tables remain unchanged |
-| 3e. Simplify to six tables | Remove operation history and request-frequency quotas; preserve business state and access checks | Verified locally; see [acceptance](archive/database-six-table-rehearsal-2026-11-10.md). Complete copy: 18 tables; hosted unchanged |
+| 3e. Simplify to six tables | Remove operation history and request-frequency quotas; preserve business state and access checks | Verified locally; see [acceptance](archive/database-six-table-rehearsal-2026-11-10.md). Complete copy: 18 tables. Hosted November 11 cutover also passes: twenty old Preview tables retired, eighteen retained; see [hosted acceptance](archive/database-six-preview-2026-11-10.md) |
 | 4. Connect formal intake | Move intake to canonical records and reuse the retained AI execution table and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
 | 5. Connect translation and combinations | Permit translation submission with no education/evaluee requirement; use service amounts, shared payments/files and per-service notes/status | Pure translation and evaluation-plus-translation both complete; completing one service cannot close the other; no double shipping charge |
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
