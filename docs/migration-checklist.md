@@ -2,6 +2,8 @@
 
 Updated November 11, 2026. The first release is **dedicated pre-evaluation**.
 Develop and test on `dev`; Production activation requires a separate release.
+The owner accepts the existing mobile checks for this release. Refunds are manual
+in Stripe Dashboard; no refund feature development is planned.
 Checked items mean the stated scope passed, not that Production is enabled.
 
 Read [status](status.md) for current capability and [database architecture](database-architecture.md)
@@ -28,7 +30,8 @@ choice is not an equivalent implementation.
 Latest runtime: [November 11 hosted journey](archive/preeval-runtime-preview-2026-11-11.md)
 passed at `d6d4aa2`, including desktop results, mobile result/status lookup and
 official Stripe test-event replay without duplicates. Full mobile intake/payment
-and recovery/refund scenarios remain open.
+was not separately repeated and is accepted as a non-blocker by the owner.
+A manual refund/state check remains part of controlled live acceptance.
 
 Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-11-10.md),
 [latest shared-table acceptance](archive/database-formal-six-preview-2026-11-11.md),
@@ -48,21 +51,30 @@ Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-1
 Verification: [offline runtime acceptance](archive/preeval-production-runtime-2026-11-11.md).
 These checks do not activate hosted Production.
 
+### Production configuration plan
+
+- [x] Prepare the [Production configuration plan](pre-evaluation-production-plan.md):
+  proposed origin, settings, private six-table target, direct live webhook and
+  manual Stripe refund procedure. This is a documented plan, not applied settings.
+- [x] Accept current mobile result/status checks as sufficient for first release;
+  do not add a mandatory second mobile payment run.
+- [x] Confirm Stripe Dashboard as the manual refund workflow; retain existing
+  webhook/state synchronization without building a new refund module.
+
 ### Release gates — after development, separately authorized
 
 - [ ] Prepare the empty Production six-table schema and restricted runtime role;
   verify grants and backups. Existing AET App records stay in the old system.
 - [ ] Configure the chosen public origin, Production-only secrets, direct live
   webhook and document location; verify email sender and AI runtime limits.
-- [ ] Finish final Preview acceptance: full mobile intake/upload/payment, mobile
-  replacement/retry and refund behavior. The latest desktop happy path, unpaid
-  result gating, mobile result/status lookup and webhook replay have passed.
 - [ ] Confirm the operating owner can find applications/documents and handle
   exceptional cases manually; publish contact/refund and service expectations.
 - [ ] Route public pre-evaluation links to the new flow; keep unfinished formal
   evaluation/translation entry points on the old system.
 - [ ] Reconcile `main` changes, review the release diff, deploy only after approval,
-  and perform an authorized real-customer/payment acceptance with rollback ready.
+  and perform an authorized controlled live application/payment acceptance with
+  rollback ready. Include one manual Stripe refund and state check, using existing
+  behavior (both full and partial refunds currently hide the result).
 
 ## Next release — formal evaluation
 

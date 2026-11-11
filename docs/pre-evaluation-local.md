@@ -4,6 +4,7 @@ Start with the current configuration below. The dedicated flow is separate from
 the general `/application` form. Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
+- [Production configuration and launch plan](pre-evaluation-production-plan.md)
 - [Production-capable runtime](#production-capable-runtime--implemented-on-dev-not-activated)
 - [Current cloud preview](#current-cloud-preview--updated-october-22-2026)
 - [GPT execution and setup](#direct-gpt-analysis--october-20-2026)
@@ -39,6 +40,8 @@ six-table contract for new applications in a separate private `aet` schema.
 Provisioning that schema/role, configuring hosted secrets and publishing are
 separate release tasks. No Production migration or provider configuration was
 performed by this implementation; existing AET App data remains in place.
+See the [configuration and launch plan](pre-evaluation-production-plan.md) for
+the proposed manifest, live webhook, manual Stripe refunds and release order.
 
 | Setting | Required Production value / behavior |
 | --- | --- |
