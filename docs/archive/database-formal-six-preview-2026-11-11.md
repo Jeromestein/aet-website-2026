@@ -128,3 +128,51 @@ requires a Preview maintenance window, restore into an isolated schema/database,
 reconciliation of new shared-table writes since the snapshot, verified mapping
 back to the selected runtime, then an explicit Preview deployment switch. Keep
 Production out of this procedure. Prefer forward fixes for remaining Preview issues.
+
+
+## Obsolete schema cleanup
+
+The owner separately authorized removal of the four retired Preview namespaces
+and seven unused functions on November 11. Live inspection confirmed zero relations,
+zero external function references and no database dependents of the seven functions.
+The remaining namespaces/functions were:
+
+| Schema | Retired functions |
+| --- | --- |
+| `aet_preview_core` | `check_service_references()`, `protect_reference_identity()`, `protect_submission()` |
+| `aet_preview_evaluation` | `sync_legacy_payment()`, `sync_legacy_workflow()` |
+| `aet_preview_preeval` | `sync_legacy_payment()`, `sync_legacy_workflow()` |
+| `aet_preview_legacy` | None |
+
+A fresh Preview-only custom-format backup and function definitions/ACLs were saved
+under ignored `.local/backups/schema-cleanup-20261111/`. The backup was restored
+into disposable PostgreSQL and the exact migration executed successfully before
+hosted execution. Migration `20261111184312_retire_empty_preview_schemas.sql` uses
+explicit function signatures and `RESTRICT`, with no CASCADE or business-table DML.
+Supabase `retire_empty_preview_schemas` returned success.
+
+Before/after fingerprints, captured before the subsequent upload smoke test,
+confirmed unchanged shared-table rows and unchanged non-target relation definitions,
+column signatures, relation ACLs/RLS and function definitions/ACLs. Final catalog
+inspection shows only `aet_preview_shared` among Preview namespaces, six business
+and runtime tables, three active functions and no Production-write permission for
+`aet_preview_runtime`. `aet_crm`, `aet_private`, public/Production and Supabase system
+schemas were retained. Old migration/setup/rehearsal source files remain historical
+references and must not be rerun against the active six-table Preview.
+
+Post-cleanup acceptance:
+
+- Chrome AET profile: CRM Test renders all fourteen applications, including both
+  formal and pre-evaluation records. No frontend code or deployment change was needed.
+- Four historical formal Status links retain quotes, education counts and Dropbox
+  file discovery; duplicate submission retains the existing synthetic application ID.
+- A third synthetic PDF was uploaded to the existing formal smoke-test application.
+  It appears in the file list and review status still permits subsequent uploads.
+  This deliberate test adds one document after the unchanged-data DDL comparison.
+- The existing paid pre-evaluation retains its matching downloaded-file hash, saved
+  AI result, two delivered English notification receipts and six historical links.
+- Official Stripe Sandbox event replay completes with no extra payment, AI run,
+  result version or notification. No new charge or customer email was generated.
+
+The earlier unified-formal fulfillment limitations remain unchanged. This cleanup
+removed unused namespaces/functions only; it did not enable additional services.

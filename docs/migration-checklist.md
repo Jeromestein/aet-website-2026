@@ -167,6 +167,16 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   skips; eight targeted formal cases and TypeScript pass. Browser verification
   also caught and fixed continued uploads after the first file enters review.
   See [acceptance](archive/database-formal-six-preview-2026-11-11.md).
+- [x] **Remove obsolete Preview schemas (November 11):** deleted the empty
+  `aet_preview_core`, `aet_preview_evaluation`, `aet_preview_legacy` and
+  `aet_preview_preeval` schemas plus seven unreferenced legacy functions, using
+  explicit RESTRICT drops after backup/restore rehearsal. Only `aet_preview_shared`
+  remains for Preview: six tables and three active functions. Before/after hashes
+  confirm no other relation/function changes and no shared-row changes from DDL.
+  Hosted CRM (14 applications), historical Status links, duplicate submission,
+  real test-file upload, paid result/download and Stripe Sandbox replay pass.
+  Production, staff authentication and CRM Live storage remain unchanged. See
+  [cleanup evidence](archive/database-formal-six-preview-2026-11-11.md#obsolete-schema-cleanup).
 - [ ] **Complete unified v2 formal fulfillment:** connect staff processing, confirmed
   quote, payment truth and report release; these remain separate from table migration.
 - [ ] **Connect translation submission to the same six:** use service details and

@@ -43,6 +43,9 @@ Preview/dev. Four formal applications, five education rows and four Dropbox file
 were migrated without changing the eight existing pre-evaluation applications.
 The last twelve old formal workflow/projection tables have been deleted after a
 fresh full backup, restored-copy rehearsal and hosted acceptance.
+The four obsolete Preview schemas and seven unused functions have also been
+removed. Preview now has one business schema, `aet_preview_shared`, containing
+six tables and three active functions; staff/CRM Live and Production schemas remain.
 
 Hosted checks cover all four formal Status links and their original quotes,
 historical file discovery, CRM Test, a new idempotent formal intake, Dropbox
