@@ -1,3 +1,7 @@
+import { simplifyPreevaluationSix } from '../scripts/database/simplify-preeval-six';
+import { activateSixTableRehearsal, sixTableMode } from '../lib/application-core/convergence-mode';
+import { simplifyPreevaluationEight } from '../scripts/database/simplify-preeval-eight';
+import { activateEightTableRehearsal } from '../lib/application-core/convergence-mode';
 import { simplifyPreevaluationNine } from '../scripts/database/simplify-preeval-nine';
 import { activateNineTableRehearsal } from '../lib/application-core/convergence-mode';
 import { compactNotificationRows } from '../lib/application-core/compact-notifications';
@@ -15,7 +19,7 @@ const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
   cookie:'',account:'',before:true,list:vi.fn(),start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
 vi.mock('../lib/preeval/db',()=>({db:()=>m.sql!,table:(name:string)=>m.sql!(convergedTableName(m.sql!,name)||name),
-  audit:async(id:string,actor:string,action:string)=>{await m.sql!`insert into ${m.sql!(convergedTableName(m.sql!,'preeval.audit')||'preeval.audit')}(application_id,actor,action) values (${id},${actor},${action})`;}}));
+  audit:async(id:string,actor:string,action:string)=>{if(sixTableMode(m.sql!))return;await m.sql!`insert into ${m.sql!(convergedTableName(m.sql!,'preeval.audit')||'preeval.audit')}(application_id,actor,action) values (${id},${actor},${action})`;}}));
 vi.mock('../lib/preeval/config',()=>({configuration:()=>({origin:'http://localhost:3022',recipient:'synthetic@example.invalid',cloudPreview:true}),
   required:(key:string)=>key==='STRIPE_TEST_SECRET_KEY'?'sk_test_synthetic':key==='STRIPE_TEST_WEBHOOK_SECRET'?'whsec_local_convergence_test':'synthetic@example.invalid',requireExternalServices:()=>{}}));
 vi.mock('next/headers',()=>({cookies:async()=>({get:()=>m.cookie?{value:m.cookie}:undefined})}));
@@ -254,6 +258,85 @@ describe.skipIf(!pgBin||!snapshotPath)('complete hosted Preview snapshot, offlin
     await flushEmails(deliver,a.id);
   }
   expect(deliver).not.toHaveBeenCalled();await expect(checkout(exempt())).rejects.toMatchObject({code:'payment_not_required'});
+ });
+
+ it('rolls back payment-event retirement when DROP fails',async()=>{
+  const before=await rows('aet.aet_payment_events');
+  await sql().unsafe(`create function public.block_eight_drop() returns event_trigger language plpgsql as $$ begin
+    raise exception 'synthetic event retirement failure'; end $$;
+    create event trigger block_eight_drop on sql_drop execute function public.block_eight_drop();`);
+  try{await expect(simplifyPreevaluationEight(sql())).rejects.toThrow('synthetic event retirement failure');}
+  finally{await sql().unsafe('drop event trigger block_eight_drop; drop function public.block_eight_drop();');}
+  expect(await rows('aet.aet_payment_events')).toEqual(before);
+  expect(await sql()`select tablename from pg_tables where schemaname='aet'`).toHaveLength(9);
+ });
+ it('retires the event table on the complete copy and retains all business and formal records',async()=>{
+  const before=await workspaceSnapshot({},staff),payments=await rows('aet.aet_payments');
+  const events=await rows('aet.aet_payment_events');
+  const retired=await simplifyPreevaluationEight(sql());await activateEightTableRehearsal(sql(),m.account);
+  expect(retired.tables).toHaveLength(8);expect(digest(retired.archive)).toBe(digest(events));
+  expect((await sql()`select to_regclass('aet.aet_payment_events') relation`)[0].relation).toBeNull();
+  expect(await sql()`select tablename from pg_tables where schemaname in ('aet','evaluation') or (schemaname='public' and tablename in ('fce_applications','fce_educations'))`).toHaveLength(20);
+  expect(await workspaceSnapshot({},staff)).toEqual(before);expect(await rows('aet.aet_payments')).toEqual(payments);
+  for(const name of expected.filter(n=>n.startsWith('aet_preview_evaluation.')||n.includes('.fce_')))expect(digest(await rows(local(name))),name).toBe(digest(source(name)));
+  writeFileSync(join(dirname(snapshotPath!),'eight-retirement-archive.json'),JSON.stringify(retired),{mode:0o600});
+ });
+ it('replays signed payments on eight tables without changing paid rows, receipts or released results',async()=>{
+  const payments=await rows('aet.aet_payments'),services=await rows('aet.aet_service_detail');
+  const sdk=new Stripe('sk_test_synthetic');
+  for(const p of verified.payments){
+    const payload=JSON.stringify({id:'evt_eight_'+p.id,type:'checkout.session.completed',livemode:false,data:{object:p.session}});
+    const signature=sdk.webhooks.generateTestHeaderString({payload,secret:'whsec_local_convergence_test'});
+    const replies=await Promise.all([0,1].map(()=>postRoute(new Request('http://localhost:3022/api/pre-evaluation/stripe-webhook',
+      {method:'POST',headers:{'stripe-signature':signature},body:payload}),{params:Promise.resolve({path:['stripe-webhook']})})));
+    expect(replies.map(r=>r.status)).toEqual([200,200]);
+  }
+  expect(await rows('aet.aet_payments')).toEqual(payments);
+  expect(await rows('aet.aet_service_detail')).toEqual(services);
+  const send=vi.fn();
+  for(const [i,a] of source('aet_preview_preeval.applications').entries()){
+    expect((await application(a.id)).result).toEqual(beforeStatus[i].result);await flushEmails(send,a.id);
+  }
+  expect(send).not.toHaveBeenCalled();await expect(checkout(exempt())).rejects.toMatchObject({code:'payment_not_required'});
+ });
+
+ it('rolls back both audit and rate-limit retirement if the second DROP fails',async()=>{
+  const audit=await rows('aet.aet_audit'),limits=await rows('aet.aet_rate_limits');
+  await sql().unsafe(`create function public.block_six_drop() returns event_trigger language plpgsql as $$ begin
+    if exists(select 1 from pg_event_trigger_dropped_objects() where object_name='aet_rate_limits') then
+      raise exception 'synthetic counters retirement failure'; end if; end $$;
+    create event trigger block_six_drop on sql_drop execute function public.block_six_drop();`);
+  try{await expect(simplifyPreevaluationSix(sql())).rejects.toThrow('synthetic counters retirement failure');}
+  finally{await sql().unsafe('drop event trigger block_six_drop; drop function public.block_six_drop();');}
+  expect(await rows('aet.aet_audit')).toEqual(audit);expect(await rows('aet.aet_rate_limits')).toEqual(limits);
+ });
+ it('retires optional history and counters without changing current business records',async()=>{
+  const crm=await workspaceSnapshot({},staff),payments=await rows('aet.aet_payments'),services=await rows('aet.aet_service_detail');
+  const audit=await rows('aet.aet_audit');
+  const retired=await simplifyPreevaluationSix(sql());await activateSixTableRehearsal(sql(),m.account);
+  expect(retired.tables).toHaveLength(6);expect(digest(retired.archive.audit)).toBe(digest(audit));
+  for(const name of ['aet_audit','aet_rate_limits'])expect((await sql()`select to_regclass(${'aet.'+name}) relation`)[0].relation).toBeNull();
+  expect(await sql()`select tablename from pg_tables where schemaname in ('aet','evaluation') or (schemaname='public' and tablename in ('fce_applications','fce_educations'))`).toHaveLength(18);
+  expect(await workspaceSnapshot({},staff)).toEqual(crm);expect(await rows('aet.aet_payments')).toEqual(payments);expect(await rows('aet.aet_service_detail')).toEqual(services);
+  for(const name of expected.filter(n=>n.startsWith('aet_preview_evaluation.')||n.includes('.fce_')))expect(digest(await rows(local(name))),name).toBe(digest(source(name)));
+  writeFileSync(join(dirname(snapshotPath!),'six-retirement-archive.json'),JSON.stringify(retired),{mode:0o600});
+ });
+ it('reads historical results and replays paid callbacks without audit or request counters',async()=>{
+  const payments=await rows('aet.aet_payments'),services=await rows('aet.aet_service_detail');
+  const sdk=new Stripe('sk_test_synthetic');
+  for(const p of verified.payments){
+    const payload=JSON.stringify({id:'evt_six_'+p.id,type:'checkout.session.completed',livemode:false,data:{object:p.session}});
+    const signature=sdk.webhooks.generateTestHeaderString({payload,secret:'whsec_local_convergence_test'});
+    for(let i=0;i<2;i++)expect((await postRoute(new Request('http://localhost:3022/api/pre-evaluation/stripe-webhook',
+      {method:'POST',headers:{'stripe-signature':signature},body:payload}),{params:Promise.resolve({path:['stripe-webhook']})})).status).toBe(200);
+  }
+  expect(await rows('aet.aet_payments')).toEqual(payments);expect(await rows('aet.aet_service_detail')).toEqual(services);
+  const send=vi.fn();
+  for(const [i,a] of source('aet_preview_preeval.applications').entries()){
+    expect((await application(a.id)).result).toEqual(beforeStatus[i].result);
+    expect((await application(a.id,true)).audit).toEqual([]);await flushEmails(send,a.id);
+  }
+  expect(send).not.toHaveBeenCalled();await expect(checkout(exempt())).rejects.toMatchObject({code:'payment_not_required'});
  });
 
 });

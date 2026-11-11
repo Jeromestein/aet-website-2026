@@ -1,3 +1,4 @@
+import { sixTableMode } from '../application-core/convergence-mode';
 import { compact } from '../application-core/compact-files';
 import { converged,recoveryConverged } from "../application-core/converged-store";
 import { workflowRows } from "../application-core/converged-store";
@@ -48,7 +49,7 @@ export async function abandonUpload(id: string, data: unknown, actor: string) {
           and attempt_id=${upload.id} and attempt_id::text=${upload.version} and state<>'ready' returning attempt_id`;
     if (!removed.length) throw new AppError('upload_expired', 409);
     await pauseForUpload(id, tx);
-    await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail)
+    if(!sixTableMode(db())) await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail)
       values (${id},${actor},'upload.abandoned',${tx.json(upload)})`;
     return { removed: true };
   });

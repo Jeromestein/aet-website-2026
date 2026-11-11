@@ -84,7 +84,7 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   snapshot, same-ID CRM compatibility projection, confirmation mail and Status.
 - [ ] Define mutable workflow/payment state for v2 intake while preserving its
   submitted snapshot and prices; keep the CRM projection consistent.
-- [ ] Add document readiness and office-authorized, audited staff actions for v2
+- [ ] Add document readiness and office-authorized staff actions for v2
   intake: request missing material, confirm fees and advance status. Acceptance:
   CRM and customer Status agree after reload; stale/cross-office writes fail.
 - [ ] Connect application-linked Stripe test checkout, verified webhook and
@@ -98,9 +98,9 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
   entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
-- [x] **Document the revised nine-table target (November 10, 2026):** five
+- [x] **Document the previous nine-table target (November 10, 2026):** five
   business tables plus AI runs, payment events, audit and rate limits. Supersedes
-  the November 6 thirteen-table design; see [target and boundaries](database-migration-plan.md#approved-convergence-target-9-tables).
+  the November 6 thirteen-table design; see [target and boundaries](database-migration-plan.md#approved-convergence-target-6-tables).
   Pre-evaluation implementation is now verified locally; hosted/cross-service
   rollout remains open. Staff auth/CMS remain outside the budget.
 - [x] **Merge upload tracking into documents in isolation:** one file row with
@@ -119,20 +119,46 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   links block retirement; expired/consumed token routes return 410 afterward.
 - [x] **Remove audit business dependencies in isolation:** service owns result
   version, current material request and confirmed test exemption/provenance.
-  Audit remains historical evidence; `aet_audit` and `aet_rate_limits` are retained.
+  This enabled the subsequent removal of audit and request-counter tables below.
 - [x] **Verify nine-table retirement locally:** 25 runtime cases + 11 full-snapshot
   cases cover migration, CRM/Status, upload recovery, AI/publication, signed
   payment/notification replay and DDL rollback. Combined **379 tests / 22 files**
   and TypeScript pass. Full isolated copy: **21 tables = 9 shared + 12 formal**;
   online Preview remains **32**, with zero hosted deletions. See
   [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
-- [ ] **Prepare hosted nine-table acceptance:** durable archive/restore, fresh
-  snapshot/quiescence, restricted roles, active old-link reconciliation, provider
-  uncertainty/retention and full customer/staff browser journey. Current local
-  tests and fixture-only download check do not authorize or prove hosted cutover.
-- [ ] **Converge formal/translation to the same nine:** retire the twelve remaining
-  formal workflow/projection tables only after their readers/writers and history
-  pass the shared file/payment/notification/access contracts.
+- [x] **Previous eight-table stage:** remove `aet_payment_events` from
+  the isolated runtime. Preserve the existing Stripe webhook, signature/amount/
+  ownership checks and atomic payment-state protection; no replacement event log.
+  Repeated callbacks preserve payment/release timestamps and still recover an
+  unfinished publication. Concurrent callbacks and stale refunds/success/expiry
+  are tested. **385 tests / 22 files and TypeScript pass.** Complete isolated copy:
+  **20 = 8 shared + 12 formal**; hosted unchanged.
+  See [eight-table acceptance](archive/database-eight-table-rehearsal-2026-11-10.md).
+- [x] **Simplify to six tables:** retire `aet_audit` and `aet_rate_limits` in the
+  isolated runtime. No new operation/actor history or request quotas; no replacement
+  logs or counters. Service state retains notes, current material request, result
+  version and confirmed test exemption. Staff history reads are empty. Authorization,
+  file limits, payment duplicate protection and recovery remain. **389 tests / 22
+  files and TypeScript pass.** Complete isolated copy: **18 = 6 shared + 12 formal**. See
+  [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
+- [ ] **Prepare hosted six-table acceptance:** fresh snapshot/quiescence,
+  recoverable backup/restore, restricted roles, usable old-link compatibility and
+  full customer/staff Preview journey. Local tests do not authorize hosted deletion.
+- [ ] **Converge formal/translation to the same six:** retire the twelve remaining
+  formal workflow/projection tables only after readers/writers and history pass
+  the shared file/payment/notification/access contracts.
+- [ ] **Optional future reconsideration — operation history / rate limiting:**
+  only revisit if a concrete business need appears. Neither is a launch requirement;
+  no staff-change tracking or request quotas are active in the six-table mode.
+- [ ] **TODO after launch — Resend delivery tracking:** connect delivered/bounce/
+  complaint webhooks and a mail-history UI only when needed. Sending through
+  Resend and checking its dashboard is sufficient for the current launch scope.
+- [ ] **TODO after launch — Payment event investigation tools:** evaluate a replay/
+  tracking UI and dispute/chargeback workflows if actual cases justify them;
+  no event table or duplicate JSON event-history array is currently planned.
+- [ ] **TODO after launch — Automated exception monitoring:** scheduled payment
+  reconciliation, mail retry jobs, provider-outage alerts and operational dashboards.
+  Keep existing basic recovery; do not implement new cron/monitoring in this phase.
 - [x] **Isolated pre-evaluation convergence (November 6, 2026):** actual entry
   points use five canonical tables and eight shared operational tables. Move
   operational tables, combine upload tracking, and physically drop seven redundant
@@ -185,12 +211,12 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   restricted hosted grants/migration and explicit rollout/rollback. The current
   convergence activation only accepts the owned local Unix-socket database;
   there is no hosted environment flag for this new stage.
-- [ ] **Cross-service convergence to 9 tables:** migrate formal/translation
+- [ ] **Cross-service convergence to 6 tables:** migrate formal/translation
   writers onto shared files, service notifications, application-ID access and
-  the four retained operational tables;
+  the retained AI execution table;
   reconcile historical IDs and provider references before retiring each source.
   Do not create another service-specific table family or a migration table that
-  becomes a permanent tenth runtime table.
+  becomes a permanent seventh runtime table.
 - [x] **Phase 1 — Additive shared schema and isolated rehearsal (November 6, 2026):**
   add the five tables in private `aet`, including birth/residence/submission/version
   fields, service pricing/result/workflow fields, document access/revisions and

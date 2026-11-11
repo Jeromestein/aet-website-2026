@@ -1,9 +1,9 @@
 # AET Implementation Status
 
 Updated November 10, 2026 after complete Preview-copy reconciliation and isolated
-nine-table pre-evaluation implementation. Hosted dev Preview activation/recovery
+six-table pre-evaluation implementation. Hosted dev Preview activation/recovery
 remains the November 6 acceptance at `b003139`; no hosted retirement has occurred.
-The revised pre-evaluation runtime passes physical four-table retirement locally;
+The revised pre-evaluation runtime retires event, audit and request-counter tables locally;
 formal/translation convergence and hosted activation remain open.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
@@ -69,42 +69,35 @@ was needed. Cancellation/refund, mobile recovery, broader provider outages and
 production charging remain open. Earlier checks remain in the
 [October 22 record](archive/preview-acceptance-2026-10-22.md).
 
-## Isolated convergence and the revised nine-table target
+## Isolated convergence and the six-table launch target
 
-The approved end state is **five business + four operational tables**. The
-pre-evaluation implementation now passes local PostgreSQL checks with exactly
-those nine tables: files own current upload state; services own bounded current
-notification state; customers use non-expiring random application-ID URLs.
-Audit and rate limits remain; staff authentication stays separate.
+The approved target is **five business tables + one AI execution table**.
+After payment-event retirement, the new pre-evaluation runtime also removes
+`aet_audit` and `aet_rate_limits`. It records no operation/actor history and applies
+no application request-frequency quotas. No substitute table, JSON history list
+or external limiter is introduced.
 
-The complete November 10 Preview snapshot contains four old pre-evaluations,
-two existing core applications and four formal applications. Local migration
-first retires seven redundant sources, then drops `aet_uploads`, `aet_emails`,
-`aet_access_tokens` and `aet_sessions`. The complete isolated copy has **21 tables:
-9 shared + 10 evaluation + 2 legacy formal**. All ten CRM applications remain.
-Formal/translation work must still converge before the whole system reaches nine.
+Current notes, result versions, material requests and confirmed test exemptions
+remain on service records. The Stripe webhook, basic payment duplicate/refund
+protection, saved-result recovery, staff/customer authorization and file limits
+remain intact. Staff reads return an empty operation history.
 
-**379 tests / 22 files and TypeScript pass**, including 25 nine-table runtime cases
-and 11 full-snapshot cases. Tests cover real service/route code with simulated
-providers: ordinary/chunked upload recovery, stale completion, AI/publication,
-application-scoped access, signed payment replay/refunds, bounded mail retries,
-CRM/Status parity, no-charge handling and rollback after physical DROP. The
-no-charge fixture has no payment row; replaying settled payments leaves their
-original timestamps intact. Old mail/access/upload evidence is returned to an
-external archive rather than another runtime table.
+The full local copy now has **18 tables = 6 shared + 10 evaluation + 2 legacy formal**,
+retaining all ten applications from the previously captured snapshot. The final
+six-table scope excludes staff auth, legacy CMS and unrelated public/system tables.
+See [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md)
+for exact checks: **389 tests across 22 files and TypeScript pass**. Earlier phase
+acceptance records are historical.
 
-The full-copy test reuses the snapshot captured at 23:04 UTC and its read-only
-Dropbox, Stripe and Resend reconciliation. No new hosted read or provider send
-was needed for this simplification. See [snapshot provenance](archive/database-full-preview-convergence-2026-11-10.md)
-and [nine-table acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
-A temporary fixture-only browser page verified the real customer component and
-its application-scoped download link; it was stopped after the check. This was
-not a hosted or database-connected browser journey.
+Launch remains focused on application → documents → payment → result → email.
+Advanced mail/payment tracking, scheduled retries and monitoring remain deferred.
+Optional operation history and request limiting may be reconsidered only if future
+needs justify them, without making them current launch work.
 
-Activation still accepts only the owned local Unix-socket database. **Online
-Preview retains 32 tables; zero hosted tables were deleted.** Hosted permissions,
-backup/rollback, old-link reconciliation, provider outage cases and fresh cutover
-validation remain open. Production, Preview settings and deployments are unchanged.
+Only the owned local Unix-socket database can activate this mode. **Online Preview
+retains 32 tables; zero hosted tables were deleted.** Production and Preview data,
+configuration and deployments are unchanged. Hosted rollout and formal/translation
+migration remain separate steps.
 
 ## Earlier isolated database verification
 
@@ -182,7 +175,7 @@ These are existing records; documentation cleanup did not rerun those checks.
    handling. Desktop upload/publication recovery and direct test-webhook replay
    now pass; keep production charging/configuration separate.
 3. Make one unified formal intake operable by staff: documents, missing-material
-   requests, confirmed quote and audited status changes.
+   requests, confirmed quote and authorized status changes.
 4. Connect that intake to payment, then report release and notifications.
 5. Extend the general application to the other services, then rehearse cutover.
 

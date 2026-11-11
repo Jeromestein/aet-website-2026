@@ -3,7 +3,7 @@ import type { Sql } from 'postgres';
 
 // Deliberately no environment switch or HTTP entry point. Only an owned local
 // cluster can activate this stage; hosted Preview keeps its existing runtime.
-const active = new WeakMap<Sql, { providerAccount: string; compact?: boolean }>();
+const active = new WeakMap<Sql, { providerAccount: string; compact?: boolean; paymentStateOnly?: boolean; minimal?: boolean }>();
 export async function activateConvergenceRehearsal(sql: Sql, providerAccount: string) {
   const [r] = await sql`select current_database() name,session_user owner,inet_server_addr() address`;
   if (r.name !== 'aet_core_rehearsal' || r.owner !== 'core_rehearsal' || r.address !== null)
@@ -13,18 +13,23 @@ export async function activateConvergenceRehearsal(sql: Sql, providerAccount: st
   if (!schema.ready || schema.retired) throw new Error('Convergence schema has not passed retirement');
   active.set(sql, { providerAccount });
 }
-export async function activateNineTableRehearsal(sql: Sql, providerAccount: string) {
+export const activateNineTableRehearsal = (sql: Sql, providerAccount: string) => activateCompactRehearsal(sql, providerAccount, false);
+export const activateEightTableRehearsal = (sql: Sql, providerAccount: string) => activateCompactRehearsal(sql, providerAccount, true);
+export const activateSixTableRehearsal = (sql: Sql, providerAccount: string) => activateCompactRehearsal(sql, providerAccount, true, true);
+async function activateCompactRehearsal(sql: Sql, providerAccount: string, paymentStateOnly: boolean, minimal = false) {
   const [r] = await sql`select current_database() name,session_user owner,inet_server_addr() address`;
   if (r.name !== 'aet_core_rehearsal' || r.owner !== 'core_rehearsal' || r.address !== null)
-    throw new Error('Nine-table mode requires the disposable rehearsal database');
+    throw new Error('Compact mode requires the disposable rehearsal database');
   if (!/^acct_[a-zA-Z0-9_]+$/.test(providerAccount)) throw new Error('Verified test account required');
   const tables=(await sql`select tablename from pg_tables where schemaname='aet' order by tablename`).map(r=>r.tablename);
-  const expected=['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments','aet_ai_runs','aet_payment_events','aet_audit','aet_rate_limits'].sort();
-  if(JSON.stringify(tables)!==JSON.stringify(expected))throw new Error('Nine-table retirement incomplete');
+  const expected=['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments','aet_ai_runs',...(minimal?[]:['aet_audit','aet_rate_limits']),...(paymentStateOnly?[]:['aet_payment_events'])].sort();
+  if(JSON.stringify(tables)!==JSON.stringify(expected))throw new Error('Compact retirement incomplete');
   await sql`select notification_state,result_version from aet.aet_service_detail limit 0`;
   await sql`select upload_state,upload_version,upload_context from aet.aet_documents limit 0`;
-  active.set(sql,{providerAccount,compact:true});
+  active.set(sql,{providerAccount,compact:true,paymentStateOnly,minimal});
 }
+export const sixTableMode = (sql: Sql) => Boolean(active.get(sql)?.minimal);
+export const paymentStateOnlyMode = (sql: Sql) => Boolean(active.get(sql)?.paymentStateOnly);
 export const nineTableMode = (sql: Sql) => Boolean(active.get(sql)?.compact);
 export const convergenceConfiguration = (sql: Sql) => active.get(sql);
 export const convergedTableName = (sql: Sql, name: string) => {
@@ -37,6 +42,10 @@ export const convergedTableName = (sql: Sql, name: string) => {
   };
   if (active.get(sql)?.compact && ['preeval.files','preeval.emails','preeval.tokens','preeval.sessions'].includes(name))
     throw new Error('Removed nine-table relation requested: '+name);
+  if (paymentStateOnlyMode(sql) && name === 'preeval.payment_events')
+    throw new Error('Retired payment events requested');
+  if (sixTableMode(sql) && ['preeval.audit','preeval.rate_limits'].includes(name))
+    throw new Error('Retired audit/rate-limit relation requested: '+name);
   if (names[name]) return 'aet.' + names[name];
   if (name.startsWith('preeval.') || /^public.aet_core_/.test(name))
     throw new Error('Retired relation requested: ' + name);

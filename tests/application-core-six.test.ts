@@ -1,5 +1,8 @@
+import { simplifyPreevaluationSix } from '../scripts/database/simplify-preeval-six';
+import { sixTableMode } from '../lib/application-core/convergence-mode';
+import { simplifyPreevaluationEight } from '../scripts/database/simplify-preeval-eight';
 import { simplifyPreevaluationNine } from '../scripts/database/simplify-preeval-nine';
-import { activateNineTableRehearsal } from '../lib/application-core/convergence-mode';
+import { activateSixTableRehearsal } from '../lib/application-core/convergence-mode';
 import { compactNotificationRows } from '../lib/application-core/compact-notifications';
 import { afterAll,beforeAll,beforeEach,describe,expect,it,vi } from 'vitest';
 import { execFileSync } from 'node:child_process';
@@ -15,12 +18,12 @@ import { POST as postRoute,GET as getRoute } from '../app/api/pre-evaluation/[..
 import { POST as lookupRoute } from '../app/api/pre-evaluation/lookup/route';
 import { AIError } from '../lib/preeval/ai-contract';
 import { activateConvergenceRehearsal,convergedTableName } from '../lib/application-core/convergence-mode';
-import { makeLink,consumeLink } from '../lib/preeval/auth';
+import { makeLink,consumeLink,limit } from '../lib/preeval/auth';
 const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
   cookie:'',list:vi.fn(),start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
 vi.mock('../lib/preeval/db',()=>({db:()=>m.sql!,table:(name:string)=>m.sql!(convergedTableName(m.sql!,name)||name),
-  audit:async(id:string,actor:string,action:string)=>{await m.sql!`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},${action})`;}}));
+  audit:async(id:string,actor:string,action:string)=>{if(sixTableMode(m.sql!))return;await m.sql!`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},${action})`;}}));
 vi.mock('../lib/preeval/config',()=>({configuration:()=>({origin:'http://localhost:3022',recipient:'synthetic@example.invalid',cloudPreview:true}),
   required:(key:string)=>key==='STRIPE_TEST_SECRET_KEY'?'sk_test_synthetic':key==='STRIPE_TEST_WEBHOOK_SECRET'?'whsec_local_convergence_test':'synthetic@example.invalid',requireExternalServices:()=>{}}));
 vi.mock('next/headers',()=>({cookies:async()=>({get:()=>m.cookie?{value:m.cookie}:undefined})}));
@@ -58,7 +61,7 @@ const result={result:'Synthetic equivalency',reasoning:'Synthetic assessment onl
 const generated={analysis:{...result,basis:'documents' as const,facts:{institution:null,country:null,qualification:null,start:null,completion:null},issues:[],evidence:[]},
   pageMap:[],model:'synthetic-model',responseId:'synthetic-response',usage:{input_tokens:1,output_tokens:1,total_tokens:2}};
 
-describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (owned PostgreSQL)',()=>{
+describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (owned PostgreSQL)',()=>{
   let directory:string,started=false,pdf:Buffer;
   const objects=new Map<string,{metadata:any;bytes:Buffer}>();
   const sql=()=>m.sql!;
@@ -75,7 +78,7 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
   async function paid(id:string){await checkout(id);charge(id);await applyCheckout(session(id),`evt_${id}`,'checkout.session.completed');}
   async function uploaded(){const original=input();const {app}=await submit(original);await addFile(app.id,file(),'customer');await completeUploads(app.id);return app;}
   beforeAll(async()=>{
-    directory=mkdtempSync(join(tmpdir(),'aet-nine-'));
+    directory=mkdtempSync(join(tmpdir(),'aet-six-'));
     execFileSync(join(pgBin!,'initdb'),['-D',join(directory,'data'),'-U','core_rehearsal','-A','trust','--locale=C','--encoding=UTF8'],{timeout:30000,stdio:'pipe'});
     execFileSync(join(pgBin!,'pg_ctl'),['-D',join(directory,'data'),'-l',join(directory,'pg.log'),'-o',`-F -k ${directory} -h '' -p 55449`,'-w','start'],{timeout:30000,stdio:'pipe'});started=true;
     const options={host:directory,port:55449,username:'core_rehearsal',onnotice:()=>{},connection:{statement_timeout:5000}};
@@ -95,7 +98,7 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     await expect(sql().begin(async tx=>{await tx.unsafe(retirement);})).rejects.toThrow('Populated cohort');
     await sql()`delete from preeval.rate_limits where key='guard'`;
     await sql().begin(async tx=>{await tx.unsafe(retirement);});
-    await simplifyPreevaluationNine(sql());await activateNineTableRehearsal(sql(),'acct_synthetic');expect(coreRuntimeEnabled()).toBe(true);
+    await simplifyPreevaluationNine(sql());await simplifyPreevaluationEight(sql());await simplifyPreevaluationSix(sql());await activateSixTableRehearsal(sql(),'acct_synthetic');expect(coreRuntimeEnabled()).toBe(true);
     vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new Error('External network forbidden')));
     vi.stubEnv('PREEVAL_EMAIL_ENABLED','true');vi.spyOn(console,'error').mockImplementation(()=>{});
     const doc=await PDFDocument.create();doc.addPage();pdf=Buffer.from(await doc.save());
@@ -119,10 +122,10 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     m.create.mockReset().mockImplementation(async({client_reference_id:id}:{client_reference_id:string})=>({id:`cs_${id}`,status:'open',url:'https://checkout.example.invalid/test'}));
     m.retrieve.mockReset().mockResolvedValue({status:'open',url:'https://checkout.example.invalid/test'});
   });
-  it('has 9 canonical/runtime tables and no retired tables or replacement views',async()=>{
+  it('has 6 canonical/runtime tables and no retired tables or replacement views',async()=>{
     const tables=await sql()`select tablename from pg_tables where schemaname='aet'`;
     expect(tables.map(t=>t.tablename).sort()).toEqual(['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments',
-      'aet_ai_runs','aet_payment_events','aet_audit','aet_rate_limits'].sort());
+      'aet_ai_runs'].sort());
     expect(await sql()`select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace
       where (n.nspname='preeval' and c.relkind in ('r','v','m','p')) or
       (n.nspname='public' and c.relname in ('aet_core_applications','aet_core_educations','aet_core_payments'))`).toHaveLength(0);
@@ -178,7 +181,7 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     expect(deliver).toHaveBeenCalledTimes(2);expect(deliver.mock.calls.map(c=>c[0].html).join(' ')).toContain('Core University');
     expect(deliver.mock.calls.map(c=>c[0].html).join(' ')).not.toContain('STALE');
     expect(await sql()`select id from aet.aet_ai_runs where application_id=${id} and state='completed'`).toHaveLength(1);
-    expect(await sql()`select id from aet.aet_payment_events where id=${`acct_synthetic:test:evt_${id}`}`).toHaveLength(1);
+    expect((await application(id,true)).audit).toEqual([]);
     expect((await service(id)).result).toMatchObject({status:'released',content:result});
     const released=(await service(id)).result.released_at;await application(id);expect((await service(id)).result.released_at).toBe(released);
   });
@@ -318,9 +321,9 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     expect((await sql()`select paid_at::text,created_at::text,updated_at::text from aet.aet_payments where application_id=${a.id}`)[0]).toEqual(before);
     expect((await application(a.id)).result).toEqual(result);
     expect((await compactNotificationRows(a.id)).filter(n=>n.kind==='result')).toHaveLength(1);
-    const attempts=await sql()`select id from aet.aet_payment_events`;
+    const paymentBefore=await sql()`select * from aet.aet_payments where application_id=${a.id}`;
     await expect(applyCheckout({...session(a.id),amount_total:1},'evt_bad_'+a.id,'checkout.session.completed')).rejects.toMatchObject({code:'invalid_payment'});
-    expect(await sql()`select id from aet.aet_payment_events`).toHaveLength(attempts.length);
+    expect(await sql()`select * from aet.aet_payments where application_id=${a.id}`).toEqual(paymentBefore);
   });
   it('serves lookup without sessions but denies staff actions and foreign file downloads',async()=>{
     const app=await uploaded();const [doc]=await sql()`select id from aet.aet_documents where application_id=${app.id}`;
@@ -388,12 +391,12 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     const app=await uploaded();await paid(app.id);await ai(app.id);
     const send=vi.fn().mockResolvedValue('receipt');await flushEmails(send,app.id);
     const before=await service(app.id);
-    await sql()`delete from aet.aet_audit where application_id=${app.id} and action='result.saved'`;
+    expect((await sql()`select to_regclass('aet.aet_audit') relation`)[0].relation).toBeNull();
     await staffAction(app.id,{action:'result',result:{...result,result:'Revised result'}},'staff');
     expect((await service(app.id)).result.version).toBe(before.result_version+1);
     await flushEmails(send,app.id);expect((await compactNotificationRows(app.id)).length).toBeLessThanOrEqual(4);
     await staffAction(app.id,{action:'information',message:'Please supply a clearer file'},'staff');
-    await sql()`delete from aet.aet_audit where application_id=${app.id} and action='information.requested'`;
+
     await flushEmails(send,app.id);expect(send.mock.calls.at(-1)![0].html).toContain('Please supply a clearer file');
   });
   it('rejects stale chunk operations after a retry and preserves immutable ready File IDs',async()=>{
@@ -411,6 +414,78 @@ describe.skipIf(!pgBin)('nine-table pre-evaluation after physical retirement (ow
     await uploadDocument(app.id,{action:'finish',uploadKey:append.uploadKey},'customer');
     await expect(sql()`update aet.aet_documents set storage_file_id='id:another-file' where application_id=${app.id}`).rejects.toThrow('identity is immutable');
     expect(await sql()`select id from aet.aet_documents where application_id=${app.id}`).toHaveLength(1);
+  });
+
+  it('handles concurrent signed deliveries with the same or different event IDs once per payment',async()=>{
+    const a=await uploaded();await ai(a.id);await checkout(a.id);charge(a.id);
+    const sdk=new Stripe('sk_test_synthetic');
+    const post=async(eventId:string)=>{
+      const payload=JSON.stringify({id:eventId,type:'checkout.session.completed',livemode:false,data:{object:session(a.id)}});
+      const signature=sdk.webhooks.generateTestHeaderString({payload,secret:'whsec_local_convergence_test'});
+      return postRoute(new Request('http://localhost:3022/api/pre-evaluation/stripe-webhook',
+        {method:'POST',headers:{'stripe-signature':signature},body:payload}),{params:Promise.resolve({path:['stripe-webhook']})});
+    };
+    const responses=await Promise.all(Array.from({length:6},(_,i)=>post('evt_parallel_'+a.id+'_'+i%2)));
+    expect(responses.map(r=>r.status)).toEqual(Array(6).fill(200));
+    const payments=await sql()`select * from aet.aet_payments where application_id=${a.id}`;expect(payments).toHaveLength(1);
+    expect(payments[0].payment_status).toBe('paid');
+    expect((await application(a.id,true)).audit).toEqual([]);
+    const send=vi.fn().mockResolvedValue('provider_once');await flushEmails(send,a.id);expect(send).toHaveBeenCalledTimes(2);
+    const before=await service(a.id);await post('evt_third_'+a.id);await flushEmails(send,a.id);
+    expect(send).toHaveBeenCalledTimes(2);expect((await service(a.id)).result).toEqual(before.result);
+    expect(await sql()`select * from aet.aet_payments where application_id=${a.id}`).toEqual(payments);
+    expect((await sql()`select to_regclass('aet.aet_payment_events') relation`)[0].relation).toBeNull();
+    expect(()=>convergedTableName(sql(),'preeval.payment_events')).toThrow('Retired payment events');
+  });
+  it('resumes failed publication on the same signed webhook after payment has committed',async()=>{
+    const a=await uploaded();await ai(a.id);await checkout(a.id);charge(a.id);
+    const payload=JSON.stringify({id:'evt_release_'+a.id,type:'checkout.session.completed',livemode:false,data:{object:session(a.id)}});
+    const signature=new Stripe('sk_test_synthetic').webhooks.generateTestHeaderString({payload,secret:'whsec_local_convergence_test'});
+    const post=()=>postRoute(new Request('http://localhost:3022/api/pre-evaluation/stripe-webhook',
+      {method:'POST',headers:{'stripe-signature':signature},body:payload}),{params:Promise.resolve({path:['stripe-webhook']})});
+    await sql().unsafe(`create function aet.block_callback_release() returns trigger language plpgsql as $$ begin
+      if new.result->>'status'='released' then raise exception 'synthetic release outage'; end if; return new; end $$;
+      create trigger block_callback_release before update on aet.aet_service_detail for each row execute function aet.block_callback_release();`);
+    try{expect((await post()).status).toBe(503);expect((await service(a.id)).result.status).toBe('draft');}
+    finally{await sql().unsafe('drop trigger block_callback_release on aet.aet_service_detail; drop function aet.block_callback_release();');}
+    const payments=await sql()`select * from aet.aet_payments where application_id=${a.id}`;expect(payments[0].payment_status).toBe('paid');
+    expect((await post()).status).toBe(200);expect((await application(a.id)).result).toEqual(result);
+    expect(await sql()`select * from aet.aet_payments where application_id=${a.id}`).toEqual(payments);
+    expect(analyze).toHaveBeenCalledTimes(1);
+    expect((await compactNotificationRows(a.id)).filter(n=>n.kind==='result')).toHaveLength(1);
+  });
+  it('keeps cumulative refunds monotonic across concurrent duplicates and stale success or expiry',async()=>{
+    const a=await uploaded();await ai(a.id);await paid(a.id);
+    const partial=charge(a.id,500),full=charge(a.id,TOTAL_CENTS);
+    const refund=(c:ReturnType<typeof charge>,id:string)=>handleStripeEvent({id,livemode:false,type:'charge.refunded',data:{object:c}} as Stripe.Event);
+    await Promise.all([refund(partial,'evt_partial_'+a.id),refund(full,'evt_full_'+a.id),refund(full,'evt_full_'+a.id)]);
+    const payments=await sql()`select * from aet.aet_payments where application_id=${a.id}`;
+    expect(payments[0]).toMatchObject({payment_status:'refunded',refunded_cents:TOTAL_CENTS});
+    await refund(partial,'evt_late_partial_'+a.id);
+    await applyCheckout(session(a.id),'evt_late_success_'+a.id,'checkout.session.completed');
+    await applyCheckout({...session(a.id),payment_status:'unpaid',status:'expired'},'evt_late_expiry_'+a.id,'checkout.session.expired');
+    expect(await sql()`select * from aet.aet_payments where application_id=${a.id}`).toEqual(payments);
+    expect((await application(a.id)).result).toBeNull();
+  });
+
+  it('has no request counters or operation history while retaining validation and access checks',async()=>{
+    const {app}=await submit(input());
+    // A zero quota would always reject in legacy mode; no rate limiter is active here.
+    await expect(limit('synthetic-six',0,600)).resolves.toBeUndefined();
+    for(let i=0;i<35;i++){
+      const response=await lookupRoute(new NextRequest('http://localhost:3022/api/pre-evaluation/lookup',
+        {method:'POST',headers:{origin:'http://localhost:3022','content-type':'application/json','x-forwarded-for':'192.0.2.1'},
+          body:JSON.stringify({applicationId:app.id,locale:'en'})}));
+      expect(response.status).toBe(200);
+    }
+    await staffAction(app.id,{action:'notes',notes:'Current note only'},'staff-should-not-be-stored');
+    const response=await application(app.id,true);expect(response.notes).toBe('Current note only');expect(response.audit).toEqual([]);
+    const saved=await service(app.id);expect(JSON.stringify(saved)).not.toContain('staff-should-not-be-stored');
+    for(const name of ['aet_audit','aet_rate_limits'])
+      expect((await sql()`select to_regclass(${'aet.'+name}) relation`)[0].relation).toBeNull();
+    expect(()=>convergedTableName(sql(),'preeval.audit')).toThrow('Retired audit/rate-limit');
+    expect(()=>convergedTableName(sql(),'preeval.rate_limits')).toThrow('Retired audit/rate-limit');
+    await expect(staffAction(app.id,{action:'information',message:''},'staff')).rejects.toMatchObject({code:'invalid_request'});
   });
 
 });

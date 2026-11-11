@@ -1,3 +1,4 @@
+import { sixTableMode } from '../application-core/convergence-mode';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, recordCoreFile } from '../application-core/runtime';
@@ -110,7 +111,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
     await recordCoreFile(tx,file,{...saved,storageLocation:accountForOffice(office)});
     if(compact())await settleCompactFile(tx,file.id,upload.version,'ready');
     else await tx`update ${table('preeval.files')} set state='ready' where id=${file.id}`;
-    await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: file.id })})`;
+    if(!sixTableMode(db())) await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: file.id })})`;
     return { complete: true };
   });
 }

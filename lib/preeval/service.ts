@@ -1,3 +1,4 @@
+import { sixTableMode } from '../application-core/convergence-mode';
 import { compactNotificationRows,retryCompactNotification } from '../application-core/compact-notifications';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { converged,submitConverged,staffConverged,workflowRows } from "../application-core/converged-store";
@@ -40,7 +41,7 @@ export async function submit(input: unknown) {
     const educationId = randomUUID();
     await saveLegacyPreeval(tx, created.id, educationId, v);
     await tx`insert into ${table("preeval.educations")}(id,application_id,school_name,country_of_study,degree_obtained,start_date,end_date) values (${educationId},${created.id},${v.schoolName},${v.countryOfStudy},${v.degreeObtained},${v.startDate},${v.endDate})`;
-    await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
+    if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
     return created;
   });
   await applicationEmail(app, "confirmation");
@@ -124,7 +125,7 @@ export async function application(id: string, staff = false) {
     response.legacy_id = app.legacy_id;
     response.emails =
       compact()?await compactNotificationRows(id):await db()`select id,kind,state,attempts,provider_id,error,sent_at,created_at from ${table("preeval.emails")} where application_id=${id} order by created_at desc`;
-    response.audit =
+    response.audit = sixTableMode(db()) ? [] :
       await db()`select actor,action,detail,created_at from ${table("preeval.audit")} where application_id=${id} order by created_at desc limit 50`;
     response.payments =
       converged() ? await db()`select checkout_session_id as session_id,amount_cents,payment_status as status,refunded_cents,created_at from aet.aet_payments where application_id=${id} order by created_at desc` : await db()`select session_id,amount_cents,status,refunded_cents,created_at from ${table("preeval.payments")} where application_id=${id} order by created_at desc`;
@@ -182,7 +183,7 @@ export async function addFile(id: string, file: File, actor: string) {
       await recordCoreFile(tx,record,metadata);
       if(compact())await settleCompactFile(tx,record.id,record.version,'ready');
       else await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
-      await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
+      if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
     });
   } catch (error) {
     if (error instanceof AppError) throw error;

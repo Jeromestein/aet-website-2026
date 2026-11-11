@@ -1,3 +1,4 @@
+import { sixTableMode } from './convergence-mode';
 import { compact, saveCompactMetadata } from './compact-files';
 import { converged,workflowRows,queueInput,adminConverged } from "./converged-store";
 import { coreTable, assertCoreConnection, corePreviewConfiguration } from './connection';
@@ -73,7 +74,7 @@ export async function submitCore(tx: TransactionSql, v: z.infer<typeof applicati
   const [workflow] = await tx`insert into ${table("preeval.applications")}(id,request_id,request_hash,email,first_name,middle_name,last_name,country,locale,ai_status,ai_pipeline,uploads_pending)
     values (${created.id},${v.requestId},${fingerprint},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},${v.locale},
       ${v.uploadsPending ? 'idle' : 'queued'},'openai',${Boolean(v.uploadsPending)}) returning *`;
-  await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
+  if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
   return workflow;
 }
 
@@ -172,7 +173,7 @@ export async function updateCoreEducation(id: string, educationId: string, input
     if (converged()) {
       if(workflow.status==='cancelled')throw new AppError('application_cancelled',409);
       await queueInput(tx,id,workflow.uploads_pending?'idle':'queued',workflow.uploads_pending);
-      await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor.email},'education.updated',${tx.json({educationId})})`;
+      if(!sixTableMode(db())) await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor.email},'education.updated',${tx.json({educationId})})`;
       return;
     }
     const changed=await tx`update ${table("preeval.applications")} set result=null,input_version=input_version+1,status='processing',
@@ -180,7 +181,7 @@ export async function updateCoreEducation(id: string, educationId: string, input
       where id=${id} and status<>'cancelled' returning id`;
     if (!changed.length) throw new AppError('application_cancelled',409);
     await syncCoreWorkflow(tx,id);
-    await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor.email},'education.updated',${tx.json({educationId})})`;
+    if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor.email},'education.updated',${tx.json({educationId})})`;
   });
 }
 

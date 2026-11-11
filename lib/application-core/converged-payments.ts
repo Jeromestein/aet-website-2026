@@ -1,4 +1,6 @@
+import { sixTableMode } from './convergence-mode';
 import 'server-only';
+import { paymentStateOnlyMode } from './convergence-mode';
 import type Stripe from 'stripe';
 import type { TransactionSql } from 'postgres';
 import { db,type Row } from '../preeval/db';
@@ -19,7 +21,7 @@ async function recordRefund(tx:TransactionSql,p:Row,intent:string,amount:number)
     where application_id=${p.application_id} and service_type='pre-evaluation'`;
   const a=await readConverged(p.application_id,tx);
   if(a?.status==='completed')await setStatus(tx,p.application_id,'processing');
-  await tx`insert into aet.aet_audit(application_id,actor,action) values (${p.application_id},'stripe',${status})`;
+  if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action) values (${p.application_id},'stripe',${status})`;
 }
 function validateCharge(c:Stripe.Charge,intent:string,p:Row) {
   if(c.livemode || intentId(c.payment_intent)!==intent || c.currency!=='usd' || c.amount!==p.amount_cents ||
@@ -69,15 +71,26 @@ export async function applyConvergedCheckout(s:Stripe.Checkout.Session,eventId:s
       refunded=refunded||current.latest_charge.amount_refunded>0;
       if(refunded)await recordRefund(tx,p,intent,current.latest_charge.amount_refunded);
     }
-    const events=await tx`insert into aet.aet_payment_events(id,type) values (${account()+':test:'+eventId},${eventType}) on conflict do nothing returning id`;
-    if(!events.length || refunded)return;
+    const stateOnly=paymentStateOnlyMode(db());
+    if(!stateOnly){
+      const events=await tx`insert into aet.aet_payment_events(id,type) values (${account()+':test:'+eventId},${eventType}) on conflict do nothing returning id`;
+      if(!events.length)return;
+    }
+    if(refunded)return;
+    // The application/payment locks serialize simultaneous deliveries. Only an
+    // effective state change updates timestamps or writes business audit history.
+    let changed: Row[]=[];
     if(s.payment_status==='paid' && !['refunded','partially_refunded'].includes(p.payment_status))
-      await tx`update aet.aet_payments set payment_status='paid',payment_intent_id=${intent!},paid_at=coalesce(paid_at,now()),updated_at=now() where id=${p.id}
-        and (payment_status is distinct from 'paid' or payment_intent_id is distinct from ${intent!} or paid_at is null)`;
+      changed=await tx`update aet.aet_payments set payment_status='paid',payment_intent_id=${intent!},paid_at=coalesce(paid_at,now()),updated_at=now() where id=${p.id}
+        and (payment_status is distinct from 'paid' or payment_intent_id is distinct from ${intent!} or paid_at is null) returning id`;
     else if((s.status==='expired'||eventType==='checkout.session.async_payment_failed')&&!['paid','refunded','partially_refunded'].includes(p.payment_status))
-      await tx`update aet.aet_payments set payment_status='expired',updated_at=now() where id=${p.id}`;
-    await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${id},'stripe',${eventType},${tx.json({session:s.id})})`;
+      changed=await tx`update aet.aet_payments set payment_status='expired',updated_at=now() where id=${p.id}
+        and (${!stateOnly} or payment_status is distinct from 'expired') returning id`;
+    if(!stateOnly||changed.length)
+      if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${id},'stripe',${eventType},${tx.json({session:s.id})})`;
   });
+  // Payment may already be committed while publication previously failed.
+  // A repeated callback must still resume the existing release/notification path.
   await publishConverged(id);
 }
 export async function refundConverged(event:Stripe.Event) {
@@ -99,7 +112,7 @@ export async function refundConverged(event:Stripe.Event) {
     const [locked]=await tx`select * from aet.aet_payments where id=${p.id} for update`;
     if(locked.payment_intent_id && locked.payment_intent_id!==intent)throw new AppError('invalid_payment');
     validateCharge(c,intent,locked);if(!c.amount_refunded)throw new AppError('invalid_payment');
-    if(!(await tx`insert into aet.aet_payment_events(id,type) values (${account()+':test:'+event.id},${event.type}) on conflict do nothing returning id`).length)return;
+    if(!paymentStateOnlyMode(db()) && !(await tx`insert into aet.aet_payment_events(id,type) values (${account()+':test:'+event.id},${event.type}) on conflict do nothing returning id`).length)return;
     await recordRefund(tx,locked,intent,c.amount_refunded);
   });
 }
@@ -119,7 +132,7 @@ export async function cancelConverged(id:string,actor:string) {
       await tx`update aet.aet_payments set payment_status='expired',updated_at=now() where id=${p.id}`;
     }
     await setStatus(tx,id,'cancelled');await tx`update aet.aet_ai_runs set lease=null,locked_at=null,state='superseded' where application_id=${id} and current`;
-    await tx`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},'application.cancelled')`;return null;
+    if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},'application.cancelled')`;return null;
   });
   if(paid){await applyConvergedCheckout(paid,`cancel-check:${paid.id}`,'checkout.reconciled');throw new AppError('contact_for_cancellation',409);}
 }

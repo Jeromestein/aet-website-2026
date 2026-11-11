@@ -1,10 +1,10 @@
 # Shared database rehearsal
 
-**November 10 update:** the runner now includes the nine-table pre-evaluation
+**November 10 update:** the runner now includes the six-table pre-evaluation
 suite. Earlier sections retain their phase-specific 13-table evidence; the new
-[acceptance record](archive/database-nine-table-rehearsal-2026-11-10.md) covers
-physical four-table retirement. No hosted database is changed.
-See the [revised plan](database-migration-plan.md#approved-convergence-target-9-tables).
+[acceptance record](archive/database-six-table-rehearsal-2026-11-10.md) covers
+physical audit/counter retirement after the earlier upload/mail/access/event stages. No hosted database is changed.
+See the [revised plan](database-migration-plan.md#approved-convergence-target-6-tables).
 
 
 Phases 1–3 create and test the five shared business tables without changing the
@@ -282,7 +282,9 @@ the offline test run. See [November 10 evidence](archive/database-full-preview-c
 
 ## Nine-table pre-evaluation simplification
 
-The default runner includes `tests/application-core-nine.test.ts` (25 cases).
+The original nine-table suite had 25 cases; it is now extended and renamed
+`tests/application-core-six.test.ts`. The original phase is retained in the
+full-snapshot suite before eight-table retirement.
 `activateNineTableRehearsal` requires the owned `aet_core_rehearsal` database,
 `core_rehearsal` role, local Unix socket, exact nine-table inventory and required
 new columns. No environment flag enables this path on a hosted database.
@@ -308,3 +310,41 @@ chunk transport and do not limit the lifetime of an application's customer link.
 Old token-only links with usable tokens block migration; expired/consumed tokens
 are externally archived, and their retired consume route returns 410. Review
 old-link communication/compatibility before any hosted cutover.
+
+## Eight-table payment simplification
+
+The eight-table suite originally had 28 cases. Its current extension is
+`tests/application-core-six.test.ts`; the eight-table migration stage remains
+in the complete-snapshot suite.
+`simplify-preeval-eight.ts` requires the exact owned nine-table source and the
+same disposable database/role/Unix socket guard. It locks existing local writers,
+returns event rows/digest for external archival, and drops only
+`aet.aet_payment_events`, without CASCADE or replacement views. The opt-in
+full-snapshot suite adds rollback, complete-copy retirement and signed concurrent
+replay checks (14 total cases across all stages). It saves the retired event rows
+outside Git alongside the private source snapshot.
+
+`activateEightTableRehearsal` accepts only the exact eight tables. Payment handlers
+use application/payment locks and effective state transitions. Legacy thirteen-
+and nine-table rehearsals remain available for comparison; hosted activation
+cannot be enabled with an environment variable. Run `pnpm test:database:rehearsal`
+for synthetic coverage, or include the opt-in full-snapshot test using the existing
+private `APPLICATION_CORE_FULL_SNAPSHOT` as documented above. No new provider fetch
+or hosted connection is implicit.
+
+## Six-table history and request-counter retirement
+
+The default runner uses `tests/application-core-six.test.ts` (29 cases).
+`simplify-preeval-six.ts` accepts the exact eight-table source in the owned local
+rehearsal database, locks its writers, externally archives old audit/counter rows
+and drops both tables in one transaction. It does not create any new runtime table.
+The full-copy suite has 17 cases, including failure on the second DROP to prove
+both retired tables are restored, six-table activation, 18-table complete inventory,
+CRM/current-state parity and signed payment replay without audit dependencies.
+
+`activateSixTableRehearsal` requires the exact six-table inventory. Only this
+connection disables new audit writes/reads and request-frequency counting. Legacy
+and hosted behavior stays unchanged. Core versions/material requests/exemptions
+continue to use service state, not the retired archive. Staff API compatibility
+returns `audit: []`; old staff UI may still show an empty history section until
+hosted UI cutover. No UI change or browser verification is claimed here.

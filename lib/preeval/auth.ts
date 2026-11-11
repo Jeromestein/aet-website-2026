@@ -1,3 +1,4 @@
+import { sixTableMode } from '../application-core/convergence-mode';
 import { compact } from '../application-core/compact-files';
 import { z } from 'zod';
 import { createHash, randomBytes } from "node:crypto";
@@ -97,6 +98,7 @@ export function sameOrigin(request: Request) {
     throw new AppError("access_denied", 403);
 }
 export async function limit(key: string, max = 5, seconds = 600) {
+  if (sixTableMode(db())) return;
   const [row] =
     await db()`insert into ${table("preeval.rate_limits")}(key,count,expires_at) values (${hash(key)},1,now()+${seconds}*interval '1 second')
     on conflict(key) do update set count=case when ${table("preeval.rate_limits")}.expires_at<now() then 1 else ${table("preeval.rate_limits")}.count+1 end,

@@ -1,3 +1,4 @@
+import { sixTableMode } from './convergence-mode';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from './compact-files';
 import { convergedPaymentState, convergedReleaseEligible } from './converged-payment-state';
 import 'server-only';
@@ -74,7 +75,7 @@ export async function submitConverged(v: Row): Promise<Row> {
       values (${a.id},'pre-evaluation',${tx.json({education_ids:[e.id]})},${BASE_CENTS},'automatic')`;
     await tx`insert into aet.aet_ai_runs(application_id,input_version,state,uploads_pending)
       values (${a.id},1,${v.uploadsPending?'idle':'queued'},${Boolean(v.uploadsPending)})`;
-    await tx`insert into aet.aet_audit(application_id,actor,action) values (${a.id},'customer','application.submitted')`;
+    if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action) values (${a.id},'customer','application.submitted')`;
     return (await readConverged(a.id,tx))!;
   });
   return {...app,locale:v.locale};
@@ -118,8 +119,9 @@ export async function publishConverged(id:string) {
     if(!a || !convergedReleaseEligible(a.payment_status) || !a.result || a.ai_status!=='completed' || a.uploads_pending || ['cancelled','needs_information'].includes(a.status))return null;
     if(a.saved_result.input_version!==a.input_version)return null;
     await tx`update aet.aet_service_detail set result=jsonb_set(jsonb_set(result,'{status}','"released"'::jsonb),'{released_at}',
-      case when result->>'status'='released' then result->'released_at' else to_jsonb(clock_timestamp()) end),updated_at=now()
-      where application_id=${id} and service_type='pre-evaluation'`;
+      case when result->>'status'='released' and result->>'released_at' is not null then result->'released_at' else to_jsonb(clock_timestamp()) end),updated_at=now()
+      where application_id=${id} and service_type='pre-evaluation'
+        and (result->>'status' is distinct from 'released' or result->>'released_at' is null)`;
     if(a.status!=='completed')await setStatus(tx,id,'completed');
     return a;
   });
@@ -130,7 +132,7 @@ export async function saveResult(tx:DB,a:Row,content:Row,source:string) {
     where application_id=${a.id} and action='result.saved'`;
   const result={content,documents:[],status:'draft',released_at:null,input_version:a.input_version,version:version.value};
   await tx`update aet.aet_service_detail set result=${tx.json(result)},updated_at=now() where id=${a.service_id}`;
-  await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${a.id},${source},'result.saved',${tx.json({version:version.value,source})})`;
+  if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${a.id},${source},'result.saved',${tx.json({version:version.value,source})})`;
 }
 export async function startSharedConverged(id:string,key:string) {
   return db().begin(async tx=>{
@@ -186,7 +188,7 @@ export async function staffConverged(id:string,body:Row,actor:string) {
     if(body.action==='notes'){
       if(typeof body.notes!=='string'||body.notes.length>5000)throw new AppError('invalid_request');
       await tx`update aet.aet_service_detail set staff_notes=${body.notes},updated_at=now() where id=${a.service_id}`;
-      await tx`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},'notes.updated')`;
+      if(!sixTableMode(db())) await tx`insert into aet.aet_audit(application_id,actor,action) values (${id},${actor},'notes.updated')`;
     }else if(body.action==='result'){
       const parsed=resultSchema.safeParse(body.result);if(!parsed.success)throw new AppError('invalid_result');
       if(a.status==='cancelled'||a.uploads_pending)throw new AppError('application_cancelled',409);
@@ -197,7 +199,7 @@ export async function staffConverged(id:string,body:Row,actor:string) {
       if(a.status==='cancelled')throw new AppError('application_cancelled',409);
       await queueInput(tx,id,'idle',a.uploads_pending,'needs_information');
       await tx`update aet.aet_service_detail set customer_message=${body.message} where id=${a.service_id}`;
-      const [request]=await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${id},${actor},'information.requested',${tx.json({message:body.message})}) returning id`;
+      const [request]=sixTableMode(db())?[]:await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${id},${actor},'information.requested',${tx.json({message:body.message})}) returning id`;
       if(compact()){
         const requestId=randomUUID();
         await tx`update aet.aet_service_detail set details=jsonb_set(details,'{information_request}',${tx.json({id:requestId,message:body.message})}::jsonb) where id=${a.service_id}`;

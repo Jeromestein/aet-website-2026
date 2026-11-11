@@ -2,7 +2,7 @@
 
 Legacy/current inventory captured November 6, 2026 from read-only metadata and
 `dev` at `90076a3`; no customer rows were read for that comparison. The target
-view reflects the nine-table design approved November 10, now verified for local
+view reflects the six-table design approved November 10, now verified for local
 pre-evaluation only. On November 6, new dev Preview
 pre-evaluation applications began using private `aet_preview_core`; see the
 [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md). Production
@@ -15,11 +15,11 @@ crosswalk; the SVGs/viewer are generated companions, not separate specifications
 
 The [code-backed migration plan](database-migration-plan.md) records field and
 supporting-record decisions, staged cutover and rollback gates. The target
-diagram now shows all nine planned entities. Five business tables
-build on the additive migration; planned document/notification fields and four
-retained operational entities are explicitly distinguished below. Existing
+diagram now shows all six planned entities. Five business tables
+build on the additive migration; planned document/notification fields and the
+retained AI execution entity are explicitly distinguished below. Existing
 13-table rehearsal results are historical evidence. The subsequent
-[nine-table acceptance](archive/database-nine-table-rehearsal-2026-11-10.md)
+[six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md)
 verifies isolated pre-evaluation; hosted/cross-service migration remains open.
 See the [rehearsal guide](database-rehearsal.md).
 
@@ -28,8 +28,8 @@ See the [rehearsal guide](database-rehearsal.md).
 1. **Legacy:** two independent application families in `public`.
 2. **Current:** separate pre-evaluation/evaluation workflow schemas plus legacy
    compatibility projections. CRM Live still uses the old public tables.
-3. **Proposed:** nine tables; one shared application identity, file/upload state,
-   service notification state and four operational tables. This revised target
+3. **Proposed:** six tables; one shared application identity, file/upload state,
+   service notification state and one AI execution table. This revised target
    is implemented only for isolated pre-evaluation; hosted Preview retains its
    existing structure and other services still need convergence.
 
@@ -44,7 +44,7 @@ Payload `public.users` and `auth.users` are recorded in the appendix.
 in the actual-schema diagrams. Lines labelled **NO FK** or **DRAFT** are logical
 associations, not enforced database relationships. Only the legacy diagram shows
 every column of every business table inline; current compatibility boxes are shortened, and the proposed view focuses on
-nine target tables. The expandable inventory below lists all
+six target tables. The expandable inventory below lists all
 verified columns and key definitions, including tables omitted from the main views.
 
 ## 1. Legacy database
@@ -377,12 +377,13 @@ education IDs; these arrays are not foreign keys.
 
 ## 3. Proposed shared database model
 
-**Nine-table target approved November 10, 2026; isolated pre-evaluation verified.**
-The five business entities build on the [additive migration](../supabase/migrations/20261106220126_shared_application_core.sql),
-which already serves new Preview pre-evaluations. Upload/email/access
-simplification now passes only in the disposable nine-table runtime. Online
-Preview still has 32 tables; the complete isolated copy has 21, including nine
-shared pre-evaluation tables. Formal/translation convergence remains open.
+**Six-table launch target approved November 10, 2026; isolated pre-evaluation verified.**
+Five business tables plus AI runs remain. The Stripe webhook still processes
+payments; locked payment state replaces the event ledger. No operation/actor history
+or application request-frequency counter is retained. Current business state owns
+notes, material requests, result versions and payment exemption. The full local
+copy has 18 tables (6 shared + 12 formal); hosted Preview remains at 32. See
+[acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
 
 The master has no storage, locale, access-token or session fields. Customers use
 its random UUID in a non-expiring application URL, with no additional credential
@@ -403,14 +404,13 @@ directory before scanning or associating newly discovered files. Initial upload
 paths are derived from office, Application ID and applicant name, not stored on
 the master. See the [directory resolution rules](dropbox.md#directory-resolution-without-folder-ids).
 
-The diagram shows **five business + four operational tables**. `notification_state`
+The diagram shows **five business + one AI execution table**. `notification_state`
 and `result_version` on service details and `upload_state`, `upload_version`,
 `upload_context` on documents are additions verified in the isolated runtime.
 The diagram's `PLANNED` labels mean not deployed to hosted Preview/Production;
-these columns are present only in the nine-table rehearsal.
+these columns are present only in the compact-table rehearsal.
 Operational fields reflect the retained convergence contracts; only relationships
-labelled FK are proposed database constraints. Payment events and rate-limit keys
-are not given fabricated application foreign keys. Customer accounts remain deferred.
+labelled FK are proposed database constraints. Customer accounts remain deferred.
 
 ```mermaid
 erDiagram
@@ -531,46 +531,29 @@ erDiagram
     timestamptz created_at
     timestamptz completed_at
   }
-  aet_payment_events {
-    text id PK "Provider account and mode scoped event ID"
-    text type
-    timestamptz received_at
-  }
-  aet_audit {
-    bigint id PK
-    uuid application_id FK "Nullable for system events"
-    text actor
-    text action
-    jsonb detail "History only; not business state"
-    timestamptz created_at
-  }
-  aet_rate_limits {
-    text key PK "Request bucket; not application FK"
-    integer count
-    timestamptz expires_at "Limit window only; not link expiry"
-  }
   aet_core_applications ||--o{ aet_education : "has optional education records"
   aet_core_applications ||--o{ aet_service_detail : "contains service details"
   aet_core_applications ||--o{ aet_documents : "has files"
   aet_core_applications |o--o{ aet_payments : "has payments"
   aet_core_applications ||--o{ aet_ai_runs : "has analysis jobs"
-  aet_core_applications |o--o{ aet_audit : "has operation history"
 
 ```
 
 - Removed target tables: `aet_uploads` merges into documents; `aet_emails` is
   replaced by Resend history and bounded service notification state;
   `aet_sessions` and `aet_access_tokens` are replaced by application-ID URLs.
-  None is deleted by this documentation change. Existing history and old-link
-  compatibility must be reconciled before implementation retirement.
-- `aet_ai_runs` preserves analysis/recovery state. `aet_payment_events` deduplicates
-  provider callbacks independently of payment ledger rows. `aet_audit` retains
-  history; `aet_rate_limits` retains shared throttling. Both remain approved here.
+  `aet_payment_events` is also retired in isolation: Stripe retains event history,
+  while atomic payment-state transitions protect against duplicate processing.
+  Hosted tables remain unchanged; archive/reconciliation precede hosted retirement.
+- `aet_ai_runs` preserves analysis/recovery state. `aet_audit` and `aet_rate_limits`
+  are removed: no operation/actor history or request-frequency quotas in the target.
+  No history arrays/counter fields replace them. Access checks, input/file limits
+  and payment duplicate protection remain. Advanced tracking is deferred.
 - `notification_state` stores current event status, stable dedupe identity,
   payload fingerprint and provider reference, not email bodies or a growing
   history list. Confirm provider history availability during implementation.
-  Move result version/material-request/exemption decisions out of audit before
-  retiring current dependencies; retain their historical provenance.
+  Result version/material-request/exemption decisions already use service state.
+  Old source evidence may be archived outside the runtime during migration.
 - A document row represents a file and only its current upload operation. File ID
   may be null until ready; reject stale completion by upload version. Preserve
   the valid prior reference until a replacement succeeds, clear transient context

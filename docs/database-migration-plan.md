@@ -25,37 +25,74 @@ redundant tables are dropped locally; existing canonical rows and formal records
 are retained. Converged CRM now includes formal rows, with all 10 applications
 reconciled. Seven full-snapshot tests and 350 combined regression tests pass.
 See [complete snapshot evidence](archive/database-full-preview-convergence-2026-11-10.md).
-That first local stage has 25 tables; the subsequent nine-table stage below
-reduces the copy to 21. Online Preview still has 32. The no-charge fixture
+That first local stage has 25 tables; later nine- and eight-table stages reduce
+the copy to 21 and then 20. Online Preview still has 32. The no-charge fixture
 retains its original audit evidence and projects `waived`, with zero amount and
 no payment row. Cross-service convergence and hosted cutover remain separate
 gates; a new cutover-time snapshot and quiescence checks will still be required.
 
-## Approved convergence target: 9 tables
+## Approved convergence target: 6 tables
 
-**November 10, 2026: implemented and verified for isolated pre-evaluation.**
-This supersedes the 13-table target, not its historical acceptance results.
-The subsequent nine-table rehearsal reduces the complete local copy from 25 to
-21 tables (9 shared + 10 evaluation + 2 legacy formal). Online Preview still has
-32 tables. Formal/translation convergence and hosted activation remain open.
-See [nine-table acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
+**November 10, 2026 simplification:** remove `aet_audit` and `aet_rate_limits`
+from the eight-table target. Do not record who changed an application or enforce
+application request-frequency quotas in this phase. No replacement log, actor
+history array, counter table or external rate-limiting service is introduced.
+The earlier thirteen-, nine- and eight-table results remain historical evidence.
+The complete local copy now has **18 tables = 6 shared + 12 formal**; hosted
+Preview remains at 32. See [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
 
 | Ownership | Target tables |
 | --- | --- |
 | Business (5) | `aet_core_applications`, `aet_education`, `aet_service_detail`, `aet_documents`, `aet_payments` |
-| Shared operations (4) | `aet_ai_runs`, `aet_payment_events`, `aet_audit`, `aet_rate_limits` |
+| AI execution (1) | `aet_ai_runs` |
 
-Staff authentication, legacy CMS, unrelated public tables and future account
-provider tables remain outside this business/runtime budget. `aet_audit` and
-`aet_rate_limits` remain in the approved nine; removing either needs a separate
-decision. No new quote, deliverable, applicant, folder-location or recovery table
-is planned. Future account ownership can link to applications without moving
-application-specific contact/evaluee/submission snapshots into an account record.
+Current notes, material requests, result versions and confirmed test exemption
+state stay on the application/service records. Staff reads return no operation
+history. Staff authentication/office scope, customer application scope, input
+validation, payment duplicate protection and file size/type/count constraints
+remain. Staff auth, legacy CMS, unrelated public tables and future accounts are
+outside this table count. Formal/translation convergence and hosted activation
+remain separate work.
 
-### Four tables removed from the target
+### Payment handling required for launch
+
+Keep the current Stripe webhook and signature verification. Match the Stripe
+account/mode, Checkout/PaymentIntent, application, currency and amount. Serialize
+updates on the application/payment row and update only actual state changes;
+repeated success must preserve `paid_at`/`updated_at` and produce no extra payment
+or operation-history record. Read current Stripe payment/refund state where already
+implemented, keep refunded amounts monotonic, and never let a late success or
+expiry undo paid/refunded state.
+
+Always attempt the existing result/notification completion path after an accepted
+success callback, even when payment is already recorded. This lets the same
+callback recover a previously failed publication without another AI run or mail.
+No local event ID list, `last_event_id` workaround, second log table or additional
+payment fields are needed. Stripe remains the event-history viewer; service
+result/notification state owns completion inside AET.
+
+### Deferred exception handling and tracking (TODO, not launch blockers)
+
+- Resend webhooks for delivered/bounced/complained status and a CRM mail-history UI.
+- A payment-event tracking/replay UI or cross-provider event ledger, only if actual
+  operational needs later justify it; do not reintroduce a table by default.
+- Scheduled reconciliation, scheduled mail retries, alert dashboards and broader
+  provider-outage automation. Keep these as TODO, not work in this phase.
+- Further dispute/chargeback and unusual multi-provider exception workflows.
+- Reconsider optional staff operation history or request limiting only if a future
+  business need arises; neither is required or implemented in the six-table mode.
+
+Existing basic rollback, signature checks, duplicate protection, refund guards
+and saved-result recovery remain in place. Deferral does not remove working
+safeguards or authorize real charging/hosted cutover.
+
+### Seven tables removed from the thirteen-table target
 
 | Previous target | New owner / behavior | Implementation gate |
 | --- | --- | --- |
+| `aet_audit` | Removed; keep current business state only | No actor/change history, no replacement log; archive old evidence only during migration |
+| `aet_rate_limits` | Removed; no request-frequency quotas in the new mode | Preserve auth, input validation, file limits and payment guards; no external limiter added |
+| `aet_payment_events` | Stripe event history; atomic state changes on `aet_payments` | Physically retire only after callback concurrency, refund ordering and publication recovery pass locally; retain the webhook |
 | `aet_uploads` | `aet_documents` owns each file and only its current upload state | Nullable File ID until ready, current upload version/context, stale-completion protection and failed-replacement recovery; no per-attempt history table |
 | `aet_emails` | Resend owns full delivery history; `aet_service_detail.notification_state` retains minimal business notification state and provider references | Stable event key, payload fingerprint, provider ID and current status; reconcile pending/uncertain sends without duplicate mail before retirement |
 | `aet_sessions` | Customer accesses the application using its random UUID in the URL | No customer session table or cookie required; every customer operation remains limited to that application |
@@ -77,8 +114,8 @@ the application/service, preserve deduplication across retries and use existing
 recovery entry points; no scheduled retry job is introduced. Local implementation
 retains at most four kinds: confirmation, result, information and access. The
 captured Resend receipts were verified; current staff views expose current state,
-not the removed full local history. Provider-history UI and retention handling
-remain hosted acceptance work. Preserve historical receipts in a reviewed archive before
+not the removed full local history. Provider-history UI and delivery-status tracking are deferred;
+review archive/retention only as needed for hosted data retirement. Preserve historical receipts in a reviewed archive before
 retiring source tables; do not assume provider history lasts indefinitely.
 
 One document row represents a file, not each upload attempt. Proposed `upload_state`,
@@ -90,12 +127,12 @@ only the current dedupe key, source fingerprint, attempt ID and start time;
 success removes the attempt ID. Key/fingerprint remain for file deduplication,
 not as an upload-attempt history.
 
-Keep audit as history, not as the source of business decisions. Move the monotonic
-result-version counter into `aet_service_detail.result_version`, keep the current
-material request in `customer_message`/validated service details, and store explicit
-payment-exemption semantics there with provenance. Preserve old audit evidence,
-but remove runtime dependence on searching logs to grant release or calculate
-versions. AI jobs, payment-event deduplication and rate limits remain shared.
+The service owns the monotonic result version, current material request and
+explicit confirmed test exemption. Retired audit rows may be archived outside the
+runtime for migration reconciliation; no new operation history is recorded. AI
+jobs remain in their own table. Request-frequency tracking is disabled only in
+the explicitly activated six-table isolated runtime; existing hosted behavior is
+unchanged until a separate cutover.
 
 ### Immediate isolated pre-evaluation gate
 
@@ -124,8 +161,9 @@ versions. AI jobs, payment-event deduplication and rate limits remain shared.
 
 Keep the five core entities: application, education, service detail, document,
 and payment. Make them the common business records for evaluation and translation.
-Keep operational records for AI, uploads, email, access, payment events, and audit.
-Those records protect behavior already implemented and tested.
+Keep only AI execution as a separate operational table. Documents and services
+own current upload/notification state; application links need no sessions.
+Payments own duplicate protection; no audit or request-counter table remains.
 
 The additive foundation is complete for the tested pre-evaluation cohort.
 Now converge its runtime and retire verified duplicate storage before expanding
@@ -259,7 +297,7 @@ exact days or combining a date-format redesign with table convergence.
 | --- | --- |
 | `sort_order` | Add a stable display order; current service selections start as array indexes and must resolve to stable education IDs before saving |
 | `created_at`, `updated_at` | Useful additions for new education records; keep unknown historical timestamps distinguishable rather than copying application dates |
-| `ai_output` | Retain as a read-only compatibility projection initially; the current result belongs to service detail, with historical runs preserved in existing AI/audit records |
+| `ai_output` | Retain as a read-only compatibility projection initially; the current result belongs to service detail, with historical runs preserved in AI run records or an external migration archive |
 | Selected education IDs | Store stable IDs in the typed evaluation request, validate same-application ownership and lock relevant records on updates; JSON references are not FKs |
 
 Do not inherit the dedicated pre-evaluation table's `UNIQUE(application_id)`
@@ -282,7 +320,7 @@ workflow fields remain recommendations to review before combined fulfillment:
 | `status` | Track this service's progress independently of other selected services |
 | `input_version` | Invalidate analysis/reports after relevant input changes; preserve the existing workflow counter until authority is switched |
 | `staff_notes` | Preserve operational notes as a separate private field, excluded from customer projections |
-| `customer_message` | Staff-authored current request/status explanation, distinct from the customer's original `notes`; retain request history in audit |
+| `customer_message` | Staff-authored current request/status explanation, distinct from the customer's original `notes`; retain only the current request, without actor/history tracking |
 | `amount_cents` | Nullable nonnegative integer: the saved price for this service in cents; `null` means not priced, `0` means an explicitly zero-priced service |
 | `currency` | Currency of the service amount, initially `USD`; all services in one Checkout must use the same currency |
 | `pricing_source` | `automatic` for server calculation or `manual` for an authorized staff-entered amount; nullable when unpriced or historical provenance is unknown |
@@ -418,8 +456,8 @@ The pricing rules are:
    `pricing_source = automatic`. The frontend can preview the same calculation;
    it cannot submit an authoritative charge amount.
 2. Custom work or an adjustment: authorized staff enter the final service amount;
-   save it with `pricing_source = manual`. Reuse the existing staff audit for
-   actor/time and before/after values, without a new quote approval/version system.
+   save it with `pricing_source = manual`. Keep the current amount only; no actor
+   log, before/after history or separate quote approval/version system is required.
 3. An unknown price stays `null`; all payable services must have a known amount
    before Checkout. Never treat `null` as zero. An explicitly zero-priced service
    must not create a zero-value provider Checkout; define its authorized no-charge
@@ -435,7 +473,7 @@ The pricing rules are:
 
 Saved prices do not change when the catalog changes. Changed service selections
 require explicit recalculation or staff reconfirmation; do not silently overwrite
-a manual amount. Use the already-planned application concurrency check and audit,
+a manual amount. Use the already-planned application concurrency check,
 not a separate quote-version counter. Derive the balance from saved service prices
 and reconciled payments/refunds, not from all Checkout attempts. Independent
 payment per service remains deferred.
@@ -476,9 +514,8 @@ Keep creation/upload, release and notification separate. Customer access require
 a released, current result plus the existing payment and authorization checks;
 a release flag alone cannot bypass them. Private drafts stay hidden from customer
 Status, file lists and generic service-detail responses. A new upload, refund or
-changed input cannot silently expose stale/unpaid output. Preserve previous
-released content/revisions and the release actor in existing audit/AI records
-before replacement. Keep one current result here, not an unbounded history array.
+changed input cannot silently expose stale/unpaid output. Preserve existing AI run output or externally archive migrated revisions where
+needed; do not add release-actor tracking or a report-history table. Keep one current result here, not an unbounded history array.
 
 Reuse existing publication recovery and email deduplication: retrying a failed
 publication must reuse the saved output, and retrying a notification must not
@@ -494,7 +531,7 @@ plan, not a database change.
 
 ### Operational migration boundaries
 
-Existing runtime tables stay intact until the nine-table adapters pass isolated
+Existing runtime tables stay intact until the six-table adapters pass isolated
 acceptance. The table below describes the destination, not authorization to delete.
 
 | Existing record | Target disposition | Required preservation |
@@ -502,14 +539,14 @@ acceptance. The table below describes the destination, not authorization to dele
 | AI runs/state | `aet_ai_runs` | Input/result versions, manifest, output, queue/lease state and publication recovery |
 | Upload tracking | Current state on `aet_documents`; retire `aet_uploads` | File association, active-operation fencing and valid file identity through failed replacement; archive old attempts if needed, no ongoing attempt history |
 | Email delivery records | Resend history plus minimal service notification state; retire `aet_emails` | Application/event association, dedupe identity and provider receipt; reconcile unsent/uncertain messages and archive historical evidence |
-| Payment events | `aet_payment_events` | Provider/account/mode-scoped event identity, type and receipt; do not fabricate an application FK when none exists |
-| Audit | `aet_audit` | Actor/action/time and historical evidence; first remove result-version, material-request and exemption business dependencies |
+| Payment events | Retire `aet_payment_events`; inspect history in Stripe | Keep signature/ownership/amount checks, atomic payment-state transitions and repeatable fulfillment; externally archive old rows during isolated retirement |
+| Audit | Retire `aet_audit` | Current result version/material request/exemption live on services; archive source evidence externally, no new actor history |
 | Customer sessions/tokens | Replace customer flow with non-expiring random application-ID URLs; retire both tables | Customer upload/status/file access scoped to the supplied application; retain staff auth and private-result checks; define redirects for old token-only URLs before retirement |
-| Rate limits | `aet_rate_limits` | Keep current shared request limits; no replacement service or deletion is approved here |
-| Staff accounts | Retain outside this nine-table budget | Staff identity, role and office authorization |
+| Rate limits | Retire `aet_rate_limits` | Disable request-frequency quotas in the new mode; no replacement service or counter array |
+| Staff accounts | Retain outside this six-table budget | Staff identity, role and office authorization |
 | Migration identity report | Reviewed external artifacts, not another runtime table | Source/target identities, counts, digests, mapping exceptions and rollback evidence |
 
-Do not create parallel service-specific families or a permanent tenth migration
+Do not create parallel service-specific families or a permanent seventh migration
 or recovery table. No quote, deliverable, applicant/profile, address-book,
 document-location, service-catalog or office table is required for this phase.
 
@@ -562,10 +599,12 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | 3. Move one pre-evaluation cohort | Switch application/education ownership first, reuse AI/email/upload/payment machinery with explicit mappings; preserve dedicated entry before connecting general entry | Existing happy path and upload/publication recovery pass, including refund and stale callback cases; no duplicate application/AI/payment/email |
 | 3b. Converge pre-evaluation | Remove duplicate workflow application/education/payment ownership; move eight operational record types under core; physically delete retired tables in a disposable database before running the actual services | Verified for new requests (20 tests), old-only migration (6) and mixed old/core-v1 migration including audited no-charge handling (8); captured-copy variant passes 14 tests. No replacement views. Fresh full hosted-snapshot also passes 7 tests with all 10 CRM records retained; hosted cutover remains separate |
 | 3c. Simplify to nine tables | Merge current upload state into documents, delegate mail history to Resend, replace customer sessions/tokens with application-ID access and remove audit business dependencies | Verified locally: 25 runtime cases + 11 full-snapshot cases, physical four-table retirement and DDL rollback; 379 combined tests / 22 files and TypeScript pass. Complete isolated copy: 21 tables; hosted remains 32. See [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md) |
-| 4. Connect formal intake | Move intake to canonical records and reuse the four retained operational tables and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
+| 3d. Simplify payments to eight tables | Retire the event table; retain Stripe webhook and payment-state duplicate protection | Verified in isolation; see [acceptance](archive/database-eight-table-rehearsal-2026-11-10.md). Hosted tables remain unchanged |
+| 3e. Simplify to six tables | Remove operation history and request-frequency quotas; preserve business state and access checks | Verified locally; see [acceptance](archive/database-six-table-rehearsal-2026-11-10.md). Complete copy: 18 tables; hosted unchanged |
+| 4. Connect formal intake | Move intake to canonical records and reuse the retained AI execution table and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
 | 5. Connect translation and combinations | Permit translation submission with no education/evaluee requirement; use service amounts, shared payments/files and per-service notes/status | Pure translation and evaluation-plus-translation both complete; completing one service cannot close the other; no double shipping charge |
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
-| 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 9 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |
+| 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 6 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |
 
 **Phase 1 evidence:** the disposable rehearsal passes schema constraints, client
 access denial, same-ID backfill, complete existing pre-evaluation service flow,
@@ -653,8 +692,8 @@ whole old database over new payments/uploads. Preserve webhook/event ingestion
 and reconcile all events received during the transition before resuming access.
 
 Define server grants and RLS for each new table and any compatibility view. Do not
-copy public browser-write privileges into canonical business tables. Keep audit
-and staff notes private, and preserve office filtering before aggregations. If a
+copy public browser-write privileges into canonical business tables. Keep staff notes and any retained historical migration evidence private, and
+preserve office filtering before aggregations. If a
 view is introduced, use caller-permission behavior where appropriate and verify
 that joins do not expand access; Supabase documents the view/RLS interaction in
 its [view guide](https://supabase.com/docs/guides/database/views).

@@ -1,4 +1,4 @@
-import { convergedTableName } from "../application-core/convergence-mode";
+import { convergedTableName, sixTableMode } from "../application-core/convergence-mode";
 import postgres from "postgres";
 import { configuration, required, businessTableName } from "./config";
 const state = globalThis as typeof globalThis & {
@@ -28,6 +28,7 @@ export async function audit(
   action: string,
   detail: Record<string, unknown> = {},
 ) {
+  if (sixTableMode(db())) return;
   await db()`insert into ${table("preeval.audit")} (application_id,actor,action,detail) values (${applicationId},${actor},${action},${JSON.stringify(detail)}::jsonb)`;
 }
 
