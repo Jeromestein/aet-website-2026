@@ -1,9 +1,9 @@
 # AET Implementation Status
 
-Updated November 11, 2026 after hosted dev Preview six-table activation and
-retirement of twenty verified Preview pre-evaluation source tables. The actual
-Preview business inventory is now eighteen tables; Production remains unchanged.
-Formal/translation convergence remains open.
+Updated November 11, 2026 after formal-evaluation convergence and retirement of
+the remaining twelve Preview source tables. The actual Preview business inventory
+is now **six shared tables**. Production remains unchanged. Unified formal-intake
+fulfillment and translation submission remain open.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
@@ -24,11 +24,11 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| Shared database | Six shared tables serve all Preview pre-evaluation records; twenty old Preview tables retired after acceptance | Converge twelve retained formal tables and translation; reconcile real history and activate Production |
+| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Connect translation; reconcile real history and activate Production |
 | Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
-| Status and documents | Formal lookup, ordinary/chunked uploads, saved Dropbox locations and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
+| Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |
 | Email | Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | New-intake lifecycle notifications and real-customer routing; scheduled mail recovery is deferred |
@@ -36,23 +36,29 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 
 ## Current hosted acceptance — November 11
 
-Dev Preview is **Ready** at runtime commit `3128a83`, deployment
-`G2XntQqf6NKy2vV2Fqd9nq9mdf6D`. `APPLICATION_CORE_MODE=six-preview` is scoped to
-Preview/dev only. Six historical pre-evaluations now use `aet_preview_shared`.
+Dev Preview is **Ready** with formal evaluation and pre-evaluation on the six
+`aet_preview_shared` tables. `APPLICATION_CORE_MODE=six-preview` remains scoped to
+Preview/dev. Four formal applications, five education rows and four Dropbox files
+were migrated without changing the eight existing pre-evaluation applications.
+The last twelve old formal workflow/projection tables have been deleted after a
+fresh full backup, restored-copy rehearsal and hosted acceptance.
 
-The real synthetic journey passed Dropbox upload/download hash verification,
-OpenAI analysis, USD 19.88 Stripe Sandbox payment, permanent webhook delivery,
-result release and two delivered English Resend emails. The customer page and
-CRM Test agree; customer API requests without staff cookies enforce the unpaid
-result gate. All six old links, including the explicit no-charge test, still work.
+Hosted checks cover all four formal Status links and their original quotes,
+historical file discovery, CRM Test, a new idempotent formal intake, Dropbox
+upload/File ID indexing and a delivered English confirmation. A browser check
+identified and fixed the upload permission for `reviewing`/`needs_information`.
+The existing paid pre-evaluation still passes file hash, released result, two
+delivered mails, six old links and official Stripe Sandbox replay without duplicates.
 
-With explicit owner confirmation and a restored-backup rehearsal, **twenty old
-Preview tables were deleted**. The actual inventory is **18 = 6 shared + 12 formal**.
-Post-deletion old/new reads, new submission/cancellation, duplicate submission and
-official Stripe event replay pass. The twelve retained formal tables are unchanged.
-The runtime has no Production write grants; Production remains on `fc1ab0d`.
+The earlier real pre-evaluation payment/AI journey remains valid. Formal payment,
+report release, refund ordering and concurrency were tested in isolated PostgreSQL
+with provider doubles; **the unified v2 formal payment and fulfillment UI is not
+newly enabled by this migration**. No live charge was performed.
 
-See [hosted six-table acceptance](archive/database-six-preview-2026-11-10.md).
+Full regression: **730 passed, 174 skipped** (optional integration environments),
+plus eight targeted formal cases and TypeScript. The runtime has no Production
+write grants. See [formal convergence acceptance](archive/database-formal-six-preview-2026-11-11.md)
+and [earlier pre-evaluation acceptance](archive/database-six-preview-2026-11-10.md).
 
 ## Earlier hosted core acceptance — November 6
 
@@ -101,8 +107,8 @@ remain on service records. The Stripe webhook, basic payment duplicate/refund
 protection, saved-result recovery, staff/customer authorization and file limits
 remain intact. Staff reads return an empty operation history.
 
-The full local copy now has **18 tables = 6 shared + 10 evaluation + 2 legacy formal**,
-retaining all ten applications from the previously captured snapshot. The final
+The November 10 local stage had **18 tables = 6 shared + 12 formal**.
+The November 11 fresh-copy formal migration and hosted cutover reduced this to **6**. The final
 six-table scope excludes staff auth, legacy CMS and unrelated public/system tables.
 See [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md)
 for exact checks: **389 tests across 22 files and TypeScript pass**. Earlier phase
@@ -114,9 +120,9 @@ Optional operation history and request limiting may be reconsidered only if futu
 needs justify them, without making them current launch work.
 
 The original six-table acceptance was local-only. The November 11 hosted
-acceptance above supersedes that deployment boundary: pre-evaluation is activated
-and its twenty old Preview tables are retired. Formal/translation convergence and
-Production cutover remain incomplete.
+acceptance above supersedes that deployment boundary: both evaluation families
+use the shared tables and all 32 obsolete Preview source tables are retired.
+Translation submission and Production cutover remain incomplete.
 
 ## Earlier isolated database verification
 
@@ -186,10 +192,9 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Rehearse a fresh complete hosted snapshot with the verified mixed-cohort
-   importer, refresh provider evidence and drain active work. Then prepare
-   separately authorized hosted rollout/rollback and test-exemption display
-   acceptance. Keep hosted records and operational tables intact.
+1. Complete the unified v2 formal-intake staff workflow on the six-table storage:
+   review documents, request missing materials and confirm the quote. Keep real
+   Production migration separately scoped and authorized.
 2. Verify hosted refund/cancellation visibility, mobile recovery and AI timeout
    handling. Desktop upload/publication recovery and direct test-webhook replay
    now pass; keep production charging/configuration separate.

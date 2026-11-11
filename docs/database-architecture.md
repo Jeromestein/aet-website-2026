@@ -2,11 +2,11 @@
 
 Legacy/current inventory captured November 6, 2026 from read-only metadata and
 `dev` at `90076a3`; no customer rows were read for that comparison. The target
-view reflects the six-table design approved November 10, now verified for local
-pre-evaluation only. On November 6, new dev Preview
+view reflects the six-table design approved November 10 and activated for hosted
+Preview pre-evaluation and formal evaluation on November 11. On November 6, new dev Preview
 pre-evaluation applications began using private `aet_preview_core`; see the
 [hosted acceptance](archive/database-preview-acceptance-2026-11-06.md). Production
-and old tables remain unchanged. The original legacy/current diagrams are the
+remains unchanged; all 32 old Preview source tables have now been retired. The original legacy/current diagrams are the
 pre-cutover inventory, not a claim that all runtime paths still use those tables.
 
 Use the [visual viewer](diagrams/database-architecture.html) to switch between
@@ -20,7 +20,9 @@ build on the additive migration; planned document/notification fields and the
 retained AI execution entity are explicitly distinguished below. Existing
 13-table rehearsal results are historical evidence. The subsequent
 [six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md)
-verifies isolated pre-evaluation; hosted/cross-service migration remains open.
+records the earlier isolated pre-evaluation stage. The
+[formal convergence acceptance](archive/database-formal-six-preview-2026-11-11.md)
+records the current six-table hosted inventory.
 See the [rehearsal guide](database-rehearsal.md).
 
 ## Reading order and scope
@@ -30,8 +32,8 @@ See the [rehearsal guide](database-rehearsal.md).
    compatibility projections. CRM Live still uses the old public tables.
 3. **Proposed:** six tables; one shared application identity, file/upload state,
    service notification state and one AI execution table. This revised target
-   is implemented only for isolated pre-evaluation; hosted Preview retains its
-   existing structure and other services still need convergence.
+   now serves both hosted Preview evaluation families. Translation submission
+   and Production activation remain separate work.
 
 This comparison covers application, education, payment, file, AI, email, staff
 and audit data. Payload content/version/media tables, Supabase-managed `auth.*`
@@ -377,13 +379,13 @@ education IDs; these arrays are not foreign keys.
 
 ## 3. Proposed shared database model
 
-**Six-table launch target approved November 10, 2026; isolated pre-evaluation verified.**
+**Six-table target activated for both hosted Preview evaluation families on November 11, 2026.**
 Five business tables plus AI runs remain. The Stripe webhook still processes
 payments; locked payment state replaces the event ledger. No operation/actor history
 or application request-frequency counter is retained. Current business state owns
 notes, material requests, result versions and payment exemption. The full local
-copy has 18 tables (6 shared + 12 formal); hosted Preview remains at 32. See
-[acceptance](archive/database-six-table-rehearsal-2026-11-10.md).
+copy and hosted Preview now have six tables. See
+[acceptance](archive/database-formal-six-preview-2026-11-11.md).
 
 The master has no storage, locale, access-token or session fields. Customers use
 its random UUID in a non-expiring application URL, with no additional credential

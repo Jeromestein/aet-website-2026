@@ -74,6 +74,8 @@ Keep source-specific READMEs beside their content. Use the relevant one:
 
 ## Historical evidence
 
+- [Formal six-table Preview convergence — November 11](archive/database-formal-six-preview-2026-11-11.md): final twelve-table retirement and hosted acceptance.
+
 These snapshots preserve decisions and verification without crowding current
 status. Old instructions, counts, unchecked boxes and provider states are dated;
 follow the current checklist and module guide before acting on them.

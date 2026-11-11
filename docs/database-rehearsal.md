@@ -348,3 +348,29 @@ and hosted behavior stays unchanged. Core versions/material requests/exemptions
 continue to use service state, not the retired archive. Staff API compatibility
 returns `audit: []`; old staff UI may still show an empty history section until
 hosted UI cutover. No UI change or browser verification is claimed here.
+
+
+## Formal convergence to six tables — November 11
+
+`tests/application-core-formal.test.ts` restores a complete fresh Preview snapshot
+into disposable PostgreSQL, runs `scripts/database/converge-formal.ts`, preserves
+the pre-evaluation cohort and physically removes all twelve old formal tables.
+It verifies both formal entry points, CRM/Status parity, education dates/prices,
+File ID ownership/revisions, failed upload retry, post-upload access, one English
+confirmation, payment replay/refund ordering and versioned report release.
+Provider calls are doubled in this suite; hosted evidence is recorded separately.
+
+```sh
+APPLICATION_CORE_TEST_PG_BIN=/opt/homebrew/opt/postgresql@15/bin \
+APPLICATION_FORMAL_SNAPSHOT=/absolute/private/snapshot-directory \
+pnpm exec vitest run tests/application-core-formal.test.ts --maxWorkers=1
+```
+
+The private directory must contain `snapshot.json` and `providers.json`. The suite
+emits a reconciled `prepared.json` before synthetic cases. Never commit snapshots,
+provider payloads or backups. `scripts/database/import-formal-preview.mts` is a
+one-time guarded import: exact project, frozen unchanged sources, artifact digest,
+empty formal target and atomic typed comparisons. It refuses a second import.
+The dated retirement migration checks source fingerprints and migrated entities,
+then drops only the named twelve Preview tables without CASCADE. Hosted acceptance
+and rollback boundaries: [November 11 evidence](archive/database-formal-six-preview-2026-11-11.md).

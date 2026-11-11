@@ -154,13 +154,23 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   webhook, result and delivered English mail pass. Six historical links work.
 - [x] **Retire verified Preview pre-evaluation sources (November 11):** owner
   confirmed deletion; the exact guarded SQL passed restored-backup rehearsal,
-  then removed twenty old tables. Hosted inventory is **18 = 6 shared + 12 formal**.
+  then removed twenty old tables. At that stage the inventory was **18 = 6 shared + 12 formal**.
   Post-deletion new submission/cancellation, retry, old/new reads and official
-  Stripe replay pass. Twelve retained formal tables are unchanged; Production
+  Stripe replay passed. Twelve formal tables remained at that stage; Production
   remains untouched. See [acceptance](archive/database-six-preview-2026-11-10.md).
-- [ ] **Converge formal/translation to the same six:** retire the twelve remaining
-  formal workflow/projection tables only after readers/writers and history pass
-  the shared file/payment/notification/access contracts.
+- [x] **Converge formal evaluation and retire its twelve Preview tables (November 11):**
+  migrate four applications, five educations and four verified Dropbox File IDs;
+  retain existing pre-evaluations. Full fresh backup restore, exact DROP rehearsal,
+  CRM/Status history, new intake/upload, delivered English mail and Stripe test
+  replay pass. Hosted Preview now has exactly **six shared business/runtime tables**;
+  Production is unchanged. Full regression: 730 passed, 174 environment-dependent
+  skips; eight targeted formal cases and TypeScript pass. Browser verification
+  also caught and fixed continued uploads after the first file enters review.
+  See [acceptance](archive/database-formal-six-preview-2026-11-11.md).
+- [ ] **Complete unified v2 formal fulfillment:** connect staff processing, confirmed
+  quote, payment truth and report release; these remain separate from table migration.
+- [ ] **Connect translation submission to the same six:** use service details and
+  documents, without adding a translation-specific table.
 - [ ] **Optional future reconsideration — operation history / rate limiting:**
   only revisit if a concrete business need appears. Neither is a launch requirement;
   no staff-change tracking or request quotas are active in the six-table mode.

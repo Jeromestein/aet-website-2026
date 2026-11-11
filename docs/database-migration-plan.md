@@ -1,18 +1,19 @@
 # Database convergence plan
 
-Updated November 11, 2026. **Hosted dev Preview pre-evaluation now uses six
-private `aet_preview_shared` tables at `3128a83`, including all six historical
-test applications. Twenty superseded Preview tables have been retired.**
-The actual Preview inventory is **18 = 6 shared + 12 retained formal tables**.
-Production remains unchanged; real business history and formal/translation
-convergence still require separate work.
+Updated November 11, 2026. **Hosted dev Preview now uses six private
+`aet_preview_shared` tables for both pre-evaluation and formal evaluation.**
+All four historical formal applications, five education records and four Dropbox
+files have been migrated, alongside the existing pre-evaluation cohort. The
+remaining twelve formal tables have been retired after full-copy and hosted checks.
+The actual Preview business inventory is **6**. Production remains unchanged.
+Translation submission and unified formal-intake payment/fulfillment remain open;
+a shared database does not make those product journeys complete.
 
-See [hosted cutover acceptance](archive/database-six-preview-2026-11-10.md),
+See [formal convergence acceptance](archive/database-formal-six-preview-2026-11-11.md),
 [active checklist](migration-checklist.md) and [rehearsal guide](database-rehearsal.md).
-The initial field audit below remains the migration baseline. Historical local
-stages had 25, 21, 20 and then 18 tables; those counts are evidence of successive
-rehearsals, not today's hosted inventory. The explicit no-charge test fixture
-projects `waived` and has no fabricated payment record.
+The field audit below remains the migration baseline. Earlier 32/25/21/20/18-table
+counts describe historical stages. Staff authentication, legacy CMS and unrelated
+Production/system tables are outside this Preview business count.
 
 ## Approved convergence target: 6 tables
 
@@ -21,8 +22,8 @@ from the eight-table target. Do not record who changed an application or enforce
 application request-frequency quotas in this phase. No replacement log, actor
 history array, counter table or external rate-limiting service is introduced.
 The earlier thirteen-, nine- and eight-table results remain historical evidence.
-Both the complete local copy and hosted dev Preview now have **18 tables =
-6 shared + 12 formal**. See [hosted acceptance](archive/database-six-preview-2026-11-10.md).
+Both the complete local copy and hosted dev Preview now have **6 shared tables**.
+See [hosted acceptance](archive/database-formal-six-preview-2026-11-11.md).
 
 | Ownership | Target tables |
 | --- | --- |
@@ -34,7 +35,7 @@ state stay on the application/service records. Staff reads return no operation
 history. Staff authentication/office scope, customer application scope, input
 validation, payment duplicate protection and file size/type/count constraints
 remain. Staff auth, legacy CMS, unrelated public tables and future accounts are
-outside this table count. Formal/translation convergence and Production activation
+outside this table count. Translation submission, unified formal-intake fulfillment and Production activation
 remain separate work.
 
 ### Payment handling required for launch
@@ -587,7 +588,8 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | 3c. Simplify to nine tables | Merge current upload state into documents, delegate mail history to Resend, replace customer sessions/tokens with application-ID access and remove audit business dependencies | Verified locally: 25 runtime cases + 11 full-snapshot cases, physical four-table retirement and DDL rollback; 379 combined tests / 22 files and TypeScript pass. Complete isolated copy at this stage: 21 tables; hosted was then 32. See [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md) |
 | 3d. Simplify payments to eight tables | Retire the event table; retain Stripe webhook and payment-state duplicate protection | Verified in isolation; see [acceptance](archive/database-eight-table-rehearsal-2026-11-10.md). Hosted tables remain unchanged |
 | 3e. Simplify to six tables | Remove operation history and request-frequency quotas; preserve business state and access checks | Verified locally; see [acceptance](archive/database-six-table-rehearsal-2026-11-10.md). Complete copy: 18 tables. Hosted November 11 cutover also passes: twenty old Preview tables retired, eighteen retained; see [hosted acceptance](archive/database-six-preview-2026-11-10.md) |
-| 4. Connect formal intake | Move intake to canonical records and reuse the retained AI execution table and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
+| 3f. Converge formal Preview storage | Migrate formal code/history to the same six and retire twelve sources | Completed November 11: fresh backup/restore, four historical applications, hosted intake/upload/mail/CRM/Status, Stripe replay and exact six-table catalog verified; see [acceptance](archive/database-formal-six-preview-2026-11-11.md) |
+| 4. Complete formal intake fulfillment | Move intake to canonical records and reuse the retained AI execution table and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
 | 5. Connect translation and combinations | Permit translation submission with no education/evaluee requirement; use service amounts, shared payments/files and per-service notes/status | Pure translation and evaluation-plus-translation both complete; completing one service cannot close the other; no double shipping charge |
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
 | 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 6 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |

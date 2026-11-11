@@ -15,7 +15,7 @@ are preserved in the [dated archives](README.md#historical-evidence).
 
 For database tables and individual fields, use the separate
 [legacy/current/proposed database comparison](database-architecture.md).
-Its shared model now serves new dev Preview pre-evaluation applications; the
+Its shared model now serves dev Preview pre-evaluation and formal evaluation; the
 original component diagrams below are not a full physical-schema inventory.
 The [database convergence plan](database-migration-plan.md) reviews code-level
 gaps in that model and proposes implementation phases, compatibility and rollback
@@ -39,10 +39,10 @@ flowchart TB
   end
 
   AUTH["Supabase Auth<br/>Staff and Office Permissions"] --> CRM
-  API -->|New Applications and Test| TEST[("Supabase Preview Schemas<br/>Evaluation / Pre-evaluation / Compatibility Tables")]
+  API -->|New Applications and Test| TEST[("Supabase Private Preview Schema<br/>Six Shared Tables")]
   API -->|CRM Live| LIVE[("Existing Business Data<br/>fce_* / aet_core_*")]
   API --> FILE["Dropbox<br/>Existing Office Accounts"]
-  API --> EMAIL["Resend<br/>Email Queue and Delivery Records"]
+  API --> EMAIL["Resend<br/>Delivery History<br/>Current Send State in Service Details"]
   API --> AI["OpenAI Responses<br/>Document Analysis and Page Evidence"]
   API -.-> PAY["Pre-evaluation Stripe Payments<br/>Test Mode Only"]
   CRON["Scheduled Recovery<br/>AI / Email / Application Expiry"] -.-> API
@@ -59,8 +59,9 @@ flowchart TB
   for configuration and dated acceptance evidence. Test-mode integration does not
   enable formal-intake payments or production charges.
 - **Shared business data:** CRM Live reads and edits existing `fce_*` and
-  `aet_core_*` records. CRM Test and new intake use preview schemas; changing the
-  UI does not migrate all records into a new database.
+  `aet_core_*` records. CRM Test and both evaluation families use six shared Preview tables; the old
+  Preview workflow/projection tables are retired. Production public data remains
+  separate and unchanged.
 - **External services:** Dropbox continues using existing office accounts.
   Preview database isolation does not imply separate storage or provider accounts.
 - **Background recovery:** AI recovery, independent email recovery and payment
