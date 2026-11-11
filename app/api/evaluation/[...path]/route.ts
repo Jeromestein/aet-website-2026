@@ -1,3 +1,7 @@
+import {formalCore,formalRows,formalFiles} from '@/lib/application-core/formal-store';
+import {coreFileMetadata,officeForConnection} from '@/lib/application-core/documents';
+import {clientForOffice} from '@/lib/dropbox/server';
+import {downloadBytes} from '@/lib/dropbox/download';
 import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
 import { configuration, required } from '@/lib/preeval/config';
@@ -30,7 +34,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
     if (endpoint === 'stripe-webhook' && post) {
       const signature = request.headers.get('stripe-signature'); if (!signature) throw new AppError('invalid_signature');
       let event; const raw = await read(request, 1048576);
-      try { event = stripeClient().webhooks.constructEvent(raw, signature, required('STRIPE_TEST_WEBHOOK_SECRET')); } catch { throw new AppError('invalid_signature'); }
+      try { event = stripeClient(formalCore()?'pre-evaluation':'formal-evaluation').webhooks.constructEvent(raw, signature, required('STRIPE_TEST_WEBHOOK_SECRET')); } catch { throw new AppError('invalid_signature'); }
       await handleStripeEvent(event); after(flushFormalEmails); return response({ received: true });
     }
     const upload = path[0] === 'applications' && path.length === 3 && ['files', 'reports'].includes(path[2]) && post;
@@ -51,8 +55,8 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       const rows = await db()`select a.id,a.data->'client'->>'name' as name,a.data->'client'->>'email' as email,
         case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office,
         a.data->'educations' as educations,a.data->'services' as services,a.status,a.payment_status,a.created_at,a.updated_at,
-        (select count(*)::int from ${table("evaluation.files")} where application_id=a.id and kind='document' and state='ready') file_count,count(*) over()::int total
-        from ${table("evaluation.applications")} a left join ${table("public.fce_applications")} l on l.id=a.id
+        (select count(*)::int from ${formalCore()?db()`(${formalFiles(db())}) f`:table("evaluation.files")} where application_id=a.id and kind='document' and state='ready') file_count,count(*) over()::int total
+        from ${formalCore()?db()`(${formalRows(db())})`:table("evaluation.applications")} a left join ${formalCore()?db()`lateral(select a.id,a.office)`:table("public.fce_applications")} l on l.id=a.id
         where (${!current.offices} or ((case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end)=any(${current.offices || []}::text[]) or ((case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end) is null and ${Boolean(current.include_unassigned)})))
         and (${status}='all' or a.status=${status} or a.payment_status=${status}) and ((a.data->'client'->>'name')||' '||(a.data->'client'->>'email')||' '||a.id::text) ilike ${filter}
         order by a.created_at desc limit 20 offset ${(page - 1) * 20}`;
@@ -64,7 +68,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       const staffRoute = ['staff', 'reports', 'access-link', 'admin'].includes(path[2]);
       const current = staffRoute ? await staffAccess(id) : await access(id);
       if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);
-      const [intake]=await db()`select data->>'intakeVersion' as version from ${table('evaluation.applications')} where id=${id}`;
+      const [intake]=await db()`select data->>'intakeVersion' as version from ${formalCore()?db()`(${formalRows(db())}) a`:table('evaluation.applications')} where id=${id}`;
       if(intake?.version==='2') throw new AppError('intake_preview_read_only',409);
       if (path[2] === 'admin' && path.length === 3 && !post) return response(await application(id, true));
       if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); after(flushFormalEmails); return response({ ok: true }); }
@@ -81,11 +85,13 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       }
       if (path[2] === 'files' && path.length === 4 && !post) {
         if (!z.uuid().safeParse(path[3]).success) throw new AppError('not_found', 404);
-        const [file] = await db()`select * from ${table("evaluation.files")} where id=${path[3]} and application_id=${id} and state='ready'`;
+        const [file] = await db()`select * from ${formalCore()?db()`(${formalFiles(db())}) f`:table("evaluation.files")} where id=${path[3]} and application_id=${id} and state='ready'`;
         if (!file) throw new AppError('not_found', 404);
         const app = await application(id, current.admin);
         if (!current.admin && file.kind === 'report' && !canDownloadReport(app as ApplicationRecord, file.id)) throw new AppError('access_denied', 403);
-        const content = await downloadFile(file.dropbox_path);
+        let content:Buffer;
+        if(formalCore()){const metadata=await coreFileMetadata(file);if(!current.admin&&file.kind==='report'&&metadata.rev!==file.storage_rev)throw new AppError('report_not_ready',409);content=await downloadBytes((await (await clientForOffice(officeForConnection(file.storage_location))).filesDownload({path:metadata.id})).result);}
+        else content=await downloadFile(file.dropbox_path);
         return new NextResponse(new Uint8Array(content), { headers: { ...privateHeaders, 'Content-Type': file.mime_type, 'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(file.name)}`, 'X-Content-Type-Options': 'nosniff' } });
       }
     }

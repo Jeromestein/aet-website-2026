@@ -1,3 +1,4 @@
+import {formalCore,formalLegacy} from '@/lib/application-core/formal-store';
 import { withDocuments } from '@/lib/customer-status/documents';
 import { readIntake } from '@/lib/application/intake-server';
 import { NextResponse } from 'next/server';
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
     if (!parsed.success) throw new AppError('invalid_application_id');
     const id = parsed.data.applicationId;
     if(new URL(request.url).searchParams.get('source')==='preview') return reply(withDocuments(projectIntakeStatus(await readIntake(id))));
+    if(!liveEnabled()&&formalCore()){const {row,educations}=await formalLegacy(id);return reply(withDocuments(projectStatus(row,educations,'preview')));}
     // Match the old formal lookup; do not route formal IDs into pre-evaluation.
     const rows = liveEnabled()
       ? await liveDb()`select id,status,payment_status,created_at,submitted_at,paid_at,office,service_type,due_amount,name,country,street_address,street_address2,city,region,zip_code,phone,fax,email,purpose,purpose_other,first_name,middle_name,last_name,date_of_birth,pronouns from public.fce_applications where id=${id}`

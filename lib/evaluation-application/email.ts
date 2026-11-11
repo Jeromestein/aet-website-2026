@@ -1,3 +1,6 @@
+import {formalCore,formalPayments,queueFormalNotification} from '../application-core/formal-store';
+import {coreTable} from '../application-core/connection';
+import {flushCompactNotifications} from '../application-core/compact-notifications';
 import "server-only";
 import { randomUUID } from "node:crypto";
 import type postgres from "postgres";
@@ -10,6 +13,7 @@ import { feeUpdateEmail, paymentConfirmationEmail, type PaymentReceipt } from ".
 
 /** Enqueue in the same transaction as the confirmed business event. */
 export async function queuePaymentEmail(tx: postgres.TransactionSql, applicationId: string, paymentId: string) {
+  if(formalCore())return queueFormalNotification(tx,applicationId,'payment','payment:'+paymentId,{payment_id:paymentId});
   await tx`insert into ${table("evaluation.emails")}(application_id,kind,dedupe_key,recipient,payment_id)
     values(${applicationId},'payment',${'payment:' + paymentId},${configuration().recipient},${paymentId}) on conflict(dedupe_key) do nothing`;
 }
@@ -27,12 +31,13 @@ export async function renderFormalEmail(row: Row) {
   const cc = officeCc(app.data.client.office, row.recipient);
   const options = { notice: "Test-mode notification · This email belongs to the isolated local workflow. No live payment is requested." };
   if (row.kind === "payment") {
-    const [payment] = await db()`select id,amount_cents,paid_at,status from ${table("evaluation.payments")}
+    const [payment] = await db()`select id,amount_cents,paid_at,status from ${formalCore()?db()`(${formalPayments(db())}) p`:table("evaluation.payments")}
       where id=${row.payment_id} and application_id=${app.id}`;
     if (!payment || payment.status !== "paid" || app.payment_status !== "paid" || !payment.paid_at)
       throw new EmailReviewRequired("payment_receipt_unavailable");
     return { ...await paymentConfirmationEmail(app, payment as PaymentReceipt, config.origin, options), cc };
   }
+  if(formalCore()){const current=app.confirmed_quote;if(!current||app.status==='cancelled'||app.payment_status!=='unpaid'||current.base!==row.quote?.base||current.additional!==row.quote?.additional||current.explanation!==row.quote?.explanation)throw new EmailReviewRequired('fee_update_superseded');return {...await feeUpdateEmail(app,current,config.origin,options),cc};}
   const [event] = await db()`select detail from ${table("evaluation.audit")}
     where id=${row.audit_id} and application_id=${app.id} and action='staff.quote'`;
   const current = app.confirmed_quote;
@@ -49,6 +54,7 @@ const resendTransport: EmailTransport = async mail => {
   return data.id;
 };
 export async function flushFormalEmails(transport: EmailTransport = resendTransport) {
+  if(formalCore()){const pending=await db()`select application_id from ${coreTable(db(),'aet_service_detail')} where service_type='evaluation' and (notification_state->'payment'->>'state' in ('queued','failed','sending') or notification_state->'fee_update'->>'state' in ('queued','failed','sending')) order by updated_at limit 5`;for(const row of pending)await flushCompactNotifications(transport,row.application_id,{serviceType:'evaluation',kinds:['payment','fee_update'],render:renderFormalEmail});return;}
   if (configuration().cloudPreview) return;
   const sql = db(), lease = randomUUID();
   await sql`update ${table("evaluation.emails")} set state='failed',error='interrupted',locked_at=null,lease=null

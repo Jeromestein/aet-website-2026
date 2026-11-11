@@ -1,3 +1,4 @@
+import {formalCore,indexFormalDocument,readFormal} from '../application-core/formal-store';
 import 'server-only';
 import { downloadBytes } from './download';
 import { startDocumentUpload, finishDocumentUpload } from '../preeval/ai-jobs';
@@ -143,6 +144,8 @@ function fileEntry(file: files.FileMetadata): FileEntry {
   return { id: file.id, name: file.name, size: file.size, uploadedAt: file.server_modified, pathDisplay: file.path_display ?? '' };
 }
 async function finishResult(dbx: Dropbox, context: ApplicationContext, file: files.FileMetadata) {
+  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()&&['cancelled','completed'].includes((await readFormal(context.id)).status))throw new DocumentError('readOnly',403);
+  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore())await indexFormalDocument(context.id,accountForOffice(context.office),file);
   let archive: 'not-required' | 'saved' | 'failed' = 'not-required';
   const storage = await resolveStorage(context);
   if (storage.archivePath) {
@@ -186,6 +189,7 @@ function validateAIFile(context: ApplicationContext, name: string, size: number)
   if (size > 20 * 1024 * 1024) throw new DocumentError('tooLarge', 413);
 }
 export async function uploadSmall(context: ApplicationContext, file: File) {
+  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()&&['cancelled','completed'].includes((await readFormal(context.id)).status))throw new DocumentError('readOnly',403);
   validateAIFile(context, file.name, file.size);
   validateFile(file.name, file.size, file.type);
   if (file.size > CHUNK_SIZE) throw new DocumentError('tooLarge', 413);
@@ -205,6 +209,7 @@ export async function uploadSmall(context: ApplicationContext, file: File) {
   return finishResult(dbx, context, result);
 }
 export async function startUpload(context: ApplicationContext, data: Record<string, unknown>, expires: number) {
+  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()&&['cancelled','completed'].includes((await readFormal(context.id)).status))throw new DocumentError('readOnly',403);
   const { fileName, fileSize, mime, contentHash } = data;
   if (typeof fileName !== 'string' || typeof fileSize !== 'number' || typeof mime !== 'string' ||
     typeof contentHash !== 'string' || !/^[a-f0-9]{64}$/.test(contentHash)) throw new DocumentError('invalid');
@@ -298,6 +303,7 @@ export async function listFiles(context: ApplicationContext, cursor?: string | n
     }
     const next = result.has_more ? { binding, index, cursor: result.cursor }
       : index + 1 < storage.reads.length ? { binding, index: index + 1, cursor: null } : null;
+    if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore())for(const entry of result.entries){if(entry['.tag']==='file')await indexFormalDocument(context.id,accountForOffice(location.office),entry);}
     return { files: result.entries.filter((entry): entry is files.FileMetadataReference => entry['.tag'] === 'file').map(fileEntry),
       nextCursor: next ? seal(accountForOffice(context.office), 'cursor', next) : null };
   }

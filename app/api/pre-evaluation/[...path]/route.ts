@@ -1,3 +1,4 @@
+import {formalCore} from '@/lib/application-core/formal-store';
 import { compact, compactFileRecords } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextResponse, after } from "next/server";
@@ -99,8 +100,8 @@ async function handler(
         throw new AppError("invalid_signature");
       }
       await handleStripeEvent(event);
-      // The preview opt-in authorizes pre-evaluation payments only.
-      if (!configuration().cloudPreview) {
+      // Both migrated services use the same verified dev Preview test endpoint.
+      if (!configuration().cloudPreview || formalCore()) {
         await handleFormalEvent(event);
         after(flushFormalEmails);
       }

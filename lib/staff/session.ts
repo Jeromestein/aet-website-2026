@@ -1,3 +1,4 @@
+import {formalCore} from '../application-core/formal-store';
 import { converged } from "../application-core/converged-store";
 import { coreTable } from '../application-core/connection';
 import "server-only";
@@ -60,7 +61,7 @@ export async function requireStaffApplication(
   const current = staff || (await requireStaff());
   const rows =
     kind === "formal"
-      ? await db()`select case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office
+      ? formalCore()?await db()`select office from ${coreTable(db(),'aet_core_applications')} where id=${id} and primary_service='evaluation'`:await db()`select case when l.id is null then nullif(a.data->'client'->>'office','') else l.office end as office
       from ${table("evaluation.applications")} a left join ${table("public.fce_applications")} l on l.id=a.id where a.id=${id}`
       : await isCoreApplication(id)
         ? await db()`select a.office from ${coreTable(db(),'aet_core_applications')} a ${converged()?db()``:db()`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.id=${id}`

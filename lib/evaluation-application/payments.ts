@@ -1,3 +1,5 @@
+import { formalCore } from '../application-core/formal-store';
+import {checkoutFormalCore,applyFormalCheckout,refundFormalCore,reconcileFormalCore,cancelFormalCore} from '../application-core/formal-payments';
 import type Stripe from 'stripe';
 import { applyChargeRefund, syncCheckoutRefund } from '../preeval/stripe-refunds';
 import { table, db } from '../preeval/db';
@@ -8,6 +10,7 @@ import { payableTotal, receiptPath, type ApplicationRecord } from './workflow';
 import { queuePaymentEmail } from './email';
 const pilot = 'aet-formal-2026-local';
 export async function checkout(id: string) {
+  if(formalCore())return checkoutFormalCore(id);
   const stripe = stripeClient();
   return db().begin(async tx => {
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
@@ -39,6 +42,7 @@ export async function checkout(id: string) {
   });
 }
 export async function applyCheckout(session: Stripe.Checkout.Session, eventId: string, eventType: string) {
+  if(formalCore())return applyFormalCheckout(session,eventId,eventType);
   if (session.livemode || session.metadata?.pilot !== pilot) return;
   const id = session.metadata.applicationId;
   if (!id) throw new AppError('invalid_payment');
@@ -63,6 +67,7 @@ export async function applyCheckout(session: Stripe.Checkout.Session, eventId: s
   });
 }
 export async function reconcile(id: string) {
+  if(formalCore())return reconcileFormalCore(id);
   const rows = await db()`select session_id from ${table("evaluation.payments")} where application_id=${id} and status in ('open','paid','partially_refunded') order by created_at desc limit 3`;
   for (const row of rows) {
     const session = await stripeClient().checkout.sessions.retrieve(row.session_id);
@@ -74,10 +79,12 @@ export async function handleStripeEvent(event: Stripe.Event) {
   if (['checkout.session.completed', 'checkout.session.async_payment_succeeded', 'checkout.session.expired', 'checkout.session.async_payment_failed'].includes(event.type)) {
     await applyCheckout(event.data.object as Stripe.Checkout.Session, event.id, event.type);
   } else if (event.type === 'charge.refunded') {
+    if(formalCore())return refundFormalCore(event);
     await applyChargeRefund(event, 'evaluation', pilot, () => stripeClient());
   }
 }
 export async function cancel(id: string, actor: string) {
+  if(formalCore())return cancelFormalCore(id,actor);
   const paid = await db().begin(async tx => {
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
     if (!app) throw new AppError('not_found', 404);

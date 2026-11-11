@@ -1,3 +1,5 @@
+import {formalCore} from '../application-core/formal-store';
+import {flushCompactNotifications} from '../application-core/compact-notifications';
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { db, table } from "../preeval/db";
@@ -34,6 +36,7 @@ export async function renderIntakeEmail(applicationId: string) {
 /** Render from saved application data after claiming this delivery record. */
 export async function sendIntakeEmail(applicationId: string, transport: IntakeTransport = resendTransport) {
   requireIntakePreview();
+  if(formalCore()){await flushCompactNotifications(transport,applicationId,{serviceType:'evaluation',kinds:['confirmation'],render:row=>renderIntakeEmail(row.application_id)});return;}
   const sql = db(), lease = randomUUID();
   await sql`update ${table("evaluation.intake_emails")} set state='failed',error='interrupted',locked_at=null,lease=null
     where application_id=${applicationId} and state='sending' and locked_at<now()-interval '3 minutes'`;

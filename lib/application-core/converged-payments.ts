@@ -97,7 +97,7 @@ export async function applyConvergedCheckout(s:Stripe.Checkout.Session,eventId:s
 export async function refundConverged(event:Stripe.Event) {
   const c=event.data.object as Stripe.Charge,intent=intentId(c.payment_intent);
   if(!intent)throw new AppError('unresolved_refund',409);
-  let [p]=await db()`select * from ${coreTable(db(),'aet_payments')} where payment_intent_id=${intent} and provider_account=${account()} and provider_mode='test'`;
+  let [p]=await db()`select * from ${coreTable(db(),'aet_payments')} where payment_intent_id=${intent} and provider_account=${account()} and provider_mode='test' and source is distinct from 'formal-evaluation'`;
   if(!p){
     const sessions=await client().checkout.sessions.list({payment_intent:intent,limit:2});
     if(sessions.has_more||sessions.data.length!==1)throw new AppError('unresolved_refund',409);

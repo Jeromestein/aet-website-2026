@@ -1,3 +1,4 @@
+import { formalCore, submitFormal } from '../application-core/formal-store';
 import 'server-only';
 import { saveLegacyFormal } from '../legacy-application/store';
 import { z } from 'zod';
@@ -13,6 +14,7 @@ export async function saveApplication(raw: unknown, key: string) {
   const input = submissionSchema.parse(raw);
   keySchema.parse(key);
   const requestHash = hash(JSON.stringify(input));
+  if(formalCore())return submitFormal(input.data,quote(input.data),input.requestId,requestHash);
   return db().begin(async sql => {
     const [created] = await sql`insert into ${table("evaluation.applications")}(request_id,request_hash,access_hash,locale,data,quote)
       values (${input.requestId},${requestHash},${hash(key)},${input.locale},${JSON.stringify(input.data)}::text::jsonb,${JSON.stringify(quote(input.data))}::text::jsonb)

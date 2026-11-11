@@ -71,6 +71,7 @@ export const convergedTableName = (sql: Sql, name: string) => {
   if (sixTableMode(sql) && ['preeval.audit','preeval.rate_limits'].includes(name))
     throw new Error('Retired audit/rate-limit relation requested: '+name);
   if (names[name]) return (active.get(sql)?.schema || 'aet') + '.' + names[name];
+  if(sixTableMode(sql) && (name.startsWith('evaluation.') || /^public\.fce_/.test(name)))throw new Error('Retired formal relation requested: '+name);
   if (name.startsWith('preeval.') || /^public.aet_core_/.test(name))
     throw new Error('Retired relation requested: ' + name);
   return null;

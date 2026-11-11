@@ -1,3 +1,4 @@
+import { formalCore, formalRows, formalFiles, formalPayments } from '../application-core/formal-store';
 import 'server-only';
 import { coreRuntimeEnabled } from '../application-core/runtime';
 import type { Sql, TransactionSql, PendingQuery } from 'postgres';
@@ -29,6 +30,20 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
 }
 
 export function formalRecords(sql: Sql | TransactionSql) {
+  if(formalCore())return sql`
+    select 'formal'::text kind,a.id,trim(concat_ws(' ',case a.pronouns when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else null end,a.first_name,nullif(a.middle_name,''),a.last_name)) name,
+      a.email,a.office,coalesce((a.data->>'intakeVersion')::int,1) as "intakeVersion",a.status,a.payment_status,a.created_at,a.updated_at,
+      coalesce(a.purpose,'') purpose,coalesce(a.residence_country,'') country,a.amount_cents amount,
+      concat_ws(', ',case when coalesce(a.data->'services'->'document'->>'tier','')<>'' then 'Document by Document' end,
+        case when coalesce(a.data->'services'->'course'->>'tier','')<>'' then 'Course by Course' end,
+        case when coalesce(a.data->'services'->'expert'->>'tier','')<>'' then 'Expert Opinion Letter' end,
+        case when coalesce(a.data->'services'->'position'->>'tier','')<>'' then 'Position Evaluation' end,
+        case when (a.data->'services'->>'translation')::boolean then 'Translation' end,
+        case when (a.data->'services'->>'customized')::boolean then 'Customized Evaluation' end) service,
+      coalesce(a.data->'delivery'->>'shipping','') not in ('','no_delivery_needed') as "mailDelivery",a.data->'educations' educations,
+      coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind',f.kind,'name',f.name,'bytes',f.bytes) order by f.created_at) from (${formalFiles(sql)}) f where f.application_id=a.id and f.state='ready'),'[]'::jsonb) files,
+      coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from (${formalPayments(sql)}) p where p.application_id=a.id),'[]'::jsonb) payments
+    from (${formalRows(sql)}) a`;
   return sql`
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
         case lower(rtrim(coalesce(l.pronouns,a.data->'evaluee'->>'title'),'.')) when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else nullif(trim(coalesce(l.pronouns,a.data->'evaluee'->>'title')),'') end,

@@ -1,3 +1,5 @@
+import { formalCore, readFormal, formalApplication } from '../application-core/formal-store';
+import { addFormalFile, formalStaffAction } from '../application-core/formal-actions';
 import { queueFeeUpdateEmail } from './email';
 import { fromLegacyFormal } from '../legacy-application/mapping';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
@@ -19,6 +21,7 @@ export async function access(id: string) {
     if (staff.offices) await requireStaffApplication('formal', id);
     return { admin: true, actor: staff.email as string };
   }
+  if(formalCore()){await readFormal(id);return {admin:false,actor:'customer'};}
   const key = (await cookies()).get(cookieName(id))?.value;
   if (key && keySchema.safeParse(key).success) {
     const [row] = await db()`select id from ${table("evaluation.applications")} where id=${id} and
@@ -34,6 +37,7 @@ export async function staffAccess(id: string) {
   return { admin: true, actor: current.email as string };
 }
 export async function application(id: string, admin: boolean): Promise<ApplicationRecord> {
+  if(formalCore())return await formalApplication(id,admin) as ApplicationRecord;
   const [row] = await db()`select id,locale,data,quote,status,payment_status,version,input_version,confirmed_quote,customer_message,released_file_id,created_at,updated_at from ${table("evaluation.applications")} where id=${id}`;
   if (!row) throw new AppError('not_found', 404);
   const [legacy] = await db()`select * from ${table("public.fce_applications")} where id=${id}`;
@@ -60,6 +64,7 @@ export async function application(id: string, admin: boolean): Promise<Applicati
   return row as ApplicationRecord;
 }
 export async function addFile(id: string, file: File, kind: 'document' | 'report', actor: string) {
+  if(formalCore())return addFormalFile(id,file,kind);
   const data = Buffer.from(await file.arrayBuffer());
   if (!validFile(data, file.type) || (kind === 'report' && file.type !== 'application/pdf')) throw new AppError('invalid_file');
   const digest = createHash('sha256').update(data).digest('hex');
@@ -97,6 +102,7 @@ export async function addFile(id: string, file: File, kind: 'document' | 'report
   if (!ready) throw new AppError('application_locked', 409);
 }
 export async function staffAction(id: string, raw: unknown, actor: string) {
+  if(formalCore())return formalStaffAction(id,raw);
   const body = staffSchema.parse(raw);
   await db().begin(async tx => {
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
@@ -127,6 +133,7 @@ export async function staffAction(id: string, raw: unknown, actor: string) {
   });
 }
 export async function makeAccessLink(id: string, actor: string) {
+  if(formalCore()){await readFormal(id);return `${configuration().origin}/credential-evaluation-application/success?id=${id}`;}
   const token = randomBytes(32).toString('hex');
   const [app] = await db()`select locale from ${table("evaluation.applications")} where id=${id}`;
   if (!app) throw new AppError('not_found', 404);
@@ -138,6 +145,7 @@ export async function makeAccessLink(id: string, actor: string) {
   return `${configuration().origin}/${app.locale}/evaluation-access#token=${token}`;
 }
 export async function consumeAccess(token: string) {
+  if(formalCore())throw new AppError('invalid_link');
   if (!keySchema.safeParse(token).success) throw new AppError('invalid_link');
   const key = randomBytes(32).toString('hex');
   const app = await db().begin(async tx => {

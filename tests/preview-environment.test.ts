@@ -72,7 +72,7 @@ describe('core Preview opt-in', () => {
   it('requires both a verified account and hosted dev Preview', () => {
     vi.stubEnv('APPLICATION_CORE_MODE','preview');
     vi.stubEnv('APPLICATION_CORE_PROVIDER_ACCOUNT','acct_synthetic');
-    expect(corePreviewConfiguration()).toEqual({providerAccount:'acct_synthetic'});
+    expect(corePreviewConfiguration()).toEqual({providerAccount:'acct_synthetic',sixTables:false});
     vi.stubEnv('VERCEL_GIT_COMMIT_REF','main');
     expect(corePreviewConfiguration).toThrow();
   });

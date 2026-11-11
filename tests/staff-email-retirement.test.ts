@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+vi.mock('server-only',()=>({}));
 const m = vi.hoisted(() => ({ query: vi.fn(), staff: vi.fn() }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => ({ value: "a".repeat(43) }) }) }));
 vi.mock("../lib/staff/session", () => ({ staffSession: m.staff, requireStaffApplication: vi.fn() }));

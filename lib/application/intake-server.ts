@@ -1,3 +1,4 @@
+import { formalCore, submitFormal, readFormal } from '../application-core/formal-store';
 import { resolveStorage } from '../dropbox/storage';
 import { contextFor } from '../dropbox/application';
 import 'server-only';
@@ -25,6 +26,7 @@ export async function saveIntake(raw:unknown) {
   for(const id of ['document','course'] as const){const choice=data.evaluationRequest.services[id];legacy.services[id]={tier:choice.selected?choice.tier:'',additionalDegrees:choice.selected?Math.max(0,choice.educationIndexes.length-1):0};}
   legacy.services.translation=data.evaluationRequest.translation;
   const stored={...legacy,intake:data,intakeVersion:2};
+  if(formalCore()){ const saved=await submitFormal(stored,quote,parsed.requestId,requestHash);return {...saved,statusPath:statusPath(saved.id,parsed.locale)}; }
   return db().begin(async tx=>{
     const [created]=await tx`insert into ${table('evaluation.applications')}(request_id,request_hash,access_hash,locale,data,quote)
       values(${parsed.requestId},${requestHash},${hash(randomUUID())},${parsed.locale},${tx.json(stored)},${tx.json(quote)}) on conflict(request_id) do nothing returning id`;
@@ -51,6 +53,7 @@ export async function saveIntake(raw:unknown) {
 }
 export async function readIntake(id:string):Promise<IntakeReceipt> {
   requireIntakePreview();
+  if(formalCore()){const a=await readFormal(id);if(a.submission_version!==2)throw new AppError('not_found',404);const e=a.notification_state.confirmation||{};return {id:a.id,locale:'en',status:a.status,createdAt:new Date(a.created_at).toISOString(),data:a.data.intake,quote:a.quote,email:{state:e.state||'queued',attempts:e.attempts||0,recipient:e.recipient||TEST_RECIPIENT},statusPath:statusPath(id,'en')};}
   const [row]=await db()`select a.id,a.locale,a.status,a.created_at,a.data->'intake' as data,a.quote,e.state,e.attempts,e.recipient
     from ${table('evaluation.applications')} a join ${table('evaluation.intake_emails')} e on e.application_id=a.id where a.id=${id} and a.data->>'intakeVersion'='2'`;
   if(!row) throw new AppError('not_found',404);

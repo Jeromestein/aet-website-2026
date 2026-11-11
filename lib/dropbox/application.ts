@@ -1,3 +1,4 @@
+import {formalCore,formalLegacy} from '../application-core/formal-store';
 import 'server-only';
 import { accountForOffice, DocumentError, safeSegment, type ApplicationKind, type Office } from './shared';
 import { folderPath, seal, type ApplicationContext } from './server';
@@ -5,6 +6,7 @@ import { folderPath, seal, type ApplicationContext } from './server';
 async function lookup(applicationId: unknown, kind: unknown) {
   if (typeof applicationId !== 'string' || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(applicationId) ||
     !['evaluation', 'pre-evaluation'].includes(String(kind))) throw new DocumentError('invalid');
+  if(kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()){const {row}=await formalLegacy(applicationId);return {...row,submitted_at:new Date(row.submitted_at).toISOString()};}
   const base = process.env.AET_APPLICATIONS_SUPABASE_URL;
   const key = process.env.AET_APPLICATIONS_SUPABASE_ANON_KEY;
   if (!base || !key) throw new DocumentError('unavailable', 503);

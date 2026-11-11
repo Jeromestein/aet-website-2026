@@ -39,14 +39,14 @@ export async function retryCompactNotification(id:string,emailId:string) {
     await tx`update ${coreTable(tx,'aet_service_detail')} set notification_state=${tx.json(s.notification_state)} where id=${s.id}`;
   });
 }
-export async function flushCompactNotifications(transport:EmailTransport,applicationId?:string) {
+export async function flushCompactNotifications(transport:EmailTransport,applicationId?:string,options?:{serviceType:string;kinds:string[];render:(row:Row)=>Promise<{subject:string;html:string;cc?:string[]}>}) {
   const outcome={attempted:0,sent:0,reviewRequired:0};
   // No unbounded scan/cron. Existing entry points request one application.
   if(!applicationId)return outcome;
-  for(const kind of kinds){
+  for(const kind of options?.kinds||kinds){
     const lease=randomUUID();
     const claimed=await db().begin(async tx=>{
-      const [s]=await tx`select id,notification_state from ${coreTable(tx,'aet_service_detail')} where application_id=${applicationId!} and service_type='pre-evaluation' for update`;
+      const [s]=await tx`select id,notification_state from ${coreTable(tx,'aet_service_detail')} where application_id=${applicationId!} and service_type=${options?.serviceType||'pre-evaluation'} for update`;
       const n=s?.notification_state[kind];
       if(!n||n.state==='sent'||n.recipient!==configuration().recipient||n.available_at===null)return null;
       const now=Date.now(),first=n.first_attempt_at?new Date(n.first_attempt_at).getTime():null;
@@ -65,14 +65,14 @@ export async function flushCompactNotifications(transport:EmailTransport,applica
     if(!claimed)continue;
     async function change(fn:(n:Row)=>void){
       return db().begin(async tx=>{
-        const [s]=await tx`select id,notification_state from ${coreTable(tx,'aet_service_detail')} where application_id=${applicationId!} and service_type='pre-evaluation' for update`;
+        const [s]=await tx`select id,notification_state from ${coreTable(tx,'aet_service_detail')} where application_id=${applicationId!} and service_type=${options?.serviceType||'pre-evaluation'} for update`;
         const n=s?.notification_state[kind];if(!n||n.id!==claimed!.id||n.lease!==lease||n.state!=='sending')return false;
         fn(n);await tx`update ${coreTable(tx,'aet_service_detail')} set notification_state=${tx.json(s.notification_state)} where id=${s.id}`;return true;
       });
     }
     try{
       const {renderQueuedEmail}=await import('../preeval/email');
-      const content=await renderQueuedEmail(claimed);
+      const content=options?await options.render(claimed):await renderQueuedEmail(claimed);
       const mail={id:claimed.id,recipient:claimed.recipient,from:`${required('RESEND_DEFAULT_FROM_NAME')} <${required('RESEND_DEFAULT_FROM_ADDRESS')}>`,...content};
       const payload=deliveryHash(mail,claimed.payload_hash);
       const valid=await change(n=>{
