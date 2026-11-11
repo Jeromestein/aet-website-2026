@@ -1,0 +1,69 @@
+{
+  "created": "2026-11-11",
+  "language": "en",
+  "purpose": "Four-image square creative set",
+  "generator": "Built-in image_gen",
+  "copy_placement": "Use English title and body in Ads Manager. Images intentionally contain no promotional text overlays.",
+  "upload_order": [
+    "01-professional-support.png",
+    "02-credential-evaluation.png",
+    "03-document-consultation.png",
+    "04-document-translation.png"
+  ],
+  "assets": [
+    {
+      "file": "01-professional-support.png",
+      "title": "Professional Support",
+      "source": "public/images/hero.webp",
+      "method": "AI-assisted reframing and retouching of an existing website photograph",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Use case: identity-preserve. Input image is the edit target, an existing website photograph. Produce ONE separate square 1024x1024 editorial photograph. Reframe the supplied photograph into a balanced square showing the same Asian woman in black blazer and pale blue shirt working at her laptop in the same bright modern office. Preserve her facial identity, expression, outfit, natural skin texture, and the silver laptop. Main subject prominent with head fully inside safe margins and workspace visible at bottom. Change only framing and subtle exposure/color grading: clean daylight, restrained navy and pale blue, authentic professional photography, no heavy filter. Edge-to-edge photo only. No text, logos, badges, headline, CTA, watermarks, borders, mockup, interface, invented branding, or extra people. This is illustrative website imagery, not an employee portrait claim.",
+      "bytes": 1861911,
+      "sha256": "0036a39b7d87257ef0fbf2db7a22605bd836fa711fb8febbc5f3cd756b3af30d"
+    },
+    {
+      "file": "02-credential-evaluation.png",
+      "title": "Credential Evaluation",
+      "source": "public/images/graduates.jpg",
+      "method": "AI-assisted reframing and retouching of an existing website photograph",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Use case: identity-preserve. Input image is the edit target: existing website graduation photograph. Create ONE separate square 1024x1024 photograph through careful reframing and light retouching. Preserve the photographed people's facial identities, black graduation gowns and orange/gold hoods, genuine expressions, and graduation setting. Center a cohesive group of the middle graduates, keeping faces and caps entirely inside frame with comfortable margins. Retain documentary photographic texture, no invented diploma, logos or additional people. Reduce background distraction subtly using realistic depth of field, retain natural warm expressions with restrained cool neutral grading consistent with an education services website. Edge-to-edge photo only. No text overlay, headline, CTA, watermark, badges, border, collage, platform UI, invented branding or claims.",
+      "bytes": 2425626,
+      "sha256": "4a2ff4637310274e9b5040b41a33eb5c5c167bcfd5ab0fe7d833be7f879fcaba"
+    },
+    {
+      "file": "03-document-consultation.png",
+      "title": "Document Consultation",
+      "source": "public/images/document-consultation.jpg",
+      "method": "AI-assisted reframing and retouching of an existing website photograph",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Use case: identity-preserve. Input image is the edit target: existing licensed website photograph of two women reviewing documents by an office window. Create ONE separate square 1024x1024 editorial photograph. Reframe into a tighter balanced square of BOTH women, their complete heads and shoulders, hands and the open navy folder prominently visible, with a little desk at bottom. Preserve both faces, identities, hair, black vest and cream jacket, existing hand positions, the folder, the original office window context and natural photographic texture. Remove excess empty top window space by reframing only; subtle cooler clean daylight color grading with navy, ivory and pale blue. The document-review service is the focus. Edge-to-edge standalone photo only, no text overlays, headlines, CTA, watermarks, badges, logo, mockup or UI. No new people or fictional credentials; not a real staff or client claim.",
+      "bytes": 2286602,
+      "sha256": "b35880169ca28b4068d63a35662658b326bc1cf2868c3b8fb19c174e71b85276"
+    },
+    {
+      "file": "04-document-translation.png",
+      "title": "Document Translation",
+      "source": null,
+      "method": "AI-generated illustrative still life",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Use case: photorealistic-natural. Produce ONE separate square 1024x1024 editorial still-life photograph illustrating professional document translation and credential review. Edge-to-edge standalone photographic scene. On a pale warm ivory office desk in soft window daylight, arrange two understated white document sheets side by side in a navy blue presentation folder, one with a simple table layout and one with paragraph layout, a refined dark blue pen diagonally beside them, a small pair of reading glasses, and two plain blue reference books stacked at the upper corner. Three-quarter overhead composition, tactile cotton paper, subtle shadows, realistic material detail, calm precise working atmosphere. Paper layout is incidental with fine out-of-focus gray print only, no decipherable sentences, no real personal data, no seals, stamps, signatures, government symbols, diploma, accreditation or approval marks. Crop close enough that the documents are clearly the primary subject with safe margins. Restrained navy, pale blue and ivory palette matching a professional education and translation website. No people. No promotional text, headline, CTA, watermark, logo, badges, decorative typography, device, interface, ad frame or collage. The scene is an illustrative concept, never a real customer document or certified sample.",
+      "bytes": 2497352,
+      "sha256": "ae8dd56656f11e17102dc9b21150ea901e6a89a7cdd95aca9a2cd67b4df125dc"
+    }
+  ],
+  "usage_notes": [
+    "Illustrative imagery; people are not identified as AET employees or clients.",
+    "The document still life is fictional and is not a real translation or evaluation report.",
+    "Original website assets are unchanged. Source provenance is documented in ASSETS.md."
+  ],
+  "validation": {
+    "method": "PNG signature, all chunk CRCs, decompressed scanline lengths and filter bytes, dimensions, static frame and file-size checks; visual inspection",
+    "result": "passed",
+    "platform_validator": "Unavailable: local Python lacks Pillow and oai_imgsan. Independent PNG checks used instead."
+  }
+}

@@ -216,3 +216,23 @@ The subsequent two standalone English articles add ten more unique legacy images
 and 16 placements. Final generated collection: 79 bodies, 93 unique image files,
 191 placements, plus the separate pilot. Institution/agency website screenshots
 remain historical source captures; no new endorsement is asserted by migration.
+
+## Square advertising images — November 11, 2026
+
+`public/ads/` contains four separate 1254 x 1254 static PNG images for an
+English-language multi-image creative. Upload order, exact generation prompts,
+source paths, dimensions, byte sizes and SHA-256 hashes are in `manifest.json`.
+
+| File | Source and treatment |
+| --- | --- |
+| `01-professional-support.png` | AI-assisted square reframing and retouching of `public/images/hero.webp`, the retained legacy website photograph. |
+| `02-credential-evaluation.png` | AI-assisted square reframing and retouching of `public/images/graduates.jpg`, the retained legacy graduation photograph. |
+| `03-document-consultation.png` | AI-assisted square reframing and retouching of `public/images/document-consultation.jpg`, the Mizuno K/Pexels photograph credited above. |
+| `04-document-translation.png` | Original AI-generated illustrative document-review still life with a navy folder, reference books, glasses and pen. |
+
+All four were produced with built-in image_gen. Original assets remain unchanged;
+existing source provenance continues to apply to the three derivatives. People
+are illustrative subjects, not identified AET employees or clients. The generated
+papers are fictional, not customer records or examples of certified reports.
+Images contain no promotional overlays; English title/body belong in Ads Manager.
+No government seal, approval, endorsement or new business claim was added.

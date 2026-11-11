@@ -1,5 +1,18 @@
 # AET Implementation Status
 
+## 2026-11-11 — Square advertising image set
+
+- Added four standalone PNG images under `public/ads/` on the owner-requested
+  `main` checkout: three edits of existing website photographs and one generated
+  document-translation still life. Sources and exact prompts are recorded.
+- Visually inspected all four images. Independent PNG signature, chunk CRC,
+  decompression, scanline, static-frame, dimension and size checks passed:
+  each is 1254 x 1254 and 1.86–2.50 MB, below the screenshot's 10 MB limit.
+- The packaged Ads Manager validator could not run because local Python lacks
+  Pillow and oai_imgsan; independent checks above were used instead.
+- Asset-only delivery; no page components, live ads or campaign settings changed.
+  No production build was performed; live deployment is not verified here.
+
 ## 2026-11-11 — ChatGPT Ads Pixel
 
 - Applied only the Pixel component, page tracker and boundary tests from `dev`
