@@ -7,6 +7,7 @@ import { createCoreShadowReader } from "../application-core/reader";
 import { randomUUID } from "node:crypto";
 import { Resend } from "resend";
 import { table, db, type Row } from "./db";
+import { applicationRecipient } from './recipients';
 import { configuration, required } from "./config";
 import { customerEmail, type CustomerEmailKind, type EmailApplication, type EmailEducation } from "./email-template";
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from "../email/delivery";
@@ -40,10 +41,10 @@ export async function applicationEmail(app: Row, kind: CustomerEmailKind, inform
 /** Load the current application, and reject stale result references rather than sending a newer result. */
 export async function renderQueuedEmail(row: Row) {
   const config = configuration();
-  if (row.recipient !== config.recipient) throw new EmailReviewRequired("recipient_changed");
   if (!["confirmation", "result", "access", "information"].includes(row.kind)) throw new EmailReviewRequired("unknown_email_kind");
   const [app] = await workflowRows(db(), row.application_id, false);
   if (!app) throw new EmailReviewRequired("application_missing");
+  if (row.recipient !== applicationRecipient(app.email)) throw new EmailReviewRequired("recipient_changed");
   if (row.kind === "result" && (
     row.result_version !== app.result_version || (app.payment_status !== "paid" && !(converged() && app.payment_status === "waived")) || !app.result ||
     ["cancelled", "needs_information"].includes(app.status)
@@ -77,7 +78,7 @@ const resendTransport: EmailTransport = async mail => {
 };
 /** Cloud preview only dispatches an explicitly enabled, application-scoped batch. */
 export function emailDispatchEnabled(applicationId?: string) {
-  return !configuration().cloudPreview || (
+  return (!configuration().cloudPreview && !configuration().production) || (
     process.env.PREEVAL_EMAIL_ENABLED === "true" &&
     typeof applicationId === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(applicationId)
   );

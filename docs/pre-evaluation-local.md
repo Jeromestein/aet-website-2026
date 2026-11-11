@@ -1,9 +1,10 @@
-# Pre-evaluation local pilot
+# Pre-evaluation runtime guide
 
 Start with the current configuration below. The dedicated flow is separate from
 the general `/application` form. Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
+- [Production-capable runtime](#production-capable-runtime--implemented-on-dev-not-activated)
 - [Current cloud preview](#current-cloud-preview--updated-october-22-2026)
 - [GPT execution and setup](#direct-gpt-analysis--october-20-2026)
 - [Owner-approved behavior](#owner-approved-behavior)
@@ -18,26 +19,79 @@ behavior. Staff password authentication is maintained in [staff-auth.md](staff-a
 
 ## Current cloud preview — updated October 22, 2026
 
-The current `aet-website-2026-dev` preview on **3022** connects directly to the
-existing cloud Supabase project using restricted private preview schemas.
-**Docker is not required.** The owner already runs the Next development server.
-Do not start the local database or older combined email/payment worker for this mode.
-The Stripe listener is only needed during an explicitly enabled local Stripe
-test, as described above. The older formal-payment and combined-worker guards
-remain in place; pre-evaluation has its own test-only opt-in. GPT analysis has its own explicit switch and runs inside the existing Next service. Dropbox files are enabled separately by `DROPBOX_DOCUMENTS_ENABLED` and
-share the Status/CRM storage integration. Pre-evaluation mail is now opt-in through `PREEVAL_EMAIL_ENABLED=true` and requires
-a valid application ID in cloud preview. Submission, authorized reads and the
-managed AI scheduler dispatch only that application's eligible mail to
-`APPLICATION_TEST_EMAIL`; historical recipients and unscoped queue drains are excluded.
-The newer formal intake retains its own confirmation sender.
-Employee migration and staff cutover remain disabled.
+The heading anchor is retained for existing links; this section was refreshed
+November 11, 2026. Hosted dev uses `APP_ENV=preview`,
+`APPLICATION_DATABASE_MODE=cloud-preview`, `APPLICATION_CORE_MODE=six-preview`
+and the restricted `aet_preview_runtime` role. It reads/writes only the six
+`aet_preview_shared` business tables. Local port 3022 keeps its existing owner-run
+server configuration. Do not replay old setup scripts against the current schema.
 
-See [the active configuration and acceptance procedure](staff-auth.md#cloud-business-preview).
-The setup below documents the earlier optional local-database/service pilot;
-its test fixtures and Docker commands are not the current cloud workflow.
-Current password-based staff login and office scopes are documented in
-[staff-auth.md](staff-auth.md). Historical email-login descriptions below are
-superseded by that document; staff email-link login has been removed.
+Preview mail and Checkout use `APPLICATION_TEST_EMAIL`. Stripe is test-only;
+`PREEVAL_STRIPE_TEST_ENABLED=true` opts into provider calls and
+`PREEVAL_STRIPE_MODE` is `test` (also the default). Direct test webhook delivery
+is already configured on hosted dev. AI, email and Dropbox each keep their own
+explicit switches. No scheduled mail recovery or new tracking table is needed.
+
+## Production-capable runtime — implemented on dev, not activated
+
+This first release supports the **dedicated pre-evaluation** flow. It reuses the
+six-table contract for new applications in a separate private `aet` schema.
+Provisioning that schema/role, configuring hosted secrets and publishing are
+separate release tasks. No Production migration or provider configuration was
+performed by this implementation; existing AET App data remains in place.
+
+| Setting | Required Production value / behavior |
+| --- | --- |
+| Deployment | Vercel Production on `main`; Preview/dev always fails the Production guard |
+| `APP_ENV`, `APPLICATION_DATABASE_MODE` | Both `production` |
+| `APPLICATION_CORE_MODE` | `six-production` |
+| `APP_ORIGIN` | Chosen canonical HTTPS origin on `americantranslationservice.com`, `www.americantranslationservice.com` or `app.americantranslationservice.com`; no path/port/query |
+| `APPLICATION_DATABASE_URL` | Dedicated `aet_runtime` role in the existing project, with no writes to legacy or Preview schemas |
+| `APPLICATION_CORE_PROVIDER_ACCOUNT` | Verified live Stripe account ID; the key's actual account is checked before Checkout/reconciliation |
+| `PREEVAL_STRIPE_MODE` | `live`; mismatched keys or events fail closed |
+| `STRIPE_LIVE_SECRET_KEY` | Server-only live key, separate from test keys; restricted keys also need permission to read their own account |
+| `PREEVAL_STRIPE_LIVE_WEBHOOK_SECRET` | Secret for `/api/pre-evaluation/stripe-webhook` on the selected Production origin |
+| `PREEVAL_EMAIL_ENABLED` | Explicit `true`, with the existing Resend sender/key; mail goes to the persisted applicant address |
+| AI / documents | Existing `PREEVAL_AI_ENABLED`, `OPENAI_API_KEY`, model and Dropbox switches/credentials; verify deployment runtime and provider access before release |
+| Staff | Existing Supabase staff membership/login configuration; both employee migration/cutover flags stay `false` |
+| `CRM_DATA_SOURCE` | Keep `preview` to select the application-runtime adapter (the six-production schema determines its actual data); `live` still refers to the old CRM integration and is not this release |
+
+Startup verifies the actual database role, cross-schema write isolation, exactly
+six tables, required runtime columns, RLS and non-public grants. It does not create
+or alter a database. Provision the empty target from the accepted six-table
+contract in a separately reviewed release migration; do not run the old sequence
+of pilot migrations or copy Preview records into Production.
+
+Production emails and Stripe Checkout use the stored applicant address, never a
+request-supplied override or `APPLICATION_TEST_EMAIL`. Signing secrets, provider
+mode, account, amount and application/session association remain checked. Test
+payment exemptions and imported test payments cannot unlock a Production result.
+Only pre-evaluation events are dispatched in the Production webhook; formal
+fulfillment is not enabled by this runtime.
+
+New documents use `/Team Files/AET2026/<office>/<name> - <application ID>` in the
+original Dropbox account, or `/AET2026/...` in the East account. Preview continues
+to use `WebsitesDev`. Reads remain authorized by application and stored File ID.
+The first release needs no historical file migration.
+
+### Offline acceptance
+
+`tests/preeval-production.test.ts` uses synthetic credentials, provider doubles
+and an owned temporary PostgreSQL cluster. It never loads `.env.local`, connects
+to hosted databases, sends customer mail or charges a card. Run:
+
+```sh
+APPLICATION_CORE_TEST_PG_BIN=/opt/homebrew/opt/postgresql@15/bin pnpm exec vitest run tests/preeval-production.test.ts
+pnpm typecheck
+```
+
+Use the matching local PostgreSQL bin path on other machines. Without it, only
+configuration tests run and database cases are skipped. Hosted Preview, mobile,
+live webhook delivery and real charges require separate acceptance; local
+rehearsal does not establish their completion. See the [release gates](migration-checklist.md).
+
+Earlier sections below are dated pilot evidence. They do not override this
+runtime configuration or authorize deployment.
 
 ## Direct GPT analysis — October 20, 2026
 

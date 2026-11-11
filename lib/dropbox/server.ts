@@ -3,7 +3,7 @@ import 'server-only';
 import { downloadBytes } from './download';
 import { startDocumentUpload, finishDocumentUpload } from '../preeval/ai-jobs';
 import { resolveStorage } from './storage';
-import { applicationFolder, initialStorage, type DocumentIdentity } from './paths';
+import { basePathFor, applicationFolder, initialStorage, type DocumentIdentity } from './paths';
 import { createCipheriv, createDecipheriv, createHash, hkdfSync, randomBytes } from 'node:crypto';
 import { Dropbox, type files } from 'dropbox';
 import { accountForOffice, CHUNK_SIZE, DocumentError, HASH_BLOCK_SIZE, safeSegment, validateFile, type Account, type ApplicationKind, type FileEntry, type FilePage, type Office } from './shared';
@@ -25,7 +25,7 @@ export function accountConfig(account: Account) {
   const config = {
     appKey: process.env[`${prefix}_KEY`], appSecret: process.env[`${prefix}_SECRET`],
     refreshToken: process.env[`${prefix}_REFRESH_TOKEN`], namespaceId: process.env[`${prefix}_NAMESPACE_ID`],
-    basePath: account === 'AET_App' ? '/Team Files/WebsitesDev' : '/WebsitesDev',
+    basePath: basePathFor(account === 'AET_App' ? 'Miami' : 'Boston'),
     laPath: '/Team Files/AET ALL Offices/AET Services/2-Foreign Credential Evaluation',
   };
   if (!config.appKey || !config.appSecret || !config.refreshToken || !config.namespaceId) throw new DocumentError('unavailable', 503);

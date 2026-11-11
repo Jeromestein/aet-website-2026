@@ -1,18 +1,20 @@
 # AET Implementation Status
 
-Updated November 11, 2026 after formal-evaluation convergence and retirement of
-the remaining twelve Preview source tables. The actual Preview business inventory
-is now **six shared tables**. Production remains unchanged. Unified formal-intake
-fulfillment and translation submission remain open.
+Updated November 11, 2026. The release scope is now **dedicated pre-evaluation
+first**. Its Production-capable runtime is implemented and tested on `dev`, but
+has not been deployed or activated. Hosted Preview continues to use six shared
+tables. Formal fulfillment and translation remain later releases.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
 ## Current stage
 
-**Pre-evaluation has a working customer journey, verified locally and through a
-controlled hosted Preview test. The unified formal-evaluation application is still
-being connected to staff processing, payment and fulfillment. AET 2026 is not yet a complete AET App replacement.**
+**Pre-evaluation is in release preparation.** The existing Preview journey works;
+new dev code adds isolated Production configuration, applicant-address mail,
+live-mode payment verification and separate document folders. Offline tests pass.
+Production database provisioning, hosted configuration and final launch acceptance
+remain open. The old AET App remains available for services outside this release.
 
 The dedicated pre-evaluation journey and the pre-evaluation choice inside the
 general `/application` form are different entry points. The dedicated journey
@@ -25,15 +27,30 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | AET Website Pixel configured in dev for public page views; four boundary tests and TypeScript passed; Chinese Contact desktop/mobile checked in the in-app browser with no local SDK load | Production publication, real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
-| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Connect translation; reconcile real history and activate Production |
-| Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
+| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the empty Production target for new orders; history migration and translation are deferred |
+| Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Final hosted/mobile acceptance, Production provisioning/configuration and authorized live acceptance |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |
-| Email | Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | New-intake lifecycle notifications and real-customer routing; scheduled mail recovery is deferred |
+| Email | Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | Applicant-address routing is tested offline on dev; hosted real-customer acceptance and formal lifecycle mail remain open; scheduled recovery is deferred |
 | Fulfillment and migration | Delivery choices saved; older formal pilot can release a PDF; legacy GPA route restored | New-intake report/paper fulfillment, old links, domain/data reconciliation and old-app retirement |
+
+## Current dev runtime verification — November 11
+
+The new `six-production` opt-in is restricted to the configured `main` Production
+deployment and private `aet` schema/`aet_runtime` role. Preview keeps its current
+schema, test-only Stripe and controlled recipient. Formal fulfillment remains
+closed in Production. Staff membership and office authorization are retained.
+
+Local regression: **764 passed, 174 optional cases skipped**. The new Production
+mode suite includes 34 checks, with eight cases using an owned local PostgreSQL
+cluster and mocked providers. TypeScript passes. No hosted environment, live
+charge, real mail, customer document or production record was touched.
+
+See [runtime acceptance and exclusions](archive/preeval-production-runtime-2026-11-11.md)
+and [configuration guide](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated).
 
 ## Current hosted acceptance — November 11
 
@@ -156,6 +173,9 @@ unchanged; this does not establish hosted historical acceptance.
 
 ## Latest integrated verification
 
+Current results are recorded [above](#current-dev-runtime-verification--november-11).
+The following list preserves the earlier recovery-integration evidence.
+
 - **Both recovery fixes are included:** result publication (`0d9a496`, merge
   `00689cf`) and upload recovery (`476413c`, merge `adc6461`). The configuration
   refactor and command-line-only legacy test actors were preserved.
@@ -196,19 +216,15 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-1. Complete the unified v2 formal-intake staff workflow on the six-table storage:
-   review documents, request missing materials and confirm the quote. Keep real
-   Production migration separately scoped and authorized.
-2. Verify hosted refund/cancellation visibility, mobile recovery and AI timeout
-   handling. Desktop upload/publication recovery and direct test-webhook replay
-   now pass; keep production charging/configuration separate.
-3. Make one unified formal intake operable by staff: documents, missing-material
-   requests, confirmed quote and authorized status changes.
-4. Connect that intake to payment, then report release and notifications.
-5. Extend the general application to the other services, then rehearse cutover.
+Finish the dedicated pre-evaluation release gates: verify the final hosted dev
+journey on desktop/phone, prepare the empty Production target and provider
+configuration, then review the release and perform separately authorized launch
+acceptance. Keep unfinished formal evaluation and translation on the old system.
 
-Detailed acceptance criteria and deferred work belong only in the
-[active checklist](migration-checklist.md), not a second task list here.
+After that release, connect formal intake to a small staff workflow: review
+materials, request missing documents, confirm payment and publish an uploaded PDF.
+Historical import, richer tracking and scheduled email recovery stay deferred.
+Detailed tasks belong in the [active checklist](migration-checklist.md).
 
 ## Documentation maintenance
 

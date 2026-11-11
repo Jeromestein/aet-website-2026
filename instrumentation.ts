@@ -1,8 +1,8 @@
-/** Verify the opt-in Preview database before accepting requests. No telemetry. */
+/** Verify the explicitly selected six-table database before accepting requests. */
 export async function register() {
-  if (process.env.NEXT_RUNTIME === 'nodejs' && process.env.APPLICATION_CORE_MODE === 'six-preview') {
+  if (process.env.NEXT_RUNTIME === 'nodejs' && ['six-preview','six-production'].includes(process.env.APPLICATION_CORE_MODE || '')) {
     const { db } = await import('./lib/preeval/db');
-    const { activateSixTablePreview } = await import('./lib/application-core/convergence-mode');
-    await activateSixTablePreview(db());
+    const { activateSixTableRuntime } = await import('./lib/application-core/convergence-mode');
+    await activateSixTableRuntime(db());
   }
 }

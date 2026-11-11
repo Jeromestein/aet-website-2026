@@ -3,7 +3,8 @@ import 'server-only';
 import { randomUUID } from 'node:crypto';
 import { db, type Row } from '../preeval/db';
 import { AppError } from '../preeval/domain';
-import { configuration, required } from '../preeval/config';
+import { required } from '../preeval/config';
+import { applicationRecipient } from '../preeval/recipients';
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from '../email/delivery';
 const kinds=['confirmation','result','information','access'];
 export async function enqueueCompact(input:{applicationId?:string|null;kind:string;key:string;resultVersion?:number;informationRequestId?:number|string}) {
@@ -18,7 +19,9 @@ export async function enqueueCompact(input:{applicationId?:string|null;kind:stri
     // At most four current entries. Never overwrite an uncertain send with a new
     // event; reconciliation must resolve it first. No ever-growing history array.
     if(old&&old.state!=='sent'&&(old.attempts>0||old.state==='sending'))throw new EmailReviewRequired('previous_notification_unsettled');
-    state[input.kind]={id:randomUUID(),kind:input.kind,key:input.key,recipient:configuration().recipient,
+    const [application] = await tx`select email from ${coreTable(tx,'aet_core_applications')} where id=${input.applicationId!}`;
+    if (!application) throw new Error('Application missing');
+    state[input.kind]={id:randomUUID(),kind:input.kind,key:input.key,recipient:applicationRecipient(application.email),
       result_version:input.resultVersion??null,information_request_id:input.informationRequestId??null,
       state:'queued',attempts:0,provider_id:null,payload_hash:null,first_attempt_at:null,
       created_at:new Date().toISOString(),available_at:new Date().toISOString(),lease:null,locked_at:null};
@@ -48,7 +51,9 @@ export async function flushCompactNotifications(transport:EmailTransport,applica
     const claimed=await db().begin(async tx=>{
       const [s]=await tx`select id,notification_state from ${coreTable(tx,'aet_service_detail')} where application_id=${applicationId!} and service_type=${options?.serviceType||'pre-evaluation'} for update`;
       const n=s?.notification_state[kind];
-      if(!n||n.state==='sent'||n.recipient!==configuration().recipient||n.available_at===null)return null;
+      if(!n||n.state==='sent'||n.available_at===null)return null;
+      const [application] = await tx`select email from ${coreTable(tx,'aet_core_applications')} where id=${applicationId!}`;
+      if(!application || n.recipient!==applicationRecipient(application.email))return null;
       const now=Date.now(),first=n.first_attempt_at?new Date(n.first_attempt_at).getTime():null;
       if(n.state==='sending'&&now-new Date(n.locked_at).getTime()<180000)return null;
       if(n.attempts>=5||(first!==null&&now-first>=23*3600000)){

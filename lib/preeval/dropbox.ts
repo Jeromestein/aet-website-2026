@@ -2,7 +2,8 @@ import { isCoreApplication } from '../application-core/runtime';
 import { coreUploadPath } from '../application-core/documents';
 import type { TransactionSql } from 'postgres';
 import { downloadBytes } from '../dropbox/download';
-import { required } from './config';
+import { configuration } from './config';
+import { environmentValue } from '../application-environment.mjs';
 import { clientForOffice, requireEnabled } from '../dropbox/server';
 import { contextFor } from '../dropbox/application';
 import { resolveStorage } from '../dropbox/storage';
@@ -19,8 +20,8 @@ export async function filePath(row: Record<string, string | null>, kind: Applica
   return `${storage.write.path}/${report ? '_reports/' : ''}${safeSegment(fileId)}-${safeSegment(name)}`;
 }
 export function officeForStoredPath(path: string): Office {
-  const oldRoot = required('DROPBOX_LEGACY_PILOT_ROOT');
-  if (oldRoot.includes('AET-PreEvaluation-Test') && path.startsWith(oldRoot + '/')) {
+  const oldRoot = environmentValue('DROPBOX_LEGACY_PILOT_ROOT') || '';
+  if (!configuration().production && oldRoot.includes('AET-PreEvaluation-Test') && path.startsWith(oldRoot + '/')) {
     path.slice(oldRoot.length + 1).split('/').forEach(safeSegment);
     return 'Miami';
   }

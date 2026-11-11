@@ -113,8 +113,8 @@ describe.skipIf(!pgBin)('pre-evaluation after physical table retirement (owned P
       const object=objects.get(path)||[...objects.values()].find(o=>`rev:${o.metadata.rev}`===path);if(!object)throw new Error('File missing');
       return{result:{...object.metadata,fileBinary:object.bytes}};
     });
-    m.create.mockReset().mockImplementation(async({client_reference_id:id}:{client_reference_id:string})=>({id:`cs_${id}`,status:'open',url:'https://checkout.example.invalid/test'}));
-    m.retrieve.mockReset().mockResolvedValue({status:'open',url:'https://checkout.example.invalid/test'});
+    m.create.mockReset().mockImplementation(async({client_reference_id:id}:{client_reference_id:string})=>({id:`cs_${id}`,livemode:false,metadata:{applicationId:id,pilot:'aet-2026-local'},amount_total:TOTAL_CENTS,status:'open',url:'https://checkout.example.invalid/test'}));
+    m.retrieve.mockReset().mockImplementation(async(sessionId:string)=>({id:sessionId,livemode:false,metadata:{applicationId:sessionId.slice(3),pilot:'aet-2026-local'},amount_total:TOTAL_CENTS,status:'open',url:'https://checkout.example.invalid/test'}));
   });
   it('has 13 canonical/runtime tables and no retired tables or replacement views',async()=>{
     const tables=await sql()`select tablename from pg_tables where schemaname='aet'`;

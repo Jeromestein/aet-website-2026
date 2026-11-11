@@ -1,3 +1,4 @@
+import { productionMode } from '../preeval/production';
 import { accountForOffice, safeSegment, type Office, type ApplicationKind, DocumentError } from './shared';
 
 export type DocumentIdentity = {
@@ -6,7 +7,10 @@ export type DocumentIdentity = {
 };
 export type Location = { office: Office; path: string };
 export type DocumentStorage = { write: Location; reads: Location[]; archivePath: string | null };
-export const basePathFor = (office: Office) => accountForOffice(office) === 'AET_App' ? '/Team Files/WebsitesDev' : '/WebsitesDev';
+export const basePathFor = (office: Office) => {
+  const root = productionMode() ? 'AET2026' : 'WebsitesDev';
+  return accountForOffice(office) === 'AET_App' ? `/Team Files/${root}` : `/${root}`;
+};
 export const archiveRoot = '/Team Files/AET ALL Offices/AET Services/2-Foreign Credential Evaluation';
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export function applicationFolder(context: DocumentIdentity) {

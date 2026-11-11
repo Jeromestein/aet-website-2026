@@ -1,7 +1,7 @@
 import { sixTableMode } from './convergence-mode';
 import { compact, saveCompactMetadata } from './compact-files';
 import { converged,workflowRows,queueInput,adminConverged } from "./converged-store";
-import { coreTable, assertCoreConnection, corePreviewConfiguration } from './connection';
+import { coreTable, assertCoreConnection, coreRuntimeConfiguration } from './connection';
 import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import type { Sql, TransactionSql } from 'postgres';
@@ -25,7 +25,7 @@ export async function activateCoreRehearsal(sql: Sql, providerAccount: string) {
   if (missing.length) throw new Error('Existing cohort requires reconciliation before activation');
   enabled.set(sql, { providerAccount });
 }
-export const coreRuntimeEnabled = () => converged() || enabled.has(db()) || Boolean(corePreviewConfiguration());
+export const coreRuntimeEnabled = () => converged() || enabled.has(db()) || Boolean(coreRuntimeConfiguration());
 export async function isCoreApplication(id: string, sql: DB = db()) {
   if (!coreRuntimeEnabled()) return false;
   await assertCoreConnection(sql);
@@ -101,7 +101,7 @@ export async function coreProfile(sql: DB, id: string): Promise<Row> {
  * Never copy workflow names/education back over the canonical business fields. */
 export async function syncCoreWorkflow(tx: TransactionSql, id: string) {
   if (converged()) return;
-  const config = enabled.get(db()) || corePreviewConfiguration();
+  const config = enabled.get(db()) || coreRuntimeConfiguration();
   if (!config || !await isCoreApplication(id,tx)) return;
   const [app] = await tx`select *,updated_at::text as updated_at from ${table("preeval.applications")} where id=${id} for update`;
   if (!app) return;

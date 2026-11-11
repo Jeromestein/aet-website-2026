@@ -1,3 +1,4 @@
+import { productionMode } from '../preeval/production';
 import { convergedPaymentState, testPaymentExemption } from './converged-payment-state';
 import { converged,statusConverged } from "./converged-store";
 import { table } from '../preeval/db';
@@ -82,10 +83,10 @@ export async function createCoreShadowReader(sql: Sql) {
             from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments
           from ${coreTable(tx,'aet_core_applications')} a ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'
             and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
-        const combined = converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
+        const combined = productionMode() ? records : converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
         return projectWorkspaceRecords(tx, combined, raw, { email: actor.email, offices: actor.offices,
-          include_unassigned: actor.includeUnassigned }, true);
+          include_unassigned: actor.includeUnassigned }, !productionMode());
       });
     },
   };

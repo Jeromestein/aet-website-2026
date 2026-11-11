@@ -4,6 +4,7 @@ import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { table, db } from "@/lib/preeval/db";
+import { preEvaluationWebhookSecret, preEvaluationPaymentTag } from '@/lib/preeval/payment-mode';
 import { configuration, required } from "@/lib/preeval/config";
 import { AppError, resultPath, MAX_FILE_BYTES } from "@/lib/preeval/domain";
 import {
@@ -94,20 +95,20 @@ async function handler(
         event = stripeClient("pre-evaluation").webhooks.constructEvent(
           raw,
           signature,
-          required("STRIPE_TEST_WEBHOOK_SECRET"),
+          preEvaluationWebhookSecret(),
         );
       } catch {
         throw new AppError("invalid_signature");
       }
       await handleStripeEvent(event);
       // Both migrated services use the same verified dev Preview test endpoint.
-      if (!configuration().cloudPreview || formalCore()) {
+      if (!configuration().production && (!configuration().cloudPreview || formalCore())) {
         await handleFormalEvent(event);
         after(flushFormalEmails);
       }
       if (event.type.startsWith("checkout.session.")) {
         const metadata = (event.data.object as { metadata?: Record<string, string> }).metadata;
-        if (metadata?.pilot === "aet-2026-local" && z.uuid().safeParse(metadata.applicationId).success)
+        if (metadata?.pilot === preEvaluationPaymentTag() && z.uuid().safeParse(metadata.applicationId).success)
           after(() => deliverApplicationEmails(metadata.applicationId));
       }
       return response({ received: true });

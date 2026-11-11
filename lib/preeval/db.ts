@@ -17,7 +17,7 @@ export function db() {
     max: 5,
     idle_timeout: 10,
     connect_timeout: 10,
-    prepare: !config.cloudPreview,
+    prepare: !config.cloudPreview && !config.production,
     connection: { statement_timeout: 15000 },
   }));
 }

@@ -1,4 +1,5 @@
 import { environmentValue } from "../application-environment.mjs";
+import { productionMode, productionOrigin } from '../preeval/production';
 import { applicationPilotOrigin } from "../preview-environment";
 
 export function staffConfiguration() {
@@ -7,13 +8,14 @@ export function staffConfiguration() {
   const database = process.env.STAFF_AUTH_DATABASE_URL;
   if (!url || !key || !database)
     throw new Error("Staff authentication is not configured");
-  // Hosted authentication is permitted only for the explicitly configured dev Preview.
-  if (process.env.VERCEL && (
+  const production = productionMode();
+  // Membership and employee-cutover rules remain unchanged.
+  if (!production && process.env.VERCEL && (
     process.env.VERCEL_ENV !== "preview" ||
     process.env.VERCEL_GIT_COMMIT_REF !== "dev" ||
     environmentValue("APP_ENV") !== "preview"
   )) throw new Error("Hosted staff authentication requires the dev Preview environment");
-  const origin = environmentValue("APP_ENV") === "preview"
+  const origin = production ? productionOrigin() : environmentValue("APP_ENV") === "preview"
     ? applicationPilotOrigin() : environmentValue("APP_ORIGIN") || "";
   return { url, key, database, origin };
 }

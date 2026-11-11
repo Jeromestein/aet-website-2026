@@ -1,6 +1,7 @@
 import { converged,publishConverged } from "../application-core/converged-store";
 import { checkoutConverged,applyConvergedCheckout,reconcileConverged,refundConverged,cancelConverged } from "../application-core/converged-payments";
 import Stripe from "stripe";
+import { preEvaluationPaymentMode, paymentModeMatches } from './payment-mode';
 import { syncCoreWorkflow } from "../application-core/runtime";
 import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
 import { table, db } from "./db";
@@ -10,14 +11,26 @@ import { applicationEmail } from "./email";
 
 // Existing formal-evaluation callers retain the cloud-preview restriction.
 export function stripeClient(scope: "pre-evaluation" | "formal-evaluation" = "formal-evaluation") {
-  if (scope !== "pre-evaluation" || process.env.PREEVAL_STRIPE_TEST_ENABLED !== "true")
+  const config = configuration();
+  if (config.production && scope !== 'pre-evaluation')
+    throw new Error('Formal evaluation is not enabled for Production');
+  const mode = scope === 'pre-evaluation' ? preEvaluationPaymentMode() : 'test';
+  if (!config.production && (scope !== "pre-evaluation" || process.env.PREEVAL_STRIPE_TEST_ENABLED !== "true"))
     requireExternalServices();
-  else
-    configuration();
-  const key = required("STRIPE_TEST_SECRET_KEY");
-  if (!key.startsWith("sk_test_") && !key.startsWith("rk_test_"))
-    throw new Error("Only Stripe test keys are permitted.");
+  const key = required(mode === 'live' ? 'STRIPE_LIVE_SECRET_KEY' : 'STRIPE_TEST_SECRET_KEY');
+  if (!key.startsWith(`sk_${mode}_`) && !key.startsWith(`rk_${mode}_`))
+    throw new Error(`Only Stripe ${mode} keys are permitted.`);
   return new Stripe(key, { maxNetworkRetries: 2, timeout: 20000 });
+}
+/** Verify the live key's actual account before creating or reconciling payments. */
+export async function verifiedPreEvaluationStripeClient() {
+  const client = stripeClient('pre-evaluation');
+  if (preEvaluationPaymentMode() === 'live') {
+    const expected = required('APPLICATION_CORE_PROVIDER_ACCOUNT');
+    const account = await client.accounts.retrieve(null);
+    if (account.id !== expected) throw new Error('Stripe account does not match the configured application account');
+  }
+  return client;
 }
 // Report the same capability enforced by payment actions without exposing configuration.
 export function canVerifyPreEvaluationPayment(): boolean {
@@ -171,7 +184,8 @@ export async function reconcile(id: string) {
   }
 }
 export async function handleStripeEvent(event: Stripe.Event) {
-  if (event.livemode) throw new AppError("live_event_rejected");
+  if (!paymentModeMatches(event)) throw new AppError(event.livemode ? 'live_event_rejected' : 'test_event_rejected');
+  if (configuration().production && !converged()) throw new AppError('runtime_unavailable',503);
   if (
     [
       "checkout.session.completed",

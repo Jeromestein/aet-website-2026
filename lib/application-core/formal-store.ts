@@ -9,8 +9,9 @@ import { AppError } from '../preeval/domain';
 import { canDownloadReport, payableTotal } from '../evaluation-application/workflow';
 import { toLegacyFormal, toLegacyEducation } from '../legacy-application/mapping';
 import { configuration } from '../preeval/config';
+import { productionMode } from '../preeval/production';
 export type FormalDB = Sql | TransactionSql;
-export const formalCore = () => sixTableMode(db());
+export const formalCore = () => !productionMode() && sixTableMode(db());
 export const formalPayments = (sql: FormalDB) => sql`select p.*,checkout_session_id as session_id,payment_intent_id as payment_intent,payment_status as status from ${coreTable(sql,'aet_payments')} p where source='formal-evaluation'`;
 export const formalFiles = (sql: FormalDB) => sql`select d.*,original_filename as name,size_bytes::int as bytes,upload_state as state,storage_path as dropbox_path,
   case when access_scope='staff_only' then 'report' else 'document' end as kind,
