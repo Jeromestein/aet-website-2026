@@ -24,6 +24,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
+| ChatGPT Ads measurement | AET Website Pixel configured in dev for public page views; four boundary tests and TypeScript passed; Chinese Contact desktop/mobile checked in the in-app browser with no local SDK load | Production publication, real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Connect translation; reconcile real history and activate Production |
 | Dedicated pre-evaluation | November 11 hosted six-table journey passed: chunked upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails | Hosted mobile/refund/timeout scenarios, production configuration and charging |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Mobile recovery, broader provider/timeout/refund scenarios |

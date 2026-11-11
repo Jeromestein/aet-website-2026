@@ -309,6 +309,18 @@ and new-tab actions retain native behavior. Other Blog click objects remain in
 `dataLayer`. These events measure contact intent, not completed inquiries.
 GA4 receipt, key-event settings and Google Ads import still need account verification.
 
+ChatGPT Ads uses the AET Website Pixel through `OpenAiAdsPixel` and
+`lib/openai-ads.ts`. It initializes once and sends `page_viewed` on public
+marketing-page navigation, with pathname-only content IDs. It does not send
+contact values, application IDs, query strings or completed-lead claims in event
+payloads. The SDK handles the incoming `oppref` attribution reference.
+Only the official website hosts in production are enabled; localhost, preview
+hosts, application/payment/status/document routes and staff pages are excluded.
+Debug logging is disabled. The SDK may remain loaded after public-page navigation,
+but no measurement call is made on excluded routes. Website installation does
+not create Ads Manager conversion goals or verify event receipt.
+Run `pnpm exec vitest run tests/openai-ads.test.ts` for the measurement boundaries.
+
 ## Service scope
 
 The Services menu retains the following services (Visa restored by owner request on October 10, 2026):

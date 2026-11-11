@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteAnalytics } from "@/components/site-analytics";
+import { OpenAiAdsPixel } from "@/components/openai-ads-pixel";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -46,6 +47,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <SiteAnalytics />
+        <OpenAiAdsPixel />
       </body>
     </html>
   );
