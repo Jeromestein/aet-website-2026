@@ -13,6 +13,27 @@
 - Asset-only delivery; no page components, live ads or campaign settings changed.
   No production build was performed; live deployment is not verified here.
 
+## 2026-11-11 — Online application click measurement
+
+- Public marketing pages now send the custom `apply_online_clicked` event for
+  links to the existing HTTPS formal-evaluation application portal. Source data
+  contains only the public pathname (including its locale), not query strings,
+  destination parameters, form fields or application identifiers.
+- Delegated click/auxclick listeners preserve native navigation and keyboard,
+  modifier and middle-button actions; cancelled/download/right-button actions,
+  process-section anchors and pre-evaluation links are excluded. Repeated clicks
+  on the same source page within one second are suppressed. Listener cleanup,
+  SDK loading queues/failure isolation and existing host/route guards are covered.
+- Validation: 12 focused tracking tests and TypeScript passed. In-app browser
+  checked the Chinese Evaluation page on desktop and at 390px, keyboard navigation
+  to the existing application portal, and the mobile menu's homepage process
+  link. The local page did not load the advertising SDK. A temporary dev server
+  used WATCHPACK_POLLING=true after the host hit its file-watcher limit; stopped
+  after verification. No production build was run.
+- This is an application-entry click, not a submitted lead. Hosted deployment,
+  real event receipt and Ads Manager custom-conversion creation/association
+  remain separate checks; no campaign settings were changed.
+
 ## 2026-11-11 — ChatGPT Ads Pixel
 
 - Applied only the Pixel component, page tracker and boundary tests from `dev`
