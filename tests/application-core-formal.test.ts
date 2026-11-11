@@ -23,6 +23,7 @@ import {flushFormalEmails} from '../lib/evaluation-application/email';
 import {readIntake,saveIntake} from '../lib/application/intake-server';
 import {sendIntakeEmail} from '../lib/application/intake-email';
 import {formalRecords,projectWorkspaceRecords} from '../lib/crm/workspace-server';
+import {contextFor} from '../lib/dropbox/application';
 import {convergeFormal} from '../scripts/database/converge-formal';
 import {fromLegacyFormal} from '../lib/legacy-application/mapping';
 const pg=process.env.APPLICATION_CORE_TEST_PG_BIN,copy=process.env.APPLICATION_FORMAL_SNAPSHOT;
@@ -91,6 +92,10 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await expect(addFile(a.id,file,'document','customer')).rejects.toMatchObject({code:'upload_failed'});
   m.upload.mockImplementation(async(args:any)=>({result:{'.tag':'file',id:'id:upload_'+a.id,rev:'1',path_display:args.path,name:'test.pdf',size:file.size,content_hash:'synthetic'}}));
   await addFile(a.id,file,'document','customer');expect((await application(a.id,true)).files).toHaveLength(1);expect((await readFormal(a.id)).status).toBe('reviewing');
+  const {row:legacy}=await formalLegacy(a.id);const row={id:legacy.id,first_name:legacy.first_name,last_name:legacy.last_name,office:legacy.office,status:legacy.status,submitted_at:new Date(legacy.submitted_at).toISOString()};expect(contextFor(row,'evaluation').canUpload).toBe(true);
+  expect(contextFor({...row,status:'needs_information'},'evaluation').canUpload).toBe(true);
+  expect(contextFor({...row,status:'completed'},'evaluation').canUpload).toBe(false);
+  expect(contextFor({...row,status:'cancelled'},'evaluation').canUpload).toBe(false);
   expect((await sql()`select storage_file_id,upload_version from aet_preview_shared.aet_documents where application_id=${a.id}`)[0]).toMatchObject({storage_file_id:'id:upload_'+a.id,upload_version:2});
  });
  it('uses versioned staff writes and blocks premature report release',async()=>{

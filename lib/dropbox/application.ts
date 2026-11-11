@@ -44,7 +44,7 @@ export function contextFor(row: Record<string, string | null>, kind: Application
     ...(kind === 'pre-evaluation' && row.email
       ? { legacyFolderKey: safeSegment(row.email) } : {}),
     submittedAt: (kind === 'evaluation' ? row.submitted_at || row.created_at : row.created_at) || '',
-    canUpload: kind === 'pre-evaluation' || ['submitted', 'processing'].includes(row.status?.toLowerCase() ?? ''),
+    canUpload: kind === 'pre-evaluation' || ['submitted', 'processing', ...(process.env.APPLICATION_CORE_MODE === 'six-preview' ? ['reviewing', 'needs_information'] : [])].includes(row.status?.toLowerCase() ?? ''),
   };
   // Persisting the identity must not require Dropbox OAuth credentials.
   // Signing access and provider operations validate account configuration.
