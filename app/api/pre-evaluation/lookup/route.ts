@@ -1,3 +1,4 @@
+import { compact } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextRequest, NextResponse } from "next/server";
 import { table, db } from "@/lib/preeval/db";
@@ -38,9 +39,9 @@ export async function POST(request: NextRequest) {
     const [app] = await workflowRows(db(), applicationId, false);
     if (!app) throw new AppError("not_found", 404);
     // Keep API/file authorization scoped to this application without customer accounts.
-    const token = await makeSession(app.id, "customer", app.email);
+    const token = compact()?null:await makeSession(app.id, "customer", app.email);
     const response = respond({ url: resultPath(locale, app.id) });
-    response.cookies.set(sessionCookie(token));
+    if(token)response.cookies.set(sessionCookie(token));
     return response;
   } catch (error) {
     return error instanceof AppError

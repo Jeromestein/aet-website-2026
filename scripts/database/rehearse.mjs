@@ -8,7 +8,7 @@ const pgBin = process.env.APPLICATION_CORE_TEST_PG_BIN || [
   '/usr/lib/postgresql/15/bin', '/usr/lib/postgresql/16/bin', '/usr/lib/postgresql/17/bin',
 ].find(path => ['initdb', 'pg_ctl', 'psql'].every(name => existsSync(join(path, name))));
 if (!pgBin) throw new Error('Set APPLICATION_CORE_TEST_PG_BIN to a local PostgreSQL bin directory. No existing database will be used.');
-const result = spawnSync('pnpm', ['exec', 'vitest', 'run', 'tests/application-core-rehearsal.test.ts', 'tests/application-core-runtime.test.ts', 'tests/application-core-preview.test.ts', 'tests/application-core-cohort.test.ts', 'tests/application-core-convergence.test.ts', 'tests/application-core-history.test.ts'], {
+const result = spawnSync('pnpm', ['exec', 'vitest', 'run', 'tests/application-core-rehearsal.test.ts', 'tests/application-core-runtime.test.ts', 'tests/application-core-preview.test.ts', 'tests/application-core-cohort.test.ts', 'tests/application-core-convergence.test.ts', 'tests/application-core-history.test.ts', 'tests/application-core-nine.test.ts'], {
   stdio: 'inherit', env: { ...process.env, APPLICATION_CORE_TEST_PG_BIN: pgBin },
 });
 if (result.error) throw result.error;

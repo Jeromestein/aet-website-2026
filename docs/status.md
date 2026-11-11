@@ -1,11 +1,11 @@
 # AET Implementation Status
 
-Updated November 6, 2026 after isolated phases one through three and the authorized
-hosted dev Preview core activation and upload/publication recovery at `b003139`.
-The old Preview cohort has subsequently passed local-copy migration rehearsal;
-hosted historical records remain unchanged. A subsequent isolated pre-evaluation
-convergence suite verifies the 13-table runtime after physical source-table
-retirement. This is the current summary, not a release log.
+Updated November 10, 2026 after complete Preview-copy reconciliation and isolated
+nine-table pre-evaluation implementation. Hosted dev Preview activation/recovery
+remains the November 6 acceptance at `b003139`; no hosted retirement has occurred.
+The revised pre-evaluation runtime passes physical four-table retirement locally;
+formal/translation convergence and hosted activation remain open.
+This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
@@ -69,32 +69,42 @@ was needed. Cancellation/refund, mobile recovery, broader provider outages and
 production charging remain open. Earlier checks remain in the
 [October 22 record](archive/preview-acceptance-2026-10-22.md).
 
-## Isolated convergence toward the 13-table target
+## Isolated convergence and the revised nine-table target
 
-The approved end state is five business tables plus eight shared operational
-tables, replacing the 32-table private Preview business baseline. Staff auth,
-legacy CMS and unrelated public tables are counted separately.
+The approved end state is **five business + four operational tables**. The
+pre-evaluation implementation now passes local PostgreSQL checks with exactly
+those nine tables: files own current upload state; services own bounded current
+notification state; customers use non-expiring random application-ID URLs.
+Audit and rate limits remain; staff authentication stays separate.
 
-The new dedicated pre-evaluation adapter now passes a physical-drop rehearsal:
-seven redundant empty tables are dropped, eight operational tables are moved,
-and new applications complete against 13 tables in `aet`. No old `preeval` table
-or same-name replacement view remains in that fixture. Twenty dedicated tests
-cover new applications. Historical acceptance now includes six old-only tests
-and eight mixed-cohort tests: all four captured old synthetic records, including
-one audited no-charge fixture, plus two applications created by the core-v1
-writer. Existing canonical rows remain unchanged; a queued AI job resumes after
-retirement. Combined regression: 343 tests / 20 files, plus 14 captured-copy tests;
-TypeScript passes. Real local PostgreSQL is used; external providers are simulated. See the [new-cohort evidence](archive/database-preeval-convergence-2026-11-06.md)
-and [historical retirement evidence](archive/database-preeval-history-convergence-2026-11-06.md).
+The complete November 10 Preview snapshot contains four old pre-evaluations,
+two existing core applications and four formal applications. Local migration
+first retires seven redundant sources, then drops `aet_uploads`, `aet_emails`,
+`aet_access_tokens` and `aet_sessions`. The complete isolated copy has **21 tables:
+9 shared + 10 evaluation + 2 legacy formal**. All ten CRM applications remain.
+Formal/translation work must still converge before the whole system reaches nine.
 
-Converged CRM reads cover pre-evaluation, not formal applications. The importer
-now preserves reconciled core-v1 rows while importing old applications. The
-synthetic exemption is represented as `waived` with zero service amount and
-original audit evidence, without a payment row or Checkout. The mixed test does
-not include a fresh copy of every hosted core record. Full hosted-snapshot
-reconciliation, shared formal/translation operations and hosted activation remain open. The activation
-has no hosted switch; current Preview still uses its prior 32-table arrangement.
-No Production/Preview tables, settings, migrations or provider data were changed.
+**379 tests / 22 files and TypeScript pass**, including 25 nine-table runtime cases
+and 11 full-snapshot cases. Tests cover real service/route code with simulated
+providers: ordinary/chunked upload recovery, stale completion, AI/publication,
+application-scoped access, signed payment replay/refunds, bounded mail retries,
+CRM/Status parity, no-charge handling and rollback after physical DROP. The
+no-charge fixture has no payment row; replaying settled payments leaves their
+original timestamps intact. Old mail/access/upload evidence is returned to an
+external archive rather than another runtime table.
+
+The full-copy test reuses the snapshot captured at 23:04 UTC and its read-only
+Dropbox, Stripe and Resend reconciliation. No new hosted read or provider send
+was needed for this simplification. See [snapshot provenance](archive/database-full-preview-convergence-2026-11-10.md)
+and [nine-table acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
+A temporary fixture-only browser page verified the real customer component and
+its application-scoped download link; it was stopped after the check. This was
+not a hosted or database-connected browser journey.
+
+Activation still accepts only the owned local Unix-socket database. **Online
+Preview retains 32 tables; zero hosted tables were deleted.** Hosted permissions,
+backup/rollback, old-link reconciliation, provider outage cases and fresh cutover
+validation remain open. Production, Preview settings and deployments are unchanged.
 
 ## Earlier isolated database verification
 

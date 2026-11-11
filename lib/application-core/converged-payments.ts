@@ -72,7 +72,8 @@ export async function applyConvergedCheckout(s:Stripe.Checkout.Session,eventId:s
     const events=await tx`insert into aet.aet_payment_events(id,type) values (${account()+':test:'+eventId},${eventType}) on conflict do nothing returning id`;
     if(!events.length || refunded)return;
     if(s.payment_status==='paid' && !['refunded','partially_refunded'].includes(p.payment_status))
-      await tx`update aet.aet_payments set payment_status='paid',payment_intent_id=${intent!},paid_at=coalesce(paid_at,now()),updated_at=now() where id=${p.id}`;
+      await tx`update aet.aet_payments set payment_status='paid',payment_intent_id=${intent!},paid_at=coalesce(paid_at,now()),updated_at=now() where id=${p.id}
+        and (payment_status is distinct from 'paid' or payment_intent_id is distinct from ${intent!} or paid_at is null)`;
     else if((s.status==='expired'||eventType==='checkout.session.async_payment_failed')&&!['paid','refunded','partially_refunded'].includes(p.payment_status))
       await tx`update aet.aet_payments set payment_status='expired',updated_at=now() where id=${p.id}`;
     await tx`insert into aet.aet_audit(application_id,actor,action,detail) values (${id},'stripe',${eventType},${tx.json({session:s.id})})`;

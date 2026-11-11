@@ -1,7 +1,10 @@
+import { compact } from './compact-files';
 import type { Sql, TransactionSql } from 'postgres';
 type DB = Sql | TransactionSql;
 /** A recorded synthetic exemption is not money received. Never infer it from zero price. */
-export const testPaymentExemption = (sql:DB) => sql`exists(
+export const testPaymentExemption = (sql:DB) => compact()?sql`exists(select 1 from aet.aet_service_detail x where x.application_id=a.id and x.service_type='pre-evaluation'
+  and x.amount_cents=0 and x.details->'payment_exemption' @> '{"scope":"synthetic-test","confirmed":true}'::jsonb
+  and not exists(select 1 from aet.aet_payments p where p.application_id=a.id))`:sql`exists(
   select 1 from aet.aet_service_detail x join aet.aet_audit e
     on e.id::text=x.details->'payment_exemption'->>'audit_id' and e.application_id=x.application_id
   join aet.aet_audit original on original.id::text=x.details->'payment_exemption'->>'source_audit_id'

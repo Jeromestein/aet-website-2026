@@ -1,5 +1,12 @@
 # Shared database rehearsal
 
+**November 10 update:** the runner now includes the nine-table pre-evaluation
+suite. Earlier sections retain their phase-specific 13-table evidence; the new
+[acceptance record](archive/database-nine-table-rehearsal-2026-11-10.md) covers
+physical four-table retirement. No hosted database is changed.
+See the [revised plan](database-migration-plan.md#approved-convergence-target-9-tables).
+
+
 Phases 1–3 create and test the five shared business tables without changing the
 running application or any hosted database. The target is the private `aet`
 schema. Those original phases retain source tables. A separate convergence suite
@@ -240,3 +247,64 @@ this fixture. No payment row, paid timestamp or fourteenth table is invented.
 This is not a hosted migration command: schema names are the local fixture
 layout, non-v1 target cohorts are rejected, and no runtime deployment switch is
 introduced. See the [acceptance scope and remaining gates](archive/database-preeval-history-convergence-2026-11-06.md).
+
+
+## Complete hosted snapshot, local-only acceptance
+
+The opt-in [full-snapshot suite](../tests/application-core-full-snapshot.test.ts)
+restores all 32 captured Preview tables, including existing core and formal rows.
+It checks source column names/types and exact restored row values before migration
+(including database-generated columns), using UTC timestamp serialization.
+It then verifies transactional rollback, seven physical drops, unchanged canonical
+rows, all CRM views and formal/customer Status, signed payment replay and sent-mail
+preservation. It owns a fresh local Unix-socket cluster and blocks external fetch.
+
+Prepare the authorized read-only snapshot and refreshed provider evidence outside
+Git, with owner-only permissions. Never commit raw database records or credentials.
+The snapshot must include `project`, `captured_at`, `tables` (all 32 fully qualified
+Preview tables) and `columns` (information-schema metadata); adjacent `verified.json`
+contains reconciled file/payment references and email receipts. The frozen six-case
+acceptance cohort deliberately fails when the source inventory changes; reconcile
+and update the fixture contract explicitly instead of silently omitting rows.
+
+```sh
+APPLICATION_CORE_TEST_PG_BIN=/opt/homebrew/opt/postgresql@15/bin \
+APPLICATION_CORE_FULL_SNAPSHOT=/private/tmp/your-private-snapshot/snapshot.json \
+pnpm exec vitest run tests/application-core-full-snapshot.test.ts
+```
+
+This opt-in suite is separate from the default synthetic rehearsal command. It
+skips when either input variable is absent; do not count a skipped run as acceptance.
+`rehearsal-report.json` is a private count/migration artifact; use the complete
+Vitest exit status, not the report's existence, to determine success. Provider
+read-only reconciliation and before/after hosted comparisons are separate from
+the offline test run. See [November 10 evidence](archive/database-full-preview-convergence-2026-11-10.md).
+
+## Nine-table pre-evaluation simplification
+
+The default runner includes `tests/application-core-nine.test.ts` (25 cases).
+`activateNineTableRehearsal` requires the owned `aet_core_rehearsal` database,
+`core_rehearsal` role, local Unix socket, exact nine-table inventory and required
+new columns. No environment flag enables this path on a hosted database.
+
+`scripts/database/simplify-preeval-nine.ts` accepts only the reconciled thirteen
+shared tables. It locks the cohort, rejects active upload/AI/mail work, unsupported
+services and unconsumed unexpired token-only links, then moves current state and
+drops the four superseded tables in one transaction without `CASCADE` or views.
+It returns the old rows and digest to its caller; the full-snapshot test saves
+that archive outside Git. A hosted version would need a durable reviewed backup
+before deletion; this local helper is not a hosted migration command.
+
+The opt-in full-snapshot suite now has eleven cases, including forced DDL failure
+rollback, four-table retirement, complete CRM/Status comparison and payment/mail
+replay. It reuses the November 10 private snapshot described above; no new fetch
+is implicit. The full copy has 21 tables after both migration stages. Provider
+calls remain simulated and the local clusters are disposed after each run.
+
+Application UUID links have no customer-cookie or creation-time expiry. File
+requests carry `applicationId` and must match the file owner; staff-only actions
+remain authenticated. Existing short-lived upload operation tokens still fence
+chunk transport and do not limit the lifetime of an application's customer link.
+Old token-only links with usable tokens block migration; expired/consumed tokens
+are externally archived, and their retired consume route returns 410. Review
+old-link communication/compatibility before any hosted cutover.

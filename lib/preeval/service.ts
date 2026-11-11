@@ -1,3 +1,5 @@
+import { compactNotificationRows,retryCompactNotification } from '../application-core/compact-notifications';
+import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { converged,submitConverged,staffConverged,workflowRows } from "../application-core/converged-store";
 import { coreTable } from '../application-core/connection';
 import { coreRuntimeEnabled, isCoreApplication, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
@@ -42,7 +44,7 @@ export async function submit(input: unknown) {
     return created;
   });
   await applicationEmail(app, "confirmation");
-  return { app, token: await makeSession(app.id, "customer", app.email) };
+  return { app, token: compact() ? null : await makeSession(app.id, "customer", app.email) };
 }
 export async function application(id: string, staff = false) {
   const core = converged() || await isCoreApplication(id);
@@ -69,6 +71,7 @@ export async function application(id: string, staff = false) {
   }
   if (core) Object.assign(app,await coreProfile(db(),id));
   const files =
+    compact() ? await db()`select * from (${compactFileRecords(db())}) f where application_id=${id} order by created_at` :
     await db()`select id,name,mime_type,bytes,state,created_at from ${table("preeval.files")} where application_id=${id} order by created_at`;
   const visible =
     staff ||
@@ -120,7 +123,7 @@ export async function application(id: string, staff = false) {
     response.ai_error = app.ai_error;
     response.legacy_id = app.legacy_id;
     response.emails =
-      await db()`select id,kind,state,attempts,provider_id,error,sent_at,created_at from ${table("preeval.emails")} where application_id=${id} order by created_at desc`;
+      compact()?await compactNotificationRows(id):await db()`select id,kind,state,attempts,provider_id,error,sent_at,created_at from ${table("preeval.emails")} where application_id=${id} order by created_at desc`;
     response.audit =
       await db()`select actor,action,detail,created_at from ${table("preeval.audit")} where application_id=${id} order by created_at desc limit 50`;
     response.payments =
@@ -143,6 +146,7 @@ export async function addFile(id: string, file: File, actor: string) {
     const [locked] = await workflowRows(tx, id, true);
     if (!locked || locked.status === "cancelled") throw new AppError("application_cancelled", 409);
     const [existing] =
+      compact() ? await tx`select * from (${compactFileRecords(tx)}) f where application_id=${id} and sha256=${digest}` :
       await tx`select * from ${table("preeval.files")} where application_id=${id} and sha256=${digest}`;
     if (existing?.state === "ready") return existing;
     if (
@@ -152,14 +156,14 @@ export async function addFile(id: string, file: File, actor: string) {
       throw new AppError("upload_in_progress", 409);
     if (
       !existing &&
-      (await tx`select id from ${table("preeval.files")} where application_id=${id}`)
+      (compact() ? await tx`select id from aet.aet_documents where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table("preeval.files")} where application_id=${id}`)
         .length >= 5
     )
       throw new AppError("file_limit");
     await pauseForUpload(id, tx);
     const fileId = existing?.id || randomUUID(),
       path = (!await isCoreApplication(id,tx) && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, name, false, tx);
-    const [row] =
+    const [row] = compact() ? [await reserveCompactFile(tx,{id:fileId,applicationId:id,name,mime:file.type,size:data.length,digest,path})] :
       await tx`insert into ${table("preeval.files")}(id,application_id,name,mime_type,bytes,sha256,dropbox_path) values (${fileId},${id},${name},${file.type},${data.length},${digest},${path})
       on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;
     return row;
@@ -169,24 +173,27 @@ export async function addFile(id: string, file: File, actor: string) {
     await db().begin(async tx => {
       const [locked] = await workflowRows(tx, id, true);
       if (!locked || locked.status === 'cancelled') throw new AppError('application_cancelled', 409);
-      const [current] = await tx`select id from ${table("preeval.files")} where id=${record.id}
+      const [current] = compact() ? await tx`select id from aet.aet_documents where id=${record.id} and application_id=${id} and upload_version::text=${record.version} and upload_state='uploading' for update` : await tx`select id from ${table("preeval.files")} where id=${record.id}
         and created_at=${record.version}::text::timestamptz and state='uploading' for update`;
       if (!current) throw new AppError('upload_expired', 409);
       // Keep the claim through storage so an abandoned/retried attempt cannot
       // overwrite a newer file or revive its index through a late callback.
       const metadata = await uploadFile(record.dropbox_path, data);
       await recordCoreFile(tx,record,metadata);
-      await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
+      if(compact())await settleCompactFile(tx,record.id,record.version,'ready');
+      else await tx`update ${table("preeval.files")} set state='ready' where id=${record.id}`;
       await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: record.id })})`;
     });
   } catch (error) {
     if (error instanceof AppError) throw error;
-    await db()`update ${table("preeval.files")} set state='failed' where id=${record.id}
+    if(compact())await settleCompactFile(db(),record.id,record.version,'failed');
+    else await db()`update ${table("preeval.files")} set state='failed' where id=${record.id}
       and created_at=${record.version}::text::timestamptz and state='uploading'`;
     throw new AppError('upload_failed', 502);
   }
 }
 export async function staffAction(id: string, body: Row, actor: string) {
+  if(compact()&&body.action==='retry_email')return retryCompactNotification(id,String(body.emailId));
   if (converged() && body.action !== "retry_email") return staffConverged(id,body,actor);
   if (body.action === "notes") {
     if (typeof body.notes !== "string" || body.notes.length > 5000)

@@ -322,8 +322,8 @@ describe.skipIf(!pgBin)('pre-evaluation after physical table retirement (owned P
   it('serves the actual lookup and Status routes with application-scoped sessions after deletion',async()=>{
     const {app,token}=await submit(input());
     const get=()=>getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+app.id),{params:Promise.resolve({path:['applications',app.id]})});
-    expect((await get()).status).toBe(401);m.cookie=token;expect((await get()).status).toBe(200);
-    m.cookie=(await submit(input())).token;expect((await get()).status).toBe(401);
+    expect((await get()).status).toBe(401);m.cookie=token!;expect((await get()).status).toBe(200);
+    m.cookie=(await submit(input())).token!;expect((await get()).status).toBe(401);
     const response=await lookupRoute(new NextRequest('http://localhost:3022/api/pre-evaluation/lookup',{method:'POST',
       headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify({applicationId:app.id,locale:'zh'})}));
     expect(response.status).toBe(200);expect((await response.json()).url).toContain('/zh/');

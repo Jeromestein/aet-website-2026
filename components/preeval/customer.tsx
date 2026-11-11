@@ -616,7 +616,7 @@ export function ApplicationResult({
               <FileText size={18} />
               <span>{f.name}</span>
               {f.state === "ready" ? (
-                <a href={"/api/pre-evaluation/files/" + f.id}>{t.download}</a>
+                <a href={"/api/pre-evaluation/files/" + f.id + "?applicationId=" + encodeURIComponent(id)}>{t.download}</a>
               ) : (
                 <span className={s.badge}>{label(f.state)}</span>
               )}

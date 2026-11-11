@@ -1,3 +1,4 @@
+import { compact, compactFileRecords } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextResponse, after } from "next/server";
 import { z } from "zod";
@@ -7,6 +8,7 @@ import { AppError, resultPath, MAX_FILE_BYTES } from "@/lib/preeval/domain";
 import {
   authorize,
   consumeLink,
+  session,
   sessionCookie,
   sameOrigin,
   limit,
@@ -132,7 +134,7 @@ async function handler(
         },
         201,
       );
-      res.cookies.set(sessionCookie(result.token));
+      if(result.token)res.cookies.set(sessionCookie(result.token));
       await scheduleAI(result.app.id);
       after(() => deliverApplicationEmails(result.app.id));
       return res;
@@ -166,7 +168,7 @@ async function handler(
       const current = await authorize(
         body.admin ? undefined : body.applicationId,
       );
-      await db()`delete from ${table("preeval.sessions")} where hash=${current.hash}`;
+      if(!compact())await db()`delete from ${table("preeval.sessions")} where hash=${current.hash}`;
       const res = response({ ok: true });
       res.cookies.set({ ...sessionCookie(""), maxAge: 0 });
       return res;
@@ -250,8 +252,14 @@ async function handler(
     if (path[0] === "files" && path[1] && !isPost) {
       const id = uuid(path[1]);
       const [file] =
-        await db()`select * from ${table("preeval.files")} where id=${id} and state='ready'`;
+        compact()?await db()`select * from (${compactFileRecords(db())}) f where id=${id} and state='ready'`:await db()`select * from ${table("preeval.files")} where id=${id} and state='ready'`;
       if (!file) throw new AppError("not_found", 404);
+      // A bare file UUID must not become another unscoped customer capability.
+      if(compact()){
+        const requested=new URL(request.url).searchParams.get('applicationId');
+        const staff=await session();
+        if(!staff && requested!==file.application_id)throw new AppError('access_denied',403);
+      }
       await authorize(file.application_id);
       const content = await isCoreApplication(file.application_id) ? await downloadCoreFile(file.application_id,file.id) : await downloadFile(file.dropbox_path);
       return new NextResponse(new Uint8Array(content), {

@@ -1,3 +1,5 @@
+import { compact } from '../application-core/compact-files';
+import { enqueueCompact,flushCompactNotifications } from '../application-core/compact-notifications';
 import { converged, workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, coreProfile } from "../application-core/runtime";
 import { createCoreShadowReader } from "../application-core/reader";
@@ -16,6 +18,7 @@ type QueueInput = {
   informationRequestId?: number | string;
 };
 export async function enqueueEmail(input: QueueInput) {
+  if(compact())return enqueueCompact(input);
   // Store routing/business references only; templates and rendered content stay in code/memory.
   await db()`insert into ${table("preeval.emails")}(application_id,kind,dedupe_key,recipient,result_version,information_request_id)
     values (${input.applicationId || null},${input.kind},${input.key},${configuration().recipient},${input.resultVersion ?? null},${input.informationRequestId ?? null})
@@ -54,7 +57,7 @@ export async function renderQueuedEmail(row: Row) {
   }
   let message = "";
   if (row.kind === "information") {
-    const [request] = await db()`select detail->>'message' as message from ${table("preeval.audit")}
+    const [request] = compact()?await db()`select customer_message as message from aet.aet_service_detail where application_id=${app.id} and service_type='pre-evaluation' and details->'information_request'->>'id'=${String(row.information_request_id)}`:await db()`select detail->>'message' as message from ${table("preeval.audit")}
       where id=${row.information_request_id} and application_id=${app.id} and action='information.requested'`;
     if (!request?.message) throw new EmailReviewRequired("information_request_missing");
     message = request.message;
@@ -80,6 +83,7 @@ export function emailDispatchEnabled(applicationId?: string) {
 }
 export async function flushEmails(transport: EmailTransport = resendTransport, applicationId?: string) {
   if (!emailDispatchEnabled(applicationId)) return;
+  if(compact())return flushCompactNotifications(transport,applicationId);
   const scope = applicationId || null;
   const recipient = configuration().recipient;
   const sql = db(), lease = randomUUID();

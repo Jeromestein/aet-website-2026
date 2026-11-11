@@ -1,6 +1,6 @@
 # AET Migration Checklist
 
-Updated November 6, 2026. Isolated phases one through three and hosted dev Preview
+Updated November 10, 2026. Isolated phases one through three and hosted dev Preview
 core acceptance at `b003139` are verified. Production and historical cohorts remain
 unchanged. A local copy of the old Preview cohort has also been rehearsed;
 this is not hosted historical activation. Unchecked capabilities remain open.
@@ -98,10 +98,41 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
 - [ ] Connect the already-tested dedicated pre-evaluation flow to the general
   entry. Evolve shared contracts as services connect; no broad database rewrite
   is required to finish one formal-evaluation journey.
-- [x] **Approve the 13-table convergence target (November 6, 2026):** five business
-  tables plus eight shared operational tables; see the [target and boundaries](database-migration-plan.md#approved-convergence-target-13-tables).
-  The 32-table baseline covers only the four private Preview business schemas.
-  Staff authentication, legacy CMS and unrelated public tables are excluded.
+- [x] **Document the revised nine-table target (November 10, 2026):** five
+  business tables plus AI runs, payment events, audit and rate limits. Supersedes
+  the November 6 thirteen-table design; see [target and boundaries](database-migration-plan.md#approved-convergence-target-9-tables).
+  Pre-evaluation implementation is now verified locally; hosted/cross-service
+  rollout remains open. Staff auth/CMS remain outside the budget.
+- [x] **Merge upload tracking into documents in isolation:** one file row with
+  nullable File ID until ready and current state/version/context. Ordinary,
+  chunked and shared uploads preserve ready files and reject stale completion;
+  failed/abandoned replacement passes after `aet_uploads` is physically dropped.
+- [x] **Replace the local mail table in isolation:** bounded current service
+  notification state retains event key, payload hash, receipt and retry budget;
+  Resend owns history. Captured delivered receipts are preserved; concurrent
+  flush, changed-payload and expired delivery-window guards pass. Old mail rows
+  are externally archived. No cron or copied HTML/history array is added.
+- [x] **Use non-expiring application-ID links in isolation:** no customer cookie,
+  session, extra token or creation-time expiry. Customer file requests must match
+  the application; staff actions and private results remain protected. Anyone
+  holding an application URL has its customer access. Active legacy token-only
+  links block retirement; expired/consumed token routes return 410 afterward.
+- [x] **Remove audit business dependencies in isolation:** service owns result
+  version, current material request and confirmed test exemption/provenance.
+  Audit remains historical evidence; `aet_audit` and `aet_rate_limits` are retained.
+- [x] **Verify nine-table retirement locally:** 25 runtime cases + 11 full-snapshot
+  cases cover migration, CRM/Status, upload recovery, AI/publication, signed
+  payment/notification replay and DDL rollback. Combined **379 tests / 22 files**
+  and TypeScript pass. Full isolated copy: **21 tables = 9 shared + 12 formal**;
+  online Preview remains **32**, with zero hosted deletions. See
+  [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
+- [ ] **Prepare hosted nine-table acceptance:** durable archive/restore, fresh
+  snapshot/quiescence, restricted roles, active old-link reconciliation, provider
+  uncertainty/retention and full customer/staff browser journey. Current local
+  tests and fixture-only download check do not authorize or prove hosted cutover.
+- [ ] **Converge formal/translation to the same nine:** retire the twelve remaining
+  formal workflow/projection tables only after their readers/writers and history
+  pass the shared file/payment/notification/access contracts.
 - [x] **Isolated pre-evaluation convergence (November 6, 2026):** actual entry
   points use five canonical tables and eight shared operational tables. Move
   operational tables, combine upload tracking, and physically drop seven redundant
@@ -132,22 +163,34 @@ deferred under the owner's accepted baseline; it is not this milestone's gate.
   Combined regression: 343 tests / 20 files; the captured-copy suite passes
   14 tests (6 old-only plus 8 mixed). TypeScript passes. See the
   [mixed-cohort evidence](archive/database-preeval-history-convergence-2026-11-06.md#mixed-cohort-extension).
-- [ ] **Complete hosted-snapshot reconciliation:** repeat with a fresh complete
-  old/core snapshot and refreshed provider evidence. Current mixed fixtures use
-  four captured old records plus two locally generated core applications, not
-  copies of every hosted core row. Resolve non-v1/other-service/ambiguous records;
-  stop active uploads, AI and mail before retirement. Keep the empty-fixture SQL
-  separate. Verify the test-exemption display before any hosted activation; this
-  is not a general customer discount or free-service feature.
+- [x] **Complete hosted-snapshot reconciliation (November 10, 2026):** restore
+  all 32 Preview tables from one fresh read-only snapshot, including four old and
+  two existing core pre-evaluations plus four formal applications. Refresh six
+  Dropbox File IDs, five Stripe test payments and 13 delivered email receipts.
+  Migrate all six pre-evaluations and physically retire seven tables locally;
+  preserve existing core rows, formal records, results, sessions and mail history.
+  Fix converged CRM to retain formal applications; all 10 records and 11 query
+  variants reconcile. Signed callback replay remains idempotent; the audited
+  no-charge fixture stays waived without a payment row. Seven snapshot tests and
+  350 combined tests / 21 files pass; TypeScript passes. A second hosted read
+  confirms all 32 source tables unchanged. The complete local copy now has 25
+  tables, including 13 converged tables; the online copy still has 32.
+  See [full-snapshot evidence](archive/database-full-preview-convergence-2026-11-10.md).
+- [ ] **Hosted cutover readiness:** reconcile a new snapshot at cutover time and
+  stop active uploads, AI and leased mail before retirement. Resolve non-v1,
+  other-service or ambiguous rows rather than forcing migration. Verify the
+  waived test-exemption display in the browser; this is not a general discount
+  feature. Keep empty-fixture SQL separate from populated-cohort migration.
 - [ ] **Hosted convergence activation:** after historical reconciliation, prepare
   restricted hosted grants/migration and explicit rollout/rollback. The current
   convergence activation only accepts the owned local Unix-socket database;
   there is no hosted environment flag for this new stage.
-- [ ] **Cross-service convergence to 13 tables:** migrate formal/translation
-  writers and merge operational email/access/audit/payment-event contracts;
+- [ ] **Cross-service convergence to 9 tables:** migrate formal/translation
+  writers onto shared files, service notifications, application-ID access and
+  the four retained operational tables;
   reconcile historical IDs and provider references before retiring each source.
   Do not create another service-specific table family or a migration table that
-  becomes a permanent fourteenth runtime table.
+  becomes a permanent tenth runtime table.
 - [x] **Phase 1 — Additive shared schema and isolated rehearsal (November 6, 2026):**
   add the five tables in private `aet`, including birth/residence/submission/version
   fields, service pricing/result/workflow fields, document access/revisions and

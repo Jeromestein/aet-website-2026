@@ -1,3 +1,4 @@
+import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { coreTable } from '../application-core/connection';
 import 'server-only';
 import { isCoreApplication } from '../application-core/runtime';
@@ -15,7 +16,7 @@ import type { Office } from '../dropbox/shared';
 export type ManifestEntry = { id: string; path: string; office: Office; revision: string; contentHash: string; size: number; mime: string };
 export async function documentManifest(app: Row): Promise<ManifestEntry[]> {
   requireEnabled();
-  const rows = await db()`select * from ${table("preeval.files")} where application_id=${app.id} order by created_at`;
+  const rows = compact() ? await db()`select * from (${compactFileRecords(db())}) f where application_id=${app.id} order by created_at` : await db()`select * from ${table("preeval.files")} where application_id=${app.id} order by created_at`;
   if (rows.some(f => f.state !== 'ready')) throw new AIError('uploads_incomplete');
   if (await isCoreApplication(app.id)) {
     const files=await db()`select * from ${coreTable(db(),'aet_documents')} where application_id=${app.id} and access_scope='customer_input' order by id`;

@@ -1,3 +1,4 @@
+import { compact } from '../application-core/compact-files';
 import "server-only";
 import { configuration } from "./config";
 import { db, table } from "./db";
@@ -23,7 +24,7 @@ export function emailRecoveryScope() {
 export async function recoverApplicationEmails(transport?: EmailTransport) {
   const scope = emailRecoveryScope();
   if (!scope) return { skipped: true };
-  const applications = await db()`select application_id from ${table("preeval.emails")}
+  const applications = compact()?scope.ids.slice(0,3).map(application_id=>({application_id})):await db()`select application_id from ${table("preeval.emails")}
     where application_id=any(${scope.ids}::uuid[]) and recipient=${scope.recipient}
       and available_at<>'infinity'::timestamptz
       and ((state in ('queued','failed') and available_at<=now())

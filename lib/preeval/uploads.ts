@@ -1,3 +1,4 @@
+import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from '../application-core/compact-files';
 import { workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, recordCoreFile } from '../application-core/runtime';
 import 'server-only';
@@ -32,14 +33,14 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
     const record = await db().begin(async tx => {
       const [app] = await workflowRows(tx, id, true);
       if (!app || app.status === 'cancelled') throw new AppError('application_cancelled', 409);
-      const [existing] = await tx`select *,created_at::text as version from ${table('preeval.files')} where application_id=${id} and sha256=${'dropbox:' + contentHash}`;
+      const [existing] = compact() ? await tx`select * from (${compactFileRecords(tx)}) f where application_id=${id} and sha256=${'dropbox:'+contentHash}` : await tx`select *,created_at::text as version from ${table('preeval.files')} where application_id=${id} and sha256=${'dropbox:' + contentHash}`;
       if (existing?.state === 'ready') return existing;
       if (existing?.state === 'uploading' && Date.now() - new Date(existing.created_at).getTime() < staleAfter) throw new AppError('upload_in_progress', 409);
-      if (!existing && (await tx`select id from ${table('preeval.files')} where application_id=${id}`).length >= 5) throw new AppError('file_limit');
+      if (!existing && (compact() ? await tx`select id from aet.aet_documents where application_id=${id} and access_scope='customer_input'` : await tx`select id from ${table('preeval.files')} where application_id=${id}`).length >= 5) throw new AppError('file_limit');
       await pauseForUpload(id, tx);
       const fileId = existing?.id || randomUUID();
       const path = (!await isCoreApplication(id,tx) && existing?.dropbox_path) || await filePath({ ...app, created_at: new Date(app.created_at).toISOString() }, 'pre-evaluation', fileId, fileName, false, tx);
-      const [row] = await tx`insert into ${table('preeval.files')}(id,application_id,name,mime_type,bytes,sha256,dropbox_path)
+      const [row] = compact() ? [await reserveCompactFile(tx,{id:fileId,applicationId:id,name:fileName,mime,size:fileSize,digest:'dropbox:'+contentHash,path})] : await tx`insert into ${table('preeval.files')}(id,application_id,name,mime_type,bytes,sha256,dropbox_path)
         values (${fileId},${id},${fileName},${mime},${fileSize},${'dropbox:' + contentHash},${path})
         on conflict(application_id,sha256) do update set state='uploading',created_at=clock_timestamp() returning *,created_at::text as version`;
       return row;
@@ -53,7 +54,8 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
         offset: 0, size: fileSize, mime, hash: contentHash, path: record.dropbox_path };
       return { uploadKey: seal(accountForOffice(office), purpose, upload, Date.now() + lifetime), offset: 0 };
     } catch {
-      await db()`update ${table('preeval.files')} set state='failed' where id=${record.id} and created_at=${record.version}::text::timestamptz and state='uploading'`;
+      if(compact())await settleCompactFile(db(),record.id,record.version,'failed');
+      else await db()`update ${table('preeval.files')} set state='failed' where id=${record.id} and created_at=${record.version}::text::timestamptz and state='uploading'`;
       throw new AppError('upload_failed', 502);
     }
   }
@@ -66,7 +68,7 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
   return db().begin(async tx => {
     const [app] = await workflowRows(tx, id, true);
     if (!app || app.status === 'cancelled') throw new AppError('application_cancelled', 409);
-    const [file] = await tx`select * from ${table('preeval.files')} where id=${upload.fileId} and application_id=${id} and created_at=${upload.version}::text::timestamptz for update`;
+    const [file] = compact() ? await tx`select * from (${compactFileRecords(tx)}) f where id=${upload.fileId} and application_id=${id} and version=${upload.version}` : await tx`select * from ${table('preeval.files')} where id=${upload.fileId} and application_id=${id} and created_at=${upload.version}::text::timestamptz for update`;
     if (!file || file.state === 'failed') throw new AppError('upload_expired', 409);
     if (file.state === 'ready') {
       if (data.action === 'finish') return { complete: true };
@@ -78,7 +80,8 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
     if (data.action === 'cancel') {
       // An uncommitted Dropbox session expires automatically. Fence it locally
       // even if the provider is unavailable, so an explicit retry can start now.
-      await tx`update ${table('preeval.files')} set state='failed' where id=${file.id}`;
+      if(compact())await settleCompactFile(tx,file.id,upload.version,'failed');
+      else await tx`update ${table('preeval.files')} set state='failed' where id=${file.id}`;
       return { complete: false };
     }
     const dbx = await clientForOffice(office);
@@ -105,7 +108,8 @@ export async function uploadDocument(id: string, data: Record<string, unknown>, 
     }
     if (!('size' in saved) || saved.size !== upload.size || saved.content_hash !== upload.hash) throw new AppError('upload_failed', 502);
     await recordCoreFile(tx,file,{...saved,storageLocation:accountForOffice(office)});
-    await tx`update ${table('preeval.files')} set state='ready' where id=${file.id}`;
+    if(compact())await settleCompactFile(tx,file.id,upload.version,'ready');
+    else await tx`update ${table('preeval.files')} set state='ready' where id=${file.id}`;
     await tx`insert into ${table('preeval.audit')}(application_id,actor,action,detail) values (${id},${actor},'file.uploaded',${tx.json({ fileId: file.id })})`;
     return { complete: true };
   });

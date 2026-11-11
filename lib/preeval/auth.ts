@@ -1,7 +1,9 @@
+import { compact } from '../application-core/compact-files';
+import { z } from 'zod';
 import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { table, db, type Row } from "./db";
-import { AppError } from "./domain";
+import { AppError, resultPath } from "./domain";
 import { configuration } from "./config";
 import { requestMatchesApplicationOrigin } from "../preview-environment";
 import { staffSession, requireStaffApplication } from "../staff/session";
@@ -13,6 +15,7 @@ export const COOKIE = "aet_preeval_session";
 export async function session() {
   const staff = await staffSession();
   if (staff) return staff as Row;
+  if(compact())return null;
   const value = (await cookies()).get(COOKIE)?.value;
   if (!value || !/^[\w-]{43}$/.test(value)) return null;
   const [row] =
@@ -21,6 +24,10 @@ export async function session() {
 }
 export async function authorize(id?: string) {
   const current = await session();
+  if(compact() && !current && id && z.uuid().safeParse(id).success){
+    const [app]=await db()`select id,email from aet.aet_core_applications where id=${id} and primary_service='pre-evaluation'`;
+    if(app)return {role:'customer',application_id:id,email:app.email};
+  }
   if (
     !current ||
     (id
@@ -37,6 +44,7 @@ export async function makeSession(
   email: string,
 ) {
   if (role !== "customer") throw new AppError("access_denied", 403);
+  if(compact())throw new AppError('sessions_retired',410);
   const token = secret();
   await db()`insert into ${table("preeval.sessions")}(hash,application_id,role,email,expires_at) values (${hash(token)},${applicationId},${role},${email},now()+interval '24 hours')`;
   return token;
@@ -59,6 +67,7 @@ export async function makeLink(
   locale: string,
 ) {
   if (role !== "customer") throw new AppError("access_denied", 403);
+  if(compact()){if(!applicationId||!z.uuid().safeParse(applicationId).success)throw new AppError('invalid_link');return configuration().origin+resultPath(locale,applicationId);}
   const token = secret();
   await db()`insert into ${table("preeval.tokens")}(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${locale},now()+interval '24 hours')`;
   return (
@@ -69,6 +78,7 @@ export async function makeLink(
   );
 }
 export async function consumeLink(token: string) {
+  if(compact())throw new AppError("legacy_link_retired",410);
   if (!/^[\w-]{43}$/.test(token)) throw new AppError("invalid_link");
   const raw = secret();
   const row = await db().begin(async (sql) => {

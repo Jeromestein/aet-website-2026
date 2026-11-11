@@ -6,7 +6,7 @@ import 'server-only';
 import type { Sql, TransactionSql } from 'postgres';
 import { z } from 'zod';
 import { AppError, TOTAL_CENTS } from '../preeval/domain';
-import { projectWorkspaceRecords, legacyRecords } from '../crm/workspace-server';
+import { projectWorkspaceRecords, legacyRecords, formalRecords } from '../crm/workspace-server';
 
 // Context is supplied by authenticated server code, never request JSON.
 export type CoreActor = { role: 'customer'; applicationId: string } |
@@ -76,13 +76,13 @@ export async function createCoreShadowReader(sql: Sql) {
             'end',concat(e.study_end_date->>'year','-',lpad(e.study_end_date->>'month',2,'0'))) order by e.sort_order,e.id)
             from ${coreTable(tx,'aet_education')} e where e.application_id=a.id),'[]') educations,
           coalesce((select jsonb_agg(jsonb_build_object('id',d.id,'kind','document','name',d.original_filename,'bytes',d.size_bytes) order by d.id)
-            from ${coreTable(tx,'aet_documents')} d where d.application_id=a.id and d.access_scope='customer_input'),'[]') files,
+            from ${coreTable(tx,'aet_documents')} d where d.application_id=a.id and d.access_scope='customer_input' and d.storage_file_id is not null),'[]') files,
           coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.checkout_session_id,'amount_cents',p.amount_cents,
             'status',p.payment_status,'created_at',p.created_at) order by p.created_at desc,p.id)
             from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments
           from ${coreTable(tx,'aet_core_applications')} a ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'
             and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
-        const combined = converged() ? records : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
+        const combined = converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
         return projectWorkspaceRecords(tx, combined, raw, { email: actor.email, offices: actor.offices,
           include_unassigned: actor.includeUnassigned }, true);

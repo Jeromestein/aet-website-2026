@@ -28,7 +28,7 @@ export async function workspaceSnapshot(raw: Record<string,string>, staff: Row):
   return projectWorkspaceRecords(sql, legacyRecords(sql), raw, staff, configuration().cloudPreview);
 }
 
-export function legacyRecords(sql: Sql | TransactionSql) {
+export function formalRecords(sql: Sql | TransactionSql) {
   return sql`
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
         case lower(rtrim(coalesce(l.pronouns,a.data->'evaluee'->>'title'),'.')) when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else nullif(trim(coalesce(l.pronouns,a.data->'evaluee'->>'title')),'') end,
@@ -52,7 +52,11 @@ export function legacyRecords(sql: Sql | TransactionSql) {
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind',f.kind,'name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('evaluation.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb) files,
         coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('evaluation.payments')} p where p.application_id=a.id),'[]'::jsonb) payments
       from ${table('evaluation.applications')} a left join ${table('public.fce_applications')} l on l.id=a.id
-      union all
+`;
+}
+
+export function legacyRecords(sql: Sql | TransactionSql) {
+  return sql`${formalRecords(sql)} union all
       select 'preeval',a.id,concat_ws(' ',coalesce(l.first_name,a.first_name),nullif(trim(coalesce(l.middle_name,a.middle_name)),''),coalesce(l.last_name,a.last_name)),coalesce(l.email,a.email),a.office,
         1,a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,${TOTAL_CENTS},'Pre-Evaluation',false,
         coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',case when e.id is not null then concat(e.study_start_date->>'year','-',e.study_start_date->>'month') else p.start_date end,'end',case when e.id is not null then concat(e.study_end_date->>'year','-',e.study_end_date->>'month') else p.end_date end) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),

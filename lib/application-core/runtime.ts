@@ -1,3 +1,4 @@
+import { compact, saveCompactMetadata } from './compact-files';
 import { converged,workflowRows,queueInput,adminConverged } from "./converged-store";
 import { coreTable, assertCoreConnection, corePreviewConfiguration } from './connection';
 import 'server-only';
@@ -139,6 +140,7 @@ export async function recordCoreFile(tx: TransactionSql, file: Row, metadata: Co
   if (!await isCoreApplication(file.application_id,tx)) return;
   if (!metadata.id?.startsWith('id:') || !metadata.rev || !['AET_App','AET_App_East'].includes(metadata.storageLocation || ''))
     throw new Error('Verified Dropbox File ID, revision and connection required');
+  if(compact())return saveCompactMetadata(tx,file,metadata);
   await tx`insert into ${coreTable(tx,'aet_documents')}(id,application_id,storage_location,storage_file_id,storage_path,storage_rev,storage_content_hash,
     original_filename,mime_type,size_bytes,access_scope)
     values (${file.id},${file.application_id},${metadata.storageLocation!},${metadata.id},${metadata.path_display || file.dropbox_path},${metadata.rev},${metadata.content_hash || null},

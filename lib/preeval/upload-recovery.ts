@@ -1,3 +1,4 @@
+import { compact } from '../application-core/compact-files';
 import { converged,recoveryConverged } from "../application-core/converged-store";
 import { workflowRows } from "../application-core/converged-store";
 import 'server-only';
@@ -40,7 +41,7 @@ export async function abandonUpload(id: string, data: unknown, actor: string) {
   return db().begin(async tx => {
     const [app] = await workflowRows(tx, id, true);
     if (!app || app.status === 'cancelled') throw new AppError('application_unavailable', 409);
-    const removed = upload.source === 'file'
+    const removed = compact() ? await tx`delete from aet.aet_documents where application_id=${id} and id=${upload.id} and upload_version::text=${upload.version} and upload_state<>'ready' and storage_file_id is null returning id` : upload.source === 'file'
       ? await tx`delete from ${table('preeval.files')} where application_id=${id} and id=${upload.id}
           and created_at::text=${upload.version} and state<>'ready' returning id`
       : await tx`delete from ${table('preeval.document_uploads')} where application_id=${id}

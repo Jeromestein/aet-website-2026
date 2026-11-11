@@ -18,41 +18,84 @@ explicit new pre-evaluation cohort, not historical or cross-service convergence.
 The isolated pre-evaluation retirement gate is verified for both new requests
 and a reconciled populated copy; see the [new-cohort acceptance](archive/database-preeval-convergence-2026-11-06.md)
 and [historical retirement acceptance](archive/database-preeval-history-convergence-2026-11-06.md).
-The latest mixed gate migrates all four captured old synthetic Preview records
-beside two locally generated core-v1 applications, retaining canonical rows and
-operational history before dropping seven tables in one transaction. Every source
-application must be reconciled. The no-charge test fixture retains original audit
-evidence in service details and projects `waived`, with zero amount and no payment
-row; this is not a general free-service feature. Fresh complete hosted snapshots,
-provider reconciliation and cross-service adoption remain gates. Hosted runtime
-and historical records retain the boundaries above.
+The November 10 full-snapshot gate restores all 32 Preview tables from a fresh
+read-only snapshot, including four old and two existing core pre-evaluations plus
+four formal applications. Provider references were refreshed read-only. Seven
+redundant tables are dropped locally; existing canonical rows and formal records
+are retained. Converged CRM now includes formal rows, with all 10 applications
+reconciled. Seven full-snapshot tests and 350 combined regression tests pass.
+See [complete snapshot evidence](archive/database-full-preview-convergence-2026-11-10.md).
+That first local stage has 25 tables; the subsequent nine-table stage below
+reduces the copy to 21. Online Preview still has 32. The no-charge fixture
+retains its original audit evidence and projects `waived`, with zero amount and
+no payment row. Cross-service convergence and hosted cutover remain separate
+gates; a new cutover-time snapshot and quiescence checks will still be required.
 
-## Approved convergence target: 13 tables
+## Approved convergence target: 9 tables
 
-The November 6 inventory contains 32 physical tables across the four private
-Preview business schemas: core 5, pre-evaluation 12, evaluation 10, legacy 5.
-The final business/runtime target is **13 physical tables**, not five:
+**November 10, 2026: implemented and verified for isolated pre-evaluation.**
+This supersedes the 13-table target, not its historical acceptance results.
+The subsequent nine-table rehearsal reduces the complete local copy from 25 to
+21 tables (9 shared + 10 evaluation + 2 legacy formal). Online Preview still has
+32 tables. Formal/translation convergence and hosted activation remain open.
+See [nine-table acceptance](archive/database-nine-table-rehearsal-2026-11-10.md).
 
 | Ownership | Target tables |
 | --- | --- |
 | Business (5) | `aet_core_applications`, `aet_education`, `aet_service_detail`, `aet_documents`, `aet_payments` |
-| Shared operations (8) | `aet_uploads`, `aet_ai_runs`, `aet_emails`, `aet_payment_events`, `aet_access_tokens`, `aet_sessions`, `aet_audit`, `aet_rate_limits` |
+| Shared operations (4) | `aet_ai_runs`, `aet_payment_events`, `aet_audit`, `aet_rate_limits` |
 
-Staff authentication (three existing private tables), the legacy CMS, unrelated
-public tables, and future account-provider tables are outside this budget. The
-CRM audit should ultimately join the shared audit contract. A new service must
-reuse these records rather than create another application/payment/email family.
-No quote, deliverable, applicant, folder-location or scheduled-recovery table is
-approved. Future account ownership is a nullable account link on applications;
-contact/evaluee/submission snapshots remain application-specific.
+Staff authentication, legacy CMS, unrelated public tables and future account
+provider tables remain outside this business/runtime budget. `aet_audit` and
+`aet_rate_limits` remain in the approved nine; removing either needs a separate
+decision. No new quote, deliverable, applicant, folder-location or recovery table
+is planned. Future account ownership can link to applications without moving
+application-specific contact/evaluee/submission snapshots into an account record.
 
-Convergence is now a prerequisite to expanding service writers. Retire duplicate
-business storage per verified cohort instead of postponing all retirement until
-phase 7. Core application owns identity/contact/submission; education owns academic
-history; service detail owns requirements, price and the current result; documents
-own completed File IDs; payments own payment/refund truth. AI scheduling belongs
-in AI run records, unfinished storage work in upload records. No mirrored workflow
-application or second payment ledger may remain in the converged path.
+### Four tables removed from the target
+
+| Previous target | New owner / behavior | Implementation gate |
+| --- | --- | --- |
+| `aet_uploads` | `aet_documents` owns each file and only its current upload state | Nullable File ID until ready, current upload version/context, stale-completion protection and failed-replacement recovery; no per-attempt history table |
+| `aet_emails` | Resend owns full delivery history; `aet_service_detail.notification_state` retains minimal business notification state and provider references | Stable event key, payload fingerprint, provider ID and current status; reconcile pending/uncertain sends without duplicate mail before retirement |
+| `aet_sessions` | Customer accesses the application using its random UUID in the URL | No customer session table or cookie required; every customer operation remains limited to that application |
+| `aet_access_tokens` | The same application-ID URL is the customer access link | No extra secret, token hash or expiry field; no expiry based on application creation time |
+
+The application-ID URL deliberately grants customer access to anyone holding it.
+Use the existing random UUID, never a sequential display number. Links do not
+expire automatically and work across browsers/devices. The UUID alone does not
+grant staff powers, private notes/drafts, arbitrary Dropbox File-ID lookup, price
+editing or report release. Keep staff authentication and office scope separate.
+Application IDs must be treated as sensitive links in logs/analytics/public views.
+This design does not add per-link revocation; assess any future revocation need
+separately rather than silently adding a token or session table back.
+
+`notification_state` is a validated, bounded map of current business notifications
+(e.g. confirmation and current result version), not a second mail archive or an
+unlimited array. It stores no copied email HTML/history. Link provider records to
+the application/service, preserve deduplication across retries and use existing
+recovery entry points; no scheduled retry job is introduced. Local implementation
+retains at most four kinds: confirmation, result, information and access. The
+captured Resend receipts were verified; current staff views expose current state,
+not the removed full local history. Provider-history UI and retention handling
+remain hosted acceptance work. Preserve historical receipts in a reviewed archive before
+retiring source tables; do not assume provider history lasts indefinitely.
+
+One document row represents a file, not each upload attempt. Proposed `upload_state`,
+`upload_version` and temporary `upload_context` hold only the current operation.
+Completed file identity is still storage connection plus Dropbox File ID. A
+replacement must not destroy the usable prior file reference before success;
+late completion of an older operation must be rejected. The local adapter keeps
+only the current dedupe key, source fingerprint, attempt ID and start time;
+success removes the attempt ID. Key/fingerprint remain for file deduplication,
+not as an upload-attempt history.
+
+Keep audit as history, not as the source of business decisions. Move the monotonic
+result-version counter into `aet_service_detail.result_version`, keep the current
+material request in `customer_message`/validated service details, and store explicit
+payment-exemption semantics there with provenance. Preserve old audit evidence,
+but remove runtime dependence on searching logs to grant release or calculate
+versions. AI jobs, payment-event deduplication and rate limits remain shared.
 
 ### Immediate isolated pre-evaluation gate
 
@@ -68,7 +111,8 @@ application or second payment ledger may remain in the converged path.
    checks after the drop. Prove table absence and foreign-key integrity.
 5. Record exactly which tables/records were retired and whether providers were
    mocked. A clean synthetic rehearsal does not approve historical or hosted drops.
-6. Repeat the verified mixed-cohort importer on a fresh complete hosted snapshot.
+6. The November 10 fresh complete hosted snapshot passes locally; repeat with a
+   new snapshot at cutover time.
    Core-v1 rows are preserved, not backfilled; inconsistent identity, results,
    prices, files or payment references reject the entire transaction. A queued
    job can resume after cutover, while running AI, uploads and leased mail require
@@ -281,7 +325,7 @@ Keep the approved staff-confirmed directory resolution and on-open scan policy.
 | A file's content changes without changing its File ID | Add nullable `storage_rev` and `storage_content_hash`; capture exact versions in AI input manifests and released outputs |
 | Metadata refresh after moves/renames | Add `updated_at`; `last_seen_at` is optional if staff need refresh freshness separately |
 | Unreleased output/private files | Add an access field such as `access_scope` (`customer_input` / `staff_only`), or retain an equivalent explicit ACL until migration; this is permission, not document type |
-| Upload has not produced a File ID yet | Retain upload-attempt records outside `aet_documents`; create a document row only after successful upload/metadata reconciliation |
+| Upload has not produced a File ID yet | Use the same file row with nullable File ID and current upload state/version/context; mark ready only after successful metadata reconciliation |
 | Unknown metadata or unavailable files | Allow unknown MIME/size where necessary; report lookup failure and retain the record, without inventing a replacement or treating failure as deletion |
 
 New staff discoveries default to staff-only until association/visibility is
@@ -448,23 +492,26 @@ and the simple amount/result contracts pass equivalence tests. Do not remove
 source history or copy staff-private content into customer-visible results. This is a target
 plan, not a database change.
 
-### Reuse operational records
+### Operational migration boundaries
 
-| Record | Recommendation and timing | Minimum information to preserve |
+Existing runtime tables stay intact until the nine-table adapters pass isolated
+acceptance. The table below describes the destination, not authorization to delete.
+
+| Existing record | Target disposition | Required preservation |
 | --- | --- | --- |
-| Existing AI runs/state | Retain now; later attach to the canonical service/application | Input/result versions, model/prompt version, manifest, output, attempt/lease/availability state and publication recovery |
-| Existing upload attempts | Retain now; consolidate transports only after equivalence tests | Application link, file key, attempt ID, state and update time; stale callbacks cannot settle newer attempts |
-| Existing email delivery records | Retain now; merge queue shapes only as a later focused change | IDs, dedupe key, recipient, business-event reference, provider receipt, payload hash, lease/attempts and timestamps |
-| Existing payment events | Retain now; later attach to the consolidated ledger | Provider-scoped event ID, event type, receipt time and processing result; preserve reconciliation-generated IDs separately from provider events |
-| Existing audit, sessions, tokens, rate limits and staff accounts | Retain, with explicit canonical links where needed | Original IDs/expiry/consumption, actor and historical event semantics; preserve office and customer authorization |
-| Migration identity report | Keep in rehearsal output and reviewed migration artifacts; not another permanent runtime table | Environment/source relation/source ID, target relation/ID, mapping status, source version/hash and migration time; unique source identity |
+| AI runs/state | `aet_ai_runs` | Input/result versions, manifest, output, queue/lease state and publication recovery |
+| Upload tracking | Current state on `aet_documents`; retire `aet_uploads` | File association, active-operation fencing and valid file identity through failed replacement; archive old attempts if needed, no ongoing attempt history |
+| Email delivery records | Resend history plus minimal service notification state; retire `aet_emails` | Application/event association, dedupe identity and provider receipt; reconcile unsent/uncertain messages and archive historical evidence |
+| Payment events | `aet_payment_events` | Provider/account/mode-scoped event identity, type and receipt; do not fabricate an application FK when none exists |
+| Audit | `aet_audit` | Actor/action/time and historical evidence; first remove result-version, material-request and exemption business dependencies |
+| Customer sessions/tokens | Replace customer flow with non-expiring random application-ID URLs; retire both tables | Customer upload/status/file access scoped to the supplied application; retain staff auth and private-result checks; define redirects for old token-only URLs before retirement |
+| Rate limits | `aet_rate_limits` | Keep current shared request limits; no replacement service or deletion is approved here |
+| Staff accounts | Retain outside this nine-table budget | Staff identity, role and office authorization |
+| Migration identity report | Reviewed external artifacts, not another runtime table | Source/target identities, counts, digests, mapping exceptions and rollback evidence |
 
-Do not create parallel new AI/email/audit tables solely to rename them. No new
-quote, deliverable, applicant/profile, address-book, document-location,
-service-catalog, office, payment-allocation, or service/education-join table is
-required for the first migration. Multiple recipients, independent service
-payments, shared ownership, and repeated language-pair line items remain separate
-extensions.
+Do not create parallel service-specific families or a permanent tenth migration
+or recovery table. No quote, deliverable, applicant/profile, address-book,
+document-location, service-catalog or office table is required for this phase.
 
 ## 4. Identity and migration rules
 
@@ -513,11 +560,12 @@ charge a customer, rerun AI, move Dropbox files, or release results.
 | 1. Rehearse additive schema | Prepare migration SQL only after approval; add target fields/tables in disposable/Preview storage and retain an external identity report; keep source tables/readers untouched | Constraints, RLS/grants and idempotent backfill pass on representative synthetic fixtures; restore procedure proven |
 | 2. Build shared access and shadow reads | Add repositories for applications, services, education, documents and payments; adapt response projections without moving authority; compare per-source reads | CRM, Status and receipts agree on IDs, office scope, names, degrees, prices, notes and visibility; shadow code has no side effects |
 | 3. Move one pre-evaluation cohort | Switch application/education ownership first, reuse AI/email/upload/payment machinery with explicit mappings; preserve dedicated entry before connecting general entry | Existing happy path and upload/publication recovery pass, including refund and stale callback cases; no duplicate application/AI/payment/email |
-| 3b. Converge pre-evaluation | Remove duplicate workflow application/education/payment ownership; move eight operational record types under core; physically delete retired tables in a disposable database before running the actual services | Verified for new requests (20 tests), old-only migration (6) and mixed old/core-v1 migration including audited no-charge handling (8); captured-copy variant passes 14 tests. No replacement views. Fresh full hosted-snapshot and hosted cutover remain separate |
-| 4. Connect formal intake | Move intake to canonical records and reuse the eight shared operational tables; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
+| 3b. Converge pre-evaluation | Remove duplicate workflow application/education/payment ownership; move eight operational record types under core; physically delete retired tables in a disposable database before running the actual services | Verified for new requests (20 tests), old-only migration (6) and mixed old/core-v1 migration including audited no-charge handling (8); captured-copy variant passes 14 tests. No replacement views. Fresh full hosted-snapshot also passes 7 tests with all 10 CRM records retained; hosted cutover remains separate |
+| 3c. Simplify to nine tables | Merge current upload state into documents, delegate mail history to Resend, replace customer sessions/tokens with application-ID access and remove audit business dependencies | Verified locally: 25 runtime cases + 11 full-snapshot cases, physical four-table retirement and DDL rollback; 379 combined tests / 22 files and TypeScript pass. Complete isolated copy: 21 tables; hosted remains 32. See [acceptance](archive/database-nine-table-rehearsal-2026-11-10.md) |
+| 4. Connect formal intake | Move intake to canonical records and reuse the four retained operational tables and simplified file/notification/access contracts; add service amount fields and `result` handling, freeze Checkout amounts, then implement v2 staff/payment/release actions deliberately | v2 intake becomes operable with controlled staff actions and correct pricing; old report variants remain readable |
 | 5. Connect translation and combinations | Permit translation submission with no education/evaluee requirement; use service amounts, shared payments/files and per-service notes/status | Pure translation and evaluation-plus-translation both complete; completing one service cannot close the other; no double shipping charge |
 | 6. Migrate remaining historical cohorts | Reconcile live legacy data, files and payments; update old URLs/callback routing; freeze or redirect old writes per cohort | Counts, sums, references and access checks reconcile; unresolved data stays explicitly isolated, not silently converted |
-| 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 13 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |
+| 7. Finish compatibility retirement | Complete per-cohort retirement already started at phase 3b; remove remaining formal/translation bridges after approval | Exactly 9 business/runtime tables, with staff auth and legacy CMS counted separately; no active old-table dependency; rollback and retention gates satisfied |
 
 **Phase 1 evidence:** the disposable rehearsal passes schema constraints, client
 access denial, same-ID backfill, complete existing pre-evaluation service flow,
@@ -560,11 +608,16 @@ Calendar estimates should follow phase 0 counts and reconciliation findings.
    entry both persist/read consistently in CRM/Status; manual prices survive a
    catalog refresh. Unknown and zero prices are distinct. Combined-service totals
    count shipping once; stale edits cannot mutate an open or paid Checkout amount.
-8. English-only new emails work without a browser. Sent rows stay sent; pending
-   messages retain dedupe/provider IDs. Changing a retry's language/content must
-   trigger existing digest review, not an unreviewed resend.
-9. Guest lookup/access links continue working and never grant cross-application
-   access; future account ownership remains an extension, not a migration dependency.
+8. English-only new emails work without a browser. Minimal notification state
+   retains event keys/provider references; migrated sent notifications do not
+   resend. Pending/uncertain sends and changed payloads reconcile explicitly;
+   Resend history is accessible as agreed without a duplicate local mail archive.
+9. Random application-ID URLs permit customer uploads/status without sessions,
+   cookies, additional tokens or automatic expiry, including long after creation.
+   Requests cannot mix another application's files, expose staff-only material or
+   invoke staff actions. Any holder of a valid application link has customer access
+   by design. Old token URLs have an explicit compatibility transition; future
+   account ownership remains an extension, not a migration dependency.
 10. A second backfill run creates no duplicates or side effects; restoring a cohort
     preserves source versions, provider events, audit and file identities.
 
