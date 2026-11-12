@@ -5,6 +5,7 @@ import {
   staffCookieName,
   staffCookieOptions,
 } from "./config";
+import { AppError } from '../preeval/domain';
 export async function refreshStaff(request: NextRequest) {
   const pending: { name: string; value: string; options: CookieOptions }[] = [];
   if (
@@ -16,7 +17,19 @@ export async function refreshStaff(request: NextRequest) {
           c.name.startsWith(staffCookieName + "."),
       )
   ) {
-    const { url, key } = staffConfiguration();
+    let config;
+    try { config = staffConfiguration(); }
+    catch (error) {
+      // Leave cookies intact; protected pages render the unavailable state.
+      if (error instanceof AppError && error.code === 'service_unavailable') {
+        return (response: NextResponse) => {
+          response.headers.set('Cache-Control', 'private, no-store');
+          return response;
+        };
+      }
+      throw error;
+    }
+    const { url, key } = config;
     const client = createServerClient(url, key, {
       cookieOptions: staffCookieOptions(),
       cookies: {

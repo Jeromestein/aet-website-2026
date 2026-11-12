@@ -9,7 +9,7 @@ import { Mail, MapPin, MessageCircle, Phone, type LucideIcon } from 'lucide-reac
 import { routing } from '@/i18n/routing';
 import { ServicePage } from '@/components/service/service-page';
 import { CardRail } from '@/components/card-rail';
-import { offices, getOffice, otherContacts, phoneHref } from '@/lib/contact';
+import { offices, otherContacts, phoneHref } from '@/lib/contact';
 import { contactContent } from '@/lib/contact-content';
 import { OfficeCard } from '@/components/offices/office-card';
 import styles from './contact.module.css';
@@ -60,8 +60,7 @@ export default async function ContactPage({ params }: Props) {
     </section>
     <section id="other" className={styles.section} aria-labelledby="contact-other-title">
       <h2 id="contact-other-title">{c.other.title}</h2>
-      <div className={styles.otherGrid}>
-        <article id="other-contact"><h3>{c.other.nyc}</h3><p><a href={phoneHref(getOffice('nyc').phones[0])}>{getOffice('nyc').phones[0]}</a><br /><a href={`mailto:${getOffice('nyc').emails[0]}`}>{getOffice('nyc').emails[0]}</a></p></article>
+      <div id="other-contact" className={styles.otherGrid}>
         <article><h3>{c.other.taiyuan}</h3><p><a href={phoneHref(otherContacts.taiyuan.phone)}>{otherContacts.taiyuan.phone}</a><br />{c.other.mobile}: <a href={phoneHref(otherContacts.taiyuan.mobile)}>{otherContacts.taiyuan.mobile}</a><br /><a href={`mailto:${otherContacts.taiyuan.email}`}>{otherContacts.taiyuan.email}</a></p></article>
       </div>
     </section>

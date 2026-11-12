@@ -43,15 +43,16 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   inspection may continue. If the owner has already explicitly made this choice
   for that conversation, honor it without asking again.
 - When the owner chooses isolation, create or reuse a worktree dedicated to that
-  task, with its own `x/<feature-name>` branch based on `dev`. Keep source files,
+  task, with its own `x/<feature-name>` branch based on `main`. Keep source files,
   `.next` output and any development-server port separate from other active
   worktrees. Follow the existing owner-managed dev-server guidance.
 - When the owner chooses the shared checkout, keep edits scoped to the assigned
   feature and preserve other conversations' changes. A separate conversation
   alone does not isolate files, Git staging or generated caches.
 - Once the feature is complete and its applicable checks pass, merge the feature
-  branch back into `dev`. Integrate one feature at a time, resolve conflicts and
+  branch back into `main`. Integrate one feature at a time, resolve conflicts and
   rerun the relevant checks on the combined result. Do not overwrite or include
   unrelated uncommitted work in the merge. Report the integration result.
-- `dev` is the integration target. Do not merge into `main`, push or deploy unless
+- `main` is the primary integration branch. Keep new customer application flows
+  closed in Production until explicitly released. Do not push or deploy unless
   the owner explicitly requests that action.

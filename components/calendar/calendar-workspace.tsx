@@ -90,7 +90,7 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
   return <div className={s.workspace} lang="en">
     <a className={s.skipLink} href="#calendar-main">Skip to calendar</a>
     <header className={s.toolbar}>
-      <div className={s.identity}><a href="/admin/CRM" className={s.iconButton} aria-label="Back to AET workspace"><ArrowLeft size={20} /></a><CalendarDays size={28} className={s.calendarIcon} /><h1>AICE Calendar</h1></div>
+      <div className={s.identity}><a href="/" className={s.iconButton} aria-label="Back to AET website"><ArrowLeft size={20} /></a><CalendarDays size={28} className={s.calendarIcon} /><h1>AICE Calendar</h1></div>
       <div className={s.periodControls}>
         <button className={s.todayButton} onClick={() => calendar.current?.getApi().today()}>Today</button>
         <div className={s.arrows}><button aria-label="Previous period" className={s.iconButton} onClick={() => calendar.current?.getApi().prev()}><ChevronLeft size={21} /></button><button aria-label="Next period" className={s.iconButton} onClick={() => calendar.current?.getApi().next()}><ChevronRight size={21} /></button></div>

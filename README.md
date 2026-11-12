@@ -70,6 +70,7 @@ configuration and does not require opening customer applications.
 | `/status?applicationId=ID` | Formal application lookup and documents |
 | `/degree-equivalency-tool` and `/status-check` | Dedicated pre-evaluation application and lookup |
 | `/admin/login` and `/admin/CRM` | Staff authentication and office-scoped CRM |
+| `/admin/calendar` | Public events calendar; no employee login |
 | `/payment` | Standalone website payment; not a new-intake payment integration |
 
 Customer routes use English at `/`, Chinese at `/zh` and Spanish at `/es`.

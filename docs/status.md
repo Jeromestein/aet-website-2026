@@ -10,9 +10,21 @@ This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
+## Guarded main integration — November 12
+
+Dev is integrated into local main with new application workflows closed by default
+in Production. Public application buttons retain the old portal, and Calendar
+remains public. CRM uses employee sessions and office authorization; missing staff
+configuration shows an unavailable state without exposing records. Main’s existing
+payment flow, expiry task and Ads click tracking are retained. No push, deployment,
+provider configuration or database changes are part of this integration.
+See [local verification](archive/guarded-main-integration-2026-11-12.md) and the
+[prior main release history](archive/main-releases-through-2026-11-12.md).
+
 ## Current stage
 
-**The next milestone is complete unified intake and credential fulfillment on dev.**
+**The next milestone is complete unified intake and credential fulfillment on main,
+using local or configured Preview testing.**
 Reuse the verified pre-evaluation upload/AI/payment/result flow behind `/application`.
 For credential evaluation, connect staff review, missing-material requests,
 confirmed payment and manual PDF publication to new v2 applications. Earlier
@@ -38,13 +50,13 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
-| ChatGPT Ads measurement | AET Website Pixel configured in dev for public page views; four boundary tests and TypeScript passed; Chinese Contact desktop/mobile checked in the in-app browser with no local SDK load | Production publication, real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
+| ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
 | Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Connect the unified entry, then joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | First release: pre-evaluation submission plus credential staff actions, linked payment and report release; translation remains deferred |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
-| AICE calendar | Local `/admin/calendar` on dev reads 20 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes six unverified leads and two undated records; artificial preview feed removed ([verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
+| AICE calendar | Public `/admin/calendar` reads 20 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes six unverified leads and two undated records; artificial preview feed removed ([verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form controls | Global custom select arrow (14px right inset, 44px text clearance) and rounded field focus halo; composite shells share one ring. Local in-app desktop/mobile checks passed for CRM sample filters, calendar and Payment; earlier application/Blog focus checks passed | Hosted deployment not performed; CRM visual check used fictional preview records |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |

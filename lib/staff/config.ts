@@ -1,3 +1,4 @@
+import { AppError } from '../preeval/domain';
 import { environmentValue } from "../application-environment.mjs";
 
 import { applicationPilotOrigin } from "../preview-environment";
@@ -12,7 +13,7 @@ function staffProductionOrigin() {
     throw new Error("Staff login requires an approved Production origin and unchanged employee cutover");
   return origin.origin;
 }
-export function staffConfiguration() {
+function readStaffConfiguration() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
   const database = process.env.STAFF_AUTH_DATABASE_URL;
@@ -27,6 +28,10 @@ export function staffConfiguration() {
   const origin = production ? staffProductionOrigin() : environmentValue("APP_ENV") === "preview"
     ? applicationPilotOrigin() : environmentValue("APP_ORIGIN") || "";
   return { url, key, database, origin };
+}
+export function staffConfiguration() {
+  try { return readStaffConfiguration(); }
+  catch { throw new AppError('service_unavailable', 503); }
 }
 export const staffCookieName = "aet_staff_auth";
 export function staffCookieOptions() {

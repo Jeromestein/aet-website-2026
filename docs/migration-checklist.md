@@ -22,7 +22,8 @@ preserves migration history and acceptance evidence.
 - [x] Keep staff membership/office authorization separate from customer access.
 - [x] Accept explicitly configured Preview deployments without a hard-coded dev branch.
 - [x] Retain the existing expiry Cron; do not register the new pre-evaluation scheduler.
-- [ ] Complete combined-main local/browser verification before integration.
+- [x] Complete combined-main local/browser verification before integration; see
+  [guarded-main acceptance](archive/guarded-main-integration-2026-11-12.md).
 - [ ] Separately authorize push and hosted verification; do not activate new workflows.
 
 ## First release — both evaluation services

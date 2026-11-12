@@ -32,12 +32,12 @@
     "next": "16.3.6",
     "next-intl": "^4.14.7",
     "pdf-lib": "1.17.1",
-    "postgres": "^3.4.9",
+    "postgres": "3.4.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-email": "6.11.3",
     "resend": "^6.32.0",
-    "server-only": "^0.0.1",
+    "server-only": "0.0.1",
     "stripe": "^23.0.0",
     "temporal-polyfill": "1.0.8",
     "zod": "^4.6.5"
@@ -50,7 +50,7 @@
     "supabase": "^2.119.0",
     "tsx": "^4.23.15",
     "typescript": "^5.9.0",
-    "vitest": "^5.0.3"
+    "vitest": "5.0.3"
   },
   "packageManager": "pnpm@9.7.1"
 }

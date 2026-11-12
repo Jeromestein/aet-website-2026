@@ -29,7 +29,9 @@ Open http://localhost:3021. The development port is configured in `package.json`
 
 ### Main and dev worktrees
 
-The current local setup uses two checkouts of the same Git repository:
+Development now centers on `main`. The former `dev` checkout remains available
+for historical work; new isolated feature branches should start from `main`.
+Both checkouts belong to the same Git repository:
 
 | Branch | Local directory | Preview |
 | --- | --- | --- |
@@ -53,9 +55,10 @@ Worktrees share Git history but have separate files, dependencies and local
 configuration. They do not automatically isolate external services or databases;
 both checkouts can still point to the same local Supabase instance. `main` and
 `dev` are development branches, not permanent website/backend applications.
-To integrate later, commit the intended changes on `dev`, merge `dev` into
-`main` from the main checkout, resolve conflicts and verify the result before
-an explicitly authorized push or deployment. Do not copy folders over `main`.
+Integrate completed feature branches into local `main`, resolve conflicts and
+verify the combined result before an explicitly authorized push or deployment.
+The guarded dev integration does not activate customer applications. Do not copy
+folders over `main`.
 
 ## Environment configuration
 
@@ -103,7 +106,7 @@ script reads either naming scheme and writes the new database keys going forward
 
 | Variables | Requirement and current purpose |
 | --- | --- |
-| `APP_ENV`, `APP_ORIGIN` | Select local, approved dev Preview, or the separately authorized six-table Production runtime and its trusted origin. See [runtime modes](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated). |
+| `APP_ENV`, `APP_ORIGIN` | Select local, configured Preview, or the separately authorized six-table Production runtime and its trusted origin. See [runtime modes](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated). |
 | `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL` | Shared application storage. URL is required; mode defaults to local when absent, but cloud-preview must be explicit. Keep mode explicit in the template. This is separate from the live CRM connection. |
 | `APPLICATION_TEST_EMAIL` | Required in local/Preview only; controls pre-evaluation/legacy workflow recipients and the pre-evaluation test Checkout email. Production uses the stored applicant email. New formal intake uses its own fixed pilot recipient in `lib/application/intake.ts`; this is not a site-wide recipient override. Keep it even when optional mail dispatch is disabled. |
 | `PREEVAL_AI_ENABLED`, `PREEVAL_OPENAI_MODEL` | Optional pre-evaluation AI capability and model override. Missing switch means off; the current model default is `gpt-6.1-sol`. The API key is required when AI is enabled. |
@@ -207,7 +210,7 @@ the application pilot has separate service requirements in
 [the local setup guide](pre-evaluation-local.md).
 Deployment is intentionally left to the owner.
 
-### Vercel dev Preview
+### Vercel Preview
 
 The Vercel project `aet-website-2026` uses `main` for Production. The `dev`
 Preview has branch-specific configuration; existing Production variables are
@@ -216,11 +219,12 @@ preserved. Its stable application origin is
 
 Use `APP_ENV=preview`, `APPLICATION_DATABASE_MODE=cloud-preview`, and that HTTPS
 origin in `APP_ORIGIN`. Keep system environment variables enabled. The server
-requires Vercel Preview, Git branch `dev`, and an exact match with
-`VERCEL_BRANCH_URL`. Forms accept only that branch origin or the current exact
+requires Vercel Preview and an exact match with `VERCEL_BRANCH_URL`.
+There is no branch-name restriction, but another branch must receive its own
+explicit Preview configuration; dev-scoped variables are not copied automatically. Forms accept only that branch origin or the current exact
 `VERCEL_URL`; no wildcard host or forwarded request header is trusted.
 `STAFF_LEGACY_MIGRATION_ENABLED` and `STAFF_AUTH_CUTOVER_ENABLED` must both remain
-`false`. Production/other branches are not enabled by this pilot configuration.
+`false`. Production is not enabled by this pilot configuration.
 
 Authentication, live CRM and isolated intake retain their three separate database
 connections. `CRM_DATA_SOURCE=live` reads and writes the same records as the old
@@ -281,7 +285,7 @@ remain under `app/[locale]/admin/CRM/page.tsx`. Authentication remains required.
 Still pending: hostname-based separation, root/wrong-host behavior, Vercel/DNS
 configuration, production application origins, access/payment return URLs and
 webhook validation, hosted worker/AI operation, and production acceptance with
-rollback. The pilot accepts local testing and the explicitly configured dev Preview only;
+rollback. The pilot accepts local testing and an explicitly configured Preview only;
 binding a production domain does not make it production-ready. Keep the existing AET App
 operational until the separately authorized cutover. No deployment or DNS change
 was made as part of the English-only staff update.

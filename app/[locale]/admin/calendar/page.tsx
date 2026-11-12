@@ -10,6 +10,6 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default function CalendarPage() {
-  // This owner-requested link-only preview contains public reference data only.
+  // This owner-requested link-only calendar contains public reference data only.
   return <CalendarWorkspace initialNow={new Date().toISOString()} events={calendarEvents} savedOn={archiveSavedOn} />;
 }
