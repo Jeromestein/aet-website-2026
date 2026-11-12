@@ -109,6 +109,10 @@ business cards and forms use the [business UI dimensions](business-ui.md).
 
 ## Interaction, accessibility and language
 
+- Text fields and native dropdowns use the global blue edge and pale-blue outer
+  focus halo, following the control radius. Composite field shells use
+  `data-focus-ring` so icons, text and chevrons share one ring. Retain native
+  keyboard focus; do not blur fields on selection.
 - Provide real destinations, at least 44px touch targets, visible focus/hover/active
   states and keyboard access. Do not represent an unavailable action as a saved result.
 - Use native disclosures and scrolling where appropriate. Keep text and actions

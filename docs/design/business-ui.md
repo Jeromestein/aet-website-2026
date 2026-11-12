@@ -213,3 +213,22 @@ tab/space-separated course name, credits and letter grade. Preserve AET's 4.35
 scale, credit-only grades and copyable GPA Summary precision; show row errors
 instead of silently omitting invalid input. Input/result panels sit side by side
 on desktop and stack on phones, with Reset and Copy summary controls.
+
+## Internal event calendar
+
+For `/admin/calendar`, follow the owner's Google Calendar reference: a full-width
+white month grid, thin neutral dividers, centered dates and a blue circle for
+today. Keep the header compact and filters secondary; omit promotional copy,
+summary cards and an upcoming-events rail. Use scoped Arial/Helvetica typography
+and blue/green/purple category colors within this calendar only.
+
+Timed month entries use a colored dot, time and one-line title. Date-only source
+announcements use a solid bar, with their unconfirmed time retained in details
+and the schedule view. Show three entries before a more-events popover; the
+popover and detail dialog expose complete titles. Phones default to Schedule,
+with full titles and explicit times. Never infer a time or recurrence from an
+incomplete announcement. Read only dated records from the saved event archive;
+unverified leads and artificial fixtures do not enter the page. Group colors and
+filters by organizer rather than inferred AICE affiliation. Preserve original time
+wording when its timezone is unknown. For a series without individual session
+dates, show the announced opening session and retain the full range in details.

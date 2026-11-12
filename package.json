@@ -24,6 +24,7 @@
     "test:database:rehearsal": "node scripts/database/rehearse.mjs"
   },
   "dependencies": {
+    "@fullcalendar/react": "7.1.5",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.118.0",
     "dropbox": "10.34.0",
@@ -38,6 +39,7 @@
     "resend": "^6.32.0",
     "server-only": "^0.0.1",
     "stripe": "^23.0.0",
+    "temporal-polyfill": "1.0.8",
     "zod": "^4.6.5"
   },
   "devDependencies": {

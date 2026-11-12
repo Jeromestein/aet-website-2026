@@ -1,0 +1,266 @@
+[
+  {
+    "url": "https://acei-global.org/webinars-and-presentations/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/acei_webinars.json",
+    "sha256": "0f50941084173620dffd96f0ce1732f16d89e0ca17a0210dfdfb1669b4cb7a02"
+  },
+  {
+    "url": "https://aice-eval.org/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aice_home.json",
+    "sha256": "2003a78665bd7a7f47e99f2fda1beef654779275df090edc47f3f5e9b32eb48d"
+  },
+  {
+    "url": "https://aice-eval.org/affiliate-members/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/affiliate.json",
+    "sha256": "083b383dcc60fd1f388368bdcd2385e0e456f952773e4d8bac6be3bab5f077bd"
+  },
+  {
+    "url": "https://aice-eval.org/endorsed-members/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/endorsed.json",
+    "sha256": "b37d506c0e5032ad3d13058d31b6271cca8a8355dee9cdcc72ee082c7161e03b"
+  },
+  {
+    "url": "https://aice-eval.org/events/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aice_events.json",
+    "sha256": "1e9dc3a14e2f44fc26061b0083c5a50453c6e6c0203b6112fd34a56212bab9cb"
+  },
+  {
+    "url": "https://aice-eval.org/news/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aice_news.json",
+    "sha256": "d2dbd689b76f6321c71b916757c633c07b253f76820f460bf0e58b0a36e183e3"
+  },
+  {
+    "url": "https://aice-eval.org/newsletter/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aice_newsletter.json",
+    "sha256": "a8755132dfa28460e11f283beb7e0c9ec6c87e1650ecbb7624f916306cc819dc"
+  },
+  {
+    "url": "https://getoiling.com/taicepcommunications/events/20837/document-provider-services-showcase",
+    "captured_on": "2026-11-10",
+    "file": "sources/2026-11-10/taicep_showcase_reg.json",
+    "sha256": "e0f4f3047334bfee5f9d4adf5f6c806e8e10cbe740eafa444456c6c737660bbc"
+  },
+  {
+    "url": "https://groningendeclaration.org/2026-cape-town-south-africa/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/gdn_annual.json",
+    "sha256": "69ae1e52c147a98e122eb1f59f371ab381733e1eea73f83c0c77043ec580958b"
+  },
+  {
+    "url": "https://groningendeclaration.org/2026-cape-town-south-africa/registration/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/gdn_reg.json",
+    "sha256": "ef6c4b7130a9a8a7586a51af967d9ceffff68749ec668015a0ea6e366716c7fb"
+  },
+  {
+    "url": "https://groningendeclaration.org/contact/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/gdn_contact.json",
+    "sha256": "56b627173e28d5259c1ab61cb659334a5351cfc8b969de21e2b743f2fe9b768a"
+  },
+  {
+    "url": "https://groningendeclaration.org/webinar-registration/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/gdn_webinars.json",
+    "sha256": "f6f0325562640729b80dc767044a12da9458988169c3eb460aaa3246e19e82af"
+  },
+  {
+    "url": "https://indico.un.org/event/1023788/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/unesco.json",
+    "sha256": "84a6837aa3bf0b971acd2302aa7eb27c699ccdcfbf5e5d3e02998ef3b7650089"
+  },
+  {
+    "url": "https://indico.un.org/event/1023788/registrations/28296/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/unesco_registration.json",
+    "sha256": "05b38581362d317f69e23ddf073192f300f5756f99dddaed685ea37e0b24e16d"
+  },
+  {
+    "url": "https://lnkd.in/d8R37UXs",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/transfer_post_link.json",
+    "sha256": "3e1a65e98d5b1a2666eda21cb5d7e76aa234239f5b4cf758a3c6deda13738b87"
+  },
+  {
+    "url": "https://taicep2026.dryfta.com/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/taicep.json",
+    "sha256": "6bd5555294a5a10158c403ece1ee32ba111abe23b42415f2689dd6be7f9d898c"
+  },
+  {
+    "url": "https://taicep2026.dryfta.com/1039-connect-new/267-bulletin-board",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/taicep_showcase.json",
+    "sha256": "a3f92769a08255db17699f27d819a71adce65db2da3075f64cb9b94037369d5b"
+  },
+  {
+    "url": "https://taicep2026.dryfta.com/1048-registration-test/buy-tickets",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/taicep_reg.json",
+    "sha256": "6a41f959f7d04895f204b28c1a7aa88f2f6fae2ee6f8e5afa59ea33d97fa81cf"
+  },
+  {
+    "url": "https://taicep2027webinars.dryfta.com/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/taicep_spring2027.json",
+    "sha256": "177fe7e34a1bcfeda7914290eb0a8b7340dc066a810a3aa960eebcb7d72f176f"
+  },
+  {
+    "url": "https://taicep2027webinars.dryfta.com/2026-01-16-00-05-24/234-webinar-list",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/taicep_spring_sessions.json",
+    "sha256": "19b8564bc17f4181ba24b5ff9efbaae75621eb91c9ed799fdbe9576c6c8d9c81"
+  },
+  {
+    "url": "https://taicep2027webinars.dryfta.com/232-calls-for-proposals",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/taicep_spring_proposals.json",
+    "sha256": "153c9926ac28c24b9fc028be1f6871c3496956c0c6b4978aba006d4226a4cafa"
+  },
+  {
+    "url": "https://taicep2027webinars.dryfta.com/buy-tickets",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/taicep_spring_tickets.json",
+    "sha256": "53372b4820c2550c8cc1f2d64a2be0fc79f381d10efb0a480188ff3b27b182d7"
+  },
+  {
+    "url": "https://www.aacrao.org/event/aacrao-international-two-day-workshop/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/aacrao_workshop.json",
+    "sha256": "be006be15a7a73e42ea8f07069041dd3d2ed20ed8891847717c2ed4c38b43652"
+  },
+  {
+    "url": "https://www.aacrao.org/events-training/events-calendar/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aacrao_calendar.json",
+    "sha256": "c2ff8b355ce1f676205e79d076ad5bcfc976683868ceb7c298e05454918cf8a2"
+  },
+  {
+    "url": "https://www.aacrao.org/events-training/training-academy/webinars/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/aacrao_webinars.json",
+    "sha256": "53e9d6d1e1046c5018916752b1444aab77cb2a0988431a4809bebc4fc4ba5372"
+  },
+  {
+    "url": "https://www.aacrao.org/news/three-countries-form-alliance-to-advance-learning-mobility-across-north-america/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/regional_alliance_news.json",
+    "sha256": "63245a9ea8df904d83245a84b046e115e53e6915bd5e0e2d594be0b5d952d36f"
+  },
+  {
+    "url": "https://www.aacrao.org/sem-conference/registration/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/sem_registration.json",
+    "sha256": "90f457c11a2c917b902a2b3f7ebe4d2f9a5e68aa2c45f3c04800b7b6341161bf"
+  },
+  {
+    "url": "https://www.aacrao.org/sem-conference/sem-workshops/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/sem_workshops.json",
+    "sha256": "eb08d47dddcd58c8e0a80857d48fbfd294c237dede6448c55732e82965496788"
+  },
+  {
+    "url": "https://www.aacrao.org/sem-conference/speakers/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/sem_agenda.json",
+    "sha256": "a4df4fe1c5e19c9df84bce8499c7a9e2cbec18412c5d106b60e8d44be73d1c1d"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/aacrao-presents-the-aice-credential-forums-exploring-credential-fraud-taking-the-fright-out-of-credential-evaluation/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/aacrao_aice_oct29.json",
+    "sha256": "8b73658aa4d5799f16e0cf35e58a8289286b24557bfa0772ff20554376f29a17"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/edge-user-group-december-2026/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/edge_dec.json",
+    "sha256": "88a87dce81f67d30f5f745d4b10bf7cd599819fd8ea605c95225b2babb701c15"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/edge-user-group-november-2026/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/edge_nov.json",
+    "sha256": "b51aa0c586bbca9c4eff97f0f4f41748b65dc98e1d412e373fbf6c58f3a86c4f"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/education-in-vatican-city-demystifying-the-worlds-largest-religious-education-system/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/vatican.json",
+    "sha256": "7b2be1ba5e638d40122e4091f04a3ba1995a37298594f8d2de5dbbbfc6f485b7"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/transfer-articulation-community-of-practice-forum-29/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/aacrao_transfer_forum.json",
+    "sha256": "0918e0536bbe497e5f39c64c0757ced6bc7e08a23bb0bd328c3672d997142208"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/transforming-transfer-credit-workflows-with-ai/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/aacrao_ai_transfer.json",
+    "sha256": "4c27555da63eec24b80a31161787e67404b7ff5e3bf22d002ff1b8761e1f0a59"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/tribal-colleges-and-universities-tcus-history-and-importance-in-higher-educations-changing-landscape/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/tribal.json",
+    "sha256": "d02e20939d3d555b5fc7eaa3ff943f84dda0c4aa105e20aa76aa01d50858a783"
+  },
+  {
+    "url": "https://www.enic.org.uk/our-role/news/1763",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/ukenic.json",
+    "sha256": "accde981f0bc2baa5e2a98acba3d88b715fca237411500245b296298d4831226"
+  },
+  {
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7519097363366584320/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/fcsa_post.json",
+    "sha256": "014df2d718b00c02a985156eb85fae1024f323055de2669a42e5aa8851c72177"
+  },
+  {
+    "url": "https://www.linkedin.com/posts/aice-association-of-international-credential-evaluators-inc%2E_aacrao-presents-the-aice-credential-forums-activity-7514376928166879232-Y0mW",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/fraud_post.json",
+    "sha256": "ea932f293df4bd0076fc2ee1c21b440cf560cb3ab4022f1314189a21e0e46b2a"
+  },
+  {
+    "url": "https://www.nafsa.org/conferences/nafsa-2026-biregional-vi-vii-conference",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/atlanta.json",
+    "sha256": "22d20e1e4c81976aa8c10b54d80c4ebb2682304ad0a2686ee189662e970fda7d"
+  },
+  {
+    "url": "https://www.nafsa.org/programs-and-events",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/nafsa_calendar.json",
+    "sha256": "423f77181401f291c7db6dbb7c8b50bb9fb33d6902c94ad488378d881fb17a3a"
+  },
+  {
+    "url": "https://www.tacrao.org/annual-conference",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/houston.json",
+    "sha256": "633dca8ef23795d062e638983d4578756447d2178ac6a7b6c3aa90934679b41c"
+  },
+  {
+    "url": "https://www.taicep.org/taiceporgwp/professional-development/spring-webinar-series/",
+    "captured_on": "2026-11-08",
+    "file": "sources/2026-11-08/taicep_spring.json",
+    "sha256": "af0b96205230748b23e062cdd3c1cef3a69787546818698c4901092df33dabfb"
+  },
+  {
+    "url": "https://www.taicep.org/taiceporgwp/professional-development/webinars/",
+    "captured_on": "2026-11-12",
+    "file": "sources/2026-11-12/taicep_webinars.json",
+    "sha256": "ac06dbd9e12ae83b1729c8aa4acfe8e829ffbfd3696005a6b167e2de3eb5fb75"
+  }
+]

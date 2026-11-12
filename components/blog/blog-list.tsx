@@ -17,7 +17,7 @@ export function BlogList({ articles, copy, locale }: { articles: BlogArticle[]; 
   return <section className={`wrap ${styles.library}`} aria-labelledby="articles-heading">
     <div className={styles.toolbar}>
       <h2 id="articles-heading">{topic === 'evaluation' ? copy.heading : topic === 'all' ? copy.all : copy.topics[topic]}</h2>
-      <label className={styles.search}>
+      <label className={styles.search} data-focus-ring>
         <span className={styles.srOnly}>{copy.search}</span>
         <Search size={20} aria-hidden="true" />
         <input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={copy.placeholder} aria-controls="blog-results" />

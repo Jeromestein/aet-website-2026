@@ -1,0 +1,106 @@
+{
+  "saved_on": "2026-11-12",
+  "source_chat": "codex://threads/01a11367-a7b9-7462-81ad-51943513b56c",
+  "note": "Follow-up leads recovered from prior research messages. These are not fictional fixtures, but the original event announcement captures were not recovered. Dates here are reported leads, not newly verified facts. Do not merge into a confirmed calendar without checking the source. Additional historical announcements remain in research-notes.json.",
+  "leads": [
+    {
+      "contact": null,
+      "event_url": null,
+      "end_date": null,
+      "time": "09:00 Pacific, as described in the recovered announcement",
+      "source_files": [
+        "research-notes.json"
+      ],
+      "id": "aice-forum-november-2026-lead",
+      "title": "AICE Credential Forum — November 2026",
+      "organizer": "AICE",
+      "date": null,
+      "source_url": "https://pe.linkedin.com/company/aice-association-of-international-credential-evaluators-inc.",
+      "research_turn_id": "01a1d0b7-bd54-73d3-8110-9f12fee54610",
+      "notes": "Prior research inferred November 12, 2026 from 'this Thursday' in a LinkedIn search cache. Direct LinkedIn access was blocked. Do not schedule the inferred date as confirmed. No meeting URL was recovered. Earlier messages identify outreach@aice-eval.org as an owner-provided enquiry address, not a contact verified in a captured webpage."
+    },
+    {
+      "contact": "info@groningendeclaration.org",
+      "event_url": "https://us02web.zoom.us/webinar/register/WN_tyMRc1NyR22mjURkbOAhXg#/registration",
+      "end_date": null,
+      "time": "11:00 AM EST, reported in the prior research",
+      "source_files": [
+        "research-notes.json",
+        "sources/2026-11-08/gdn_contact.json"
+      ],
+      "id": "gdn-recognition-ai-20261125-lead",
+      "title": "提升学历认可的可信度：亚美尼亚的核验、数字化与 AI",
+      "organizer": "Groningen Declaration Network (GDN)",
+      "date": "2026-11-25",
+      "source_url": "https://www.linkedin.com/posts/groningen-declaration-network_armenic-gdnnetwork-recognition-activity-7521220626129342464-SxeB",
+      "research_turn_id": "01a18340-acff-7041-be71-4a20e50e5c02",
+      "notes": "The descriptive Chinese title is retained from the research summary, not asserted to be a verbatim official title. Event date, time and registration URL survive in that summary; the original announcement capture was not recovered. Email is the captured general GDN office contact. No AICE speaker was verified."
+    },
+    {
+      "contact": "info@groningendeclaration.org",
+      "event_url": null,
+      "end_date": null,
+      "time": null,
+      "source_files": [
+        "research-notes.json",
+        "sources/2026-11-08/gdn_contact.json"
+      ],
+      "id": "gdn-eqar-20261209-lead",
+      "title": "From Quality Assurance to Trusted Recognition: EQAR and DEQAR in Action",
+      "organizer": "Groningen Declaration Network (GDN)",
+      "date": "2026-12-09",
+      "source_url": "https://pe.linkedin.com/company/aice-association-of-international-credential-evaluators-inc.",
+      "research_turn_id": "01a1d0b7-bd54-73d3-8110-9f12fee54610",
+      "notes": "Reported from an AICE LinkedIn preview in search cache. No organizer event-page capture or registration URL was recovered. AICE recommendation does not establish AICE attendance. Email is the general GDN office contact, not a named event contact."
+    },
+    {
+      "contact": null,
+      "event_url": "https://www.chea.org/webinar-aim-standards-practical-implementation",
+      "end_date": null,
+      "time": null,
+      "source_files": [
+        "research-notes.json"
+      ],
+      "id": "chea-aim-20261119-lead",
+      "title": "美国高等教育认证规则研讨会",
+      "organizer": "Council for Higher Education Accreditation (CHEA)",
+      "date": "2026-11-19",
+      "source_url": "https://www.chea.org/webinar-aim-standards-practical-implementation",
+      "research_turn_id": "01a1a259-a99f-7d01-9bd0-c5f6e7792028",
+      "notes": "Title is the descriptive Chinese label in the recovered report, not asserted to be the exact official event title. The report supplies this official URL and November 19 date, but no original page capture was recovered. Time and contact remain unknown; no AICE attendance was verified."
+    },
+    {
+      "contact": null,
+      "event_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
+      "end_date": null,
+      "time": "18:00–20:00 EST, reported in the prior research",
+      "source_files": [
+        "research-notes.json"
+      ],
+      "id": "montreal-recognition-20261117-lead",
+      "title": "海外专业资格认可圆桌及酒会",
+      "organizer": "Frédérick Doucet (invitation author; formal organizer not established)",
+      "date": "2026-11-17",
+      "source_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
+      "research_turn_id": "01a1a259-a99f-7d01-9bd0-c5f6e7792028",
+      "notes": "Descriptive Chinese title retained from the report. Announcement was reported as a French-language Montreal event at Librairie Le Port de tête, reposted by AICE. Original post capture was not recovered. Attendance, email and booking details remain unverified."
+    },
+    {
+      "contact": "info@groningendeclaration.org",
+      "event_url": null,
+      "end_date": null,
+      "time": null,
+      "source_files": [
+        "research-notes.json",
+        "sources/2026-11-08/gdn_contact.json"
+      ],
+      "id": "gdn-annual-2027-lead",
+      "title": "GDN Annual Meeting 2027",
+      "organizer": "Groningen Declaration Network (GDN)",
+      "date": null,
+      "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7518345840130838531/",
+      "research_turn_id": "01a15f33-d283-7390-b49f-bd5fb228339e",
+      "notes": "Prior report says Canada was announced, with city and dates unpublished. No direct announcement capture was recovered; this is not a scheduled event. Email is the captured general GDN office contact."
+    }
+  ]
+}

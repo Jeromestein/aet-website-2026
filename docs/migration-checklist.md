@@ -1,6 +1,6 @@
 # AET Release Checklist
 
-Updated November 11, 2026. The first release is **pre-evaluation and credential
+Updated November 12, 2026. The first release is **pre-evaluation and credential
 evaluation together, through the unified `/application` entry**.
 Develop and test on `dev`; Production activation requires a separate release.
 The owner accepts the existing mobile checks for this release. Refunds are manual
@@ -107,6 +107,19 @@ These checks do not activate hosted Production.
   unified entry, including credential PDF delivery, with rollback ready. Include
   one manual Stripe refund and state check, using existing
   behavior (both full and partial refunds currently hide the result).
+
+## AICE calendar — separate frontend preview
+
+- [x] Add link-only `/admin/calendar` on dev without a public navigation entry.
+  Verify month/week/schedule, mobile, search, relationship filters, timezone changes,
+  details and eight events on one day. See [local evidence](archive/calendar-frontend-2026-11-12.md).
+- [x] Recover historical research into [local JSON files](../data/aice/README.md),
+  preserve 44 raw page captures and separate six unverified announcement leads.
+- [x] Connect 20 dated records from `data/aice/events.json`; exclude six unverified
+  leads and two undated announcements. Remove the artificial preview feed. Verify
+  cross-month dates, source/contact details, timezone conversion and phone Schedule.
+- [ ] Design persistence and source ingestion with the owner; then implement
+  OpenAI-assisted updates and scheduling. No database or automatic refresh yet.
 
 ## Deferred — not first-release blockers
 
