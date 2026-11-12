@@ -1,6 +1,6 @@
 # AET Implementation Status
 
-Updated November 11, 2026. The owner now requires **pre-evaluation and credential
+Updated November 12, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
 journey is verified on dev Preview; the unified pre-evaluation choice is not yet
 connected. Credential intake works, but its payment and staff-to-report journey
@@ -44,6 +44,7 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
 | Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | First release: pre-evaluation submission plus credential staff actions, linked payment and report release; translation remains deferred |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
+| AICE calendar | Local `/admin/calendar` on dev reads 20 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes six unverified leads and two undated records; artificial preview feed removed ([verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form focus | Global blue edge and pale-blue halo for native dropdowns and text fields; composite search/select shells share one ring. Local in-app checks passed for application, Blog search and CRM sample desktop/mobile plus keyboard navigation | Hosted deployment not performed; CRM visual check used fictional preview records |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |
