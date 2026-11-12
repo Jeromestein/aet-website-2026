@@ -35,12 +35,12 @@ Open the intended checkout in VS Code and run its server from your terminal:
 | Checkout | Branch | Command | Preview |
 | --- | --- | --- | --- |
 | `/Users/plusone/Desktop/Code/aet-website-2026` | `main` | `pnpm dev` | `http://localhost:3021` |
-| `/Users/plusone/Desktop/Code/aet-website-2026-dev` | `dev` | `pnpm exec next dev --port 3022` | `http://localhost:3022` |
 
-`pnpm dev` explicitly selects port 3021 in either checkout. Reuse the owner's
-existing server. Each worktree has its own ignored `.env.local`, based on
+`pnpm dev` explicitly selects port 3021. The old dev and eval working directories
+were retired; continue in the main checkout. Reuse the owner's existing server.
+Local configuration stays in the ignored `.env.local`, based on
 [.env.example](.env.example); worktrees do not isolate external services.
-See [worktree setup](docs/development.md#main-and-dev-worktrees) and
+See [worktree setup](docs/development.md#main-checkout-and-retired-worktrees) and
 [environment configuration](docs/development.md#environment-configuration)
 before enabling application, payment, email or AI integrations.
 

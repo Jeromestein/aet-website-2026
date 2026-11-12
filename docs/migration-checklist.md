@@ -17,6 +17,9 @@ preserves migration history and acceptance evidence.
 
 ## Guarded integration into main
 
+- [x] Retire the old dev/eval working directories after verified local backups;
+  retain `x/aet-eval` and its four unmerged commits for separate review. See
+  [local setup and preservation details](development.md#main-checkout-and-retired-worktrees).
 - [x] Add a server-side release gate to all new customer application pages and APIs.
 - [x] Keep public website application links at the legacy portal and Calendar public.
 - [x] Keep staff membership/office authorization separate from customer access.

@@ -27,38 +27,35 @@ pnpm dev
 
 Open http://localhost:3021. The development port is configured in `package.json`.
 
-### Main and dev worktrees
+### Main checkout and retired worktrees
 
-Development now centers on `main`. The former `dev` checkout remains available
-for historical work; new isolated feature branches should start from `main`.
-Both checkouts belong to the same Git repository:
+Develop in `/Users/plusone/Desktop/Code/aet-website-2026` on `main`. Open this
+folder in VS Code and run `pnpm dev` from your terminal at http://localhost:3021.
+Reuse the owner's existing server; restart it after configuration changes when
+required. The local `APP_ORIGIN` and `PAYMENT_SITE_URL` use port 3021.
 
-| Branch | Local directory | Preview |
-| --- | --- | --- |
-| `main` | `/Users/plusone/Desktop/Code/aet-website-2026` | `http://localhost:3021` |
-| `dev` | `/Users/plusone/Desktop/Code/aet-website-2026-dev` | `http://localhost:3022` |
+The sibling `aet-website-2026-dev` and `aet-website-2026-eval` working directories
+were removed on November 12, 2026 after checking their Git state and verifying
+private local-file backups under `.local/retired-worktrees/`:
 
-Open the intended directory in VS Code and run its server from your own terminal.
-For the dev worktree, use:
+- `dev-20261112-144515`: original dev settings, database backups, test artifacts
+  and the original main environment file. Dev's commits are contained in main;
+  its development configuration was carried over to main with local port 3021.
+- `eval-20261112-144745`: eval settings, local artifacts and a verified incremental
+  Git bundle. **Four eval commits remain outside main**, including three not yet
+  pushed. Keep branch `x/aet-eval`; review this feature separately before merging.
+  Its bundle depends on existing repository history and is not a full repo backup.
 
-```sh
-pnpm exec next dev --port 3022
-```
+Both branches remain available. Backup manifests contain file hashes; the backup
+folder is ignored by Git and contains private configuration and data. Do not
+commit or publish it. Dependency/build caches were discarded. Reopen old editor
+windows and terminals in the main folder. No local application journey was rerun
+as part of this directory cleanup; hosted Preview acceptance is recorded separately.
 
-`pnpm dev` still selects port 3021 in both checkouts; `.env.local` does not
-override that explicit script argument. Reuse the owner's running server for
-the matching checkout. The dev worktree's ignored `.env.local` uses port 3022
-for `APP_ORIGIN` and `PAYMENT_SITE_URL`. Keep secrets out of Git and restart
-the user-managed process after changing startup configuration when required.
-
-Worktrees share Git history but have separate files, dependencies and local
-configuration. They do not automatically isolate external services or databases;
-both checkouts can still point to the same local Supabase instance. `main` and
-`dev` are development branches, not permanent website/backend applications.
-Integrate completed feature branches into local `main`, resolve conflicts and
-verify the combined result before an explicitly authorized push or deployment.
-The guarded dev integration does not activate customer applications. Do not copy
-folders over `main`.
+Future isolated feature worktrees should start from main. Worktrees isolate local
+files, not external services or databases. Integrate reviewed features into main
+and verify before an explicitly authorized push or deployment. Pushing main still
+triggers Production; removing these directories does not change deployment settings.
 
 ## Environment configuration
 
@@ -67,7 +64,7 @@ Use one private `.env.local` in each worktree for actual local values. Keep
 or service-specific secret file for the same worktree. Both files are grouped by
 shared application configuration, pilot test recipient, staff
 authentication, CRM, optional AI/email/payments/Dropbox and scheduled tasks.
-The template origin defaults to port 3022 for the dev worktree; use 3021 for main.
+The template origin defaults to port 3021 for the main checkout.
 Organizing settings does not enable or disable their services.
 
 Shared settings now use `APP_`, `APPLICATION_` and Dropbox-specific names.
