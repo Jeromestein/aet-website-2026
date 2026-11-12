@@ -1,5 +1,19 @@
 # AET Implementation Status
 
+## 2026-11-11 — Evaluation feed trial file
+
+- Added `public/ads/aet-evaluation-feed.csv` with two standard evaluation
+  offerings, using the website's listed estimated prices of USD 100 and USD 180
+  and processing times of 7 and 8 business days. Descriptions retain the estimate
+  qualification; fixed payable totals and service-category eligibility remain
+  unverified. Availability reflects the services offered on the public site,
+  not a verified fulfillment-capacity check.
+- Validated two unique item IDs, all ten columns, UTF-8 CSV round-trip parsing,
+  price formats and HTTPS URLs. Both public image URLs and the evaluation page
+  returned HTTP 200; image responses were PNG.
+- Prepared for the owner's manual upload trial only. No Feed upload or campaign
+  activation was performed.
+
 Updated November 12, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
 journey is verified on dev Preview; the unified pre-evaluation choice is not yet
