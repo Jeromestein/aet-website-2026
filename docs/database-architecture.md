@@ -1,57 +1,40 @@
-# Database architecture: legacy, current and proposed
+# Database architecture: current Preview and historical comparison
 
-Legacy/current inventory captured November 6, 2026 from read-only metadata and
-`dev` at `90076a3`; no customer rows were read for that comparison. The target
-view reflects the six-table design approved November 10 and activated for hosted
-Preview pre-evaluation and formal evaluation on November 11. On November 6, new dev Preview
-pre-evaluation applications began using private `aet_preview_core`; see the
-[hosted acceptance](archive/database-preview-acceptance-2026-11-06.md). Production
-remains unchanged; all 32 old Preview source tables have now been retired. The original legacy/current diagrams are the
-pre-cutover inventory, not a claim that all runtime paths still use those tables.
+Verified November 11, 2026 against live Supabase metadata (columns, constraints
+and indexes; no customer rows read). **Current dev Preview uses one schema,
+`aet_preview_shared`, with six tables and three active trigger functions.** Both
+pre-evaluation and formal evaluation use this storage. The four retired Preview
+schemas and their seven unused functions have been removed. Production is unchanged.
 
-Use the [visual viewer](diagrams/database-architecture.html) to switch between
-the three diagrams and zoom. This file is the editable Mermaid source and field
-crosswalk; the SVGs/viewer are generated companions, not separate specifications.
+Open the [visual viewer](diagrams/database-architecture.html), which defaults to
+**Current Preview**, or jump to the [current six-table Mermaid](#3-current-preview-database).
+The viewer includes two explicitly historical views for comparison:
 
-The [code-backed migration plan](database-migration-plan.md) records field and
-supporting-record decisions, staged cutover and rollback gates. The target
-diagram now shows all six planned entities. Five business tables
-build on the additive migration; planned document/notification fields and the
-retained AI execution entity are explicitly distinguished below. Existing
-13-table rehearsal results are historical evidence. The subsequent
-[six-table acceptance](archive/database-six-table-rehearsal-2026-11-10.md)
-records the earlier isolated pre-evaluation stage. The
-[formal convergence acceptance](archive/database-formal-six-preview-2026-11-11.md)
-records the current six-table hosted inventory.
-See the [rehearsal guide](database-rehearsal.md).
+1. **Legacy public:** six business tables captured November 6; still separate
+   from the Preview migration. Production and CRM Live were not retired.
+2. **Pre-convergence Preview:** the November 6 workflow/projection design, now retired.
+3. **Current Preview:** all 109 actual columns of the six shared tables, with
+   their types, nullable status, primary keys and enforced foreign/unique keys.
 
-## Reading order and scope
+`PK` = primary key; `FK` = database foreign key; `UK` = unique constraint.
+Multiple UK columns can belong to a composite constraint; see the exact groups
+below the current diagram. Optional payment ownership reflects the nullable
+`aet_payments.application_id`; other child tables require an application.
+Partial unique indexes and JSON references are explained separately.
 
-1. **Legacy:** two independent application families in `public`.
-2. **Current:** separate pre-evaluation/evaluation workflow schemas plus legacy
-   compatibility projections. CRM Live still uses the old public tables.
-3. **Proposed:** six tables; one shared application identity, file/upload state,
-   service notification state and one AI execution table. This revised target
-   now serves both hosted Preview evaluation families. Translation submission
-   and Production activation remain separate work.
+Staff authentication (`aet_private`, Supabase `auth`), CRM Live (`aet_crm` and
+`public`), legacy CMS and system schemas are outside the six-table business count.
+They remain in place. Future customer accounts and translation submission are
+not presented as deployed features. See the [checklist](migration-checklist.md),
+[migration plan](database-migration-plan.md) and
+[acceptance](archive/database-formal-six-preview-2026-11-11.md).
 
-This comparison covers application, education, payment, file, AI, email, staff
-and audit data. Payload content/version/media tables, Supabase-managed `auth.*`
-internals and the separate report-editor branch are outside this diagram's scope.
-They are not deleted or replaced by this proposal. Staff-account references to
-Payload `public.users` and `auth.users` are recorded in the appendix.
+Mermaid blocks in this document are the source; SVGs and the viewer are generated
+companions. Historical field inventories retain their original capture date.
 
-`PK` = primary key; `FK` = an actual or explicitly proposed foreign key;
-`UK` may be part of a composite unique constraint. Nullable fields are annotated
-in the actual-schema diagrams. Lines labelled **NO FK** or **DRAFT** are logical
-associations, not enforced database relationships. Only the legacy diagram shows
-every column of every business table inline; current compatibility boxes are shortened, and the proposed view focuses on
-six target tables. The expandable inventory below lists all
-verified columns and key definitions, including tables omitted from the main views.
+## 1. Legacy public database — historical capture
 
-## 1. Legacy database
-
-All six entities below are actual `public` tables. Formal evaluation stores its
+All six entities below were verified in `public` on November 6, 2026. Formal evaluation stores its
 payment summary directly on `fce_applications`; pre-evaluation/core applications
 have a separate `aet_core_payments` table. `fce_external_orders` is independent:
 it has no `application_id` and no foreign key to either application family.
@@ -155,9 +138,12 @@ erDiagram
   fce_applications ||--o{ fce_educations : application_id
 ```
 
-## 2. Current dev database
+## 2. Pre-convergence Preview — historical
 
-| Diagram prefix | Actual schema / table |
+These schemas and tables have been retired from dev Preview. This diagram is
+retained only to explain the migration; it is not the current database.
+
+| Diagram prefix | Former schema / table |
 | --- | --- |
 | `pre_*` | `aet_preview_preeval.*` |
 | `eval_*` | `aet_preview_evaluation.*` |
@@ -166,7 +152,7 @@ erDiagram
 | `document_locations` | `aet_preview_evaluation.document_locations` |
 
 Local equivalents are `preeval`, `evaluation` and the local `public` fixture.
-Cloud Preview remaps those logical names; it does not write these submissions
+At that stage, Cloud Preview remapped those logical names; it did not write submissions
 into the live `public` business tables. Five compatibility tables were observed;
 there is no `aet_preview_legacy.fce_external_orders` in the metadata snapshot.
 
@@ -377,258 +363,204 @@ containing `currency`, `lines`, `min`, `max`, `needsQuote`; amounts are cents.
 Compatibility `service_type.websiteQuote` also retains education IDs and selected
 education IDs; these arrays are not foreign keys.
 
-## 3. Proposed shared database model
+## 3. Current Preview database
 
-**Six-table target activated for both hosted Preview evaluation families on November 11, 2026.**
-Five business tables plus AI runs remain. The Stripe webhook still processes
-payments; locked payment state replaces the event ledger. No operation/actor history
-or application request-frequency counter is retained. Current business state owns
-notes, material requests, result versions and payment exemption. The full local
-copy and hosted Preview now have six tables. See
-[acceptance](archive/database-formal-six-preview-2026-11-11.md).
-
-The master has no storage, locale, access-token or session fields. Customers use
-its random UUID in a non-expiring application URL, with no additional credential
-or cookie; anyone holding the link can exercise that application's customer
-operations. Staff identity/office checks and private-result visibility stay separate.
-Documents keep File IDs, no Folder ID, folder row, `document_locations`, location
-`kind`, `document_type` or `deleted_at`. Uploading files may temporarily lack a File ID.
-
-**Language policy:** automatic business emails use English. The target application
-has no `locale` or notification-language field; do not move that preference into
-service JSON or another business table. Website language remains a URL/browser
-preference. Translation source/target languages remain service requirements and
-are unrelated to this policy. See the [email language decision](email-templates.md#planned-language-policy).
-
-Known files can be looked up by File ID to obtain current metadata and paths.
-Those paths may suggest directories to scan; staff must confirm an uncertain
-directory before scanning or associating newly discovered files. Initial upload
-paths are derived from office, Application ID and applicant name, not stored on
-the master. See the [directory resolution rules](dropbox.md#directory-resolution-without-folder-ids).
-
-The diagram shows **five business + one AI execution table**. `notification_state`
-and `result_version` on service details and `upload_state`, `upload_version`,
-`upload_context` on documents are additions verified in the isolated runtime.
-The diagram's `PLANNED` labels mean not deployed to hosted Preview/Production;
-these columns are present only in the compact-table rehearsal.
-Operational fields reflect the retained convergence contracts; only relationships
-labelled FK are proposed database constraints. Customer accounts remain deferred.
+All six tables below exist in **`aet_preview_shared`**. The schema prefix is omitted
+inside entity names for readability. Field order, types and nullable markers match
+the hosted catalog as of November 11. Required here means database `NOT NULL`;
+form validation may require additional fields for a particular service.
 
 ```mermaid
 erDiagram
   direction TB
   aet_core_applications {
-    uuid id PK
-    text contact_name "Client or organization"
-    text email
-    text phone
-    jsonb mailing_address "Recipient address"
-    text office
-    text primary_service
-    text pronouns
-    text first_name "Evaluee; optional for translation"
-    text middle_name
-    text last_name "Evaluee; optional for translation"
-    date date_of_birth
-    text residence_country
-    text purpose
-    text source
-    text status
-    uuid request_id UK
-    text request_hash
-    integer request_hash_version "0 preserves legacy hashing"
-    integer submission_version
-    jsonb submitted_snapshot "Immutable original business inputs"
-    timestamptz submitted_at
-    integer version
-    timestamptz created_at
-    timestamptz updated_at
+    uuid id PK "required"
+    text contact_name "nullable; Client or organization"
+    text email "nullable"
+    text phone "nullable"
+    jsonb mailing_address "nullable; Recipient address"
+    text office "nullable"
+    text primary_service "required"
+    text pronouns "nullable"
+    text first_name "nullable"
+    text middle_name "nullable"
+    text last_name "nullable"
+    date date_of_birth "nullable"
+    text residence_country "nullable"
+    text purpose "nullable"
+    text source "nullable"
+    text status "required"
+    uuid request_id UK "nullable; Request deduplication"
+    text request_hash "nullable"
+    integer request_hash_version "nullable"
+    integer submission_version "nullable"
+    jsonb submitted_snapshot "nullable; Immutable submitted inputs"
+    timestamptz submitted_at "nullable"
+    integer version "required"
+    timestamptz created_at "required"
+    timestamptz updated_at "required"
   }
   aet_education {
-    uuid id PK
-    uuid application_id FK
-    text school_name
-    text country_of_study
-    text degree_obtained
-    jsonb study_start_date "Month precision"
-    jsonb study_end_date "Month precision"
-    integer sort_order
-    jsonb ai_output "Compatibility projection"
-    timestamptz created_at
-    timestamptz updated_at
+    uuid id PK "required"
+    uuid application_id FK "required"
+    text school_name "required"
+    text country_of_study "required"
+    text degree_obtained "required"
+    jsonb study_start_date "required; Month precision"
+    jsonb study_end_date "required; Month precision"
+    integer sort_order "required"
+    jsonb ai_output "nullable"
+    timestamptz created_at "nullable"
+    timestamptz updated_at "nullable"
   }
   aet_service_detail {
-    uuid id PK
-    uuid application_id FK,UK "Composite unique with service_type"
-    text service_type UK
-    jsonb details
-    integer details_version
-    text status
-    integer input_version
-    text notes "Customer notes on service; private on payment"
-    text staff_notes
-    text customer_message
-    integer amount_cents "Service price or payment total; distinct"
-    text currency
-    text pricing_source "Automatic or manual; nullable"
-    jsonb result "Content, file refs and release metadata"
-    integer result_version "PLANNED monotonic counter; not audit-derived"
-    jsonb notification_state "PLANNED bounded event status and Resend refs"
-    timestamptz created_at
-    timestamptz updated_at
+    uuid id PK "required"
+    uuid application_id FK,UK "required; composite UK"
+    text service_type UK "required; composite UK"
+    jsonb details "required"
+    integer details_version "required"
+    text status "required"
+    integer input_version "required"
+    text notes "nullable"
+    text staff_notes "nullable"
+    text customer_message "nullable"
+    integer amount_cents "nullable; Integer cents"
+    text currency "required"
+    text pricing_source "nullable"
+    jsonb result "nullable"
+    timestamptz created_at "required"
+    timestamptz updated_at "required"
+    integer result_version "required; Monotonic release counter"
+    jsonb notification_state "required; Current send state; Resend refs"
   }
   aet_documents {
-    uuid id PK
-    uuid application_id FK
-    text storage_location UK "Composite unique with File ID"
-    text storage_file_id UK "Nullable until ready; Dropbox File ID"
-    text storage_path "Cached path; not identity"
-    text storage_rev "Current file revision"
-    text storage_content_hash
-    text original_filename
-    text mime_type
-    bigint size_bytes
-    text access_scope "Customer input or staff only"
-    text upload_state "PLANNED current state only"
-    integer upload_version "PLANNED stale completion guard"
-    jsonb upload_context "PLANNED transient operation data"
-    timestamptz created_at
-    timestamptz updated_at
+    uuid id PK "required"
+    uuid application_id FK "required"
+    text storage_location UK "nullable; Dropbox connection; composite UK"
+    text storage_file_id UK "nullable; Dropbox File ID; ready required; composite UK"
+    text storage_path "nullable; Cached path; not identity"
+    text storage_rev "nullable; Ready file revision"
+    text storage_content_hash "nullable"
+    text original_filename "required"
+    text mime_type "nullable"
+    bigint size_bytes "nullable"
+    text access_scope "required"
+    timestamptz created_at "nullable"
+    timestamptz updated_at "required"
+    text upload_state "required"
+    integer upload_version "required; Stale completion guard"
+    jsonb upload_context "required; Current operation only"
   }
   aet_payments {
-    text id PK
-    uuid application_id FK
-    integer amount_cents "Service price or payment total; distinct"
-    text currency
-    integer refunded_cents
-    numeric due_amount "Generated from amount_cents"
-    text payment_status
-    text provider
-    text provider_account
-    text provider_mode
-    text checkout_session_id
-    text payment_intent_id
-    text payment_id
-    text source
-    text notes "Customer notes on service; private on payment"
-    jsonb payer_snapshot "Standalone payer metadata"
-    timestamptz paid_at "Unknown historical values remain NULL"
-    timestamptz created_at
-    timestamptz updated_at
+    text id PK "required"
+    uuid application_id FK "nullable"
+    integer amount_cents "required; Integer cents"
+    text currency "required"
+    integer refunded_cents "required"
+    numeric due_amount "nullable; Generated dollars"
+    text payment_status "required"
+    text provider UK "nullable; composite UK"
+    text provider_account UK "nullable; composite UK"
+    text provider_mode UK "nullable; composite UK"
+    text checkout_session_id UK "nullable; composite UK"
+    text payment_intent_id UK "nullable; composite UK"
+    text payment_id "nullable"
+    text source "nullable"
+    text notes "nullable"
+    jsonb payer_snapshot "nullable; Standalone payer details"
+    timestamptz paid_at "nullable; Successful payment time"
+    timestamptz created_at "nullable"
+    timestamptz updated_at "nullable"
   }
   aet_ai_runs {
-    uuid id PK
-    uuid application_id FK
-    integer input_version
-    jsonb input
-    jsonb output
-    text state
-    text error
-    boolean current
-    boolean uploads_pending
-    integer attempts
-    timestamptz available_at
-    timestamptz locked_at
-    uuid lease
-    timestamptz created_at
-    timestamptz completed_at
+    uuid id PK "required"
+    uuid application_id FK "required"
+    integer input_version "required"
+    jsonb input "required"
+    jsonb output "nullable"
+    text state "required"
+    text error "nullable"
+    timestamptz created_at "required"
+    timestamptz completed_at "nullable"
+    text model "nullable"
+    text response_id "nullable"
+    jsonb usage "nullable; Provider usage metadata"
+    text input_hash "nullable; Analysis input fingerprint"
+    text prompt_version "nullable; Analysis prompt version"
+    boolean current "required"
+    boolean uploads_pending "required"
+    integer attempts "required"
+    timestamptz available_at "required"
+    timestamptz locked_at "nullable"
+    uuid lease "nullable"
   }
-  aet_core_applications ||--o{ aet_education : "has optional education records"
-  aet_core_applications ||--o{ aet_service_detail : "contains service details"
-  aet_core_applications ||--o{ aet_documents : "has files"
-  aet_core_applications |o--o{ aet_payments : "has payments"
-  aet_core_applications ||--o{ aet_ai_runs : "has analysis jobs"
-
+  aet_core_applications ||--o{ aet_education : "education records"
+  aet_core_applications ||--o{ aet_service_detail : "services"
+  aet_core_applications ||--o{ aet_documents : "files"
+  aet_core_applications |o--o{ aet_payments : "payments"
+  aet_core_applications ||--o{ aet_ai_runs : "analysis jobs"
 ```
 
-- Removed target tables: `aet_uploads` merges into documents; `aet_emails` is
-  replaced by Resend history and bounded service notification state;
-  `aet_sessions` and `aet_access_tokens` are replaced by application-ID URLs.
-  `aet_payment_events` is also retired in isolation: Stripe retains event history,
-  while atomic payment-state transitions protect against duplicate processing.
-  Hosted tables remain unchanged; archive/reconciliation precede hosted retirement.
-- `aet_ai_runs` preserves analysis/recovery state. `aet_audit` and `aet_rate_limits`
-  are removed: no operation/actor history or request-frequency quotas in the target.
-  No history arrays/counter fields replace them. Access checks, input/file limits
-  and payment duplicate protection remain. Advanced tracking is deferred.
-- `notification_state` stores current event status, stable dedupe identity,
-  payload fingerprint and provider reference, not email bodies or a growing
-  history list. Confirm provider history availability during implementation.
-  Result version/material-request/exemption decisions already use service state.
-  Old source evidence may be archived outside the runtime during migration.
-- A document row represents a file and only its current upload operation. File ID
-  may be null until ready; reject stale completion by upload version. Preserve
-  the valid prior reference until a replacement succeeds, clear transient context
-  afterward and do not store a permanent per-attempt history. No folder tracking
-  or new upload table is introduced.
-- `mailing_address` is one nullable JSONB field on the application master, with
-  `name`, `country`, `street`, `street2`, `city`, `region` and `postal` keys. It is
-  the recipient address for this application, shared by evaluation and translation;
-  require a valid address only when physical delivery is requested. `pronouns`
-  belongs to the evaluee, alongside their name, and may be absent for translation.
-  See the [field definitions](migration-architecture.md#planned-application-contact-and-recipient-fields).
-- A translation-only request has no education rows; evaluation may have multiple
-  education rows. `aet_service_detail` permits multiple services per application,
-  with composite uniqueness on `(application_id, service_type)` initially. A
-  combined evaluation/translation request has two service rows under one ID.
-  `details` has a defined validation schema per type; it is not arbitrary JSON.
-  The service table replaces the earlier translation-only table proposal.
-  Optional customer remarks belong in `aet_service_detail.notes`, not a duplicate
-  `details.instructions` key. Keep each service's notes separate from internal
-  staff notes and payment notes; retain historical submitted snapshots.
-- Service pricing uses `amount_cents`, `currency` and `pricing_source`; no `quote`
-  JSON or `aet_quotes` table is required. The server calculates fixed prices from
-  the shared catalog, or staff enter the final amount. `null` means not priced;
-  zero is an explicit known price. Save prices instead of recalculating history
-  against a changed catalog. Sum service amounts in one currency and charge
-  shared shipping once. Payments preserve the amount actually used at Checkout.
-- Nullable `aet_service_detail.result` holds the current text/structured output,
-  delivered document references and release status/time. File references point
-  to `aet_documents.id` and pin the delivered revisions; File IDs and storage
-  metadata stay on documents. No `aet_deliverables` table is needed. Preserve
-  relevant input/result versions and existing release/payment/access checks.
-  See the [delivery contract](database-migration-plan.md#service-delivery-result).
-  The result is not an unlimited history list or permission to expose drafts.
-- `storage_location` plus `storage_file_id` is a **composite** unique reference in
-  documents; neither column alone is unique. File bytes stay in Dropbox.
-- For a new application, derive the initial upload directory from office,
-  Application ID and applicant name; save each successful upload's **File ID**.
-  Do not persist Folder IDs or create folder records. Open/refresh resolves known
-  File IDs and uses authorized, unambiguous current parent paths for scanning.
-  Changed or conflicting directories, missing anchors and existing empty folders
-  require staff confirmation. A moved file's parent is a candidate, not proof that
-  all its contents belong to the application. Preview/download uses File ID after
-  access checks; `storage_path` is cached file metadata, not an authoritative root.
-  Staff may also look up a File ID directly; linking a new result requires an
-  explicit application association and must not silently reassign another record.
-- `aet_payments` preserves existing shared payment records/IDs and nullable links
-  for standalone payments. The rename does not collapse provider ledgers into
-  legacy summary columns: checkout sessions, payment intents, cents/currency,
-  refunds and event deduplication remain in the workflow tables pending a separate
-  payment-unification decision. Do not convert amounts or discard history silently.
-  Add `created_at` for payment-record creation and `updated_at` for its last actual
-  change; retain `paid_at` for successful payment. Refunds and duplicate webhook
-  deliveries do not overwrite `paid_at`. See the [timestamp definitions](migration-architecture.md#planned-payment-timestamps).
-- Keep full formal/pre-evaluation snapshots, quotes, AI input/result versions,
-  report-release references and their dependent records. Linking these workflows
-  to the shared master still requires a migration plan. Preserve `fce_*` readers
-  and compatibility projections until cutover is separately verified.
-- `document_locations` and its composite `(application_id, kind)` key describe
-  the current implementation only. Before a separately authorized cutover, resolve
-  legacy identities and historical write/read/archive references, register their
-  files by File ID, and verify existing readers. Do not copy location `kind` or
-  folder references into the target file table. Keep the actual registry and its
-  callers intact until that migration is completed; this update changes no database.
+### Relationships and constraints
 
-See the [directory resolution decision](dropbox.md#directory-resolution-without-folder-ids)
-and [full file synchronization design](dropbox.md#planned-shared-document-records).
+- Five child tables reference `aet_core_applications.id`. All relations drawn here
+  are actual foreign keys. Payments alone allow a null application reference for
+  standalone records; this does not mean standalone website payments are already
+  fully connected to this Preview workflow.
+- Service uniqueness is **`(application_id, service_type)`**. Education is optional
+  at the application level and can contain multiple degrees. Schema capacity for
+  translation does not imply that translation submission is connected yet.
+- Document uniqueness is **`(storage_location, storage_file_id)`**. File ID is
+  nullable during upload; a ready file requires its connection, File ID and revision.
+  Bytes remain in Dropbox. There is no folder table, Folder ID or storage field
+  on the application master. Paths are cached observations, not file identity.
+- Payment uniqueness uses **`(provider, provider_account, provider_mode,
+  checkout_session_id)`** and the equivalent combination with `payment_intent_id`.
+  The partial `aet_payments_one_open` index permits only one creating/open payment
+  per non-null application. Actual Stripe callbacks update these payment rows;
+  there is no separate payment-events table in Preview.
+- Partial `aet_ai_current` enforces one `current=true` AI run per application.
+  Document upload keys are unique per application through the expression index
+  on `(application_id, upload_context->>'key')`. Neither is a global UK on the
+  application column, so these conditional constraints are not marked UK above.
+- `details.education_ids` and `result.documents[].document_id` are JSON references,
+  checked by triggers for application ownership. They are not separate SQL foreign
+  keys. The result pins file revisions and records release/input/result versions.
+- Three active functions remain: `check_service_references()`,
+  `protect_reference_identity()` and `protect_submission()`. They enforce JSON
+  associations, identity stability and immutable submitted snapshots.
 
-## 4. Field-by-field crosswalk
+### Current storage responsibilities
 
-Each legacy field appears below. **Current** points to its workflow representation
-where one exists; compatibility copies still retain the legacy column. **Proposed**
-describes an intended owner or an explicitly unresolved retention boundary, not
-a migration already performed. `intake.*` means `eval_applications.data.intake.*`.
+- Application: contact/evaluee, office, recipient address, current state and original
+  submission. `request_id`/hash protect submission retries; they are not customer
+  login credentials. No locale, session or access-token column is present.
+- Service: validated requirements, customer/staff notes, integer-cent price,
+  automatic/manual pricing source and current result/notification state. Existing
+  formal compatibility quote and delivery snapshots remain inside `details` and
+  `submitted_snapshot`; no separate quotes or deliverables table exists.
+- Documents: File ID and current upload/revision state. Provider/account differences
+  are represented by `storage_location`; no permanent per-attempt upload history.
+- Payments: provider identity, actual charged/refunded amounts and payment times.
+  Nullable historical `created_at`/`updated_at` remain nullable in the real schema;
+  the diagram does not silently strengthen those constraints.
+- AI runs: input/output, model, provider response ID, usage, input hash, prompt
+  version, retry/lease state and completion. These operational fields are deployed.
+- Mail delivery history remains in Resend; bounded notification state remains on
+  service details. No Preview audit, rate-limit, email, session or event table exists.
+
+The unified v2 formal payment/staff/report-release journey, translation submission,
+customer accounts and Production cutover remain separate open work. The six-table
+storage migration does not assert those product capabilities are complete.
+
+## 4. Historical migration field crosswalk
+
+This section preserves the **November 6 planning snapshot**, not today's migration
+status. Its “Current representation” means the workflow at that historical date;
+“Proposed” records the destination considered then. References below to retained
+Preview tables or pending migration gates have since been superseded by section 3
+and the [November 11 acceptance](archive/database-formal-six-preview-2026-11-11.md).
+`intake.*` means the historical `eval_applications.data.intake.*`.
 
 <details>
 <summary>aet_core_applications: every legacy field</summary>
@@ -819,9 +751,11 @@ because the minimal document table omits them. Keep them in the workflow/process
 records and design their association before replacing an existing file table.
 `document_type` and `deleted_at` are intentionally not proposed replacements.
 
-## 5. Complete verified field inventory
+## 5. Historical field inventory — November 6
 
-This appendix lists every column for the selected schemas. Each constraint shown
+This appendix is the pre-convergence capture, including now-retired Preview tables.
+Use section 3 and the viewer field list for the current six-table columns.
+This historical appendix lists every column for its selected schemas. Each constraint shown
 is from the read-only database metadata, not inferred from matching field names.
 Composite UK markers apply to the combination, not each marked column alone.
 Check constraints, defaults and partial indexes are not exhaustively diagrammed.
@@ -1625,29 +1559,23 @@ updated_at: timestamptz; required
 
 </details>
 
-## 6. Decisions still needed before implementation
+## 6. Remaining expansion boundaries
 
-- Confirm the common master fields and the meaning of client versus evaluee;
-  pure translation has no education rows and may have no evaluee.
-- Plan same-ID master records for formal applications and reconcile existing
-  pre-evaluation/legacy education IDs; never collapse multiple degrees into the
-  current pre-evaluation table's unique application slot.
-- Select authoritative mutable status and payment ownership. Preserve immutable
-  submission/price snapshots and explain any lossy legacy projections.
-- Reconcile legacy money in dollars with workflow cents, provider reference types,
-  standalone payments and refunds. No implicit conversion or discarded history.
-- Integrate shared documents with existing upload/AI/release metadata and saved
-  folders before retiring any existing file records. Track File IDs and keep
-  scanning on open; continuous background sync is outside this phase.
+- Connect unified formal-intake staff/payment/release actions to the existing schema.
+- Connect translation using service details and documents, without mandatory education.
+- Keep customer account ownership separate from the evaluee. No new user or applicant
+  entity is deployed; account linkage remains a future design/migration task.
+- Reconcile Production data and providers in a separately authorized cutover.
 
-The task list remains in the [migration checklist](migration-checklist.md).
-Customer accounts and email scheduling remain explicitly deferred there.
-This comparison is not a migration script or a production readiness assertion.
+The active [checklist](migration-checklist.md) owns these tasks. Advanced email/payment
+tracking and scheduled recovery remain deferred. No database changes accompany this
+Mermaid/documentation update.
 
 ## Sources and maintenance
 
 - Read-only live `information_schema.columns`, `pg_constraint` and `pg_indexes`
-  for the six public business tables and the five selected new-system schemas.
+  for the current `aet_preview_shared` six tables (November 11); historical public
+  and pre-convergence captures are dated November 6.
 - [Schema routing](../lib/preeval/config.ts),
   [v2 intake persistence](../lib/application/intake-server.ts),
   [form fields](../lib/application/model.ts),

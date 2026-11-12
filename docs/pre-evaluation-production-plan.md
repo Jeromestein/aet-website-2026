@@ -4,10 +4,22 @@ Prepared November 11, 2026, against dev `ec57042`. **Plan only: nothing in
 Production has been changed.** This document records the proposed settings and
 release order; it is not an executable environment file or deployment approval.
 
+**Scope update:** the owner now requires pre-evaluation and credential evaluation
+to launch together through `/application`. The manifest below covers the existing
+pre-evaluation runtime only. It must be extended for credential intake, payment,
+applicant mail and report delivery after dev implementation; it is not sufficient
+for the joint launch. See the [active checklist](migration-checklist.md).
+
 ## First-release decisions
 
-- Launch the dedicated pre-evaluation journey for new orders only. Keep formal
-  evaluation, translation and historical AET App business on their existing paths.
+- Launch both evaluation services for new orders through `/application` after
+  joint acceptance. Preserve existing customer links; translation and historical
+  AET App business keep their existing paths.
+- Retain the old Production tables and their data long-term after the new system
+  launches. There is no scheduled deletion date. Launch, history copying or
+  eventual old-app shutdown never authorizes dropping, truncating, renaming or
+  overwriting those tables. Any future destructive cleanup needs a separate,
+  explicit owner decision. A backup is not a substitute for retaining the tables.
 - Reuse the existing Vercel project, Supabase project, Stripe, Dropbox and Resend.
   Use separate new-order business data, credentials and document locations.
 - Refunds are handled manually in the Stripe Dashboard. Keep the existing refund
@@ -24,7 +36,8 @@ release, subject to checking its existing Vercel binding before activation:
 
 | Purpose | Proposed path on that origin |
 | --- | --- |
-| Apply | `/degree-equivalency-tool/application` |
+| Apply | `/application` once both service paths are connected and accepted |
+| Existing dedicated pre-evaluation links | `/degree-equivalency-tool/application` (retain compatibility) |
 | Result | `/degree-equivalency-tool/application/success?applicationId=ID` |
 | Retrieve an application | `/status-check` |
 | New-order staff workspace | `/admin/CRM` |
@@ -42,7 +55,7 @@ If `www` cannot serve the new flow without an unapproved website/domain cutover,
 resolve that before release rather than silently moving `app` or weakening the
 approved-origin guard. The current code does not accept arbitrary new subdomains.
 
-## Vercel configuration manifest
+## Vercel configuration manifest — pre-evaluation only
 
 Apply these only to the **Production** environment of the existing project during
 the separately authorized release. Keep dev Preview's values intact. Resolve
@@ -105,11 +118,35 @@ Prepare an empty private `aet` schema for these six tables only:
 `aet_core_applications`, `aet_education`, `aet_service_detail`, `aet_documents`,
 `aet_payments`, `aet_ai_runs`. Include the accepted indexes, constraints, triggers,
 functions and role-specific RLS policies; copying column names alone is insufficient.
-The contract used by `tests/preeval-production.test.ts` comes from
-`supabase/migrations/20261111010750_preview_six_table_core.sql` with the Production
-schema/role mapping. Prepare a **separately reviewed release migration** from that
-contract. Do not execute the historical Preview migration chain or its retirement
-scripts against Production. No release SQL is generated or applied by this plan.
+Reuse the current accepted Preview structure; do not design a second business
+model. Fields, relations, indexes and constraints should match after normalizing
+schema/role names. The present `tests/preeval-production.test.ts` fixture reuses
+`supabase/migrations/20261111010750_preview_six_table_core.sql`. Preview subsequently
+expanded two status constraints to accept `reviewing` in
+`supabase/migrations/20261111180424_preview_formal_six_table_support.sql`. The release
+baseline must include that accepted constraint change too; passing the earlier
+fixture alone does not prove current schema parity or enable formal fulfillment.
+
+Prepare a **separately reviewed, additive release migration** for the new target
+and compare its schema to the current Preview contract before applying it. Do not
+execute the historical Preview migration chain or its retirement scripts against
+Production. No release SQL is generated or applied by this plan.
+
+| Boundary | Existing Preview | Proposed new Production |
+| --- | --- | --- |
+| Supabase project | Existing project | Same project; no new Supabase project required |
+| Private business schema | `aet_preview_shared` | `aet`, subject to target inventory |
+| Runtime role | `aet_preview_runtime` | `aet_runtime` with separate credentials |
+| Business model | Six accepted tables | The same six-table contract |
+| Initial rows | Existing synthetic/test applications | Empty; accepts new real applications after launch |
+| Providers | Sandbox payments, controlled test mail, `WebsitesDev` documents | Live payments, applicant mail, `AET2026` documents |
+
+Provider modes and folders are environment configuration differences, not new
+business tables. Keep Preview available for future testing. Old Production tables,
+Preview tables and new Production tables coexist; **six is the new system's table
+count, not the total number of tables in the Supabase project**. Staff Auth and
+provider/system tables are outside that six-table count. No automatic dual-write,
+historical import or deletion of original tables is part of this first release.
 
 Before provisioning, inventory and back up the target. If `aet` or `aet_runtime`
 already exists, reconcile it explicitly; never drop/overwrite it to make the
@@ -166,13 +203,16 @@ and verify the state rather than editing payment amounts in the database.
 
 ## Release order and stop conditions
 
-All actions below are future work, after explicit authorization:
+All actions below are future work, after explicit authorization. First complete
+both workflows on dev Preview and extend this pre-evaluation configuration plan
+for credential evaluation; the current manifest cannot enable that service.
 
 1. Confirm the canonical origin, live merchant account and operating staff owner.
    Snapshot existing Production configuration/deployment; confirm old app links
    and unfinished service entry points will remain on the old system.
 2. Review/rehearse the empty six-table provisioning migration, verify backup and
-   restricted-role isolation, then provision only the approved target. Verify
+   restricted-role isolation and Preview schema parity, then provision only the
+   approved new target. Keep old Production tables/data intact. Verify
    sender, original Dropbox access and AI model access without customer records.
 3. Prepare the Production-only manifest and dedicated live webhook configuration.
    Review the full `dev`/`main` release diff, not just the last runtime commit.
@@ -186,8 +226,10 @@ All actions below are future work, after explicit authorization:
    manual refund and existing refund-state synchronization; this is acceptance
    of existing behavior, not new refund development. Stop on any mode/account,
    recipient, storage, authorization or payment-state mismatch.
-6. Point only pre-evaluation entry links to the new flow. Record the release and
-   operating contact. Existing mobile checks are accepted; no additional mobile
+6. Complete the separately authorized credential journey as well, including
+   application-linked payment, staff review, PDF publication and customer mail.
+   Point both evaluation entry links to `/application` only after both pass.
+   Record the release and operating contact. Existing mobile checks are accepted; no additional mobile
    suite or optional tracking project is required for this first release.
 
 Before taking new orders, rollback may restore the recorded prior deployment and
@@ -203,7 +245,8 @@ plan introduces no new kill-switch setting.
 
 Prepared: configuration names/values, proposed origin, six-table/credential
 boundaries, webhook event list, manual refund procedure, release and rollback
-sequence. Pending: actual Production configuration inventory, confirmed host and
+sequence for pre-evaluation. Pending: credential runtime/configuration support,
+joint acceptance, actual Production configuration inventory, confirmed host and
 merchant ID, reviewed provisioning SQL, provider permission checks and authorized
 activation/live acceptance. No secret values, Production mutations, deployment,
 refund, commit or push were performed while preparing this document.

@@ -14,7 +14,7 @@ are summarized in the [migration checklist](migration-checklist.md) and
 are preserved in the [dated archives](README.md#historical-evidence).
 
 For database tables and individual fields, use the separate
-[legacy/current/proposed database comparison](database-architecture.md).
+[current and historical database comparison](database-architecture.md).
 Its shared model now serves dev Preview pre-evaluation and formal evaluation; the
 original component diagrams below are not a full physical-schema inventory.
 The [database convergence plan](database-migration-plan.md) reviews code-level

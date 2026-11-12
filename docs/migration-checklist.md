@@ -1,22 +1,30 @@
 # AET Release Checklist
 
-Updated November 11, 2026. The first release is **dedicated pre-evaluation**.
+Updated November 11, 2026. The first release is **pre-evaluation and credential
+evaluation together, through the unified `/application` entry**.
 Develop and test on `dev`; Production activation requires a separate release.
 The owner accepts the existing mobile checks for this release. Refunds are manual
 in Stripe Dashboard; no refund feature development is planned.
 Checked items mean the stated scope passed, not that Production is enabled.
+Old Production tables and their data must remain long-term, with no scheduled
+delete date. New-system launch or old-app shutdown does not authorize deletion;
+any later destructive cleanup requires a separate explicit owner decision.
 
 Read [status](status.md) for current capability and [database architecture](database-architecture.md)
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
 
-## First release — dedicated pre-evaluation
+## First release — both evaluation services
 
-Scope: apply → upload documents → analyze → pay → view result → receive email.
-Use the dedicated pre-evaluation entry; the general `/application` pre-evaluation
-choice is not an equivalent implementation.
+Pre-evaluation: apply → upload → analyze → pay → view result → receive email.
+Credential evaluation: apply → upload → staff review → pay → staff prepare and
+publish a PDF → download report and receive email. Use the existing six-table
+model; automated formal report generation is not required.
 
-### Already verified on dev Preview
+### Dedicated pre-evaluation — already verified on dev Preview
+
+This evidence covers the dedicated entry, not the currently unconnected
+pre-evaluation choice in `/application`.
 
 - [x] Submit and recover an application using its customer link.
 - [x] Upload/download documents, replace a failed upload and reject stale completion.
@@ -37,7 +45,7 @@ Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-1
 [latest shared-table acceptance](archive/database-formal-six-preview-2026-11-11.md),
 [upload/publication recovery](archive/preview-recovery-acceptance-2026-11-06.md).
 
-### Current development — formal operation mode
+### Pre-evaluation Production runtime — implemented, not activated
 
 - [x] Add explicit Production runtime configuration without activating it; keep
   local/dev Preview on isolated data, test payments and controlled recipients.
@@ -51,11 +59,33 @@ Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-1
 Verification: [offline runtime acceptance](archive/preeval-production-runtime-2026-11-11.md).
 These checks do not activate hosted Production.
 
+### Unified application — next development milestone
+
+- [ ] Connect `/application` pre-evaluation submission to the existing working
+  lifecycle, including customer/education/office fields, quote and recovery links.
+  Preserve existing dedicated applications and links.
+- [x] Build the three-step credential application, shared 2026 pricing, exclusive
+  document/course selection, education and mailing-address requirements.
+- [x] Save credential intake, notify the test recipient, expose Status/uploads and CRM.
+- [ ] Connect staff review, missing-material requests, price confirmation and
+  status changes to new v2 intake; CRM currently shows these submissions read-only.
+- [ ] Enable application-linked Checkout and signed payment reconciliation for
+  new credential intake; reuse existing payment/workflow components where compatible.
+- [ ] Let staff upload/publish the finished PDF and notify the customer; expose
+  authorized report download and retain the selected paper-delivery details.
+- [ ] Extend credential intake/fulfillment to the isolated Production runtime and
+  real applicant recipients. Current credential paths remain Preview/local only.
+- [ ] Verify both complete journeys from `/application` on dev Preview, including
+  office access, customer/CRM agreement and duplicate-payment protection.
+
 ### Production configuration plan
 
 - [x] Prepare the [Production configuration plan](pre-evaluation-production-plan.md):
   proposed origin, settings, private six-table target, direct live webhook and
-  manual Stripe refund procedure. This is a documented plan, not applied settings.
+  manual Stripe refund procedure for pre-evaluation. This is a documented plan,
+  not applied settings or a complete two-service release plan.
+- [ ] Extend that plan to the unified entry and credential workflow after dev
+  implementation and joint Preview acceptance.
 - [x] Accept current mobile result/status checks as sufficient for first release;
   do not add a mandatory second mobile payment run.
 - [x] Confirm Stripe Dashboard as the manual refund workflow; retain existing
@@ -63,34 +93,26 @@ These checks do not activate hosted Production.
 
 ### Release gates — after development, separately authorized
 
-- [ ] Prepare the empty Production six-table schema and restricted runtime role;
-  verify grants and backups. Existing AET App records stay in the old system.
+- [ ] Prepare an additive, empty Production copy of the current accepted Preview
+  six-table structure and a restricted runtime role; compare schema parity and
+  verify grants/backups. Preserve old Production tables/data and Preview tables.
 - [ ] Configure the chosen public origin, Production-only secrets, direct live
   webhook and document location; verify email sender and AI runtime limits.
 - [ ] Confirm the operating owner can find applications/documents and handle
   exceptional cases manually; publish contact/refund and service expectations.
-- [ ] Route public pre-evaluation links to the new flow; keep unfinished formal
-  evaluation/translation entry points on the old system.
+- [ ] Route both public evaluation entry points to the unified application after
+  joint acceptance; preserve historical links and keep translation on its old path.
 - [ ] Reconcile `main` changes, review the release diff, deploy only after approval,
-  and perform an authorized controlled live application/payment acceptance with
-  rollback ready. Include one manual Stripe refund and state check, using existing
+  and perform authorized controlled live acceptance for both services from the
+  unified entry, including credential PDF delivery, with rollback ready. Include
+  one manual Stripe refund and state check, using existing
   behavior (both full and partial refunds currently hide the result).
-
-## Next release — formal evaluation
-
-- [x] Build the three-step general application, shared 2026 pricing, exclusive
-  document/course selection, education and mailing-address requirements.
-- [x] Save formal intake, notify the test recipient, expose Status/uploads and CRM.
-- [ ] Let staff review documents, request missing material, confirm price/payment
-  and advance the application; keep customer Status consistent.
-- [ ] Enable application-linked payment for the new intake.
-- [ ] Let staff upload and publish the finished PDF and notify the customer.
-- [ ] Verify office permissions and one complete manual fulfillment journey.
 
 ## Deferred — not first-release blockers
 
-- [ ] Translation intake/fulfillment and a fully unified application experience.
-- [ ] Historical Production import and complete AET App retirement.
+- [ ] Translation intake/fulfillment and its integration into the unified application.
+- [ ] Historical Production copying and eventual old-app shutdown, if separately
+  requested; retain original Production tables/data even after either action.
 - [ ] Rich tracking, audit dashboards, analytics and extensive operational reporting.
 - [ ] Scheduled email recovery/cron; reconsider only when failed mail volume warrants it.
 - [ ] Further AI tuning beyond the accepted baseline; automatic formal report generation.

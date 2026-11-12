@@ -15,6 +15,21 @@ The field audit below remains the migration baseline. Earlier 32/25/21/20/18-tab
 counts describe historical stages. Staff authentication, legacy CMS and unrelated
 Production/system tables are outside this Preview business count.
 
+## Production retention rule
+
+The owner requires old Production tables and data to remain long-term after the
+new system launches. There is no planned deletion date. Historical copying and
+eventual old-app shutdown do not imply dropping, truncating, renaming or overwriting
+those tables; destructive cleanup requires a separate explicit owner decision.
+Earlier retirement procedures below concern isolated rehearsals or the already
+accepted Preview cleanup, not permission to remove old Production tables.
+
+New Production provisioning is additive: copy the current accepted six-table
+structure into its private target, with separate credentials and empty initial
+data. Preserve the existing six-table Preview for testing. Six is not the entire
+Supabase project's table count. See the [configuration plan](pre-evaluation-production-plan.md#supabase-and-documents)
+for the Preview/Production comparison and known constraint-baseline difference.
+
 ## Approved convergence target: 6 tables
 
 **November 10, 2026 simplification:** remove `aet_audit` and `aet_rate_limits`

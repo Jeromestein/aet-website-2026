@@ -12,7 +12,7 @@ not additional active task lists.
 | [Current status](status.md) | Current capability, verified boundary and next milestone |
 | [Migration checklist](migration-checklist.md) | Active tasks, acceptance gates and explicitly deferred work |
 | [Migration architecture](migration-architecture.md) | The two maintained English diagrams and the planned shared application/service-detail model |
-| [Database architecture comparison](database-architecture.md) | Three Mermaid database views, a zoomable viewer and field-by-field legacy/current/proposed mapping |
+| [Database architecture comparison](database-architecture.md) | Current six-table Mermaid, historical comparisons and a zoomable field viewer |
 | [Database convergence plan](database-migration-plan.md) | Six-table target, isolated pre-evaluation implementation, field ownership and remaining hosted/cross-service gates |
 | [Development and configuration](development.md) | Worktrees, environment names, deployment boundaries and shared website data |
 

@@ -1,25 +1,32 @@
 # AET Implementation Status
 
-Updated November 11, 2026. The release scope is now **dedicated pre-evaluation
-first**. Its Production-capable runtime is implemented and tested on `dev`, but
-has not been activated in Production. The code is deployed and verified on dev
-Preview, which continues to use six shared tables. Formal fulfillment and
-translation remain later releases.
+Updated November 11, 2026. The owner now requires **pre-evaluation and credential
+evaluation to launch together through `/application`**. The dedicated pre-evaluation
+journey is verified on dev Preview; the unified pre-evaluation choice is not yet
+connected. Credential intake works, but its payment and staff-to-report journey
+is incomplete. Both use the accepted six-table model. Translation remains deferred;
+Production has not been activated for these new workflows.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
 ## Current stage
 
-**Pre-evaluation is in release preparation.** The existing Preview journey works;
-new dev code adds isolated Production configuration, applicant-address mail,
-live-mode payment verification and separate document folders. Offline tests and
-the updated hosted Preview happy path pass. Production database provisioning,
-hosted configuration and final launch acceptance
-remain open. The old AET App remains available for services outside this release.
-The [Production configuration plan](pre-evaluation-production-plan.md) is prepared,
-not applied. The owner accepts the current mobile checks for first release and
-will handle refunds manually in Stripe Dashboard; no refund UI/API work is planned.
+**The next milestone is complete unified intake and credential fulfillment on dev.**
+Reuse the verified pre-evaluation upload/AI/payment/result flow behind `/application`.
+For credential evaluation, connect staff review, missing-material requests,
+confirmed payment and manual PDF publication to new v2 applications. Earlier
+formal pilot components exist but do not make the current intake end-to-end ready.
+
+The pre-evaluation Production-capable runtime and its
+[configuration plan](pre-evaluation-production-plan.md) are prepared, not activated;
+credential intake/fulfillment still needs Production support. Verify both services
+from the unified entry on Preview before final configuration and authorized live
+acceptance. The owner accepts existing mobile result/status checks and will handle
+refunds manually in Stripe Dashboard; no refund UI/API work is planned.
+Old Production tables/data remain long-term alongside the new schema and existing
+Preview tables. There is no deletion date or authorization to remove old tables.
+The six-table count describes the new business model, not the whole project.
 
 The dedicated pre-evaluation journey and the pre-evaluation choice inside the
 general `/application` form are different entry points. The dedicated journey
@@ -32,10 +39,10 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | AET Website Pixel configured in dev for public page views; four boundary tests and TypeScript passed; Chinese Contact desktop/mobile checked in the in-app browser with no local SDK load | Production publication, real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
-| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the empty Production target for new orders; history migration and translation are deferred |
-| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Production provisioning/configuration and authorized controlled live acceptance, including a manual Stripe refund/state check |
+| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
+| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Connect the unified entry, then joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
-| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | Staff actions, payment truth and report release for this v2 intake; shared pre-evaluation/translation submission |
+| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | First release: pre-evaluation submission plus credential staff actions, linked payment and report release; translation remains deferred |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |
