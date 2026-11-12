@@ -212,40 +212,58 @@ Deployment is intentionally left to the owner.
 
 ### Vercel Preview
 
-The Vercel project `aet-website-2026` uses `main` for Production. The `dev`
-Preview has branch-specific configuration; existing Production variables are
-preserved. Its stable application origin is
-`https://aet-website-2026-git-dev-meiyutechs-projects.vercel.app`.
+Develop on `main` and use the dedicated testing origin:
+`https://aet-main-preview-meiyutechs-projects.vercel.app`.
+See [main Preview acceptance](archive/main-preview-2026-11-12.md) for verified
+behavior and remaining checks. The former dev deployment remains available as a
+historical deployment; new testing no longer requires the dev branch.
 
-Use `APP_ENV=preview`, `APPLICATION_DATABASE_MODE=cloud-preview`, and that HTTPS
-origin in `APP_ORIGIN`. Keep system environment variables enabled. The server
-requires Vercel Preview and an exact match with `VERCEL_BRANCH_URL`.
-There is no branch-name restriction, but another branch must receive its own
-explicit Preview configuration; dev-scoped variables are not copied automatically. Forms accept only that branch origin or the current exact
-`VERCEL_URL`; no wildcard host or forwarded request header is trusted.
-`STAFF_LEGACY_MIGRATION_ENABLED` and `STAFF_AUTH_CUTOVER_ENABLED` must both remain
-`false`. Production is not enabled by this pilot configuration.
+Vercel still uses `main` as its Production branch. A Git push to main still
+triggers a Production deployment; this configuration does not change that rule.
+For testing without changing Production, explicitly create a Preview deployment
+from reviewed main source, wait for Ready, then assign only the testing alias:
 
-Authentication, live CRM and isolated intake retain their three separate database
-connections. `CRM_DATA_SOURCE=live` reads and writes the same records as the old
-workspace; deployment environments do not isolate those business records.
-The existing staff accounts are not migrated. An already-provisioned native admin
-uses `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `STAFF_AUTH_DATABASE_URL` without a
-service-role key. Dropbox uses both existing office accounts and stored paths.
+```sh
+pnpm dlx vercel@65.15.0 deploy --environment preview --project aet-website-2026 --scope meiyutechs-projects
+pnpm dlx vercel@65.15.0 alias set <ready-preview-deployment-url> aet-main-preview-meiyutechs-projects.vercel.app --scope meiyutechs-projects
+```
 
-Dev Preview uses `STRIPE_PAYMENT_MODE=test` with both offices' test keys and an
-HTTPS `STRIPE_TEST_SITE_URL`; no live Stripe or PayPal credentials were added.
-A hosted webhook endpoint and its matching signing secret have not been set up
-by this configuration change. Local CLI webhook secrets are not copied to the
-hosted environment. Legacy local-only form routes, hosted AI acceptance and
-production cutover remain outside this Preview setup. The newer `/application`
-intake, `/status` lookup and `/admin/CRM` use the configured cloud connections.
+Do not use the `git-main` alias for this: it belongs to the Production deployment.
+Do not promote this Preview to Production. The testing alias retains the same
+public Preview access as the former dev alias; employee login and office checks
+still protect CRM. Unique deployment URLs retain Vercel authentication.
 
-Local `.env.local` and port 3022 remain unchanged. The owner authorized the dev
-push and Preview acceptance; checked behavior and remaining limits are recorded
-in `docs/status.md`. Production cutover requires separate authorization.
-Environment changes apply to new deployments. Never commit connection strings
-or keys.
+Vercel rejects a main-specific Preview variable override while main is the
+Production branch. The former dev test configuration therefore now supplies the
+**default Preview environment**, including any future Preview branches. Sensitive
+variables were moved in place without exporting their values. Four identical
+shared Preview/Production variables and their old dev overrides were preserved.
+Production variables were not changed. Do not use these defaults for untrusted
+branch deployments; existing Git fork protection remains enabled.
+
+Required values are `APP_ENV=preview`, `APPLICATION_DATABASE_MODE=cloud-preview`,
+`APPLICATION_CORE_MODE=six-preview`, and the testing HTTPS origin in `APP_ORIGIN`.
+`APPLICATION_PREVIEW_ALIAS` contains that exact hostname without a scheme.
+When absent, origin validation continues to use `VERCEL_BRANCH_URL`. Forms accept
+only the configured origin or the exact current `VERCEL_URL`; request Host and
+forwarded headers cannot supply trust. Both staff migration/cutover switches
+remain `false`. These settings never enable Production applications.
+
+Authentication, live CRM and isolated intake retain separate database connections.
+`CRM_DATA_SOURCE=live` accesses the same business records as the old workspace:
+Preview does **not** isolate CRM Live edits. Use Test view for synthetic work.
+The six application tables remain in `aet_preview_shared`; no table or grant was
+changed. Existing native staff accounts are reused without migration.
+
+Stripe remains in test mode. `PAYMENT_SITE_URL` and `STRIPE_TEST_SITE_URL` use the
+new testing origin. Existing test endpoint `we_1UTTP2JMcR2XIhynZXyFcdYa` now points
+to its `/api/pre-evaluation/stripe-webhook`; its signing secret and event list
+were retained. No relay or temporary secret is needed. Production Stripe remains
+unchanged. The existing dedicated pre-evaluation flow is distinct from the still
+unconnected pre-evaluation choice in `/application`.
+
+Environment changes apply to new deployments. Local `.env.local` files and server
+ports were not changed. Never commit credentials or connection strings.
 
 ### Application domains and staff URLs
 

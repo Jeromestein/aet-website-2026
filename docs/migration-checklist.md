@@ -24,7 +24,15 @@ preserves migration history and acceptance evidence.
 - [x] Retain the existing expiry Cron; do not register the new pre-evaluation scheduler.
 - [x] Complete combined-main local/browser verification before integration; see
   [guarded-main acceptance](archive/guarded-main-integration-2026-11-12.md).
-- [ ] Separately authorize push and hosted verification; do not activate new workflows.
+- [x] Push guarded main and verify Production remains closed for new applications.
+- [x] Configure a dedicated main Preview with the existing test services; verify
+  form/review, existing pre-evaluation result/document reads and direct Stripe
+  test webhook delivery. See [main Preview acceptance](archive/main-preview-2026-11-12.md).
+- [x] Verify main Preview authenticated CRM list loading, search, office filters
+  and synthetic Test details after owner sign-in; no record writes performed.
+- [ ] Confirm intended staff access to unassigned pre-evaluation records before
+  relying on the current account for that queue; do not widen access implicitly.
+- [ ] Repeat a fresh application/upload/payment journey when the unified entry is connected.
 
 ## First release — both evaluation services
 

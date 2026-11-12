@@ -44,6 +44,17 @@ See [worktree setup](docs/development.md#main-and-dev-worktrees) and
 [environment configuration](docs/development.md#environment-configuration)
 before enabling application, payment, email or AI integrations.
 
+## Hosted testing from main
+
+Use [main Preview](https://aet-main-preview-meiyutechs-projects.vercel.app/zh/application)
+and its [staff login](https://aet-main-preview-meiyutechs-projects.vercel.app/admin/login).
+Development no longer requires dev. Preview uses the existing test configuration;
+CRM Live still shares legacy records. See [deployment instructions](docs/development.md#vercel-preview)
+and [verification scope](docs/archive/main-preview-2026-11-12.md).
+Pushing main still auto-deploys Production; a test deployment must explicitly
+select Preview. The dedicated testing alias is separate from the Production
+`git-main` alias.
+
 ## Application release protection
 
 Development now centers on `main`; use local testing or an explicitly configured

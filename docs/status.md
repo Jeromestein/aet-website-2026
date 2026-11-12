@@ -12,13 +12,24 @@ See the [active checklist](migration-checklist.md) for tasks and
 
 ## Guarded main integration — November 12
 
-Dev is integrated into local main with new application workflows closed by default
-in Production. Public application buttons retain the old portal, and Calendar
-remains public. CRM uses employee sessions and office authorization; missing staff
-configuration shows an unavailable state without exposing records. Main’s existing
-payment flow, expiry task and Ads click tracking are retained. No push, deployment,
-provider configuration or database changes are part of this integration.
-See [local verification](archive/guarded-main-integration-2026-11-12.md) and the
+Dev is integrated into main and the guarded main deployment is live. New
+application workflows remain closed in Production, public application links retain
+the old portal, and Calendar remains public. CRM requires employee sessions and
+office authorization. Missing Production staff configuration remains fail-closed.
+
+A dedicated [main Preview](https://aet-main-preview-meiyutechs-projects.vercel.app/zh/application)
+now reuses the former dev test configuration. Formal form/review, existing synthetic
+pre-evaluation lookup/result/document download and a direct Stripe test webhook
+replay passed. Anonymous CRM access is blocked. After owner login, Live/Test list
+loading, synthetic-record ID search, office filters and Test detail sections
+passed. The current account sees three offices; its Live pre-evaluation list is
+empty, consistent with the explicit Unassigned-access rule for legacy records.
+No access grants were changed. No new formal submission/email or fresh payment
+journey was run in this check. Unified pre-evaluation remains
+unconnected. Production deployment, aliases and environment variables were
+verified unchanged by this Preview setup. Source fix `eac0b3c` is integrated into
+local main, not pushed. See [Preview acceptance](archive/main-preview-2026-11-12.md),
+[local integration verification](archive/guarded-main-integration-2026-11-12.md) and
 [prior main release history](archive/main-releases-through-2026-11-12.md).
 
 ## Current stage
