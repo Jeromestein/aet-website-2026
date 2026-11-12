@@ -29,8 +29,12 @@ export function applicationPilotOrigin() {
   if (environmentValue("APP_ENV") === "local" && !process.env.VERCEL &&
       !process.env.VERCEL_ENV && ["localhost", "127.0.0.1"].includes(url.hostname) &&
       ["http:", "https:"].includes(url.protocol)) return url.origin;
-  if (vercelConfiguredPreview() && url.origin === vercelOrigin(process.env.VERCEL_BRANCH_URL))
-    return url.origin;
+  if (vercelConfiguredPreview()) {
+    // An explicitly configured alias keeps Preview links separate from the
+    // production branch alias. Never derive this trust from request headers.
+    const host = process.env.APPLICATION_PREVIEW_ALIAS || process.env.VERCEL_BRANCH_URL;
+    if (url.origin === vercelOrigin(host)) return url.origin;
+  }
   throw new Error("Application pilot requires local testing or the configured Preview");
 }
 
@@ -40,7 +44,7 @@ export function cloudBusinessEnvironmentAllowed() {
     (["http://localhost:3021", "http://localhost:3022"].includes(origin) || vercelConfiguredPreview());
 }
 
-/** The stable branch URL and this exact deployment URL can both submit forms. */
+/** The configured Preview origin and this exact deployment URL can submit forms. */
 export function requestMatchesApplicationOrigin(origin: string | null, configured: string) {
   if (!origin) return false;
   if (environmentValue("APP_ENV") !== "preview") return origin === configured;

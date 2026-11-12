@@ -13,6 +13,7 @@ beforeEach(() => {
     APP_ENV: "preview", APP_ORIGIN: origin, APPLICATION_DATABASE_MODE: "cloud-preview",
     VERCEL: "1", VERCEL_ENV: "preview", VERCEL_GIT_COMMIT_REF: "dev",
     VERCEL_BRANCH_URL: host, VERCEL_URL: deployment.slice(8),
+    APPLICATION_PREVIEW_ALIAS: "",
     STAFF_LEGACY_MIGRATION_ENABLED: "false", STAFF_AUTH_CUTOVER_ENABLED: "false",
     APPLICATION_DATABASE_URL: `postgresql://${PREVIEW_ROLE}.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`,
     APPLICATION_TEST_EMAIL: "test@example.invalid",
@@ -22,6 +23,23 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("configured Preview environment boundaries", () => {
+  it("uses a dedicated main Preview alias without trusting its production branch alias", () => {
+    const alias = "aet-main-preview-example.vercel.app";
+    vi.stubEnv("VERCEL_GIT_COMMIT_REF", "main");
+    vi.stubEnv("APPLICATION_PREVIEW_ALIAS", alias);
+    vi.stubEnv("APP_ORIGIN", `https://${alias}`);
+    expect(staffConfiguration().origin).toBe(`https://${alias}`);
+    expect(cloudBusinessEnvironmentAllowed()).toBe(true);
+    expect(requestMatchesApplicationOrigin(`https://${alias}`, `https://${alias}`)).toBe(true);
+    expect(requestMatchesApplicationOrigin(deployment, `https://${alias}`)).toBe(true);
+    expect(requestMatchesApplicationOrigin(origin, `https://${alias}`)).toBe(false);
+    vi.stubEnv("VERCEL_ENV", "production");
+    expect(() => applicationPilotOrigin()).toThrow();
+  });
+  it.each(["other.vercel.app", "https://example.vercel.app", "example.com", "example.vercel.app.evil.invalid", "user@example.vercel.app"])("rejects mismatched or invalid configured alias %s", alias => {
+    vi.stubEnv("APPLICATION_PREVIEW_ALIAS", alias);
+    expect(() => applicationPilotOrigin()).toThrow();
+  });
   it("supports cloud business records and secure staff cookies on dev", () => {
     expect(configuration()).toMatchObject({ origin, cloudPreview: true });
     expect(cloudBusinessEnvironmentAllowed()).toBe(true);
