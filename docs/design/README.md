@@ -109,6 +109,15 @@ business cards and forms use the [business UI dimensions](business-ui.md).
 
 ## Interaction, accessibility and language
 
+- **Never display diagonal outbound-link arrows anywhere in the AET interface.**
+  This includes `↗`, `ArrowUpRight`, `ExternalLink` (the arrow leaving a square),
+  and equivalent SVG/CSS icons. The rule applies to public pages, staff navigation,
+  tools, cards, buttons, tables and customer flows, including hover/focus states
+  and links that open in a new tab. Keep the destination label and, where useful,
+  a meaningful leading icon such as a calculator, document or globe. Indicate
+  new-tab behavior with localized accessible text when needed, not an arrow.
+  Dropdown/disclosure chevrons, sidebar toggles and functional Back/Next arrows
+  remain governed by their existing interaction rules.
 - Closed single-select dropdowns use the shared custom 16px chevron in
   `app/globals.css`: **14px from the right edge and 44px right text padding**, on
   desktop and mobile. Preserve native `<select>` behavior; do not add a second
@@ -146,6 +155,8 @@ business cards and forms use the [business UI dimensions](business-ui.md).
 
 ## Acceptance and maintenance
 
+- Reject diagonal outbound-link arrows during design review, including on
+  desktop/mobile and hover/focus states; do not reintroduce them from UI templates.
 - Verify branding, approved copy, shared prices, destinations, samples and images.
 - Check 320/390/760/850/1440px and 200% zoom for wrapping, clipping, controls and
   local scrolling; exercise affected desktop/mobile states in the in-app browser.

@@ -53,7 +53,7 @@ The older four-step formal pilot is a separate flow, documented in
   Course-by-Course are mutually exclusive radio choices. Hide expert/position
   services and the help-choosing option in this intake.
 - Each card has a separate, always-available sample PDF link: pale blue, navy
-  “View Evaluation Sample”, document/external-link icons and localized accessible
+  “View Evaluation Sample”, a document icon and localized accessible
   name. Open separately without changing the radio. Beside the service heading,
   use a question-mark link to localized `/evaluation#service` in a new tab.
 - Use shared 2026 tiers. Mark 24-hour and same-day choices with an asterisk and
@@ -160,6 +160,9 @@ mail remain English. Staff sign-in is separate.
   labels/tooltips, active state, refresh, website and account actions. Expand content
   without resetting filters/refetching. Mobile keeps the full drawer. Visit AET
   website uses orange text, pale orange background and globe, without trailing arrow.
+- GPA calculator and all other sidebar destinations use their leading feature
+  icon and text only, with no trailing outbound-link arrow. Opening a new tab
+  does not exempt a link from the [global arrow prohibition](README.md#interaction-accessibility-and-language).
 
 ### List and drawer
 

@@ -584,14 +584,6 @@ h2 {
   padding-top: 20px;
   font-size: 11px;
 }
-.circle-arrow {
-  display: grid;
-  place-items: center;
-  background: #ffffff15;
-  border-radius: 50%;
-  height: 35px;
-  width: 35px;
-}
 .service-list {
   display: flex;
   flex-direction: column;
@@ -625,10 +617,6 @@ h2 {
   padding: 13px;
   background: #eceee8;
   border-radius: 10px;
-}
-.row-arrow {
-  margin-left: auto;
-  margin-top: 13px;
 }
 .service-footnote {
   display: flex;
@@ -1358,9 +1346,6 @@ h2 {
   }
   .service-row .small-label {
     font-size: 7px;
-  }
-  .row-arrow {
-    width: 19px;
   }
   .service-footnote {
     flex-wrap: wrap;

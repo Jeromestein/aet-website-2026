@@ -7,7 +7,7 @@ import { getPathname } from "@/i18n/navigation";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+
 import { homeInstitutions, type Institution } from "@/lib/institutions";
 import styles from "./institution-carousel.module.css";
 
@@ -49,8 +49,8 @@ export function InstitutionCarousel({ id = "institutions", title, institutions =
         ))}
       </div>
       <div className={`wrap ${styles.footer}`}>
-        {embedded ? <a className="text-link" href={contactPath(locale)}>{contactLabel} <ArrowUpRight size={16} aria-hidden="true" /></a> : <p>{t("home.institutions.closing")}{" "}
-          <a className="text-link" href={getPathname({ locale, href: '/institutions' })}>{t("home.institutions.explore")} <ArrowUpRight size={16} aria-hidden="true" /></a>
+        {embedded ? <a className="text-link" href={contactPath(locale)}>{contactLabel} </a> : <p>{t("home.institutions.closing")}{" "}
+          <a className="text-link" href={getPathname({ locale, href: '/institutions' })}>{t("home.institutions.explore")} </a>
         </p>}
       </div>
     </section>

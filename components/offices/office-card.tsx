@@ -1,4 +1,4 @@
-import { ArrowUpRight, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 import { officeAddress, officeDirections, officeHours, officePath, phoneHref, type Office } from '@/lib/contact';
 import type { ContactContent } from '@/lib/contact-content';
@@ -14,7 +14,7 @@ export function OfficeCard({ office, content, locale, expanded = false }: { offi
     <dl className={styles.facts}>
       <div><dt>{content.labels.phone}</dt><dd>{office.phones.map((phone, i) => <span key={phone}><a href={phoneHref(phone)}>{phone}</a>{copy.phoneNotes?.[i] && <small>{copy.phoneNotes[i]}</small>}</span>)}</dd></div>
       <div><dt>{content.labels.email}</dt><dd>{office.emails.map(email => <a key={email} href={`mailto:${email}`}>{email}</a>)}</dd></div>
-      <div><dt>{content.labels.address}</dt><dd><address>{address}</address><a className={styles.directions} href={officeDirections(office)} target="_blank" rel="noopener noreferrer">{content.labels.directions}<ArrowUpRight size={15} aria-hidden="true" /></a></dd></div>
+      <div><dt>{content.labels.address}</dt><dd><address>{address}</address><a className={styles.directions} href={officeDirections(office)} target="_blank" rel="noopener noreferrer">{content.labels.directions}</a></dd></div>
       {hours && <div><dt>{content.labels.hours}</dt><dd>{hours}</dd></div>}
     </dl>
     {(office.whatsapp || office.wechat || office.tollFreeChina || office.fax || office.qq) && <details className={styles.more} open={expanded}><summary>{content.labels.more}</summary><dl>
@@ -24,6 +24,6 @@ export function OfficeCard({ office, content, locale, expanded = false }: { offi
       {office.fax && <div><dt>{content.labels.fax}</dt><dd>{office.fax}</dd></div>}
       {office.qq && <div><dt>{content.labels.qq}</dt><dd>{office.qq}</dd></div>}
     </dl></details>}
-    {!expanded && office.slug && <a className={styles.detailLink} href={officePath(locale, office)}>{content.labels.officeDetails}<ArrowUpRight size={16} aria-hidden="true" /></a>}
+    {!expanded && office.slug && <a className={styles.detailLink} href={officePath(locale, office)}>{content.labels.officeDetails}</a>}
   </article>;
 }

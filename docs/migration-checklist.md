@@ -17,6 +17,8 @@ preserves migration history and acceptance evidence.
 
 ## Guarded integration into main
 
+- [x] Remove diagonal outbound-link arrows sitewide per the design guide; verify
+  local CRM sidebar, Calendar details and homepage service cards on desktop/mobile.
 - [x] Retire the old dev/eval working directories after verified local backups;
   retain `x/aet-eval` and its four unmerged commits for separate review. See
   [local setup and preservation details](development.md#main-checkout-and-retired-worktrees).

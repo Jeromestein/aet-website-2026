@@ -211,7 +211,6 @@ h2, .faq-section h2 { font-size: clamp(2.15rem, 4.3vw, 4.5rem); line-height: 1.1
   .service-row h3 { font-size: 1.5rem; }
   .service-row p { font-size: 1rem; }
   .service-row .service-icon { display: inline-flex; }
-  .service-row .row-arrow { margin: auto 0 0; }
   .service-footnote a { margin-left: 0; min-height: 44px; }
   .impact-scene { padding-block: 64px; gap: 28px; }
   .impact-intro h2 { font-size: clamp(2.65rem, 12vw, 3.7rem); }

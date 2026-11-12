@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
-  ArrowUpRight,
   GraduationCap,
   RefreshCw,
   Search,
@@ -173,7 +172,6 @@ export default function PreEvaluationWorkspace() {
         </button>
         <a className={s.button} href="/degree-equivalency-tool/application">
           New application
-          <ArrowUpRight size={16} />
         </a>
       </div>
       {error && !selected && (
@@ -207,7 +205,6 @@ export default function PreEvaluationWorkspace() {
                   <td data-label="Applicant">
                     <button onClick={() => select(row.id)}>
                       {row.first_name} {row.last_name}{" "}
-                      <ArrowUpRight size={13} />
                     </button>
                     <small>{row.id}</small>
                     <small>{row.email}</small>

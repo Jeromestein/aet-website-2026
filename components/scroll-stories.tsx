@@ -10,7 +10,7 @@ import Image from "next/image";
 import { CardRail } from "./card-rail";
 import { BenefitCard } from "./benefit-card";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowUpRight, FileCheck2, Globe2, GraduationCap, ShieldCheck, SquarePen, Star } from "lucide-react";
+import { FileCheck2, Globe2, GraduationCap, ShieldCheck, SquarePen, Star } from "lucide-react";
 
 function useFacts() {
   const t = useTranslations();
@@ -203,7 +203,7 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
           <h3 className={methodStyles.methodTitle}>{t("home.process.title")}</h3>
           <p>{t("home.process.text")}</p>
           <a className="button journey-apply" href={'https://app.americantranslationservice.com/credential-evaluation-application'}>
-            <SquarePen size={24} aria-hidden="true" />{t("home.process.action")}<ArrowUpRight size={24} aria-hidden="true" />
+            <SquarePen size={24} aria-hidden="true" />{t("home.process.action")}
           </a>
         </div>
         <div className="journey-layout">
@@ -217,7 +217,7 @@ export function ProcessStory({ id = "process", variant = "home" }: { id?: string
             <div className="journey-mobile-image"><StepVisual index={i} /></div>
             <div className="journey-card"><span className="journey-number">0{i + 1}</span><div>
               <span className="eyebrow">{step.label}</span><h3>{step.title}</h3><p>{step.text}</p>
-              {i === steps.length - 1 && <a className="text-link" href={'https://app.americantranslationservice.com/credential-evaluation-application'}>{t("home.process.action")} <ArrowUpRight size={18} aria-hidden="true" /></a>}
+              {i === steps.length - 1 && <a className="text-link" href={'https://app.americantranslationservice.com/credential-evaluation-application'}>{t("home.process.action")} </a>}
             </div></div>
           </article>)}</CardRail>
         </div>

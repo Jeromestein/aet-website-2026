@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { articleTitle, articleUrl, topics, type BlogArticle, type BlogCopy, type BlogTopic } from '@/lib/blog';
 import styles from './blog.module.css';
 import type { Locale } from '@/i18n/routing';
@@ -41,7 +41,7 @@ export function BlogList({ articles, copy, locale }: { articles: BlogArticle[]; 
         <article className={styles.card}>
           <div className={styles.cardMeta}><span>{copy.topics[article.topic]}</span><span lang={article.city ? 'en' : undefined}>{article.city ?? copy.general}</span></div>
           <h3 lang={article.titles?.[locale] ? (locale === 'zh' ? 'zh-Hans' : locale) : 'en'}><a href={articleUrl(article, locale)}>{articleTitle(article, locale)}</a></h3>
-          <span className={styles.read} aria-hidden="true">{copy.read}<ArrowUpRight size={19} /></span>
+          <span className={styles.read} aria-hidden="true">{copy.read}</span>
         </article>
       </li>)}</ul> : <div className={styles.empty}><Search size={32} aria-hidden="true" /><h3>{copy.empty}</h3><p>{copy.emptyHint}</p><button type="button" className="button" onClick={reset}>{copy.reset}</button></div>}
     </div>

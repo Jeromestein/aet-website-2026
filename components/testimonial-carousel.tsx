@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import reviews from "./testimonials.json";
 import styles from "./testimonial-carousel.module.css";
 
@@ -59,7 +59,7 @@ export function TestimonialCarousel() {
             <strong aria-hidden="true">5.0</strong>
             <span className={styles.ratingStars} aria-hidden="true">★★★★★</span>
           </div>
-          <a href="https://www.google.com/search?q=american+education+and+translation+services+%28aet%29+florida" target="_blank" rel="noopener noreferrer" aria-label={t("home.testimonials.moreLabel")}>{t("home.testimonials.more")} <ArrowUpRight size={17} aria-hidden="true" />
+          <a href="https://www.google.com/search?q=american+education+and+translation+services+%28aet%29+florida" target="_blank" rel="noopener noreferrer" aria-label={t("home.testimonials.moreLabel")}>{t("home.testimonials.more")}
           </a>
         </div>
       </div>

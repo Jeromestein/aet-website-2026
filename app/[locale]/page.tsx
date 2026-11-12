@@ -16,7 +16,6 @@ import { CardRail } from "@/components/card-rail";
 import { InstitutionCarousel } from "@/components/institution-carousel";
 import { ImpactStory, ProcessStory } from "@/components/scroll-stories";
 import {
-  ArrowUpRight,
   GraduationCap,
   Languages,
   FileCheck2,
@@ -151,9 +150,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </dl>
               <div className="card-bottom">
                 <span>{t("home.services.learn")}</span>
-                <span className="circle-arrow">
-                  <ArrowUpRight size={21} />
-                </span>
               </div>
             </a>
             <div className="other-services"><h3 className="rail-heading">{t("home.services.other")}</h3>
@@ -174,7 +170,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     <h3>{s.title}</h3>
                     <p>{s.text}</p>
                   </div>
-                  <ArrowUpRight className="row-arrow" size={23} />
                 </a>
               ))}
             </CardRail></div>
@@ -183,7 +178,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="service-rating">
               <Image src="/images/bbb-hero-transparent.png" alt={t("home.services.bbb")} width={2172} height={724} sizes="146px" />
             </div>
-            <a href={contactPath(locale)} className="text-link">{t("home.contact")} <ArrowUpRight size={18} aria-hidden="true" />
+            <a href={contactPath(locale)} className="text-link">{t("home.contact")}
             </a>
           </div>
         </section>
@@ -223,7 +218,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div data-reveal>
             <span className="eyebrow">{t("home.faq.eyebrow")}</span>
             <h2>{t("home.faq.title")} </h2>
-            <a href={contactPath(locale)} className="text-link">{t("home.contact")} <ArrowUpRight size={18} />
+            <a href={contactPath(locale)} className="text-link">{t("home.contact")}
             </a>
           </div>
           <div className="faq-list" data-reveal>

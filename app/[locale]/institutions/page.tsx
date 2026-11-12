@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ArrowDown, ArrowUpRight, ClipboardCheck } from 'lucide-react';
+import { ArrowDown, ClipboardCheck } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { Navigation } from '@/components/navigation';
@@ -46,13 +46,13 @@ export default async function InstitutionsPage({ params }: Props) {
         </div><aside className={styles.guidance} aria-labelledby="before-applying">
           <ClipboardCheck size={32} strokeWidth={1.4} aria-hidden="true" />
           <h2 id="before-applying">{copy.qualification}</h2><p>{copy.qualificationText}</p>
-          <a href={getPathname({ locale, href: '/contact' })}>{copy.contact}<ArrowUpRight size={18} aria-hidden="true" /></a>
+          <a href={getPathname({ locale, href: '/contact' })}>{copy.contact}</a>
         </aside></div>
       </div></header>
       <InstitutionDirectory sections={content.sections} copy={copy} />
       <section className={styles.closing}><div className={`wrap ${styles.closingInner}`}>
         <div><span className="eyebrow">{copy.eyebrow}</span><h2>{copy.closingTitle}</h2><p>{content.closing}</p></div>
-        <a className="button" href={content.applyUrl}>{copy.apply}<ArrowUpRight size={20} aria-hidden="true" /></a>
+        <a className="button" href={content.applyUrl}>{copy.apply}</a>
       </div></section>
     </main>
     <SiteFooter />

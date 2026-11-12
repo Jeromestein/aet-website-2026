@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
-  ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUpRight, Calculator, Check,
+  ArrowDownToLine, ArrowLeft, ArrowRight, Calculator, Check,
   CheckCheck, ChevronLeft, ChevronRight, CircleCheck, Clock3,
   CreditCard, FileCheck2, FileText, FolderOpen, GraduationCap, LayoutDashboard,
   Link2, Mail, MapPin, Menu, Plus, RotateCcw, Search, Upload, X,
@@ -255,7 +255,7 @@ export default function CRMPreview() {
       </nav>
       <div className={s.sidebarBottom}>
         <div className={s.previewCard}><span className={s.previewIcon}><LayoutDashboard size={18} /></span><strong>Preview workspace</strong><p>Explore with sample data.<br />Changes reset on refresh.</p><button onClick={reset}><RotateCcw size={13} />Reset preview</button></div>
-        <a className={s.websiteLink} href="/">Visit AET website<ArrowUpRight size={15} /></a>
+        <a className={s.websiteLink} href="/">Visit AET website</a>
         <div className={s.profile}><span>AT</span><div>AET team<small>Preview workspace</small></div><Badge tone="blue">Demo</Badge></div>
       </div>
     </aside>
@@ -303,7 +303,7 @@ export default function CRMPreview() {
           </div>
 
           {(view === 'applications' || view === 'equivalency') && <>
-            <div className={s.tableWrap}><table className={s.table}><thead><tr><th>CLIENT / APPLICATION</th><th>EDUCATION</th><th>SERVICE</th><th>STATUS</th><th>PAYMENT</th><th>UPDATED</th><th><span className={s.srOnly}>Open application</span></th></tr></thead><tbody>
+            <div className={s.tableWrap}><table className={s.table}><thead><tr><th>CLIENT / APPLICATION</th><th>EDUCATION</th><th>SERVICE</th><th>STATUS</th><th>PAYMENT</th><th>UPDATED</th></tr></thead><tbody>
               {rows.map(row => <tr key={row.id}>
                 <td><button className={s.clientCell} onClick={() => openApplication(row.id)}><OfficeBadge office={row.office} /><span><strong>{row.name}</strong><small>{row.id}</small></span></button></td>
                 <td><DetailTrigger row={row} section="education" onOpen={() => openApplication(row.id, 'education')} /></td>
@@ -311,11 +311,10 @@ export default function CRMPreview() {
                 <td><Badge tone={row.stage === 'completed' ? 'green' : row.stage === 'processing' ? 'blue' : 'neutral'}><span className={s.statusDot} />{stageLabels[row.stage]}</Badge><small className={s.cellHint}>{row.stage === 'completed' ? 'Delivered' : row.documents.some(doc => doc.status === 'Missing') ? 'Awaiting documents' : row.documents.some(doc => doc.status === 'Received') ? 'Documents to review' : row.payment === 'pending' ? 'Awaiting payment' : 'Due ' + row.due}</small></td>
                 <td><strong className={s.amount}>{money(row.amount)}</strong><small className={row.payment === 'paid' ? s.paymentPaid : s.paymentPending}>{row.payment === 'paid' ? <><CheckCheck size={12} />Paid</> : row.payment === 'refunded' ? 'Refunded' : 'Pending'}</small></td>
                 <td className={s.updated}><time dateTime={row.updated}>{row.updated}</time></td>
-                <td><button className={s.rowArrow} aria-label={'View ' + row.name} onClick={() => openApplication(row.id)}><ArrowUpRight size={17} /></button></td>
               </tr>)}
             </tbody></table></div>
             <div className={s.mobileCards}>{rows.map(row => <article className={s.mobileCard} key={row.id}>
-              <button className={s.mobileIdentity} aria-label={'View ' + row.name} aria-haspopup="dialog" onClick={() => openApplication(row.id)}><OfficeBadge office={row.office} /><span><strong>{row.name}</strong><small>{row.id} · {row.office}</small></span><ArrowUpRight size={18} /></button>
+              <button className={s.mobileIdentity} aria-label={'View ' + row.name} aria-haspopup="dialog" onClick={() => openApplication(row.id)}><OfficeBadge office={row.office} /><span><strong>{row.name}</strong><small>{row.id} · {row.office}</small></span></button>
               <dl className={s.mobileDetails}><div><dt>Education</dt><dd><DetailTrigger row={row} section="education" onOpen={() => openApplication(row.id, 'education')} /></dd></div><div><dt>Service</dt><dd><DetailTrigger row={row} section="service" onOpen={() => openApplication(row.id, 'service')} /></dd></div></dl>
               <footer><Badge tone={row.stage === 'completed' ? 'green' : row.stage === 'processing' ? 'blue' : 'neutral'}>{stageLabels[row.stage]}</Badge><span>{money(row.amount)} · {row.payment === 'paid' ? 'Paid' : row.payment === 'refunded' ? 'Refunded' : 'Pending'}</span></footer>
               <div className={s.mobileUpdated}><span>Updated</span><time dateTime={row.updated}>{row.updated}</time></div>
@@ -326,10 +325,10 @@ export default function CRMPreview() {
 
           {view === 'payments' && <div className={s.alternateList}>{visiblePayments.map(payment => {
             const row = applications.find(item => item.id === payment.applicationId)!;
-            return <button key={payment.id} className={s.paymentRow} onClick={() => openApplication(row.id, 'payment')}><span className={s.fileIcon}><Link2 size={20} /></span><span className={s.paymentClient}><strong>{row.name}</strong><small>{payment.id} · {row.id}</small></span><span className={s.paymentMethod}>{payment.method}</span><Badge tone={payment.status === 'Paid' ? 'green' : payment.status === 'Draft' ? 'neutral' : 'amber'}>{payment.status}</Badge><strong className={s.paymentAmount}>{money(payment.amount)}</strong><ArrowUpRight size={17} /></button>;
+            return <button key={payment.id} className={s.paymentRow} onClick={() => openApplication(row.id, 'payment')}><span className={s.fileIcon}><Link2 size={20} /></span><span className={s.paymentClient}><strong>{row.name}</strong><small>{payment.id} · {row.id}</small></span><span className={s.paymentMethod}>{payment.method}</span><Badge tone={payment.status === 'Paid' ? 'green' : payment.status === 'Draft' ? 'neutral' : 'amber'}>{payment.status}</Badge><strong className={s.paymentAmount}>{money(payment.amount)}</strong></button>;
           })}{!visiblePayments.length && <div className={s.empty}><CreditCard size={30} /><h3>No payment requests found</h3><p>Adjust your search or create a sample payment request.</p></div>}<p className={s.listNote}>Sample payment records. New requests are saved as preview drafts; no live payment links are created.</p></div>}
 
-          {view === 'documents' && <div className={s.alternateList}>{scoped.filter(row => [row.name, row.id, row.service].join(' ').toLowerCase().includes(search.toLowerCase().trim())).map(row => <div className={s.documentGroup} key={row.id}><div className={s.documentHeading}><button onClick={() => openApplication(row.id, 'documents')}>{row.name}<ArrowUpRight size={14} /></button><span>{row.id} · {row.office}</span></div><div className={s.documentItems}>{row.documents.map(doc => <button className={s.documentItem} key={doc.name} onClick={() => openApplication(row.id, 'documents')}><FileText size={20} /><span>{doc.name}</span><Badge tone={doc.status === 'Reviewed' ? 'green' : doc.status === 'Missing' ? 'amber' : 'blue'}>{doc.status}</Badge></button>)}</div></div>)}{!scoped.some(row => [row.name, row.id, row.service].join(' ').toLowerCase().includes(search.toLowerCase().trim())) && <div className={s.empty}><FolderOpen size={30} /><h3>No documents found</h3><p>Try another client name or office.</p></div>}</div>}
+          {view === 'documents' && <div className={s.alternateList}>{scoped.filter(row => [row.name, row.id, row.service].join(' ').toLowerCase().includes(search.toLowerCase().trim())).map(row => <div className={s.documentGroup} key={row.id}><div className={s.documentHeading}><button onClick={() => openApplication(row.id, 'documents')}>{row.name}</button><span>{row.id} · {row.office}</span></div><div className={s.documentItems}>{row.documents.map(doc => <button className={s.documentItem} key={doc.name} onClick={() => openApplication(row.id, 'documents')}><FileText size={20} /><span>{doc.name}</span><Badge tone={doc.status === 'Reviewed' ? 'green' : doc.status === 'Missing' ? 'amber' : 'blue'}>{doc.status}</Badge></button>)}</div></div>)}{!scoped.some(row => [row.name, row.id, row.service].join(' ').toLowerCase().includes(search.toLowerCase().trim())) && <div className={s.empty}><FolderOpen size={30} /><h3>No documents found</h3><p>Try another client name or office.</p></div>}</div>}
         </section>
         <footer className={s.pageFooter}><span>AET Workspace <span> / </span> Client services</span><span>Interactive preview · Fictional records and amounts</span></footer>
       </main>

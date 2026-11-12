@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, CreditCard } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 import { paymentOffices, paymentServices, type PaymentContent, type PaymentOffice } from '@/lib/payment';
 import styles from '@/app/[locale]/payment/payment.module.css';
@@ -87,13 +87,13 @@ export function PaymentForm({ c, locale, stripeMode, stripeOffices, checkoutToke
     </div>
     <div className={styles.legal}>
       <input key={`${provider}-${office}-${stripeMode}`} id="pay-terms" type="checkbox" name="terms" value="1" required />
-      <div><label htmlFor="pay-terms">{stripe ? f.stripeTerms : f.terms}</label><p><a href="/terms" target="_blank" rel="noopener noreferrer">{f.termsLink} <ArrowUpRight size={14} aria-hidden="true" /></a><a href="/privacy" target="_blank" rel="noopener noreferrer">{f.privacyLink} <ArrowUpRight size={14} aria-hidden="true" /></a></p></div>
+      <div><label htmlFor="pay-terms">{stripe ? f.stripeTerms : f.terms}</label><p><a href="/terms" target="_blank" rel="noopener noreferrer">{f.termsLink} </a><a href="/privacy" target="_blank" rel="noopener noreferrer">{f.privacyLink} </a></p></div>
     </div>
     <input type="hidden" name="payment_mode" value={stripeMode} />
     <input type="hidden" name="checkout_token" value={checkoutToken} />
     <input type="hidden" name="website" value="AET 2026 online payment" />
     <input type="hidden" name="infotype" value="online payment" />
     <input type="hidden" name="locale" value={locale} />
-    <div className={styles.submitRow}><button type="submit" className="button primary"><CreditCard size={19} aria-hidden="true" />{stripe ? f.stripeSubmit : f.submit}<ArrowUpRight size={18} aria-hidden="true" /></button><small>{stripe ? f.stripeNewTab : f.newTab}</small></div>
+    <div className={styles.submitRow}><button type="submit" className="button primary"><CreditCard size={19} aria-hidden="true" />{stripe ? f.stripeSubmit : f.submit}</button><small>{stripe ? f.stripeNewTab : f.newTab}</small></div>
   </form>;
 }

@@ -10,7 +10,7 @@ import { Navigation } from '@/components/navigation';
 import { SiteFooter } from '@/components/site-footer';
 import { BlogList } from '@/components/blog/blog-list';
 import { articles, articleUrl, blogCopy, pilotSlug } from '@/lib/blog';
-import { ArrowUpRight, BookOpen } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import styles from '@/components/blog/blog.module.css';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -45,7 +45,7 @@ export default async function BlogPage({ params }: Props) {
           <span className={styles.featuredLabel}><BookOpen size={20} aria-hidden="true" />{copy.featured}</span>
           <h2 lang="en">Boston Foreign Credential Evaluation</h2>
           <p>{copy.featuredDescription}</p>
-          <span className={styles.featuredAction}>{copy.read}<ArrowUpRight size={20} aria-hidden="true" /></span>
+          <span className={styles.featuredAction}>{copy.read}</span>
         </a></div>
       </div></header>
       <BlogList articles={articles} copy={copy} locale={locale} />

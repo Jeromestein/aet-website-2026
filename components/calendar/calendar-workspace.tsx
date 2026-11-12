@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/react/daygrid';
 import timeGridPlugin from '@fullcalendar/react/timegrid';
 import listPlugin from '@fullcalendar/react/list';
 import themePlugin from '@fullcalendar/react/themes/monarch';
-import { ArrowLeft, ArrowUpRight, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Globe2, Info, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowLeft, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, Globe2, Info, Search, SlidersHorizontal, X } from 'lucide-react';
 import { calendarSpan, dateInZone, dateLabel, eventDateLabel, eventTime, isInPeriod, organizerColors, organizerGroup, organizerLabels, type CalendarEvent, type OrganizerGroup } from '@/lib/calendar/events';
 import '@fullcalendar/react/skeleton.css';
 import '@fullcalendar/react/themes/monarch/theme.css';
@@ -46,7 +46,7 @@ function EventDetails({ event, timeZone, savedOn, onClose }: { event: CalendarEv
         {event.notes && <section><p>{event.notes}</p></section>}
         <div className={s.sourceNote}><Info size={17} /><p>Saved {dateLabel(savedOn)} from public sources. Confirm current arrangements with the organizer.</p></div>
       </div>
-      <div className={s.dialogFooter}><a className={s.primaryButton} href={event.event_url || event.source_url} target="_blank" rel="noopener noreferrer">{event.event_url ? 'View event page' : 'View source'}<ArrowUpRight size={18} /></a>{event.event_url && event.source_url !== event.event_url && <a className={s.secondaryButton} href={event.source_url} target="_blank" rel="noopener noreferrer">Original source <ExternalLink size={15} /></a>}</div>
+      <div className={s.dialogFooter}><a className={s.primaryButton} href={event.event_url || event.source_url} target="_blank" rel="noopener noreferrer">{event.event_url ? 'View event page' : 'View source'}</a>{event.event_url && event.source_url !== event.event_url && <a className={s.secondaryButton} href={event.source_url} target="_blank" rel="noopener noreferrer">Original source </a>}</div>
     </>}
   </dialog>;
 }
