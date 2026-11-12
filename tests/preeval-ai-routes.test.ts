@@ -1,3 +1,5 @@
+// Provider unit fixtures run with the release gate open; real gating is tested separately.
+vi.mock('../lib/application-release', () => ({ applicationUnavailableResponse: () => null }));
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 const m = vi.hoisted(() => ({ abandon: vi.fn(), unfinished: vi.fn(), origin: vi.fn(), schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
 vi.mock('server-only', () => ({}));

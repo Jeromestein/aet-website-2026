@@ -1,3 +1,4 @@
+import { requireApplicationPage } from '@/lib/application-page-access';
 import { environmentValue } from "../../../lib/application-environment.mjs";
 import { getTranslations } from 'next-intl/server';
 import ApplicationShell from '@/components/evaluation-application/shell';
@@ -9,6 +10,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: `${t('title')} | AET`, robots: { index: false, follow: false }, referrer: 'no-referrer' as const };
 }
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  requireApplicationPage(false);
+
   const { locale } = await params;
   return <ApplicationShell locale={locale}><EvaluationApplication locale={locale} enabled={environmentValue("APP_ENV") === 'local'} /></ApplicationShell>;
 }

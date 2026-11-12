@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { contextFromRequest, requireUploadAllowed } from '@/lib/dropbox/server';
 import { handle, json, jsonBody, requireSameOrigin } from '@/lib/dropbox/http';
 import { DocumentError } from '@/lib/dropbox/shared';
@@ -5,6 +6,8 @@ import { abandonUpload, unfinishedUploads } from '@/lib/preeval/upload-recovery'
 import { AppError } from '@/lib/preeval/domain';
 export const runtime = 'nodejs';
 export async function GET(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   return handle(async () => {
     const { data: context } = contextFromRequest(request);
     if (context.kind !== 'pre-evaluation') return json({ uploads: [], pending: false, hasReady: false, canModify: false });
@@ -12,6 +15,8 @@ export async function GET(request: Request) {
   });
 }
 export async function POST(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   return handle(async () => {
     requireSameOrigin(request);
     const { data: context } = contextFromRequest(request);

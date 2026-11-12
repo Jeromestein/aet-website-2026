@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { compact } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,6 +15,8 @@ const respond = (data: unknown, status = 200) => NextResponse.json(data, {
 });
 
 export async function POST(request: NextRequest) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     sameOrigin(request);
     await limit("customer-lookup:global", 200, 600);

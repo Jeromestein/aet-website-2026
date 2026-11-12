@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import {formalCore,formalLegacy} from '@/lib/application-core/formal-store';
 import { withDocuments } from '@/lib/customer-status/documents';
 import { readIntake } from '@/lib/application/intake-server';
@@ -13,6 +14,8 @@ const reply = (body: unknown, status = 200) => NextResponse.json(body, { status,
   'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer',
 } });
 export async function POST(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     sameOrigin(request);
     await limit('formal-status:global', 200, 600);

@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { emailAssetOrigin } from "@/lib/email/assets";
 import { confirmationEmail } from "@/lib/application/intake-template";
 import { initialDraft } from "@/lib/application/model";
@@ -66,6 +67,8 @@ async function sampleEmail(kind: Kind, assetOrigin: string, pendingFee: boolean)
 const escape = (value: string) => value.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
 export async function GET(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   if (process.env.NODE_ENV !== "development") return new Response(null, { status: 404 });
   const url = new URL(request.url);
   const selected = templates.find((item) => item.id === url.searchParams.get("kind")) ?? templates[0];

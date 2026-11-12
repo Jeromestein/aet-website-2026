@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import {formalCore,formalRows,formalFiles} from '@/lib/application-core/formal-store';
 import {coreFileMetadata,officeForConnection} from '@/lib/application-core/documents';
 import {clientForOffice} from '@/lib/dropbox/server';
@@ -27,6 +28,8 @@ async function read(request: Request, max = 24000) {
   return Buffer.concat(chunks);
 }
 async function handler(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     configuration();
     const { path } = await params; const endpoint = path.join('/'); const post = request.method === 'POST';

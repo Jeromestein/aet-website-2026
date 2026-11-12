@@ -1,3 +1,4 @@
+import { requireApplicationPage } from '@/lib/application-page-access';
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { hasLocale } from 'next-intl';
@@ -16,6 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t('title'), description: t('intro'), robots: { index: false, follow: false }, referrer: 'no-referrer' };
 }
 export default async function DocumentsPage({ params }: Props) {
+  requireApplicationPage(false);
+
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);

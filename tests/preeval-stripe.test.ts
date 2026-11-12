@@ -45,7 +45,7 @@ describe('pre-evaluation Stripe test containment', () => {
     expect(canVerifyPreEvaluationPayment()).toBe(false);
   });
   it('still validates database role and approved origin when opted in', () => {
-    vi.stubEnv('APP_ORIGIN', 'http://localhost:3021');
+    vi.stubEnv('APP_ORIGIN', 'http://localhost:3999');
     expect(() => stripeClient('pre-evaluation')).toThrow();
     expect(canVerifyPreEvaluationPayment()).toBe(false);
     vi.stubEnv('APP_ORIGIN', 'http://localhost:3022');

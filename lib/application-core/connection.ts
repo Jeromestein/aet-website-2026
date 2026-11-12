@@ -3,13 +3,13 @@ import type { Sql, TransactionSql } from 'postgres';
 import { configuration, PREVIEW_ROLE, PRODUCTION_ROLE } from '../preeval/config';
 
 type DB = Sql | TransactionSql;
-/** This opt-in is accepted only in the existing restricted dev Preview. */
+/** This opt-in is accepted only in the existing restricted configured Preview. */
 export function corePreviewConfiguration() {
   const mode = process.env.APPLICATION_CORE_MODE;
   if (!mode) return null;
   if (!['preview','six-preview'].includes(mode) || process.env.VERCEL !== '1' || process.env.VERCEL_ENV !== 'preview'
-    || process.env.VERCEL_GIT_COMMIT_REF !== 'dev' || !configuration().cloudPreview)
-    throw new Error('Core runtime requires the restricted dev Preview');
+    || !configuration().cloudPreview)
+    throw new Error('Core runtime requires the restricted configured Preview');
   const providerAccount = process.env.APPLICATION_CORE_PROVIDER_ACCOUNT || '';
   if (!/^acct_[a-zA-Z0-9_]+$/.test(providerAccount)) throw new Error('Verified Stripe test account required');
   return { providerAccount, sixTables: mode === 'six-preview' };

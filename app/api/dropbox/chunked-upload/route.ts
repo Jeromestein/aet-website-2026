@@ -1,8 +1,11 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { contextFromRequest, continueUpload, requireUploadAllowed, startUpload } from '@/lib/dropbox/server';
 import { handle, json, jsonBody, requireSameOrigin } from '@/lib/dropbox/http';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 export async function POST(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   return handle(async () => {
     requireSameOrigin(request);
     const context = contextFromRequest(request);

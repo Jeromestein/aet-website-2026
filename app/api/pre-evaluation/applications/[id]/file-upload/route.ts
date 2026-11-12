@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { z } from 'zod';
 import { configuration } from '@/lib/preeval/config';
 import { authorize, sameOrigin, limit } from '@/lib/preeval/auth';
@@ -9,6 +10,8 @@ import { DocumentError, CHUNK_SIZE } from '@/lib/dropbox/shared';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     configuration();
     sameOrigin(request);

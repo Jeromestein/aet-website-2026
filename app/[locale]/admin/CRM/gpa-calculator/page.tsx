@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import GPACalculator from '@/components/crm/gpa-calculator';
 import StaffUnavailable from '@/components/staff/unavailable';
 import { AppError } from '@/lib/preeval/domain';
-import { session } from '@/lib/preeval/auth';
+import { staffSession as session } from '@/lib/staff/session';
 
 export const metadata: Metadata = {
   title: 'GPA Calculator | AET Workspace',

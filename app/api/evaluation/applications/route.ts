@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { environmentValue } from "../../../../lib/application-environment.mjs";
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -9,6 +10,8 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 const response = (value: unknown, status = 200) => NextResponse.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' } });
 export async function POST(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     if (environmentValue("APP_ENV") !== 'local') return response({ error: 'unavailable' }, 503);
     configuration(); sameOrigin(request);

@@ -1,3 +1,5 @@
+// Provider unit fixtures run with the release gate open; real gating is tested separately.
+vi.mock('../lib/application-release', () => ({ applicationUnavailableResponse: () => null }));
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createHash } from 'node:crypto';
 const m = vi.hoisted(() => ({ query: vi.fn(), begin: vi.fn(), authorize: vi.fn(), origin: vi.fn(), limit: vi.fn(), pause: vi.fn(),

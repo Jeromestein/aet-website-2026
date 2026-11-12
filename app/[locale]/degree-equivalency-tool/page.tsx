@@ -1,3 +1,4 @@
+import { requireApplicationPage } from '@/lib/application-page-access';
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Navigation } from "@/components/navigation";
@@ -25,6 +26,8 @@ export default async function Page({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  requireApplicationPage(true);
+
   const { locale } = await params,
     t = copy(locale);
   return (

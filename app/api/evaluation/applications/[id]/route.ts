@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { environmentValue } from "../../../../../lib/application-environment.mjs";
 import { NextResponse } from 'next/server';
 import { access, application } from '@/lib/evaluation-application/service';
@@ -6,6 +7,8 @@ import { AppError } from '@/lib/preeval/domain';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   const headers = { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'no-referrer' };
   try {
     if (environmentValue("APP_ENV") !== 'local') return NextResponse.json({ error: 'unavailable' }, { status: 503, headers });

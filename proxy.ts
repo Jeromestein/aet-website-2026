@@ -31,6 +31,11 @@ export default async function proxy(request: NextRequest) {
       url.pathname = canonicalPath;
       return NextResponse.redirect(url, 308);
     }
+    if (canonicalPath === '/admin/calendar' || canonicalPath === '/admin/calendar/') {
+      const response = staffMiddleware(request);
+      response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+      return response;
+    }
     const finish = await refreshStaff(request);
     return finish(staffMiddleware(request));
   }

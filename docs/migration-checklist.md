@@ -2,7 +2,8 @@
 
 Updated November 12, 2026. The first release is **pre-evaluation and credential
 evaluation together, through the unified `/application` entry**.
-Develop and test on `dev`; Production activation requires a separate release.
+Develop primarily on `main`, with local or configured Preview testing.
+Merging code does not activate new application workflows in Production.
 The owner accepts the existing mobile checks for this release. Refunds are manual
 in Stripe Dashboard; no refund feature development is planned.
 Checked items mean the stated scope passed, not that Production is enabled.
@@ -13,6 +14,16 @@ any later destructive cleanup requires a separate explicit owner decision.
 Read [status](status.md) for current capability and [database architecture](database-architecture.md)
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
+
+## Guarded integration into main
+
+- [x] Add a server-side release gate to all new customer application pages and APIs.
+- [x] Keep public website application links at the legacy portal and Calendar public.
+- [x] Keep staff membership/office authorization separate from customer access.
+- [x] Accept explicitly configured Preview deployments without a hard-coded dev branch.
+- [x] Retain the existing expiry Cron; do not register the new pre-evaluation scheduler.
+- [ ] Complete combined-main local/browser verification before integration.
+- [ ] Separately authorize push and hosted verification; do not activate new workflows.
 
 ## First release — both evaluation services
 

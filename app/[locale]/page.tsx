@@ -1,4 +1,3 @@
-import { environmentValue } from "../../lib/application-environment.mjs";
 import { graph, organizationSchema } from '@/lib/structured-data';
 import { StructuredData } from '@/components/structured-data';
 import { pageMetadata } from '@/lib/seo';
@@ -28,7 +27,7 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { Navigation, RevealObserver } from "@/components/navigation";
-const legacyPre =
+const pre =
   "https://app.americantranslationservice.com/degree-equivalency-tool";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -43,10 +42,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations();
-  const apply = getPathname({ locale, href: '/apply' });
-  const pre = environmentValue("APP_ENV") === 'local'
-    ? getPathname({ locale, href: '/degree-equivalency-tool' })
-    : legacyPre;
   const services = [
     { icon: Languages, number: "02", title: t("navigation.certified"), text: t("home.services.certifiedText"), href: "/certified-translation", tag: t("home.services.translationTag") },
     { icon: MessageCircle, number: "03", title: t("navigation.interpretation"), text: t("home.services.interpretationText"), href: "/interpretation", tag: t("navigation.interpretation") },

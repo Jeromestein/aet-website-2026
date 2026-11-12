@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { after } from 'next/server';
 import { sameOrigin, limit } from '@/lib/preeval/auth';
 import { saveIntake, requireIntakePreview } from '@/lib/application/intake-server';
@@ -5,6 +6,8 @@ import { sendIntakeEmail } from '@/lib/application/intake-email';
 import { intakeBody,intakeError,intakeReply } from '@/lib/application/intake-http';
 export const runtime='nodejs';
 export async function POST(request:Request){
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
  try{
   requireIntakePreview();sameOrigin(request);
   await limit('intake:submit:'+(request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'local'),30,600);

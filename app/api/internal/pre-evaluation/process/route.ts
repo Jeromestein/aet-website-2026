@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { timingSafeEqual } from 'node:crypto';
 import { recoverAIJobs } from '@/lib/preeval/ai-scheduler';
 export const runtime = 'nodejs';
@@ -5,6 +6,8 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 const json = (body: object, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 export async function GET(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   const secret = process.env.CRON_SECRET;
   const provided = Buffer.from(request.headers.get('authorization') || '');
   const expected = Buffer.from(`Bearer ${secret || ''}`);

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { session } from '@/lib/preeval/auth';
+import { staffSession as session } from '@/lib/staff/session';
 export { metadata } from '../page';
 export const dynamic = 'force-dynamic';
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

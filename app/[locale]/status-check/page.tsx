@@ -1,3 +1,4 @@
+import { requireApplicationPage } from '@/lib/application-page-access';
 import { copy } from "@/lib/preeval/copy";
 import type { Metadata } from "next";
 import PreEvaluationShell from "@/components/preeval/shell";
@@ -21,6 +22,8 @@ export default async function Page({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ applicationId?: string }>;
 }) {
+  requireApplicationPage(true);
+
   const { locale } = await params,
     { applicationId } = await searchParams;
   return (

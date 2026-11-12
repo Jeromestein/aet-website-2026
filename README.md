@@ -44,6 +44,23 @@ See [worktree setup](docs/development.md#main-and-dev-worktrees) and
 [environment configuration](docs/development.md#environment-configuration)
 before enabling application, payment, email or AI integrations.
 
+## Application release protection
+
+Development now centers on `main`; use local testing or an explicitly configured
+Preview deployment before pushing. Production application pages redirect to fixed
+legacy entry URLs, and their APIs return 503, unless `APPLICATIONS_ENABLED=true`
+and the Production deployment settings agree. Setting it to `false` closes the
+new application workflows in any environment. Leave it unset for configured
+local/Preview testing. The gate never migrates data or configures providers.
+
+Public website application buttons continue to use the legacy portal. Staff
+accounts and office permissions protect CRM; `/admin/calendar` remains public.
+Standalone `/payment` and the existing expiry Cron are outside the new gate.
+Preview still requires its exact configured origin, restricted database role,
+test payments and unchanged employee cutover settings; the branch name alone
+neither permits nor denies it. Production staff login requires its own valid
+configuration and does not require opening customer applications.
+
 ## Main entry points
 
 | Entry | Purpose |

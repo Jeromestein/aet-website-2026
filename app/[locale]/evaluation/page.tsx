@@ -41,7 +41,7 @@ export default async function EvaluationPage({ params }: Props) {
   const t = await getTranslations();
   const pricing = await getTranslations('pricing');
   const c = evaluationContent[locale];
-  const application = getPathname({ locale, href: '/apply' });
+  const application = 'https://app.americantranslationservice.com/credential-evaluation-application';
   const cslb = cslbEntry[locale];
   const replacements: Record<string, string> = {
     documentPrice: formatMoney(documentEvaluationStandard.price, locale),

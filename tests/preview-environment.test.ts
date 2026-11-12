@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllEnvs());
 
-describe("dev Preview environment boundaries", () => {
+describe("configured Preview environment boundaries", () => {
   it("supports cloud business records and secure staff cookies on dev", () => {
     expect(configuration()).toMatchObject({ origin, cloudPreview: true });
     expect(cloudBusinessEnvironmentAllowed()).toBe(true);
@@ -36,7 +36,7 @@ describe("dev Preview environment boundaries", () => {
     expect(requestMatchesApplicationOrigin(value, origin)).toBe(false);
   });
   it.each([
-    ["VERCEL_ENV", "production"], ["VERCEL_GIT_COMMIT_REF", "main"], ["VERCEL", ""],
+    ["VERCEL_ENV", "production"], ["VERCEL", ""],
     ["STAFF_LEGACY_MIGRATION_ENABLED", "true"], ["STAFF_AUTH_CUTOVER_ENABLED", "true"],
     ["APPLICATION_DATABASE_MODE", "local"], ["APP_ENV", "local"],
     ["VERCEL_BRANCH_URL", "other.vercel.app"], ["VERCEL_BRANCH_URL", ""],
@@ -73,7 +73,7 @@ describe('core Preview opt-in', () => {
     vi.stubEnv('APPLICATION_CORE_MODE','preview');
     vi.stubEnv('APPLICATION_CORE_PROVIDER_ACCOUNT','acct_synthetic');
     expect(corePreviewConfiguration()).toEqual({providerAccount:'acct_synthetic',sixTables:false});
-    vi.stubEnv('VERCEL_GIT_COMMIT_REF','main');
+    vi.stubEnv('VERCEL_ENV','production');
     expect(corePreviewConfiguration).toThrow();
   });
   it.each(['production','unknown'])('rejects mode %s', mode => {

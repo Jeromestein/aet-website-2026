@@ -9,7 +9,7 @@ afterEach(()=>vi.unstubAllEnvs());
 describe('cloud business preview containment',()=>{
  it('maps workflow and original tables to private preview schemas',()=>{expect(businessTableName('public.fce_applications')).toBe('aet_preview_legacy.fce_applications');expect(businessTableName('preeval.applications')).toBe('aet_preview_preeval.applications');expect(businessTableName('evaluation.sessions')).toBe('aet_preview_evaluation.sessions');});
  it('preserves local database table names',()=>{vi.stubEnv('APPLICATION_DATABASE_MODE','local');vi.stubEnv('APPLICATION_DATABASE_URL','postgresql://postgres:test@127.0.0.1:55422/postgres');expect(businessTableName('public.fce_applications')).toBe('public.fce_applications');});
- it.each(['http://localhost:3021','https://app.americantranslationservice.com'])('rejects an unapproved origin %s',origin=>{vi.stubEnv('APP_ORIGIN',origin);expect(()=>configuration()).toThrow();});
+ it.each(['http://localhost:3999','https://app.americantranslationservice.com'])('rejects an unapproved origin %s',origin=>{vi.stubEnv('APP_ORIGIN',origin);expect(()=>configuration()).toThrow();});
  it('rejects remote databases unless preview is explicit',()=>{vi.stubEnv('APPLICATION_DATABASE_MODE','local');expect(()=>configuration()).toThrow();});
  it('rejects a privileged remote connection',()=>{vi.stubEnv('APPLICATION_DATABASE_URL',`postgresql://postgres.${CLOUD_PROJECT}:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);expect(()=>configuration()).toThrow();});
  it('rejects a different project',()=>{vi.stubEnv('APPLICATION_DATABASE_URL',`postgresql://${PREVIEW_ROLE}.different:test@aws-0-us-west-1.pooler.supabase.com:6543/postgres`);expect(()=>configuration()).toThrow();});

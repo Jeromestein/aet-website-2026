@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { session } from '@/lib/preeval/auth';
+import { staffSession as session } from '@/lib/staff/session';
 export const metadata: Metadata = { title: 'Formal Evaluations — AET Workspace', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
 export default async function Page() {

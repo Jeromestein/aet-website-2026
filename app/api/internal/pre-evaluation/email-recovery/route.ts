@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import { timingSafeEqual } from "node:crypto";
 import { recoverApplicationEmails } from "@/lib/preeval/email-recovery";
 
@@ -7,6 +8,8 @@ export const maxDuration = 300;
 const json = (body: object, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
 export async function GET(request: Request) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   const secret = process.env.CRON_SECRET;
   const provided = Buffer.from(request.headers.get("authorization") || "");
   const expected = Buffer.from(`Bearer ${secret || ""}`);

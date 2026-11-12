@@ -12,10 +12,9 @@ export function employeeLoginUnchanged() {
     process.env.STAFF_AUTH_CUTOVER_ENABLED === "false";
 }
 
-function vercelDevPreview() {
+function vercelConfiguredPreview() {
   return environmentValue("APP_ENV") === "preview" &&
     process.env.VERCEL === "1" && process.env.VERCEL_ENV === "preview" &&
-    process.env.VERCEL_GIT_COMMIT_REF === "dev" &&
     environmentValue("APPLICATION_DATABASE_MODE") === "cloud-preview" && employeeLoginUnchanged();
 }
 
@@ -30,15 +29,15 @@ export function applicationPilotOrigin() {
   if (environmentValue("APP_ENV") === "local" && !process.env.VERCEL &&
       !process.env.VERCEL_ENV && ["localhost", "127.0.0.1"].includes(url.hostname) &&
       ["http:", "https:"].includes(url.protocol)) return url.origin;
-  if (vercelDevPreview() && url.origin === vercelOrigin(process.env.VERCEL_BRANCH_URL))
+  if (vercelConfiguredPreview() && url.origin === vercelOrigin(process.env.VERCEL_BRANCH_URL))
     return url.origin;
-  throw new Error("Application pilot requires local testing or the configured dev Preview");
+  throw new Error("Application pilot requires local testing or the configured Preview");
 }
 
 export function cloudBusinessEnvironmentAllowed() {
   const origin = applicationPilotOrigin();
   return employeeLoginUnchanged() &&
-    (origin === "http://localhost:3022" || vercelDevPreview());
+    (["http://localhost:3021", "http://localhost:3022"].includes(origin) || vercelConfiguredPreview());
 }
 
 /** The stable branch URL and this exact deployment URL can both submit forms. */

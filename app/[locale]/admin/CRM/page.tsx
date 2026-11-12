@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import StaffUnavailable from '@/components/staff/unavailable';
 import { AppError } from '@/lib/preeval/domain';
 import CRMWorkspace from '@/components/crm/workspace';
-import { session } from '@/lib/preeval/auth';
+import { staffSession as session } from '@/lib/staff/session';
 import type { WorkspaceView, CaseReference } from '@/lib/crm/contracts';
 import { z } from 'zod';
 

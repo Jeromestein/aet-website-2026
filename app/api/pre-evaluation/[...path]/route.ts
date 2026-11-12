@@ -1,3 +1,4 @@
+import { applicationUnavailableResponse } from '@/lib/application-release';
 import {formalCore} from '@/lib/application-core/formal-store';
 import { compact, compactFileRecords } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
@@ -80,6 +81,8 @@ async function handler(
   request: Request,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
+  const unavailable = applicationUnavailableResponse(); if (unavailable) return unavailable;
+
   try {
     configuration();
     const { path } = await params,

@@ -1,3 +1,5 @@
+// Provider unit fixtures run with the release gate open; real gating is tested separately.
+vi.mock('../lib/application-release', () => ({ applicationUnavailableResponse: () => null }));
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OutgoingEmail } from "../lib/email/delivery";
 
