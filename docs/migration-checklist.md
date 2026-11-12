@@ -37,7 +37,9 @@ preserves migration history and acceptance evidence.
   and synthetic Test details after owner sign-in; no record writes performed.
 - [ ] Confirm intended staff access to unassigned pre-evaluation records before
   relying on the current account for that queue; do not widen access implicitly.
-- [ ] Repeat a fresh application/upload/payment journey when the unified entry is connected.
+- [x] Repeat the unified pre-evaluation application/upload/AI/Sandbox-payment/result/
+  email journey on main Preview; verify CRM Test and unchanged Production.
+  See [unified entry acceptance](archive/unified-preeval-preview-2026-11-12.md).
 
 ## First release — both evaluation services
 
@@ -49,7 +51,7 @@ model; automated formal report generation is not required.
 ### Dedicated pre-evaluation — already verified on dev Preview
 
 This historical hosted evidence covers the dedicated entry. The unified entry is
-now connected locally; its fresh main Preview acceptance remains pending.
+now also accepted on main Preview; see the unified entry acceptance above.
 
 - [x] Submit and recover an application using its customer link.
 - [x] Upload/download documents, replace a failed upload and reject stale completion.
@@ -89,7 +91,7 @@ These checks do not activate hosted Production.
 - [x] Connect `/application` pre-evaluation submission to the existing working
   lifecycle, including customer/education/office fields, quote and recovery links.
   Preserve existing dedicated applications and links. Local API/database tests
-  and desktop/mobile form checks passed; no hosted acceptance is implied.
+  and desktop/mobile form checks passed; fresh hosted acceptance is linked above.
 - [x] Redirect the old pre-evaluation form and `/apply` into localized `/application`;
   retain saved status/result links and existing Production release gates.
 - [x] Save pre-evaluation contact/office/notes, require residence country and terms,
@@ -106,8 +108,10 @@ These checks do not activate hosted Production.
   authorized report download and retain the selected paper-delivery details.
 - [ ] Extend credential intake/fulfillment to the isolated Production runtime and
   real applicant recipients. Current credential paths remain Preview/local only.
-- [ ] Verify both complete journeys from `/application` on main Preview, including
-  office access, customer/CRM agreement and duplicate-payment protection.
+- [x] Verify unified pre-evaluation on main Preview: selected office, customer/CRM
+  agreement, document download, paid result and both delivered emails.
+- [ ] Verify the complete credential journey from `/application` on main Preview,
+  then joint acceptance including office access and duplicate-payment protection.
 
 ### Production configuration plan
 

@@ -3,8 +3,8 @@
 Start with the current configuration below. New pre-evaluation applications use
 `/application?service=pre-evaluation` (with the locale prefix when applicable).
 The old `/degree-equivalency-tool/application` form redirects there; saved
-application/success URLs remain compatible. This integration is locally verified,
-with fresh hosted main Preview acceptance still pending. Use [current status](status.md) and the
+application/success URLs remain compatible. This integration passed
+[fresh hosted main Preview acceptance](archive/unified-preeval-preview-2026-11-12.md). Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
 - [Production configuration and launch plan](pre-evaluation-production-plan.md)
@@ -370,8 +370,8 @@ running by this acceptance.
   country, institution, study country, degree, and start/end month and year.
   Middle name and supporting documents are optional, as in the legacy form.
   Country selections submit the original codes; study dates are saved as
-  `{year, month}` in the existing education table. The second step includes the
-  optional document picker; files upload after successful application creation.
+  `{year, month}` in the existing education table. The unified form confirms the
+  application first and opens the saved document page for optional uploads.
   Upload failures show a retry message on the saved application.
 - Legacy price: USD 19.00 plus the rounded legacy Stripe gross-up fee of 0.88;
   checkout total is **USD 19.88**, calculated on the server. Card and Alipay are
@@ -389,15 +389,15 @@ running by this acceptance.
   the saved draft.
 - The administrator remains `tech@meiyugroup.org`; the current test recipient is
   `errplusone@gmail.com`. Pilot email uses the configured test recipient. Legacy CC/BCC
-  recipients are not used. The `office` field is retained but the operational
-  pre-evaluation UI has no office selection, badges or access partitioning.
+  recipients are not used. Unified intake requires an eligible office and stores
+  it for office-scoped CRM access; legacy unassigned records retain their guards.
 - AI reads the saved Dropbox PDF/images through the server and uses the OpenAI
   Responses API. No Google Vision OCR, Poppler conversion or Codex subprocess
   runs in this pipeline. API credentials remain server-only; deployment is separate.
 
 ## Open locally
 
-Use the dev worktree at `/Users/plusone/Desktop/Code/aet-website-2026-dev`.
+Use the main checkout at `/Users/plusone/Desktop/Code/aet-website-2026`.
 Its current preview and local application origins use port 3022:
 
 - Customer start: <http://localhost:3022/degree-equivalency-tool>

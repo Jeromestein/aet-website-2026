@@ -17,7 +17,8 @@
 Updated November 12, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
 journey is verified on earlier dev Preview; the unified pre-evaluation choice is
-now connected and verified locally, with fresh main Preview acceptance pending. Credential intake works, but its payment and staff-to-report journey
+now verified end to end on main Preview at `67a9cf1`. Credential intake works,
+but its payment and staff-to-report journey
 is incomplete. Both use the accepted six-table model. Translation remains deferred;
 Production has not been activated for these new workflows.
 This is the current summary, not a release log.
@@ -47,8 +48,8 @@ verified unchanged by this Preview setup. Source fix `eac0b3c` is integrated int
 
 ## Current stage
 
-**The next milestone is hosted acceptance of unified pre-evaluation and completion
-of credential fulfillment on main.**
+**The next milestone is completion of credential fulfillment on main, followed
+by joint release acceptance for both evaluation services.**
 The unified entry now reuses pre-evaluation upload/AI/payment/result handling.
 For credential evaluation, connect staff review, missing-material requests,
 confirmed payment and manual PDF publication to new v2 applications. Earlier
@@ -64,7 +65,7 @@ Old Production tables/data remain long-term alongside the new schema and existin
 Preview tables. There is no deletion date or authorization to remove old tables.
 The six-table count describes the new business model, not the whole project.
 
-## Unified entry — local implementation, November 12
+## Unified entry — main Preview accepted, November 12
 
 New pre-evaluation applications now start at `/application?service=pre-evaluation`.
 The old dedicated form URL redirects there; existing application IDs, status,
@@ -84,8 +85,14 @@ including submission retry/conflict, office visibility, upload, AI, payment,
 result release and deduplicated mail using a disposable PostgreSQL database and
 provider doubles. TypeScript and locale checks passed. In-app desktop/390px checks
 covered the three-step form, fees, terms validation, draft restore and old-entry
-redirect. No hosted submission, provider delivery or payment was performed.
-Main Preview acceptance remains required; translation submission is still deferred.
+redirect. Those local checks used no hosted providers.
+
+The subsequent [main Preview acceptance](archive/unified-preeval-preview-2026-11-12.md)
+passed a fresh unified application, PDF upload/download hash check, AI analysis,
+USD 19.88 Stripe Sandbox payment, automatic result release, two delivered English
+emails and authenticated CRM Test list/details. Existing direct test webhook is
+unchanged; Stripe reports zero pending webhooks. Production deployment and
+configuration remain unchanged. Translation submission is still deferred.
 
 ## Module progress
 
@@ -94,15 +101,15 @@ Main Preview acceptance remains required; translation submission is still deferr
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
-| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Accept the new unified entry on main Preview, then joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
+| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Unified entry accepted on main Preview November 12; next: joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
-| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional formal intake and Status handoff; pre-evaluation connected and locally tested | Fresh main Preview pre-evaluation acceptance plus credential staff actions, linked payment and report release; translation remains deferred |
+| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional formal intake and Status handoff; pre-evaluation accepted end to end on main Preview at `67a9cf1` | Credential staff actions, linked payment and report release; translation remains deferred |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | AICE calendar | Public `/admin/calendar` reads 20 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes six unverified leads and two undated records; artificial preview feed removed ([verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form controls | Global custom select arrow (14px right inset, 44px text clearance) and rounded field focus halo; composite shells share one ring. Local in-app desktop/mobile checks passed for CRM sample filters, calendar and Payment; earlier application/Blog focus checks passed | Hosted deployment not performed; CRM visual check used fictional preview records |
 | Link icon cleanup | Removed 33 diagonal outbound-arrow icons/text markers across website, CRM, Calendar, application samples, Payment and email preview; removed obsolete arrow-only table column and styling. Local desktop/mobile visual checks passed for CRM sidebar, calendar details and homepage service cards | Local source changes only; not deployed |
 | CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | New v2 Test intake remains read-only; legacy employee migration/cutover stays off |
-| Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for the unified intake; production business rules |
+| Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Application-linked checkout/webhook/reconciliation for credential intake; production business rules |
 | Email | Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | Applicant-address routing is tested offline on dev; hosted real-customer acceptance and formal lifecycle mail remain open; scheduled recovery is deferred |
 | Fulfillment and migration | Delivery choices saved; older formal pilot can release a PDF; legacy GPA route restored | New-intake report/paper fulfillment, old links, domain/data reconciliation and old-app retirement |
 
