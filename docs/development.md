@@ -256,8 +256,9 @@ Stripe remains in test mode. `PAYMENT_SITE_URL` and `STRIPE_TEST_SITE_URL` use t
 new testing origin. Existing test endpoint `we_1UTTP2JMcR2XIhynZXyFcdYa` now points
 to its `/api/pre-evaluation/stripe-webhook`; its signing secret and event list
 were retained. No relay or temporary secret is needed. Production Stripe remains
-unchanged. The existing dedicated pre-evaluation flow is distinct from the still
-unconnected pre-evaluation choice in `/application`.
+unchanged. New pre-evaluation applications now use the unified `/application`
+entry; the old dedicated form redirects there and saved result links remain valid.
+See current status for the latest hosted acceptance boundary.
 
 Environment changes apply to new deployments. Local `.env.local` files and server
 ports were not changed. Never commit credentials or connection strings.

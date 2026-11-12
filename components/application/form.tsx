@@ -16,6 +16,16 @@ import { getPathname } from '@/i18n/navigation';
 import s from './application.module.css';
 import { statusPath } from '@/lib/application/intake';
 import { intakeCopy } from '@/lib/application/intake-copy';
+import { copy as preevaluationCopy } from '@/lib/preeval/copy';
+import { BASE_CENTS, FEE_CENTS, TOTAL_CENTS, resultPath } from '@/lib/preeval/domain';
+import { submissionKey, restoreSubmissionAttempt, type SubmissionAttempt, type SubmittedApplication, type ConnectedService } from '@/lib/application/submission';
+
+function PreevaluationFees({ locale }: { locale: Locale }) {
+  const t = preevaluationCopy(locale);
+  const money = (cents: number) => new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD' }).format(cents / 100);
+  return <dl className={s.receiptFees}>{[[t.price, BASE_CENTS], [t.fee, FEE_CENTS], [t.total, TOTAL_CENTS]].map(([label, cents]) =>
+    <div key={label}><dt>{label}</dt><dd>{money(Number(cents))}</dd></div>)}</dl>;
+}
 
 function Field({ id, label, requiredMark, fullWidth, optional, hint, error, children }: { id: string; label: string; requiredMark?: boolean; fullWidth?: boolean; optional?: string; hint?: string; error?: string; children: ReactNode }) {
   return <div className={s.field + (fullWidth ? ' ' + s.fullWidth : '')}>
@@ -29,11 +39,11 @@ function Field({ id, label, requiredMark, fullWidth, optional, hint, error, chil
 export function GeneralApplication({ locale, initialService }: { locale: Locale; initialService: ServiceId | '' }) {
   const c = applicationCopy[locale];
   const ic = intakeCopy[locale];
+  const pc = preevaluationCopy(locale);
   const [submitting,setSubmitting]=useState(false),[submitError,setSubmitError]=useState('');
-  const [submitted,setSubmitted]=useState<{id:string;statusPath:string}|null>(null);
+  const [submitted,setSubmitted]=useState<SubmittedApplication|null>(null);
   const submitLock=useRef(false);
-  const attempt=useRef<{requestId:string;payload:string;result?:{id:string;statusPath:string}}|null>(null);
-  const attemptKey=DRAFT_KEY+'-submission';
+  const attempts = useRef<Partial<Record<ConnectedService, SubmissionAttempt>>>({});
   const ec = evaluationCopy[locale];
   const dc = deliveryCopy[locale];
   const [data, setData] = useState<ApplicationDraft>(() => initialDraft(initialService));
@@ -66,19 +76,21 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
 
   useEffect(() => {
     try {
-      const storedAttempt=sessionStorage.getItem(attemptKey);
-      if(storedAttempt){try{
-        const value=JSON.parse(storedAttempt),uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-        if(uuid.test(value.requestId)&&typeof value.payload==='string'){
-          attempt.current={requestId:value.requestId,payload:value.payload};
-          if(uuid.test(value.result?.id)){attempt.current.result={id:value.result.id,statusPath:statusPath(value.result.id,locale)};if(!initialService||initialService==='evaluation')setSubmitted(attempt.current.result);}
-        }
-      }catch{/* Ignore an invalid local attempt. */}}
+      for (const service of ['evaluation', 'pre-evaluation'] as const) {
+        const raw = sessionStorage.getItem(submissionKey(service)) || (service === 'evaluation' ? sessionStorage.getItem(DRAFT_KEY + '-submission') : null);
+        const restoredAttempt = restoreSubmissionAttempt(raw, service);
+        if (restoredAttempt) attempts.current[service] = restoredAttempt;
+      }
       const draft = restoreDraft(sessionStorage.getItem(DRAFT_KEY) || '');
       if (draft) {
         const changed = initialService && initialService !== draft.data.service;
         setData(changed ? selectService(draft.data, initialService) : draft.data);
         setStep(changed ? 0 : draft.step); setRestored(true);
+      }
+      const service = initialService || draft?.data.service;
+      if (service === 'evaluation' || service === 'pre-evaluation') {
+        const result = attempts.current[service]?.result;
+        if (result) setSubmitted(result);
       }
     } catch { /* Draft storage is optional; the form still works without it. */ }
     setReady(true);
@@ -131,26 +143,37 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
     requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); heading.current?.scrollIntoView({ block: 'start', behavior: 'instant' }); });
   }
   async function submitApplication(){
-    if(submitLock.current||submitted||data.service!=='evaluation')return;
-    const validation={...validateStep(data,0),...validateStep(data,1)};
-    if(Object.keys(validation).length){setErrors(validation);setStep(Object.keys(validateStep(data,0)).length?0:1);return;}
+    if(submitLock.current||submitted||(data.service!=='evaluation' && data.service!=='pre-evaluation'))return;
+    const validation={...validateStep(data,0),...validateStep(data,1),...validateStep(data,2)};
+    if(Object.keys(validation).length){setErrors(validation);setStep(Object.keys(validateStep(data,0)).length?0:Object.keys(validateStep(data,1)).length?1:2);requestAnimationFrame(() => errorBox.current?.focus());return;}
     submitLock.current=true;setSubmitting(true);setSubmitError('');
     try{
-      const payload=JSON.stringify({locale,data});
-      // Keep the same ID even if answers change after an uncertain response. The server rejects a conflicting replay instead of creating a duplicate.
-      if(!attempt.current)attempt.current={requestId:crypto.randomUUID(),payload};
-      else attempt.current.payload=payload;
-      try{sessionStorage.setItem(attemptKey,JSON.stringify(attempt.current));}catch{/* The in-memory key still prevents double clicks. */}
-      const response=await fetch('/api/application-intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:attempt.current.requestId,locale,data}),signal:AbortSignal.timeout(30000)});
-      const result=await response.json();
-      if(!response.ok)throw new Error(result.error);
-      attempt.current.result={id:result.id,statusPath:result.statusPath};setSubmitted(attempt.current.result);
-      try{sessionStorage.setItem(attemptKey,JSON.stringify(attempt.current));sessionStorage.removeItem(DRAFT_KEY);}catch{/* Saving the server result does not depend on browser storage. */}
-    }catch(error){setSubmitError(error instanceof Error&&error.message==='idempotency_conflict'?ic.conflict:ic.failed);}
+      const service = data.service;
+      const payload = JSON.stringify({locale,data});
+      // Each service retains its own key across uncertain responses, edits and reloads.
+      const attempt = attempts.current[service] ??= {requestId: crypto.randomUUID(), payload};
+      attempt.payload = payload;
+      try { sessionStorage.setItem(submissionKey(service), JSON.stringify(attempt)); } catch { /* In-memory retry remains available. */ }
+      const endpoint = service === 'pre-evaluation' ? '/api/pre-evaluation/applications' : '/api/application-intake';
+      const response = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({requestId:attempt.requestId,locale,data}), signal:AbortSignal.timeout(30000)});
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      if (typeof result.id !== 'string' || !/^[a-f0-9-]{36}$/i.test(result.id)) throw new Error('invalid_response');
+      const destination = service === 'pre-evaluation' ? resultPath(locale, result.id) + '#documents' : statusPath(result.id, locale);
+      attempt.result = {id:result.id, service}; setSubmitted(attempt.result);
+      try { sessionStorage.setItem(submissionKey(service), JSON.stringify(attempt)); sessionStorage.removeItem(DRAFT_KEY); } catch { /* The server result is already saved. */ }
+      if (service === 'pre-evaluation') window.location.assign(destination);
+    } catch (error) {
+      const code = error instanceof Error ? error.message : '';
+      setSubmitError(['idempotency_conflict', 'duplicate_conflict'].includes(code) ? ic.conflict : code === 'invalid_application' ? pc.invalid_application : ic.failed);
+    }
     finally{submitLock.current=false;setSubmitting(false);}
   }
   function reset() {
-    attempt.current=null;setSubmitted(null);setSubmitError('');try{sessionStorage.removeItem(attemptKey);}catch{}
+    attempts.current={};setSubmitted(null);setSubmitError('');try{
+      sessionStorage.removeItem(DRAFT_KEY + '-submission');
+      for (const service of ['evaluation', 'pre-evaluation'] as const) sessionStorage.removeItem(submissionKey(service));
+    }catch{}
     setData(initialDraft()); setStep(0); setErrors({}); setClearing(false); setRestored(false); setOfficeChanged(false);
     const url = new URL(window.location.href); url.searchParams.delete('service');
     window.history.replaceState(window.history.state, '', url);
@@ -163,7 +186,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
   const input = (key: keyof ApplicationDraft, label: string, options: InputHTMLAttributes<HTMLInputElement> & { requiredMark?: boolean; optional?: boolean; hint?: string } = {}) => {
     const { requiredMark, optional, hint, ...props } = options;
     return <Field id={key} label={label} requiredMark={requiredMark} optional={optional ? c.optional : undefined} hint={hint} error={errors[key] && errorText[errors[key]]}>
-      <input {...props} {...accessibility(key, hint)} required={!optional} maxLength={300} value={data[key] as string} onChange={event => update(key, event.target.value)} />
+      <input {...props} {...accessibility(key, hint)} required={!optional} maxLength={key === 'email' ? 254 : data.service === 'pre-evaluation' && ['firstName', 'middleName', 'lastName'].includes(key) ? 200 : 300} value={data[key] as string} onChange={event => update(key, event.target.value)} />
     </Field>;
   };
   const select = (key: 'purpose' | 'translationType', label: string, placeholder: string, options: { value: string; label: string }[]) => <Field id={key} label={label} requiredMark error={errors[key] && errorText[errors[key]]}>
@@ -172,10 +195,14 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
   const reviewRow = (label: string, value: string) => <div><dt>{label}</dt><dd>{value || '—'}</dd></div>;
   const activeEducations = data.service === 'pre-evaluation' ? data.educations.slice(0, 1) : data.educations;
 
-  if(submitted)return <div className={s.shell}><section className={s.receipt}><p className={s.eyebrow}>{ic.test}</p><h1>{ic.saved}</h1><p>{ic.id}: <strong>{submitted.id}</strong></p><p>{ic.note}</p><p>{ic.pilotNote}</p><a className={s.primary} href={submitted.statusPath}>{ic.open}<ArrowRight size={18}/></a><p>{ic.next}</p><button className={s.secondary} onClick={reset}>{ic.newApplication}</button></section></div>;
+  if(submitted) {
+    const preeval = submitted.service === 'pre-evaluation';
+    const destination = preeval ? resultPath(locale, submitted.id) + '#documents' : statusPath(submitted.id, locale);
+    return <div className={s.shell}><section className={s.receipt}><p className={s.eyebrow}>{preeval ? pc.eyebrow : ic.test}</p><h1>{ic.saved}</h1><p>{ic.id}: <strong>{submitted.id}</strong></p><p>{preeval ? pc.savedHint : ic.note}</p>{!preeval && <p>{ic.pilotNote}</p>}<a className={s.primary} href={destination}>{preeval ? c.submit : ic.open}<ArrowRight size={18}/></a>{!preeval && <p>{ic.next}</p>}<button className={s.secondary} onClick={reset}>{ic.newApplication}</button></section></div>;
+  }
   return <div className={s.shell}>
     <div className={s.introduction}><p className={s.eyebrow}>{c.eyebrow}</p><h1>{c.title}</h1><p>{c.intro}</p></div>
-    <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{data.service==='evaluation'?ic.pilot:c.preview}</strong><span>{data.service==='evaluation'?ic.pilotNote:c.previewNote}</span></p></div>
+    {(data.service === 'evaluation' || data.service === 'translation') && <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{data.service==='evaluation'?ic.pilot:c.preview}</strong><span>{data.service==='evaluation'?ic.pilotNote:c.previewNote}</span></p></div>}
     <nav className={s.steps} aria-label={c.progress}><ol>{labels.map((label, index) => <li key={label} className={index === step ? s.currentStep : index < step ? s.completedStep : ''}>
       <button type="button" onClick={() => navigate(index)} aria-current={index === step ? 'step' : undefined} disabled={!ready || submitting}>
         <span className={s.stepNumber}>{index < step ? <Check size={19} aria-hidden="true" /> : index + 1}</span><span>{label}</span>
@@ -224,6 +251,9 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
                   </Field>
                   {input('dateOfBirth', c.dateOfBirth, { type: 'date', optional: true, autoComplete: 'off', max: new Date().toISOString().slice(0, 10) })}
                 </div>
+                {data.service === 'pre-evaluation' && <Field id="residenceCountry" label={pc.country} requiredMark error={errors.residenceCountry && errorText[errors.residenceCountry]}>
+                  <select {...accessibility('residenceCountry')} required value={data.residenceCountry} onChange={event => update('residenceCountry', event.target.value)}><option value="">{c.select}</option>{countries.map(country => <option key={country.value} value={country.value}>{country.label}</option>)}</select>
+                </Field>}
                 <div className={s.nameGrid}>
                   {input('firstName', c.firstName, { requiredMark: true, autoComplete: 'off' })}{input('middleName', c.middleName, { optional: true, autoComplete: 'off' })}{input('lastName', c.lastName, { requiredMark: true, autoComplete: 'off' })}
                 </div>
@@ -238,7 +268,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
                       key === 'start' || key === 'end' ? <div className={s.monthSelect}>
                         <select {...accessibility(id)} aria-label={label + ' · ' + c.year} required value={education[key].split('-')[0] || ''} onChange={event => updateEducation(index, key, event.target.value + '-' + (education[key].split('-')[1] || ''))}><option value="">{c.year}</option>{years.map(year => <option key={year} value={year}>{year}</option>)}</select>
                         <select {...accessibility(id)} id={id + '-month'} name={id + '-month'} aria-label={label + ' · ' + c.month} required value={education[key].split('-')[1] || ''} onChange={event => updateEducation(index, key, (education[key].split('-')[0] || '') + '-' + event.target.value)}><option value="">{c.month}</option>{Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, '0')).map(month => <option key={month} value={month}>{month}</option>)}</select>
-                      </div> : <input {...accessibility(id)} required maxLength={300} placeholder={key === 'school' ? c.schoolPlaceholder : c.degreePlaceholder} value={education[key]} onChange={event => updateEducation(index, key, event.target.value)} />}
+                      </div> : <input {...accessibility(id)} required maxLength={data.service === 'pre-evaluation' ? 200 : 300} placeholder={key === 'school' ? c.schoolPlaceholder : c.degreePlaceholder} value={education[key]} onChange={event => updateEducation(index, key, event.target.value)} />}
                     </Field>;
                   })}</div>
                   {index > 0 && <button type="button" className={s.textButton} onClick={() => { setData(current => ({ ...current, educations: current.educations.filter((_, i) => i !== index), evaluationRequest: removeEvaluationEducation(current.evaluationRequest, index) })); setErrors({}); }}>{c.remove} {c.educationRecord} {index + 1}</button>}
@@ -271,6 +301,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
                   {reviewRow(c.pronouns, pronounNames[data.pronouns])}
                   {reviewRow(c.personHeading, [data.firstName, data.middleName, data.lastName].filter(Boolean).join(' '))}
                   {reviewRow(c.dateOfBirth, data.dateOfBirth)}
+                  {data.service === 'pre-evaluation' && reviewRow(pc.country, countryLabel(data.residenceCountry, locale))}
                   {data.service === 'evaluation' && reviewRow(c.purpose, purposes.find(item => item.value === data.purpose)?.label || '')}
                 </>}
               </dl>
@@ -287,14 +318,19 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
               <EvaluationFees locale={locale} value={data.evaluationRequest} delivery={data.evaluationDelivery} educations={data.educations} />
               </section>
             </>}
+            {data.service === 'pre-evaluation' && <section className={s.reviewSection}>
+              <h3>{pc.total}</h3><PreevaluationFees locale={locale} /><p className={s.sectionHint}>{pc.note}</p>
+              <label className={s.termsChoice}><input {...accessibility('preevaluationTerms')} type="checkbox" required checked={data.preevaluationTerms} onChange={event => { setData(current => ({...current, preevaluationTerms:event.target.checked})); setErrors(current => { const next={...current}; delete next.preevaluationTerms; return next; }); }} /><span>{pc.terms} <a href={getPathname({locale,href:'/terms'})} target="_blank" rel="noopener noreferrer">{pc.termsLink}</a></span></label>
+              {errors.preevaluationTerms && <p className={s.fieldError} id="preevaluationTerms-error">{c.required}</p>}
+            </section>}
             <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3>{data.service==='evaluation'?<p><Mail size={19}/>{ic.before}</p>:<><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></>}</div>
           </>}
         </fieldset>
         <div className={s.actions}>
           {step > 0 && <button type="button" className={s.back} disabled={submitting} onClick={() => navigate(step - 1)}><ArrowLeft size={17} aria-hidden="true" />{c.back}</button>}
-          <button className={s.primary} type="submit" disabled={!ready || submitting || (step === 2 && data.service !== 'evaluation')} aria-describedby={step === 2 ? 'submission-note' : undefined}>{step === 2 ? (submitting?ic.sending:data.service==='evaluation'?ic.submit:c.submit) : step === 1 ? c.review : c.next}<ArrowRight size={18} aria-hidden="true" /></button>
+          <button className={s.primary} type="submit" disabled={!ready || submitting || (step === 2 && data.service !== 'evaluation' && data.service !== 'pre-evaluation')} aria-describedby={step === 2 ? 'submission-note' : undefined}>{step === 2 ? (submitting?ic.sending:data.service==='evaluation'?ic.submit:c.submit) : step === 1 ? c.review : c.next}<ArrowRight size={18} aria-hidden="true" /></button>
         </div>
-        {step === 2 && <p className={s.submissionNote} id="submission-note">{data.service==='evaluation'?ic.note:c.notConnected}</p>}{submitError&&<p className={s.errorBox} role="alert">{submitError}</p>}
+        {step === 2 && <p className={s.submissionNote} id="submission-note">{data.service==='evaluation'?ic.note:data.service==='pre-evaluation'?c.uploadLater:c.notConnected}</p>}{submitError&&<p className={s.errorBox} role="alert">{submitError}</p>}
         <div className={s.draftBar}><span><Save size={14} aria-hidden="true" />{saved ? c.saved : c.notSaved}</span><button ref={clearButton} type="button" disabled={!ready || submitting} aria-expanded={clearing} aria-controls="clear-draft-panel" onClick={() => setClearing(true)}><RotateCcw size={16} aria-hidden="true" />{c.clear}</button></div>
         {clearing && <div id="clear-draft-panel" className={s.clearPanel} role="group" aria-label={c.clearQuestion}><p>{c.clearQuestion}</p><button ref={clearConfirm} type="button" className={s.secondary} onClick={reset}>{c.clearConfirm}</button><button type="button" className={s.textButton} onClick={() => { setClearing(false); clearButton.current?.focus(); }}>{c.cancel}</button></div>}
       </form>
@@ -302,6 +338,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
         <section className={s.summary}><div className={s.summaryHeading}><ClipboardCheck size={22} strokeWidth={1.6} aria-hidden="true" /><h2>{c.summary}</h2></div>
           <dl>{reviewRow(c.serviceLabel, data.service ? services[data.service].title : c.notSelected)}{reviewRow(c.officeLabel, data.office ? officeNames[data.office] : c.notSelected)}{reviewRow(c.contactLabel, data.contactName.trim() || c.notEntered)}</dl>
           {data.service === 'evaluation' && step > 0 && <EvaluationFees locale={locale} value={data.evaluationRequest} delivery={data.evaluationDelivery} educations={data.educations} compact />}
+          {data.service === 'pre-evaluation' && <PreevaluationFees locale={locale} />}
           <p className={s.summaryNote}>{c.summaryNote}</p>
           <ol className={s.miniSteps}>{labels.map((label, index) => <li key={label} className={index <= step ? s.miniActive : ''}><span>{index < step ? <Check size={13} aria-hidden="true" /> : index + 1}</span>{label}</li>)}</ol>
         </section>

@@ -1,4 +1,5 @@
 import { applicationUnavailableResponse } from '@/lib/application-release';
+import { preEvaluationInput } from '@/lib/application/preevaluation';
 import {formalCore} from '@/lib/application-core/formal-store';
 import { compact, compactFileRecords } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
@@ -131,7 +132,7 @@ async function handler(
     }
     if (endpoint === "applications" && isPost) {
       await limit("submissions", 30, 3600);
-      const result = await submit(body);
+      const result = await submit('data' in body ? preEvaluationInput(body) : body);
       const res = response(
         {
           id: result.app.id,
@@ -213,7 +214,9 @@ async function handler(
         return response(await unfinishedUploads(id));
       }
       if (path[2] === "uploads-complete" && isPost) {
-        await completeUploads(id); await scheduleAI(id); return response({ ok: true });
+        if (body.withoutDocuments === true) await completeUploads(id, true);
+        else await completeUploads(id);
+        await scheduleAI(id); return response({ ok: true });
       }
       if (path[2] === "retry-ai" && isPost) {
         await limit("ai-retry:" + id, 3, 600);

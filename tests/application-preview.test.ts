@@ -34,7 +34,7 @@ describe('general application preview', () => {
     expect(validateStep({ ...draft, targetLanguage: ' chinese ' }, 1)).toHaveProperty('targetLanguage', 'languages');
   });
   it('validates active education records and chronological dates', () => {
-    const draft = { ...initialDraft('pre-evaluation'), pronouns: 'mx', firstName: 'Test', lastName: 'Applicant', educations: [{ school: 'Example University', country: 'CN', degree: 'Bachelor', start: '2018-09', end: '2022-06' }, { school: '', country: '', degree: '', start: '', end: '' }] };
+    const draft = { ...initialDraft('pre-evaluation'), residenceCountry: 'US', pronouns: 'mx', firstName: 'Test', lastName: 'Applicant', educations: [{ school: 'Example University', country: 'CN', degree: 'Bachelor', start: '2018-09', end: '2022-06' }, { school: '', country: '', degree: '', start: '', end: '' }] };
     expect(validateStep(draft, 1)).toEqual({});
     expect(validateStep({ ...draft, service: 'evaluation' }, 1)).toHaveProperty('education.1.school');
     expect(validateStep({ ...draft, educations: [{ ...draft.educations[0], end: '2017-06' }] }, 1)).toHaveProperty('education.0.end', 'dateOrder');

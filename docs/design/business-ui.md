@@ -8,7 +8,7 @@ backend features are enabled; use [status](../status.md) for that boundary.
 | --- | --- |
 | Unified three-step application | [General application](#general-application) / [intake guide](../credential-intake-testing.md) |
 | Customer Status and documents | [Customer status](#customer-status-and-documents) / [Dropbox](../dropbox.md) |
-| Dedicated pre-evaluation | [Pre-evaluation](#dedicated-pre-evaluation) / [workflow guide](../pre-evaluation-local.md) |
+| Pre-evaluation lifecycle | [Pre-evaluation](#dedicated-pre-evaluation) / [workflow guide](../pre-evaluation-local.md) |
 | Staff workspace | [CRM](#crm-workspace) / [authentication](../staff-auth.md) |
 | Business email | [Email design and delivery](../email-templates.md) |
 
@@ -24,8 +24,10 @@ Staff use their own English-only workspace shell.
 ## General application
 
 Localized `/application` accepts `service=pre-evaluation`, `service=evaluation`
-or `service=translation`. Keep existing destinations until the corresponding
-submission is connected; a visible service choice does not enable its backend.
+or `service=translation`. Pre-evaluation and formal intake share this entry;
+translation remains a non-submitting preview. Redirect the old dedicated
+pre-evaluation form to its selected service here; retain saved application links.
+Public website destinations remain controlled by the release gate.
 The older four-step formal pilot is a separate flow, documented in
 [evaluation-application.md](../evaluation-application.md).
 
@@ -110,10 +112,16 @@ document context through refresh and do not present a failed upload as saved.
 
 ## Dedicated pre-evaluation
 
-Preserve the legacy applicant → education → review flow, required fields,
-optional supporting documents and USD 19.88 total. Use pale blue, navy, white
-cards and orange main actions; preserve tab progress and provide Start over.
-This dedicated flow is distinct from the general application's service choice.
+New applications use the general three-step form above. Include required residence
+country separately from study country, one education and USD 19.88 total (USD 19
+plus USD 0.88 processing). Review requires the existing terms and disclaimer.
+Preserve per-service retry IDs, drafts and Start over. Submission opens the saved
+application's document section; never show an unsaved-preview notice for this
+connected service. Retain the existing result/status layout and saved URLs.
+
+Supporting documents remain optional. Show an explicit continue-without-documents
+choice only before any upload begins on a new unified application. Pending or
+failed uploads and staff-requested materials must use the existing recovery flow.
 
 Use `public/images/graduates.jpg` as a wide photographic landing hero: navy gradient
 behind white copy and orange application action, central/right graduates visible.

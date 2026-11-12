@@ -67,7 +67,7 @@ export async function createCoreShadowReader(sql: Sql) {
     async workspace(raw: Record<string,string>, actor: Extract<CoreActor,{role:'staff'}>) {
       if (actor.role !== 'staff' || !Array.isArray(actor.offices)) throw new AppError('access_denied',403);
       return sql.begin('isolation level repeatable read read only', async tx => {
-        const records = tx`select 'preeval'::text kind,a.id,concat_ws(' ',a.first_name,nullif(trim(a.middle_name),''),a.last_name) name,
+        const records = tx`select 'preeval'::text kind,a.id,concat_ws(' ',case a.pronouns when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else null end,a.first_name,nullif(trim(a.middle_name),''),a.last_name) name,
           a.email,a.office,1 as "intakeVersion",a.status,${paymentState(tx)} as payment_status,a.created_at,a.updated_at,
           'Preliminary degree equivalency'::text purpose,a.residence_country as country,
           case when ${converged() ? testPaymentExemption(tx) : tx`false`} then 0 else coalesce((select p.amount_cents from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id order by p.created_at desc nulls last,p.id limit 1),${TOTAL_CENTS}) end amount,

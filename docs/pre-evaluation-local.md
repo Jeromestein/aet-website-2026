@@ -1,7 +1,10 @@
 # Pre-evaluation runtime guide
 
-Start with the current configuration below. The dedicated flow is separate from
-the general `/application` form. Use [current status](status.md) and the
+Start with the current configuration below. New pre-evaluation applications use
+`/application?service=pre-evaluation` (with the locale prefix when applicable).
+The old `/degree-equivalency-tool/application` form redirects there; saved
+application/success URLs remain compatible. This integration is locally verified,
+with fresh hosted main Preview acceptance still pending. Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
 - [Production configuration and launch plan](pre-evaluation-production-plan.md)
@@ -213,8 +216,10 @@ node --env-file=.env.local --import ./scripts/register-server-only.mjs --import 
   can receive a clearly marked form-only assessment. Failed, missing or incomplete
   uploads must not silently become a form-only assessment. Retry the original
   failed file; contact staff to replace a saved unreadable/unsupported document.
-- Initial form submission waits until all selected uploads succeed. Later customer
-  uploads pause analysis until the customer confirms all files are ready. Shared
+- Unified intake saves before upload and keeps analysis paused. The saved document
+  page completes selected uploads as a batch, or explicitly continues without
+  documents on a pristine new application. Later customer uploads pause analysis
+  until the customer confirms all files are ready. Shared
   multi-file uploads finalize as a batch; failed/interrupted attempts block analysis.
   Interrupted shared-upload attempts can be retried after a 15-minute lease if the
   browser could not cancel them. Pilot upload retries retain their 2-minute lease.

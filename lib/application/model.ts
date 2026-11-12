@@ -18,6 +18,7 @@ const educationSchema = z.object({ school: text, country: text, degree: text, st
 export const dataSchema = z.object({
   contactName: text, email: text, phone: text, service: z.enum(['', ...serviceIds]), office: text,
   pronouns: text.default(''), dateOfBirth: text.default(''),
+  residenceCountry: text.default(''), preevaluationTerms: z.boolean().default(false),
   firstName: text, middleName: text, lastName: text, purpose: text, evaluationType: text,
   evaluationRequest: evaluationRequestSchema.default(emptyEvaluationRequest),
   evaluationDelivery: deliverySchema.default(emptyDelivery),
@@ -32,6 +33,7 @@ export const emptyEducation = (): EducationDraft => ({ school: '', country: '', 
 export const initialDraft = (service: ServiceId | '' = ''): ApplicationDraft => ({
   contactName: '', email: '', phone: '', service, office: '',
   pronouns: '', dateOfBirth: '',
+  residenceCountry: '', preevaluationTerms: false,
   firstName: '', middleName: '', lastName: '', purpose: '', evaluationType: '',
   evaluationRequest: emptyEvaluationRequest(),
   evaluationDelivery: emptyDelivery(),
@@ -54,6 +56,7 @@ export function validateStep(data: ApplicationDraft, step: number): FormErrors {
       for (const key of ['sourceLanguage', 'targetLanguage', 'translationType'] as const) required(key, data[key]);
       if (data.sourceLanguage.trim() && data.sourceLanguage.trim().toLocaleLowerCase() === data.targetLanguage.trim().toLocaleLowerCase()) errors.targetLanguage = 'languages';
     } else if (data.service) {
+      if (data.service === 'pre-evaluation' && !isCountryCode(data.residenceCountry)) errors.residenceCountry = 'country';
       required('pronouns', data.pronouns);
       if (data.pronouns && !pronounIds.some(value => value === data.pronouns)) errors.pronouns = 'pronouns';
       required('firstName', data.firstName); required('lastName', data.lastName);
@@ -78,6 +81,7 @@ export function validateStep(data: ApplicationDraft, step: number): FormErrors {
       }
     }
   }
+  if (step === 2 && data.service === 'pre-evaluation' && !data.preevaluationTerms) errors.preevaluationTerms = 'required';
   return errors;
 }
 

@@ -1,8 +1,8 @@
 import { requireApplicationPage } from '@/lib/application-page-access';
 import { copy } from "@/lib/preeval/copy";
 import type { Metadata } from "next";
-import PreEvaluationShell from "@/components/preeval/shell";
-import { ApplicationForm } from "@/components/preeval/customer";
+import { redirect } from "next/navigation";
+import { pathFor } from "@/lib/preeval/domain";
 export async function generateMetadata({
   params,
 }: {
@@ -23,9 +23,5 @@ export default async function Page({
   requireApplicationPage(true);
 
   const { locale } = await params;
-  return (
-    <PreEvaluationShell locale={locale} narrow>
-      <ApplicationForm locale={locale} />
-    </PreEvaluationShell>
-  );
+  redirect(pathFor(locale, '/application') + '?service=pre-evaluation');
 }

@@ -8,7 +8,7 @@ import { configuration } from '../preeval/config';
 import { AppError } from '../preeval/domain';
 import { initialData } from '../evaluation-application/domain';
 import { toLegacyFormal, toLegacyEducation, type LegacyFormalProjection } from '../legacy-application/mapping';
-import { intakeSchema, normalizeIntake, intakeQuote, officeNames, statusPath, TEST_RECIPIENT, type IntakeReceipt } from './intake';
+import { intakeSchema, normalizeIntake, intakeFingerprint, intakeQuote, officeNames, statusPath, TEST_RECIPIENT, type IntakeReceipt } from './intake';
 export function requireIntakePreview() {
   if(!configuration().cloudPreview) throw new AppError('preview_unavailable',503);
 }
@@ -16,7 +16,7 @@ const hash=(value:string)=>createHash('sha256').update(value).digest('hex');
 export async function saveIntake(raw:unknown) {
   requireIntakePreview();
   const parsed=intakeSchema.parse(raw), data=normalizeIntake(parsed.data), quote=intakeQuote(data);
-  const requestHash=hash(JSON.stringify({...parsed,data}));
+  const requestHash=hash(intakeFingerprint(parsed));
   // Retain a compatibility projection for CRM lists; intake is the complete, authoritative snapshot.
   const legacy:LegacyFormalProjection=initialData();
   legacy.client={...legacy.client,name:data.contactName,email:data.email,phone:data.phone,office:officeNames[data.office],purpose:data.purpose};

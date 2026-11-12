@@ -56,7 +56,7 @@ export default async function Page({
             <p className={landing.intro}>{t.intro}</p>
             <div className={landing.actions}>
               <a className={s.button + " " + s.primary}
-                href={pathFor(locale, "/degree-equivalency-tool/application")}>
+                href={pathFor(locale, "/application?service=pre-evaluation")}>
                 {t.start}<ArrowRight size={18} aria-hidden="true" />
               </a>
               <a className={landing.statusLink} href={pathFor(locale, "/status-check")}>

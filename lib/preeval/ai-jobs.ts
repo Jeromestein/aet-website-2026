@@ -15,8 +15,9 @@ export async function pauseForUpload(id: string, tx?: TransactionSql): Promise<v
   if (!rows.length) throw new AppError('application_unavailable', 409);
   await syncCoreWorkflow(tx,id);
 }
-export async function completeUploads(id: string) {
-  if (converged()) return completeConverged(id);
+export async function completeUploads(id: string, withoutDocuments = false) {
+  if (converged()) return completeConverged(id, withoutDocuments);
+  if (withoutDocuments) throw new AppError('uploads_incomplete', 409);
   return db().begin(async tx => {
     const [app] = await tx`select * from ${table('preeval.applications')} where id=${id} for update`;
     // A customer must start a supplemental batch; only staff can resume a

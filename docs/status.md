@@ -16,8 +16,8 @@
 
 Updated November 12, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
-journey is verified on dev Preview; the unified pre-evaluation choice is not yet
-connected. Credential intake works, but its payment and staff-to-report journey
+journey is verified on earlier dev Preview; the unified pre-evaluation choice is
+now connected and verified locally, with fresh main Preview acceptance pending. Credential intake works, but its payment and staff-to-report journey
 is incomplete. Both use the accepted six-table model. Translation remains deferred;
 Production has not been activated for these new workflows.
 This is the current summary, not a release log.
@@ -39,18 +39,17 @@ loading, synthetic-record ID search, office filters and Test detail sections
 passed. The current account sees three offices; its Live pre-evaluation list is
 empty, consistent with the explicit Unassigned-access rule for legacy records.
 No access grants were changed. No new formal submission/email or fresh payment
-journey was run in this check. Unified pre-evaluation remains
-unconnected. Production deployment, aliases and environment variables were
-verified unchanged by this Preview setup. Source fix `eac0b3c` is integrated into
-local main, not pushed. See [Preview acceptance](archive/main-preview-2026-11-12.md),
+journey was run in that check. Unified pre-evaluation was subsequently connected
+locally; that change is not covered by the earlier hosted acceptance. Production deployment, aliases and environment variables were
+verified unchanged by this Preview setup. Source fix `eac0b3c` is integrated into main. See [Preview acceptance](archive/main-preview-2026-11-12.md),
 [local integration verification](archive/guarded-main-integration-2026-11-12.md) and
 [prior main release history](archive/main-releases-through-2026-11-12.md).
 
 ## Current stage
 
-**The next milestone is complete unified intake and credential fulfillment on main,
-using local or configured Preview testing.**
-Reuse the verified pre-evaluation upload/AI/payment/result flow behind `/application`.
+**The next milestone is hosted acceptance of unified pre-evaluation and completion
+of credential fulfillment on main.**
+The unified entry now reuses pre-evaluation upload/AI/payment/result handling.
 For credential evaluation, connect staff review, missing-material requests,
 confirmed payment and manual PDF publication to new v2 applications. Earlier
 formal pilot components exist but do not make the current intake end-to-end ready.
@@ -65,10 +64,28 @@ Old Production tables/data remain long-term alongside the new schema and existin
 Preview tables. There is no deletion date or authorization to remove old tables.
 The six-table count describes the new business model, not the whole project.
 
-The dedicated pre-evaluation journey and the pre-evaluation choice inside the
-general `/application` form are different entry points. The dedicated journey
-works; the general form's pre-evaluation and translation submissions remain
-unconnected. Avoid using one flow's acceptance as evidence for another.
+## Unified entry — local implementation, November 12
+
+New pre-evaluation applications now start at `/application?service=pre-evaluation`.
+The old dedicated form URL redirects there; existing application IDs, status,
+upload, checkout and result links continue to work. `/apply` redirects to the
+formal choice after its existing release gate. Public Production CTAs and release
+gates are unchanged.
+
+The form saves contact/organization, phone, handling office, applicant identity,
+residence country, one education and customer notes in existing canonical fields.
+Review includes USD 19.88 and required terms. Successful submission opens the saved
+application's document section; AI waits for upload completion or an explicit
+no-documents choice on a pristine application. Failed uploads cannot be skipped.
+Office-scoped CRM shows the saved contact fields and customer notes.
+
+Local checks: 111 focused tests plus 31 six-table integration cases passed,
+including submission retry/conflict, office visibility, upload, AI, payment,
+result release and deduplicated mail using a disposable PostgreSQL database and
+provider doubles. TypeScript and locale checks passed. In-app desktop/390px checks
+covered the three-step form, fees, terms validation, draft restore and old-entry
+redirect. No hosted submission, provider delivery or payment was performed.
+Main Preview acceptance remains required; translation submission is still deferred.
 
 ## Module progress
 
@@ -77,9 +94,9 @@ unconnected. Avoid using one flow's acceptance as evidence for another.
 | Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
-| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Connect the unified entry, then joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
+| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Accept the new unified entry on main Preview, then joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
-| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional intake, confirmation and Status handoff | First release: pre-evaluation submission plus credential staff actions, linked payment and report release; translation remains deferred |
+| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional formal intake and Status handoff; pre-evaluation connected and locally tested | Fresh main Preview pre-evaluation acceptance plus credential staff actions, linked payment and report release; translation remains deferred |
 | Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and CRM document access | East-account read scope, deployment migrations and broader hosted recovery checks |
 | AICE calendar | Public `/admin/calendar` reads 20 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes six unverified leads and two undated records; artificial preview feed removed ([verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form controls | Global custom select arrow (14px right inset, 44px text clearance) and rounded field focus halo; composite shells share one ring. Local in-app desktop/mobile checks passed for CRM sample filters, calendar and Payment; earlier application/Blog focus checks passed | Hosted deployment not performed; CRM visual check used fictional preview records |

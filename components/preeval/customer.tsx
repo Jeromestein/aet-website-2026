@@ -393,6 +393,7 @@ export function ApplicationResult({
   locale: string;
   id: string;
 }) {
+  const openedDocuments = useRef(false);
   const t = copy(locale),
     [app, setApp] = useState<any>(null),
     [loadError, setLoadError] = useState(""),
@@ -434,7 +435,13 @@ export function ApplicationResult({
     );
     return () => { active = false; clearInterval(timer); };
   }, [id, locale]);
-  async function action(name: string) {
+  useEffect(() => {
+    if (app && !openedDocuments.current && window.location.hash === '#documents') {
+      openedDocuments.current = true;
+      document.getElementById('documents')?.scrollIntoView({block:'start'});
+    }
+  }, [app]);
+  async function action(name: string, body: Record<string, unknown> = {}) {
     setBusy(name);
     setError("");
     try {
@@ -445,7 +452,7 @@ export function ApplicationResult({
         await api("logout", { applicationId: id });
         location.assign(pathFor(locale, "/status-check"));
       } else {
-        await api("applications/" + id + "/" + name, {});
+        await api("applications/" + id + "/" + name, body);
         await load();
       }
     } catch (e) {
@@ -566,7 +573,7 @@ export function ApplicationResult({
             <h3>{t.reasoning}</h3>
             <p>{app.result.reasoning}</p>
             <a
-              href={pathFor(locale, '/apply')}
+              href={pathFor(locale, '/application') + '?service=evaluation'}
               className={s.secondary}
             >
               {t.formal}
@@ -607,7 +614,7 @@ export function ApplicationResult({
           </>
         )}
       </section>
-      <section className={s.card}>
+      <section id="documents" className={s.card} style={{scrollMarginTop: 110}}>
         <h2>{t.documents}</h2>
         <p className={s.helper}>{t.uploadHint}</p>
         <ul className={s.files}>
@@ -623,6 +630,7 @@ export function ApplicationResult({
             </li>
           ))}
         </ul>
+        {app.can_skip_documents && <button type="button" className={s.secondary} disabled={!!busy} onClick={() => action('uploads-complete', {withoutDocuments:true})}>{t.skipDocuments}</button>}
         <UploadRecovery endpoint={`/api/pre-evaluation/applications/${id}/upload-recovery`}
           completeEndpoint={`/api/pre-evaluation/applications/${id}/uploads-complete`} revision={app} disabled={!!busy}
           onBusyChange={value => setBusy(value ? 'recovery' : '')} onChange={() => { setError(''); void load(); }} />

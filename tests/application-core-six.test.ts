@@ -1,3 +1,5 @@
+import { initialDraft } from '../lib/application/model';
+import { preEvaluationInput } from '../lib/application/preevaluation';
 import { simplifyPreevaluationSix } from '../scripts/database/simplify-preeval-six';
 import { sixTableMode } from '../lib/application-core/convergence-mode';
 import { simplifyPreevaluationEight } from '../scripts/database/simplify-preeval-eight';
@@ -78,6 +80,8 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
   async function paid(id:string){await checkout(id);charge(id);await applyCheckout(session(id),`evt_${id}`,'checkout.session.completed');}
   async function uploaded(){const original=input();const {app}=await submit(original);await addFile(app.id,file(),'customer');await completeUploads(app.id);return app;}
   beforeAll(async()=>{
+    vi.stubEnv('APP_ENV','local');vi.stubEnv('APP_ORIGIN','http://localhost:3022');
+    vi.stubEnv('VERCEL','');vi.stubEnv('VERCEL_ENV','');vi.stubEnv('APPLICATIONS_ENABLED','true');
     directory=mkdtempSync(join(tmpdir(),'aet-six-'));
     execFileSync(join(pgBin!,'initdb'),['-D',join(directory,'data'),'-U','core_rehearsal','-A','trust','--locale=C','--encoding=UTF8'],{timeout:30000,stdio:'pipe'});
     execFileSync(join(pgBin!,'pg_ctl'),['-D',join(directory,'data'),'-l',join(directory,'pg.log'),'-o',`-F -k ${directory} -h '' -p 55449`,'-w','start'],{timeout:30000,stdio:'pipe'});started=true;
@@ -184,6 +188,46 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
     expect((await application(id,true)).audit).toEqual([]);
     expect((await service(id)).result).toMatchObject({status:'released',content:result});
     const released=(await service(id)).result.released_at;await application(id);expect((await service(id)).result.released_at).toBe(released);
+  });
+  it('runs unified intake through deferred upload, payment and result with office-scoped CRM',async()=>{
+    const data={...initialDraft('pre-evaluation'),contactName:'Synthetic Organization',email:'synthetic@example.invalid',phone:'+1 202 555 0148',office:'la',
+      pronouns:'ms',firstName:'Unified',middleName:'',lastName:'Applicant',dateOfBirth:'1990-01-10',residenceCountry:'US',preevaluationTerms:true,notes:'Customer note',
+      educations:[{school:'Unified University',country:'CN',degree:'Bachelor',start:'2018-09',end:'2022-06'}]};
+    const payload={requestId:randomUUID(),locale:'zh' as const,data};
+    const post=(body:unknown)=>postRoute(new Request('http://localhost:3022/api/pre-evaluation/applications',{
+      method:'POST',headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify(body)}),{params:Promise.resolve({path:['applications']})});
+    const response=await post(payload);expect(response.status).toBe(201);
+    const saved=await response.json();expect(saved.url).toContain('/zh/degree-equivalency-tool/application/success?applicationId=');
+    expect((await (await post(payload)).json()).id).toBe(saved.id);
+    expect((await post({...payload,data:{...data,office:'miami'}})).status).toBe(409);
+    const [core]=await sql()`select * from aet.aet_core_applications where id=${saved.id}`;
+    expect(core).toMatchObject({contact_name:'Synthetic Organization',phone:data.phone,office:'Los Angeles',pronouns:'ms',residence_country:'US',source:'unified-application'});
+    expect((await service(saved.id)).details.customer_notes).toBe('Customer note');
+    expect(await application(saved.id)).toMatchObject({ai_status:'idle',uploads_pending:true,can_skip_documents:true,phone:data.phone,customer_notes:'Customer note'});
+    await ai(saved.id);expect(analyze).not.toHaveBeenCalled();
+    const visible=await workspaceSnapshot({q:saved.id},{email:'staff@example.invalid',offices:['Los Angeles'],include_unassigned:false});
+    expect(visible.rows).toHaveLength(1);expect(visible.rows[0].name).toBe('Ms. Unified Applicant');
+    expect((await workspaceSnapshot({q:saved.id},{email:'staff@example.invalid',offices:['Miami'],include_unassigned:false})).rows).toHaveLength(0);
+    await addFile(saved.id,file(),'customer');await completeUploads(saved.id);await ai(saved.id);await paid(saved.id);
+    expect((await application(saved.id)).result).toEqual(result);
+    const deliver=vi.fn().mockResolvedValue('mail_unified');await flushEmails(deliver,saved.id);await flushEmails(deliver,saved.id);
+    expect(deliver).toHaveBeenCalledTimes(2);
+    expect(await sql()`select id from aet.aet_core_applications where request_id=${payload.requestId}`).toHaveLength(1);
+  });
+  it('permits explicit no-document continuation only for a pristine unified application',async()=>{
+    const data={...initialDraft('pre-evaluation'),contactName:'Synthetic Organization',email:'synthetic@example.invalid',phone:'+1 202 555 0148',office:'miami',
+      pronouns:'mx',firstName:'Optional',lastName:'Documents',residenceCountry:'US',preevaluationTerms:true,
+      educations:[{school:'University',country:'CN',degree:'Bachelor',start:'2018-09',end:'2022-06'}]};
+    const make=async()=> (await submit(preEvaluationInput({requestId:randomUUID(),locale:'en',data}))).app;
+    const app=await make();await expect(completeUploads(app.id)).rejects.toMatchObject({code:'uploads_incomplete'});
+    await completeUploads(app.id,true);expect(await application(app.id)).toMatchObject({uploads_pending:false,ai_status:'queued',can_skip_documents:false});
+    await ai(app.id);expect(analyze).toHaveBeenCalledTimes(1);
+    const pending=await make();await startDocumentUpload(pending.id,'unfinished');
+    await expect(completeUploads(pending.id,true)).rejects.toMatchObject({code:'uploads_incomplete'});
+    const legacy=await submit({...input(),uploadsPending:true});
+    await expect(completeUploads(legacy.app.id,true)).rejects.toMatchObject({code:'uploads_incomplete'});
+    const requested=await make();await staffAction(requested.id,{action:'information',message:'Please upload your diploma'},'staff');
+    await expect(completeUploads(requested.id,true)).rejects.toMatchObject({code:'uploads_incomplete'});
   });
   it('resolves renamed/moved files by File ID and never stores a folder row',async()=>{
     const app=await uploaded();const [d]=await sql()`select * from aet.aet_documents where application_id=${app.id}`;

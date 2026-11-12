@@ -37,6 +37,6 @@ export default function ApplicationLookup({ locale, initialId = "", autoOpen = f
       <button className={s.button + " " + s.primary} disabled={busy}><Search size={18} />{busy ? t.loading : t.check}</button>
       {error && <p role="alert" className={s.error}>{error}</p>}
     </form>
-    <a href={pathFor(locale, "/degree-equivalency-tool/application")}>{t.new}</a>
+    <a href={pathFor(locale, "/application?service=pre-evaluation")}>{t.new}</a>
   </>;
 }

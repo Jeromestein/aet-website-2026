@@ -24,6 +24,8 @@ import { publishIfReady, cancelApplication, canVerifyPreEvaluationPayment } from
 export async function submit(input: unknown) {
   const value = applicationSchema.safeParse(input);
   if (!value.success) throw new AppError("invalid_application");
+  // Unified intake requires canonical owners for contact, office and evaluee data.
+  if (value.data.unified && !converged()) throw new AppError('service_unavailable', 503);
   const v = value.data,
     fingerprint = hash(JSON.stringify(v));
   const app = converged() ? await submitConverged(v) : await db().begin(async (tx) => {
@@ -85,6 +87,13 @@ export async function application(id: string, staff = false) {
     middle_name: app.middle_name,
     email: app.email,
     country: app.country,
+    contact_name: app.contact_name,
+    phone: app.phone,
+    customer_notes: app.customer_notes,
+    office: app.office,
+    pronouns: app.pronouns,
+    date_of_birth: app.date_of_birth ? new Date(app.date_of_birth).toISOString().slice(0,10) : null,
+    can_skip_documents: app.source === 'unified-application' && app.status === 'submitted' && app.input_version === 1 && app.uploads_pending && files.length === 0,
     locale: app.locale,
     status: app.status,
     payment_status: app.payment_status,

@@ -48,8 +48,8 @@ model; automated formal report generation is not required.
 
 ### Dedicated pre-evaluation — already verified on dev Preview
 
-This evidence covers the dedicated entry, not the currently unconnected
-pre-evaluation choice in `/application`.
+This historical hosted evidence covers the dedicated entry. The unified entry is
+now connected locally; its fresh main Preview acceptance remains pending.
 
 - [x] Submit and recover an application using its customer link.
 - [x] Upload/download documents, replace a failed upload and reject stale completion.
@@ -86,9 +86,15 @@ These checks do not activate hosted Production.
 
 ### Unified application — next development milestone
 
-- [ ] Connect `/application` pre-evaluation submission to the existing working
+- [x] Connect `/application` pre-evaluation submission to the existing working
   lifecycle, including customer/education/office fields, quote and recovery links.
-  Preserve existing dedicated applications and links.
+  Preserve existing dedicated applications and links. Local API/database tests
+  and desktop/mobile form checks passed; no hosted acceptance is implied.
+- [x] Redirect the old pre-evaluation form and `/apply` into localized `/application`;
+  retain saved status/result links and existing Production release gates.
+- [x] Save pre-evaluation contact/office/notes, require residence country and terms,
+  display USD 19.88, defer AI until documents are ready or explicitly skipped,
+  and preserve service-specific retries plus existing formal retry fingerprints.
 - [x] Build the three-step credential application, shared 2026 pricing, exclusive
   document/course selection, education and mailing-address requirements.
 - [x] Save credential intake, notify the test recipient, expose Status/uploads and CRM.
@@ -100,7 +106,7 @@ These checks do not activate hosted Production.
   authorized report download and retain the selected paper-delivery details.
 - [ ] Extend credential intake/fulfillment to the isolated Production runtime and
   real applicant recipients. Current credential paths remain Preview/local only.
-- [ ] Verify both complete journeys from `/application` on dev Preview, including
+- [ ] Verify both complete journeys from `/application` on main Preview, including
   office access, customer/CRM agreement and duplicate-payment protection.
 
 ### Production configuration plan

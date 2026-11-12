@@ -1,7 +1,7 @@
 import { describe,it,expect } from 'vitest';
 import { initialDraft } from '../lib/application/model';
 import { selectEvaluationService } from '../lib/application/evaluation';
-import { intakeSchema,intakeQuote,normalizeIntake,TEST_RECIPIENT,statusPath } from '../lib/application/intake';
+import { intakeSchema,intakeQuote,intakeFingerprint,normalizeIntake,TEST_RECIPIENT,statusPath } from '../lib/application/intake';
 import { confirmationEmail } from '../lib/application/intake-template';
 const fixture=()=>{
  const data={...initialDraft('evaluation'),contactName:'Synthetic Applicant',email:TEST_RECIPIENT,phone:'+44 20 7946 0000',office:'miami',pronouns:'mx',firstName:'Test',lastName:'Applicant',purpose:'other',educations:[{school:'Test University',country:'GB',degree:'Test Bachelor',start:'2014-09',end:'2018-06'}]};
@@ -9,6 +9,12 @@ const fixture=()=>{
  return {requestId:'11111111-1111-4111-8111-111111111111',locale:'en',data};
 };
 describe('credential intake contract',()=>{
+ it('preserves the original formal fingerprint across shared-form upgrades',()=>{
+   const f=fixture();const {residenceCountry:_,preevaluationTerms:__,...legacyData}=normalizeIntake(f.data);
+   const before=JSON.stringify({...f,data:legacyData});
+   expect(intakeFingerprint({...f,data:{...f.data,residenceCountry:'US',preevaluationTerms:true}})).toBe(before);
+   expect(intakeFingerprint({...f,data:{...f.data,phone:'+44 20 7946 0001'}})).not.toBe(before);
+ });
  it('accepts optional birthday, international phone and other purpose',()=>expect(intakeSchema.safeParse(fixture()).success).toBe(true));
  it.each(['translation','pre-evaluation'])('rejects unsupported service %s',service=>expect(intakeSchema.safeParse({...fixture(),data:{...fixture().data,service}}).success).toBe(false));
  it('rejects injected client totals and invalid purpose',()=>{expect(intakeSchema.safeParse({...fixture(),quote:{min:1}}).success).toBe(false);expect(intakeSchema.safeParse({...fixture(),data:{...fixture().data,purpose:'unknown'}}).success).toBe(false);});

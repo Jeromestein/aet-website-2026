@@ -9,6 +9,7 @@ import { db, table, type Row } from '../preeval/db';
 import { AppError, BASE_CENTS } from '../preeval/domain';
 import { convergenceConfiguration } from './convergence-mode';
 import { coreEducation } from './runtime';
+import { officeNames } from '../application/intake';
 
 type DB = Sql | TransactionSql;
 export const converged = () => Boolean(convergenceConfiguration(db()));
@@ -24,7 +25,7 @@ export async function lockApplication(tx: DB, id: string) {
 /** API-compatible shape computed from canonical owners; never persisted as a second application. */
 export async function readConverged(id: string, sql: DB = db(), lock = false): Promise<Row | undefined> {
   if (lock) await lockApplication(sql,id);
-  const [app] = await sql`select a.*,a.residence_country as country,s.id as service_id,s.staff_notes as notes,
+  const [app] = await sql`select a.*,a.residence_country as country,s.id as service_id,s.staff_notes as notes,s.details->>'customer_notes' as customer_notes,
     s.status,s.input_version,s.result as saved_result,s.result->'content' as result,
     ${compact()?sql`s.result_version`:sql`coalesce((s.result->>'version')::int,0)`} result_version,
     j.state as ai_status,j.error as ai_error,j.uploads_pending,j.attempts as ai_attempts,j.lease as ai_active_run,
@@ -65,15 +66,15 @@ export async function submitConverged(v: Row): Promise<Row> {
       if(![0,1].includes(old.request_hash_version)||old.request_hash!==expected)throw new AppError('duplicate_conflict',409);
       return (await readConverged(old.id,tx))!;
     }
-    const [a]=await tx`insert into ${coreTable(tx,'aet_core_applications')}(contact_name,email,first_name,middle_name,last_name,residence_country,primary_service,
+    const [a]=await tx`insert into ${coreTable(tx,'aet_core_applications')}(contact_name,phone,office,pronouns,date_of_birth,email,first_name,middle_name,last_name,residence_country,primary_service,
       purpose,source,status,request_id,request_hash,request_hash_version,submission_version,submitted_snapshot,submitted_at)
-      values (${[v.firstName,v.middleName,v.lastName].filter(Boolean).join(' ')},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},
-      'pre-evaluation','Preliminary degree equivalency','dedicated-pre-evaluation','submitted',${v.requestId},${hash},1,1,${tx.json(snapshot)},now()) returning id`;
+      values (${v.unified?.contactName || [v.firstName,v.middleName,v.lastName].filter(Boolean).join(' ')},${v.unified?.phone || null},${v.unified ? officeNames[v.unified.office] : null},${v.unified?.pronouns || null},${v.unified?.dateOfBirth || null},${v.email},${v.firstName},${v.middleName},${v.lastName},${v.country},
+      'pre-evaluation','Preliminary degree equivalency',${v.unified ? 'unified-application' : 'dedicated-pre-evaluation'},'submitted',${v.requestId},${hash},1,1,${tx.json(snapshot)},now()) returning id`;
     const month=(value:string)=>({year:value.slice(0,4),month:value.slice(5,7)});
     const [e]=await tx`insert into ${coreTable(tx,'aet_education')}(application_id,school_name,country_of_study,degree_obtained,study_start_date,study_end_date)
       values (${a.id},${v.schoolName},${v.countryOfStudy},${v.degreeObtained},${tx.json(month(v.startDate))},${tx.json(month(v.endDate))}) returning id`;
     await tx`insert into ${coreTable(tx,'aet_service_detail')}(application_id,service_type,details,amount_cents,pricing_source)
-      values (${a.id},'pre-evaluation',${tx.json({education_ids:[e.id]})},${BASE_CENTS},'automatic')`;
+      values (${a.id},'pre-evaluation',${tx.json({education_ids:[e.id],...(v.unified ? {customer_notes:v.unified.notes} : {})})},${BASE_CENTS},'automatic')`;
     await tx`insert into ${coreTable(tx,'aet_ai_runs')}(application_id,input_version,state,uploads_pending)
       values (${a.id},1,${v.uploadsPending?'idle':'queued'},${Boolean(v.uploadsPending)})`;
     if(!sixTableMode(db())) await tx`insert into ${coreTable(tx,'aet_audit')}(application_id,actor,action) values (${a.id},'customer','application.submitted')`;
@@ -86,14 +87,15 @@ export async function pauseConverged(id:string,tx:TransactionSql) {
   if(!app || app.status==='cancelled')throw new AppError('application_unavailable',409);
   await queueInput(tx,id,'idle',true);
 }
-export async function completeConverged(id:string) {
+export async function completeConverged(id:string, withoutDocuments = false) {
   await db().begin(async tx=>{
     const a=await readConverged(id,tx,true);
     if(!a || a.status==='cancelled' || (a.status==='needs_information'&&!a.uploads_pending))throw new AppError('application_unavailable',409);
     if(!a.uploads_pending)return;
     const files=compact()?await tx`select upload_state as state from ${coreTable(tx,'aet_documents')} where application_id=${id} and access_scope='customer_input'`:await tx`select state from ${coreTable(tx,'aet_uploads')} where application_id=${id}`;
     const docs=await tx`select id from ${coreTable(tx,'aet_documents')} where application_id=${id} and access_scope='customer_input' and storage_file_id is not null`;
-    if(!files.length || files.some(f=>f.state!=='ready') || files.length!==docs.length)throw new AppError('uploads_incomplete',409);
+    const skip = withoutDocuments && a.source === 'unified-application' && a.status === 'submitted' && a.input_version === 1 && !files.length && !docs.length;
+    if(!skip && (!files.length || files.some(f=>f.state!=='ready') || files.length!==docs.length))throw new AppError('uploads_incomplete',409);
     await queueInput(tx,id,'queued',false);
   });
 }

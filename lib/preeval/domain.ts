@@ -29,12 +29,20 @@ export const applicationSchema = z
     endDate: date,
     terms: z.literal(true),
     uploadsPending: z.boolean().optional(),
+    unified: z.object({
+      contactName: z.string().trim().min(1).max(300),
+      phone: z.string().trim().max(300).refine(v => /^[+\d\s().-]+$/.test(v) && /^\d{7,15}$/.test(v.replace(/\D/g, ''))),
+      office: z.enum(['miami', 'la', 'sf']), pronouns: z.enum(['mr', 'ms', 'mx']),
+      dateOfBirth: z.string().refine(v => !v || (/^\d{4}-\d{2}-\d{2}$/.test(v) &&
+        Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0,10) === v && v >= '0001-01-01' && v <= new Date().toISOString().slice(0,10))),
+      notes: z.string().trim().max(3000),
+    }).strict().optional(),
   })
   .strict()
   .refine((v) => v.startDate <= v.endDate, {
     message: "invalid_dates",
     path: ["endDate"],
-  });
+  }).refine(v => !v.unified || v.uploadsPending === true, { message: 'uploads_must_follow_confirmation' });
 export type ApplicationInput = z.infer<typeof applicationSchema>;
 export const resultSchema = z
   .object({

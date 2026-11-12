@@ -170,7 +170,7 @@ export default function PreEvaluationWorkspace() {
           <RefreshCw size={16} />
           Refresh
         </button>
-        <a className={s.button} href="/degree-equivalency-tool/application">
+        <a className={s.button} href="/application?service=pre-evaluation">
           New application
         </a>
       </div>

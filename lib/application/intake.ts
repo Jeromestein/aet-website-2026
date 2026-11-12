@@ -18,6 +18,11 @@ export function normalizeIntake(raw: ApplicationDraft): ApplicationDraft {
   if(data.evaluationDelivery.report==='pdf') data.evaluationDelivery=emptyDelivery();
   return data;
 }
+export function intakeFingerprint(input: {requestId:string;locale:string;data:ApplicationDraft}): string {
+  // Pre-evaluation fields must not invalidate saved formal submission retries.
+  const {residenceCountry:_residence,preevaluationTerms:_terms,...data}=normalizeIntake(input.data);
+  return JSON.stringify({...input,data});
+}
 export function intakeQuote(data:ApplicationDraft):Quote {
   const service=quoteEvaluation(data.evaluationRequest,data.educations.length),delivery=quoteDelivery(data.evaluationDelivery);
   const lines:Quote['lines']=service.lines.flatMap(line=>[
