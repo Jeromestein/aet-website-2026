@@ -44,7 +44,7 @@ export function InstitutionDirectory({ sections, copy }: { sections: DirectorySe
       <p>{String(total).padStart(2, '0')} <span>{copy.entries}</span></p>
     </div>
     <div className={styles.tools} hidden={!ready}>
-      <label className={styles.search}>
+      <label className={styles.search} data-focus-ring>
         <Search size={23} aria-hidden="true" /><span className={styles.srOnly}>{copy.search}</span>
         <input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={copy.placeholder} aria-controls="institution-results" />
       </label>

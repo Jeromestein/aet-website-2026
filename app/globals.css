@@ -7,6 +7,11 @@
   --line: #d9e5ef;
   --action-blue: #284f75;
   --accent: #507fa6;
+  --focus-border: #507fa6;
+  --focus-halo: #c4e0fc;
+  --select-arrow-inset: 14px;
+  --select-text-clearance: 44px;
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23576f83' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   --footer: #142e45;
   --orange: #c7471d;
   --orange-hover: #a93816;
@@ -42,6 +47,39 @@ button:focus-visible,
 summary:focus-visible {
   outline: 3px solid var(--orange);
   outline-offset: 6px;
+}
+/* Keep native selection behavior while sharing the closed control's arrow. */
+:root body select:not([multiple]):where(:not([size]), [size="1"]) {
+  appearance: none;
+  padding-right: var(--select-text-clearance);
+  background-image: var(--select-arrow);
+  background-position: right var(--select-arrow-inset) center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+}
+/* Shared field focus. Composite controls put data-focus-ring on their shell. */
+:root body :is(select, textarea, input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="submit"], [type="button"], [type="reset"], [type="hidden"]))):focus,
+:root body [data-focus-ring]:focus-within {
+  outline: 1px solid var(--focus-border);
+  outline-offset: 0;
+  box-shadow: 0 0 0 4px var(--focus-halo);
+}
+:root body [data-focus-ring] :is(input, select, textarea):focus {
+  outline: none;
+  box-shadow: none;
+}
+@media (forced-colors: active) {
+  :root {
+    --focus-border: Highlight;
+  }
+  :root body select:not([multiple]):where(:not([size]), [size="1"]) {
+    appearance: auto;
+    background-image: none;
+  }
+  :root body :is(input, select, textarea):focus,
+  :root body [data-focus-ring]:focus-within {
+    outline-width: 2px;
+  }
 }
 button,
 summary {

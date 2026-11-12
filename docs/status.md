@@ -1,5 +1,27 @@
 # AET Implementation Status
 
+## 2026-11-12 — Select Design and Calendar for main
+
+- Selected shared field focus rings, native dropdown arrows, composite search
+  wrappers and the public Calendar from dev `9eccb44`. Retained main's existing
+  analytics, application links, payments and deployment configuration. CRM,
+  staff authentication and dev application/database workflows are not included.
+- Added `/admin/calendar` with Month/Week/Schedule views, search, organizer
+  filters, timezone selection and event details. It uses 20 dated public events
+  from the saved archive; 23 referenced source captures are retained. The back
+  link returns to the website. No account or new environment variables are needed.
+- English-only routing preserves the website language cookie. HTTP checks
+  confirmed a 200 response with `noindex, nofollow`, and locale-prefixed URLs
+  redirect with their query intact. Existing Chinese Blog routing still works.
+- All 35 tests, TypeScript, three-locale message validation and whitespace
+  checks passed. In-app browser checks passed for desktop calendar views,
+  November/December navigation, search, filtering, timezone conversion,
+  details/Escape and the website back link. Calendar at 390px and 320px defaults
+  to Schedule with no horizontal overflow. Blog and Institutions search controls
+  were checked on desktop and at 390px, including the shared focus halo.
+- Verification used an isolated local server on port 3031, stopped afterwards.
+  No production build, push or hosted deployment was performed.
+
 ## 2026-11-11 — Square advertising image set
 
 - Added four standalone PNG images under `public/ads/` on the owner-requested

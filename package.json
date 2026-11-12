@@ -10,13 +10,15 @@
     "check:i18n": "node scripts/check-i18n.mjs"
   },
   "dependencies": {
+    "@fullcalendar/react": "7.1.5",
     "lucide-react": "^0.468.0",
     "next": "16.3.6",
     "next-intl": "^4.14.7",
     "postgres": "3.4.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "temporal-polyfill": "1.0.8"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -60,6 +60,14 @@ GA4 receipt, key-event settings and Google Ads import still need account verific
 
 ## Scope
 
+The public, English-only AICE reference calendar is available at `/admin/calendar`.
+It requires no account or new environment variables, has no global navigation
+entry, and is marked noindex. Month, Week and Schedule views use saved public
+event records with search, organizer filters and timezone selection; phones
+default to Schedule. Locale-prefixed links redirect to the canonical path while
+preserving the website language preference. See [calendar data notes](data/aice/README.md).
+This selective release does not include the dev CRM or its staff-login workflow.
+
 The complete institution directory is available at `/institutions`,
 `/zh/institutions` and `/es/institutions`. It preserves 28 legacy entries across
 four categories, with localized search, filters and complete application notes.

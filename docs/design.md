@@ -386,3 +386,25 @@ An explicit language URL wins over saved preferences. Otherwise use the saved
 language, browser preference, then English. Preserve the current page, query, and
 fragment when switching. Missing translations fall back to English and are flagged
 by development checks. New localized pages reuse the same route and message structure.
+
+## 8. Shared form fields and event calendar
+
+Inputs, textareas and single-selection native dropdowns use the shared
+`--focus-border` and `--focus-halo` tokens. Composite search controls put
+`data-focus-ring` on the wrapper so keyboard focus surrounds the whole control.
+Retain native keyboard behavior and the forced-colors fallback.
+
+Single-selection dropdown arrows sit 14px from the right with 44px text clearance.
+Do not add a second arrow or duplicate the shared rule inside individual pages.
+Multi-select/listbox controls retain their native appearance.
+
+`/admin/calendar` is a public, English-only reference calendar with no account
+requirement, no global navigation entry and no search indexing. Locale-prefixed
+calendar URLs redirect to that canonical path without changing the saved website
+language. Its back link returns to the website; CRM is outside this release.
+
+Use the scoped calendar styling from dev: white month grid, neutral dividers,
+blue today marker, organizer colors, compact header, Month/Week/Schedule views,
+search, filters and timezone selection. Phones default to Schedule. Detail dialogs
+retain full titles and source/contact links. Read only dated entries from the saved
+archive; preserve unknown timezones and the announced opening of a series.

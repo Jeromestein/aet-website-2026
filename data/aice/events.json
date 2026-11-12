@@ -1,0 +1,359 @@
+{
+  "saved_on": "2026-11-12",
+  "source_chat": "codex://threads/01a11367-a7b9-7462-81ad-51943513b56c",
+  "note": "Recovered historical captures, not a live feed. AICE and related industry events; not all are AICE-hosted. Raw snapshots were captured November 8–12, 2026. Missing values are null. Date ranges are inclusive; time retains source wording and uncertainty. No illustrative UI fixtures or unannounced next-forum placeholder included.",
+  "events": [
+    {
+      "id": "gdn-preconference-20261019",
+      "title": "Decolonizing Recognition: Ubuntu — Stronger Together",
+      "organizer": "Groningen Declaration Network (GDN)",
+      "contact": "info@groningendeclaration.org",
+      "event_url": "https://groningendeclaration.org/2026-cape-town-south-africa/",
+      "date": "2026-10-19",
+      "end_date": null,
+      "time": "12:00–16:00, Cape Town local time; numeric timezone not stated in the capture",
+      "source_url": "https://groningendeclaration.org/2026-cape-town-south-africa/",
+      "source_files": [
+        "sources/2026-11-12/gdn_annual.json",
+        "sources/2026-11-08/gdn_contact.json"
+      ],
+      "notes": "Historical pre-conference at CPUT. Email is the general GDN office contact. The announcement names Instructure, DSTI, ORA and SAQA as partners; it does not establish AICE participation."
+    },
+    {
+      "id": "gdn-annual-20261020",
+      "title": "GDN Annual Meeting 2026",
+      "organizer": "Groningen Declaration Network (GDN); South African Qualifications Authority (SAQA)",
+      "contact": "info@groningendeclaration.org",
+      "event_url": "https://groningendeclaration.org/2026-cape-town-south-africa/",
+      "date": "2026-10-20",
+      "end_date": "2026-10-22",
+      "time": null,
+      "source_url": "https://groningendeclaration.org/2026-cape-town-south-africa/",
+      "source_files": [
+        "sources/2026-11-12/gdn_annual.json",
+        "sources/2026-11-08/gdn_contact.json"
+      ],
+      "notes": "Historical event in Cape Town. Email is the general GDN office contact. Individual AICE-related sessions are described in the recovered research messages, not inferred from this overview."
+    },
+    {
+      "id": "taicep-conference-20261026",
+      "title": "2026 TAICEP Conference",
+      "organizer": "TAICEP",
+      "contact": "answers@taicep.org",
+      "event_url": "https://taicep2026.dryfta.com/",
+      "date": "2026-10-26",
+      "end_date": "2026-10-28",
+      "time": null,
+      "source_url": "https://taicep2026.dryfta.com/",
+      "source_files": [
+        "sources/2026-11-12/taicep.json"
+      ],
+      "notes": "Historical Halifax conference. No specific AICE attendance is inferred."
+    },
+    {
+      "id": "aice-aacrao-fraud-20261029",
+      "title": "AACRAO presents the AICE Credential Forum’s: Exploring credential fraud – taking the fright out of credential evaluation",
+      "organizer": "AACRAO; AICE",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/aacrao-presents-the-aice-credential-forums-exploring-credential-fraud-taking-the-fright-out-of-credential-evaluation/",
+      "date": "2026-10-29",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated in the saved event page",
+      "source_url": "https://www.aacrao.org/webinar/aacrao-presents-the-aice-credential-forums-exploring-credential-fraud-taking-the-fright-out-of-credential-evaluation/",
+      "source_files": [
+        "sources/2026-11-08/aacrao_aice_oct29.json"
+      ],
+      "notes": "Historical AICE collaboration. The earlier research reports Eastern time, but this source capture does not label the timezone. The membership support email from other AACRAO pages is not treated as this event’s contact."
+    },
+    {
+      "id": "aacrao-transfer-20261030",
+      "title": "Transfer & Articulation Community of Practice Forum",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/transfer-articulation-community-of-practice-forum-29/",
+      "date": "2026-10-30",
+      "end_date": null,
+      "time": "15:00–16:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/transfer-articulation-community-of-practice-forum-29/",
+      "source_files": [
+        "sources/2026-11-08/aacrao_transfer_forum.json"
+      ],
+      "notes": "Historical webinar. The displayed membership email is for login assistance, so contact is left null."
+    },
+    {
+      "id": "aacrao-workshop-20261031",
+      "title": "AACRAO International Two-Day Workshop",
+      "organizer": "AACRAO",
+      "contact": "meetings@aacrao.org",
+      "event_url": "https://www.aacrao.org/event/aacrao-international-two-day-workshop/",
+      "date": "2026-10-31",
+      "end_date": "2026-11-01",
+      "time": null,
+      "source_url": "https://www.aacrao.org/event/aacrao-international-two-day-workshop/",
+      "source_files": [
+        "sources/2026-11-08/aacrao_workshop.json",
+        "sources/2026-11-08/sem_registration.json",
+        "sources/2026-11-12/affiliate.json"
+      ],
+      "notes": "Historical workshop with AICE Affiliate Robert Watkins. The event page lists Oct 31 09:00 through Nov 1 16:00; earlier research found conflicting daily timings, so no continuous meeting time is assigned. Contact is the SEM registration office, not a personal speaker email."
+    },
+    {
+      "id": "aacrao-sem-20261101",
+      "title": "AACRAO SEM Conference 2026",
+      "organizer": "AACRAO",
+      "contact": "meetings@aacrao.org",
+      "event_url": "https://www.aacrao.org/sem-conference/registration/",
+      "date": "2026-11-01",
+      "end_date": "2026-11-04",
+      "time": null,
+      "source_url": "https://www.aacrao.org/sem-conference/registration/",
+      "source_files": [
+        "sources/2026-11-08/sem_registration.json",
+        "sources/2026-11-08/fcsa_post.json"
+      ],
+      "notes": "Historical Baltimore conference. AICE reposted FCSA’s participation. Corporate eligibility questions were separately directed to corporates@aacrao.org on the registration page."
+    },
+    {
+      "id": "aacrao-tribal-20261105",
+      "title": "Tribal Colleges and Universities (TCUs): History and Importance in Higher Education’s Changing Landscape",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/tribal-colleges-and-universities-tcus-history-and-importance-in-higher-educations-changing-landscape/",
+      "date": "2026-11-05",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/tribal-colleges-and-universities-tcus-history-and-importance-in-higher-educations-changing-landscape/",
+      "source_files": [
+        "sources/2026-11-08/tribal.json"
+      ],
+      "notes": "Historical industry webinar; no verified AICE participation in the capture. Membership login support is not an event contact."
+    },
+    {
+      "id": "nafsa-atlanta-20261108",
+      "title": "NAFSA 2026 Biregional VI & VII Conference",
+      "organizer": "NAFSA",
+      "contact": null,
+      "event_url": "https://www.nafsa.org/conferences/nafsa-2026-biregional-vi-vii-conference",
+      "date": "2026-11-08",
+      "end_date": "2026-11-11",
+      "time": null,
+      "source_url": "https://www.nafsa.org/conferences/nafsa-2026-biregional-vi-vii-conference",
+      "source_files": [
+        "sources/2026-11-12/atlanta.json"
+      ],
+      "notes": "Historical Atlanta conference. Jeremy Miñano’s coffee invitation is preserved in research-notes.json; a separate appointment time is not invented."
+    },
+    {
+      "id": "taicep-showcase-20261112",
+      "title": "Digital Credential Providers Services Showcase",
+      "organizer": "TAICEP",
+      "contact": "taicepcommunications@taicep.org",
+      "event_url": "https://getoiling.com/taicepcommunications/events/20837/document-provider-services-showcase",
+      "date": "2026-11-12",
+      "end_date": null,
+      "time": "10:00 AM EST (America/New_York)",
+      "source_url": "https://www.taicep.org/taiceporgwp/professional-development/webinars/",
+      "source_files": [
+        "sources/2026-11-12/taicep_webinars.json",
+        "sources/2026-11-10/taicep_showcase_reg.json",
+        "sources/2026-11-12/affiliate.json"
+      ],
+      "notes": "TAICEP-hosted event with moderator Rebecca Murphy, listed as an AICE Affiliate. Contact appears on the registration site. No end time is inferred from the site’s generic webinar duration.",
+      "calendar": {
+        "start": "2026-11-12T10:00:00-05:00"
+      }
+    },
+    {
+      "id": "aacrao-transfer-20261113",
+      "title": "Transfer & Articulation Community of Practice Forum",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/transfer-articulation-community-of-practice-forum-30/",
+      "date": "2026-11-13",
+      "end_date": null,
+      "time": null,
+      "source_url": "https://www.aacrao.org/events-training/training-academy/webinars/",
+      "source_files": [
+        "sources/2026-11-12/aacrao_webinars.json"
+      ],
+      "notes": "Date and event link are retained from the official listing; the individual event page was not captured. No AICE participation or time is inferred."
+    },
+    {
+      "id": "aacrao-vatican-20261117",
+      "title": "Education in Vatican City: Demystifying the World’s Largest Religious Education System",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/education-in-vatican-city-demystifying-the-worlds-largest-religious-education-system/",
+      "date": "2026-11-17",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/education-in-vatican-city-demystifying-the-worlds-largest-religious-education-system/",
+      "source_files": [
+        "sources/2026-11-12/vatican.json",
+        "sources/2026-11-12/affiliate.json"
+      ],
+      "notes": "The event names Shelby Cearley; the AICE Affiliate snapshot lists Shelby L Cearley. This is a matching-name affiliation lead, not proof of AICE hosting. Login support email is not stored as an event contact."
+    },
+    {
+      "id": "aacrao-edge-20261119",
+      "title": "EDGE User Group: November 2026",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/edge-user-group-november-2026/",
+      "date": "2026-11-19",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/edge-user-group-november-2026/",
+      "source_files": [
+        "sources/2026-11-12/edge_nov.json"
+      ],
+      "notes": "Industry event; no verified AICE participant. Membership login support is not an event contact."
+    },
+    {
+      "id": "aacrao-transfer-ai-20261120",
+      "title": "Transforming Transfer Credit Workflows with AI",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/transforming-transfer-credit-workflows-with-ai/",
+      "date": "2026-11-20",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/transforming-transfer-credit-workflows-with-ai/",
+      "source_files": [
+        "sources/2026-11-08/aacrao_ai_transfer.json"
+      ],
+      "notes": "Industry webinar. Details come from the November 8 individual-page capture; date is also present in the November 12 listing. No AICE participation is inferred."
+    },
+    {
+      "id": "aacrao-ai-intent-20261201",
+      "title": "AI with Intent: Building Trustworthy Solutions for Enrollment Management",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/ai-with-intent-building-trustworthy-solutions-for-enrollment-management/",
+      "date": "2026-12-01",
+      "end_date": null,
+      "time": null,
+      "source_url": "https://www.aacrao.org/webinar/transforming-transfer-credit-workflows-with-ai/",
+      "source_files": [
+        "sources/2026-11-08/aacrao_ai_transfer.json"
+      ],
+      "notes": "Title, date and URL appear in Related Webinars; individual page was not captured. Related industry event, no verified AICE participation."
+    },
+    {
+      "id": "unesco-education-20261210",
+      "title": "Right to Education roundtable to mark Human Rights Day 2026",
+      "organizer": "UNESCO",
+      "contact": "righttoeducation@unesco.org",
+      "event_url": "https://indico.un.org/event/1023788/",
+      "date": "2026-12-10",
+      "end_date": null,
+      "time": "10:00–17:00 Europe/Paris",
+      "source_url": "https://indico.un.org/event/1023788/",
+      "source_files": [
+        "sources/2026-11-12/unesco.json"
+      ],
+      "notes": "Official overview provides this time and email. The earlier research saw a 09:30 registration start and conflicting room labels; confirm before attending. AICE repost was reported in the research chat; no AICE attendance is established. Registration capture is a login page, not evidence of available places.",
+      "calendar": {
+        "start": "2026-12-10T10:00:00+01:00",
+        "end": "2026-12-10T17:00:00+01:00"
+      }
+    },
+    {
+      "id": "aacrao-ai-admissions-20261215",
+      "title": "AI and International Admissions: Promise, Pitfalls, and Practical Realities",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/ai-and-international-admissions-promise-pitfalls-and-practical-realities/",
+      "date": "2026-12-15",
+      "end_date": null,
+      "time": null,
+      "source_url": "https://www.aacrao.org/webinar/education-in-vatican-city-demystifying-the-worlds-largest-religious-education-system/",
+      "source_files": [
+        "sources/2026-11-12/vatican.json"
+      ],
+      "notes": "Title, date and URL appear in Related Webinars; individual page was not captured. No time or AICE participant is inferred."
+    },
+    {
+      "id": "taicep-proposals-20261215",
+      "title": "TAICEP 2027 Spring Webinar Series — Proposal Deadline",
+      "organizer": "TAICEP Professional Development Committee",
+      "contact": "swhipple@evalcompany.com",
+      "event_url": "https://taicep2027webinars.dryfta.com/232-calls-for-proposals",
+      "date": "2026-12-15",
+      "end_date": null,
+      "time": null,
+      "source_url": "https://taicep2027webinars.dryfta.com/232-calls-for-proposals",
+      "source_files": [
+        "sources/2026-11-12/taicep_spring_proposals.json"
+      ],
+      "notes": "Submission deadline, not a meeting. Susan Whipple is explicitly listed as the committee contact. No cutoff time is published in the capture.",
+      "calendar": {
+        "presentation": "deadline"
+      }
+    },
+    {
+      "id": "aacrao-edge-20261217",
+      "title": "EDGE User Group: December 2026",
+      "organizer": "AACRAO",
+      "contact": null,
+      "event_url": "https://www.aacrao.org/webinar/edge-user-group-december-2026/",
+      "date": "2026-12-17",
+      "end_date": null,
+      "time": "14:00–15:00; timezone not stated",
+      "source_url": "https://www.aacrao.org/webinar/edge-user-group-december-2026/",
+      "source_files": [
+        "sources/2026-11-08/edge_dec.json"
+      ],
+      "notes": "Industry event; no verified AICE participant. Membership login support is not an event contact."
+    },
+    {
+      "id": "taicep-spring-20270304",
+      "title": "2027 TAICEP Spring Webinar Series — Back to Basics: Country Systems",
+      "organizer": "TAICEP",
+      "contact": "answers@taicep.org",
+      "event_url": "https://taicep2027webinars.dryfta.com/",
+      "date": "2027-03-04",
+      "end_date": "2027-05-13",
+      "time": "Thursdays, 10:30 AM Eastern US; first session March 4, 2027",
+      "source_url": "https://taicep2027webinars.dryfta.com/",
+      "source_files": [
+        "sources/2026-11-12/taicep_spring2027.json"
+      ],
+      "notes": "One series record covering the announced range, not a continuous meeting. Ten sessions planned; do not generate individual dates or fixed EST offsets across daylight saving changes. Email is the organizer’s published administrative contact. No AICE speaker is confirmed.",
+      "calendar": {
+        "start": "2027-03-04T10:30:00-05:00",
+        "presentation": "series_start"
+      }
+    },
+    {
+      "id": "tacrao-2026",
+      "title": "TACRAO 2026 Annual Conference",
+      "organizer": "Texas Association of Collegiate Registrars and Admissions Officers (TACRAO)",
+      "contact": null,
+      "event_url": "https://www.tacrao.org/annual-conference",
+      "date": null,
+      "end_date": null,
+      "time": null,
+      "source_url": "https://www.tacrao.org/annual-conference",
+      "source_files": [
+        "sources/2026-11-12/houston.json"
+      ],
+      "notes": "The capture confirms the 2026 Houston event but no longer displays its dates; the November 7, 2027 footer belongs to a different event. Prior research reports November 8–11, 2026 and SDR representatives, retained in research-notes.json. Date remains null rather than using the 2027 footer."
+    },
+    {
+      "id": "ukenic-2026",
+      "title": "UKENIC26 — Navigating change: shared challenges, collective solutions",
+      "organizer": "UK ENIC",
+      "contact": null,
+      "event_url": "https://www.enic.org.uk/our-role/news/1763",
+      "date": null,
+      "end_date": null,
+      "time": null,
+      "source_url": "https://www.enic.org.uk/our-role/news/1763",
+      "source_files": [
+        "sources/2026-11-12/ukenic.json"
+      ],
+      "notes": "The saved programme announcement confirms the event but omits its dates. Prior research reports November 30–December 1, 2026; that unarchived date evidence remains in research-notes.json. Date is deliberately null here. No AICE attendee is confirmed."
+    }
+  ]
+}
