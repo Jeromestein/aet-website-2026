@@ -98,8 +98,8 @@
 .search input:focus-visible { outline: none; }
 .search button { padding: 3px; display: grid; place-items: center; }
 .filterControls { display: flex; gap: 9px; }
-.selectWrap { display: flex; align-items: center; gap: 5px; height: 37px; padding: 0 10px; border: 1px solid var(--crm-border); border-radius: 6px; color: #657a8c; }
-.selectWrap select { padding: 0 3px; border: 0; appearance: none; background: transparent; color: inherit; font-size: 13px; height: 100%; cursor: pointer; max-width: 145px; }
+.selectWrap { display: flex; align-items: center; gap: 5px; height: 37px; padding: 0 0 0 10px; border: 1px solid var(--crm-border); border-radius: 6px; color: #657a8c; }
+.selectWrap select { padding: 0 3px; border: 0; background-color: transparent; color: inherit; font-size: 13px; height: 100%; cursor: pointer; max-width: 189px; min-width: 0; }
 .tableWrap { overflow-x: auto; }
 .table { width: 100%; min-width: 1100px; table-layout: fixed; border-collapse: collapse; text-align: left; }
 .table th:nth-child(1) { width: 6%; }

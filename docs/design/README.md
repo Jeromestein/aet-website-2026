@@ -109,10 +109,23 @@ business cards and forms use the [business UI dimensions](business-ui.md).
 
 ## Interaction, accessibility and language
 
-- Text fields and native dropdowns use the global blue edge and pale-blue outer
-  focus halo, following the control radius. Composite field shells use
-  `data-focus-ring` so icons, text and chevrons share one ring. Retain native
-  keyboard focus; do not blur fields on selection.
+- Closed single-select dropdowns use the shared custom 16px chevron in
+  `app/globals.css`: **14px from the right edge and 44px right text padding**, on
+  desktop and mobile. Preserve native `<select>` behavior; do not add a second
+  SVG arrow or override these values in individual pages. Composite shells have
+  no trailing padding so the select's right edge aligns with the visible shell.
+  Multiple-selection/listbox controls retain native styling; forced-colors mode
+  restores the native arrow for visibility.
+- Text fields, textareas and dropdowns use the shared focus tokens: a 1px
+  `#507FA6` blue edge and 4px `#C4E0FC` outer halo with no outline gap, following
+  the control radius. Keep the ring while focused after mouse or keyboard use;
+  remove it on blur. Do not force blur on selection. Composite field shells use
+  `data-focus-ring` so icons, text and chevrons share one ring without an inner
+  outline. Forced-colors mode retains a 2px system-color outline.
+- Global CSS supplies these defaults, and this guide is the requirement for new
+  components. Reuse the global tokens and shell attribute instead of duplicating
+  local arrow/focus definitions. These field rules do not change navigation
+  disclosures or the separate focus treatment for links, buttons and choices.
 - Provide real destinations, at least 44px touch targets, visible focus/hover/active
   states and keyboard access. Do not represent an unavailable action as a saved result.
 - Use native disclosures and scrolling where appropriate. Keep text and actions

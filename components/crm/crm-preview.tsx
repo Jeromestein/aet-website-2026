@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUpRight, Calculator, Check,
-  CheckCheck, ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Clock3,
+  CheckCheck, ChevronLeft, ChevronRight, CircleCheck, Clock3,
   CreditCard, FileCheck2, FileText, FolderOpen, GraduationCap, LayoutDashboard,
   Link2, Mail, MapPin, Menu, Plus, RotateCcw, Search, Upload, X,
 } from 'lucide-react';
@@ -297,8 +297,8 @@ export default function CRMPreview() {
           </div>
           <div className={s.filters}>
             <label className={s.search} data-focus-ring><Search size={18} /><span className={s.srOnly}>Search applications</span><input value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} placeholder={view === 'payments' ? 'Search client or payment reference…' : 'Search name, ID, or service…'} />{search && <button aria-label="Clear search" onClick={() => { setSearch(''); setPage(1); }}><X size={14} /></button>}</label>
-            <div className={s.filterControls}><label className={s.selectWrap} data-focus-ring><MapPin size={15} /><span className={s.srOnly}>Office</span><select value={office} onChange={event => { setOffice(event.target.value); setPage(1); }}><option value="all">All offices</option>{offices.map(item => <option key={item}>{item}</option>)}</select><ChevronDown size={13} /></label>
-              {(view === 'applications' || view === 'equivalency') && <label className={s.selectWrap} data-focus-ring><span className={s.srOnly}>Sort applications</span><select value={sort} onChange={event => { setSort(event.target.value); setPage(1); }}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option></select><ChevronDown size={13} /></label>}
+            <div className={s.filterControls}><label className={s.selectWrap} data-focus-ring><MapPin size={15} /><span className={s.srOnly}>Office</span><select value={office} onChange={event => { setOffice(event.target.value); setPage(1); }}><option value="all">All offices</option>{offices.map(item => <option key={item}>{item}</option>)}</select></label>
+              {(view === 'applications' || view === 'equivalency') && <label className={s.selectWrap} data-focus-ring><span className={s.srOnly}>Sort applications</span><select value={sort} onChange={event => { setSort(event.target.value); setPage(1); }}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option></select></label>}
             </div>
           </div>
 

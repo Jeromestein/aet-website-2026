@@ -31,7 +31,7 @@
 .search:focus-within { background: #e9eef6; }
 .search input { min-width: 0; width: 126px; height: 38px; border: 0; background: transparent; outline: none; color: #202124; }
 .search button { display: grid; place-items: center; min-width: 30px; height: 36px; }
-.selectWrap { display: flex; align-items: center; border: 1px solid #747775; border-radius: 22px; padding-right: 12px; }
+.selectWrap { display: flex; align-items: center; border: 1px solid #747775; border-radius: 22px; padding-right: 0; }
 .selectWrap select { appearance: none; border: 0; padding: 8px 10px 8px 17px; background: transparent; min-height: 38px; cursor: pointer; color: #202124; }
 .main { padding: 0 16px 0; }
 .utilityRow { min-height: 42px; display: flex; align-items: center; gap: 24px; padding: 0 8px 8px; color: var(--cal-muted); font-size: 12px; }
@@ -172,7 +172,6 @@
   .search:focus-within input { width: 100%; padding: 0 4px; }
   .search:has(input:not(:placeholder-shown)) { background: #d3e3fd; }
   .search button { min-width: 20px; }
-  .selectWrap { padding-right: 8px; }
   .selectWrap select { padding-left: 12px; padding-right: 5px; font-size: 13px; }
   .periodControls { gap: 8px; padding-left: 7px; }
   .workspace .periodControls h2 { font-size: 19px; }

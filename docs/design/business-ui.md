@@ -43,7 +43,7 @@ The older four-step formal pilot is a separate flow, documented in
 | Offices | Native dropdown, disabled until a service is chosen. Evaluation/pre-evaluation: Miami, Los Angeles, San Francisco. Translation: those three plus Boston and New York. Exclude Beijing. Clear an ineligible office on service change/draft restore while retaining other answers. |
 | Name | Required Mr./Ms./Mx. dropdown before required first/last names; optional middle name and date of birth. Chinese labels are Chinese-only, with the optional marker beside middle name. Align desktop name inputs. |
 | Education | All education fields required. School and country share a desktop row; degree name spans the next full row. Stack on phones. Include identity/education in drafts and review. |
-| Dropdowns | Consistent chevron inset 14px from the right, with enough text padding. |
+| Dropdowns | Follow the [global field rules](README.md#interaction-accessibility-and-language): custom chevron inset 14px, 44px right text padding and a single rounded blue focus ring; preserve native select behavior. |
 | Progress/actions | Three-step indicator; no duplicate counter in the first-step action bar. Forward action right-aligned and green; Back black with white text throughout this form. |
 | Start over | Error-red text, reset icon, no underline; confirm clearing and offer Cancel before removing answers. |
 

@@ -98,7 +98,7 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
       </div>
       <div className={s.tools}>
         <label className={s.search} data-focus-ring><Search size={19} /><input aria-label="Search events" placeholder="Search" value={query} onChange={e => setQuery(e.target.value)} />{query && <button aria-label="Clear search" onClick={() => setQuery('')}><X size={16} /></button>}</label>
-        <label className={s.selectWrap} data-focus-ring><select aria-label="Calendar view" value={view} onChange={e => changeView(e.target.value as View)}><option value="dayGridMonth">Month</option><option value="timeGridWeek">Week</option><option value="listMonth">Schedule</option></select><ChevronDown size={16} /></label>
+        <label className={s.selectWrap} data-focus-ring><select aria-label="Calendar view" value={view} onChange={e => changeView(e.target.value as View)}><option value="dayGridMonth">Month</option><option value="timeGridWeek">Week</option><option value="listMonth">Schedule</option></select></label>
       </div>
     </header>
     <main id="calendar-main" className={s.main}>
@@ -108,7 +108,7 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
           <p>Related industry events are included. See each event’s notes for its AICE connection.</p>{hasFilters && <button className={s.textButton} onClick={reset}>Clear filters</button>}
         </div></details>
         <div className={s.legend} aria-label="Calendar colors">{Object.entries(organizerLabels).map(([key, label]) => <span key={key}><span className={`${s.dot} ${s[key]}`} />{label}</span>)}</div>
-        <label className={s.timeZone}><Globe2 size={15} /><select aria-label="Display timezone" value={timeZone} onChange={e => setTimeZone(e.target.value)}>{zones.map(zone => <option key={zone.value} value={zone.value}>{zone.label}</option>)}</select><ChevronDown size={14} /></label>
+        <label className={s.timeZone} data-focus-ring><Globe2 size={15} /><select aria-label="Display timezone" value={timeZone} onChange={e => setTimeZone(e.target.value)}>{zones.map(zone => <option key={zone.value} value={zone.value}>{zone.label}</option>)}</select></label>
       </div>
       <section className={`${s.calendarPanel} ${view === 'listMonth' ? s.scheduleView : view === 'timeGridWeek' ? s.weekView : s.monthView}`} aria-label="Event calendar">
         <div className={s.calendarScroll}>
