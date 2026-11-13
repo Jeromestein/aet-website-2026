@@ -86,7 +86,7 @@ Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-1
 Verification: [offline runtime acceptance](archive/preeval-production-runtime-2026-11-11.md).
 These checks do not activate hosted Production.
 
-### Unified application — next development milestone
+### Unified application — main Preview accepted
 
 - [x] Connect `/application` pre-evaluation submission to the existing working
   lifecycle, including customer/education/office fields, quote and recovery links.
@@ -100,18 +100,22 @@ These checks do not activate hosted Production.
 - [x] Build the three-step credential application, shared 2026 pricing, exclusive
   document/course selection, education and mailing-address requirements.
 - [x] Save credential intake, notify the test recipient, expose Status/uploads and CRM.
-- [ ] Connect staff review, missing-material requests, price confirmation and
-  status changes to new v2 intake; CRM currently shows these submissions read-only.
-- [ ] Enable application-linked Checkout and signed payment reconciliation for
+- [x] Connect staff review, missing-material requests, price confirmation and
+  status changes to new v2 intake in the restricted six-table Preview.
+- [x] Enable application-linked Checkout and signed payment reconciliation for
   new credential intake; reuse existing payment/workflow components where compatible.
-- [ ] Let staff upload/publish the finished PDF and notify the customer; expose
+- [x] Let staff upload/publish the finished PDF and notify the customer; expose
   authorized report download and retain the selected paper-delivery details.
 - [ ] Extend credential intake/fulfillment to the isolated Production runtime and
   real applicant recipients. Current credential paths remain Preview/local only.
 - [x] Verify unified pre-evaluation on main Preview: selected office, customer/CRM
   agreement, document download, paid result and both delivered emails.
-- [ ] Verify the complete credential journey from `/application` on main Preview,
-  then joint acceptance including office access and duplicate-payment protection.
+- [x] Verify the complete credential journey from `/application` on main Preview:
+  supplement request, confirmed quote, Sandbox payment/direct webhook, private PDF
+  draft, publication/download and five delivered notifications. See
+  [credential acceptance](archive/unified-credential-preview-2026-11-12.md).
+- [ ] Complete joint release review, including intended office permissions and
+  Production-capable credential behavior. Refunds remain manual in Stripe.
 
 ### Production configuration plan
 
@@ -119,8 +123,8 @@ These checks do not activate hosted Production.
   proposed origin, settings, private six-table target, direct live webhook and
   manual Stripe refund procedure for pre-evaluation. This is a documented plan,
   not applied settings or a complete two-service release plan.
-- [ ] Extend that plan to the unified entry and credential workflow after dev
-  implementation and joint Preview acceptance.
+- [ ] Extend that plan to the unified entry and credential workflow after the accepted
+  main Preview journeys and joint release review.
 - [x] Accept current mobile result/status checks as sufficient for first release;
   do not add a mandatory second mobile payment run.
 - [x] Confirm Stripe Dashboard as the manual refund workflow; retain existing

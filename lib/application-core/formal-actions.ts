@@ -62,6 +62,7 @@ export async function formalStaffAction(id:string,raw:unknown){
       if(body.status==='needs_information'&&body.message.length<3)throw new AppError('message_required');
       if(body.status==='processing'&&(a.payment_status!=='paid'||!(await tx`select id from (${formalFiles(tx)}) f where application_id=${id} and kind='document' and state='ready'`).length))throw new AppError('payment_and_documents_required',409);
       await tx`update ${coreTable(tx,'aet_service_detail')} set customer_message=${body.message},result=null where id=${a.service_id}`;
+      if(body.status==='needs_information')await queueFormalNotification(tx,id,'information','information:'+id+':'+(a.version+1),{message:body.message});
     }
     if(body.action==='release'){
       const [f]=await tx`select * from (${formalFiles(tx)}) f where id=${body.fileId} and application_id=${id} and kind='report' and state='ready'`;
@@ -69,6 +70,7 @@ export async function formalStaffAction(id:string,raw:unknown){
       const docs=await tx`select id from (${formalFiles(tx)}) f where application_id=${id} and kind='document' and state='ready'`;
       if(a.payment_status!=='paid'||a.status!=='processing'||!f||f.input_version!==a.input_version||pending.length||!docs.length)throw new AppError('report_not_ready',409);
       await tx`update ${coreTable(tx,'aet_service_detail')} set result_version=result_version+1,result=jsonb_build_object('content',null,'documents',${tx.json([{document_id:f.id,storage_rev:f.storage_rev}])}::jsonb,'status','released','released_at',now(),'input_version',input_version,'version',result_version+1),customer_message='' where id=${a.service_id}`;
+      await queueFormalNotification(tx,id,'report','report:'+id+':'+(a.version+1),{file_id:f.id,input_version:a.input_version});
     }
     await touchFormal(tx,id,body.action==='release'?'completed':body.action==='status'?body.status:undefined);
   });

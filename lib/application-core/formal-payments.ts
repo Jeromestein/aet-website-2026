@@ -1,3 +1,4 @@
+import { formalStatusPath, type ApplicationRecord } from '../evaluation-application/workflow';
 import { coreTable } from './connection';
 import 'server-only';
 import type Stripe from 'stripe';
@@ -46,7 +47,7 @@ export async function checkoutFormalCore(id:string) {
       line_items:[{price_data:{currency:'usd',product_data:{name:'Formal Credential Evaluation',description:'Evaluation services and delivery shown on your application.'},unit_amount:p.amount_cents},quantity:1}],
       client_reference_id:id,customer_email:configuration().recipient,
       metadata:{applicationId:id,paymentType:'formal-evaluation',pilot:'aet-formal-2026-local'},
-      success_url:configuration().origin+('/credential-evaluation-application/success?id='+id)+'&checkout=success',cancel_url:configuration().origin+('/credential-evaluation-application/success?id='+id)+'&checkout=cancelled',
+      success_url:configuration().origin+formalStatusPath(a as ApplicationRecord)+'&checkout=success',cancel_url:configuration().origin+formalStatusPath(a as ApplicationRecord)+'&checkout=cancelled',
       expires_at:Math.floor(Date.now()/1000)+1800},{idempotencyKey:'formal-checkout-'+p.id});
     await tx`update ${coreTable(tx,'aet_payments')} set checkout_session_id=${session.id},payment_status='open',updated_at=now() where id=${p.id}`;
     return session.url!;

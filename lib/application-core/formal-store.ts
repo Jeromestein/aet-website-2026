@@ -17,7 +17,7 @@ export const formalFiles = (sql: FormalDB) => sql`select d.*,original_filename a
   case when access_scope='staff_only' then 'report' else 'document' end as kind,
   coalesce((upload_context->>'input_version')::int,0) as input_version,upload_context->>'sha256' as sha256
   from ${coreTable(sql,'aet_documents')} d join ${coreTable(sql,'aet_core_applications')} a on a.id=d.application_id where a.primary_service='evaluation'`;
-export const formalRows = (sql: FormalDB) => sql`select a.*,s.id as service_id,'en'::text as locale,s.input_version,s.staff_notes,s.customer_message,
+export const formalRows = (sql: FormalDB) => sql`select a.*,s.id as service_id,coalesce(a.submitted_snapshot->>'locale','en') as locale,s.input_version,s.staff_notes,s.customer_message,
   s.details->'quote' as quote,s.details->'confirmed_quote' as confirmed_quote,s.notification_state,s.result,s.amount_cents,
   s.result->'documents'->0->>'document_id' as released_file_id,${convergedPaymentState(sql)} as payment_status,
   jsonb_build_object(
@@ -53,7 +53,7 @@ export async function insertFormal(sql:FormalDB,input:Row) {
     first_name:d.evaluee.first,middle_name:d.evaluee.middle,last_name:d.evaluee.last,date_of_birth:d.evaluee.birth||null,residence_country:d.client.country||null,
     purpose:d.client.purpose,source:d.intakeVersion===2?'unified-application':'formal-evaluation',status:input.status||'submitted',
     request_id:input.request_id,request_hash:input.request_hash,request_hash_version:0,submission_version:d.intakeVersion===2?2:1,
-    submitted_snapshot:sql.json(input.snapshot||{data:d,quote:q}),submitted_at:input.created_at||now,version:input.version||1,created_at:input.created_at||now,updated_at:input.updated_at||now})}`;
+    submitted_snapshot:sql.json(input.snapshot||{data:d,quote:q,locale:input.locale||'en'}),submitted_at:input.created_at||now,version:input.version||1,created_at:input.created_at||now,updated_at:input.updated_at||now})}`;
   for(let i=0;i<d.educations.length;i++){
     const e=input.educations?.[i]||toLegacyEducation(d.educations[i]);
     await sql`insert into ${coreTable(sql,'aet_education')} ${sql({id:educationIds[i],application_id:id,school_name:e.school_name,country_of_study:e.country_of_study,
@@ -66,12 +66,12 @@ export async function insertFormal(sql:FormalDB,input:Row) {
     created_at:input.created_at||now,updated_at:input.updated_at||now})}`;
   return id;
 }
-export async function submitFormal(data:Row,quote:Row,requestId:string,requestHash:string) {
+export async function submitFormal(data:Row,quote:Row,requestId:string,requestHash:string,locale:string='en') {
   return db().begin(async sql=>{
     await sql`select pg_advisory_xact_lock(hashtextextended(${requestId},0))`;
     const [old]=await sql`select id,request_hash,primary_service from ${coreTable(sql,'aet_core_applications')} where request_id=${requestId}`;
     if(old){if(old.primary_service!=='evaluation'||old.request_hash!==requestHash)throw new AppError('idempotency_conflict',409);return {id:old.id as string,created:false};}
-    const id=await insertFormal(sql,{data,quote,request_id:requestId,request_hash:requestHash});
+    const id=await insertFormal(sql,{data,quote,request_id:requestId,request_hash:requestHash,locale});
     if(data.intakeVersion===2)await queueFormalNotification(sql,id,'confirmation','intake:'+id);
     return {id,created:true};
   });
@@ -92,7 +92,7 @@ export async function formalLegacy(id:string) {
     paid_at:(await db()`select max(paid_at) as paid from ${coreTable(db(),'aet_payments')} where application_id=${id} and payment_status='paid'`)[0].paid},educations};
 }
 export async function queueFormalNotification(sql:FormalDB,id:string,kind:string,key:string,extra:Row={}){
-  if(!['confirmation','payment','fee_update'].includes(kind))throw new Error('Unsupported formal notification');
+  if(!['confirmation','payment','fee_update','information','report'].includes(kind))throw new Error('Unsupported formal notification');
   const [s]=await sql`select id,notification_state from ${coreTable(sql,'aet_service_detail')} where application_id=${id} and service_type='evaluation' for update`;
   const old=s.notification_state[kind];if(old?.key===key)return;
   if(old&&old.state!=='sent'&&old.attempts>0)throw new AppError('notification_review_required',409);
@@ -101,7 +101,19 @@ export async function queueFormalNotification(sql:FormalDB,id:string,kind:string
 }
 /** Refresh file metadata discovered in an authorized folder; never reassign a File ID. */
 export async function indexFormalDocument(id:string,location:string,file:Row) {
+  return db().begin(tx=>indexFormalDocumentInTransaction(tx,id,location,file));
+}
+/** Serialize the final storage commit with staff publication; late uploads cannot change a released report. */
+export async function commitFormalDocument<T extends Row>(id:string,location:string,commit:()=>Promise<T>):Promise<T> {
   return db().begin(async tx=>{
+    const a=await readFormal(id,tx,true);
+    if(['cancelled','completed'].includes(a.status))throw new AppError('application_locked',409);
+    const file=await commit();
+    await indexFormalDocumentInTransaction(tx,id,location,file);
+    return file;
+  }) as Promise<T>;
+}
+async function indexFormalDocumentInTransaction(tx:TransactionSql,id:string,location:string,file:Row) {
     const a=await readFormal(id,tx,true);
     const [old]=await tx`select * from ${coreTable(tx,'aet_documents')} where storage_location=${location} and storage_file_id=${file.id}`;
     if(old&&old.application_id!==id)throw new AppError('document_application_mismatch',409);
@@ -118,5 +130,4 @@ export async function indexFormalDocument(id:string,location:string,file:Row) {
       await tx`update ${coreTable(tx,'aet_documents')} set storage_path=${file.path_display||null},storage_rev=${file.rev},storage_content_hash=${file.content_hash||null},original_filename=${file.name},size_bytes=${file.size},updated_at=now() where id=${old.id}`;
       if(changed){await tx`update ${coreTable(tx,'aet_service_detail')} set input_version=input_version+1,result=null where id=${a.service_id}`;await touchFormal(tx,id,a.status==='completed'?'reviewing':undefined);}
     }
-  });
 }

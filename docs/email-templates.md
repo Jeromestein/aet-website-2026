@@ -84,8 +84,10 @@ Use `AET <info@americantranslationservice.com>` through the sender environment
 variables. The dev worktree's local configuration and `.env.example` use these
 values; production configuration has not been changed.
 
-Formal intake confirmations, payment receipts and fee updates resolve CC from
-saved application data at send time, preserving the legacy office mapping:
+Formal cloud Preview confirmations, payment receipts, fee updates, information
+requests and report notifications send only to the controlled test recipient, with
+no office CC. Legacy/local routing retains the saved-office mapping below; it is
+not a claim that Production formal mail has been activated:
 
 | Office | CC |
 | --- | --- |
@@ -99,8 +101,8 @@ The current evaluation form offers Miami, Los Angeles and San Francisco. Routing
 supports both saved office IDs and legacy names, excludes duplicate To recipients,
 and blocks unknown offices rather than copying an unrelated team. CC is included
 in the delivery digest, so changed routing requires review before retrying.
-Pre-evaluation records currently have no office field, so no office is inferred
-for those notifications. All email flows share the sender environment settings.
+Pre-evaluation notifications do not add office CC, including unified records
+that now retain a handling office. All email flows share the sender environment settings.
 
 ## Payment and fee delivery
 

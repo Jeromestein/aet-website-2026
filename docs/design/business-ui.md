@@ -202,7 +202,8 @@ mail remain English. Staff sign-in is separate.
   cases. Reuse the authorized snapshot and manual refresh.
 - Keep drawer width, identity header, service/status badges, six tabs and open/close
   behavior shared across Live/Test. No embedded customer “Application saved” receipt.
-  Matching visuals do not enable writes; preserve the current v2 read-only boundary.
+  Matching visuals do not enable writes; gate v2 operations on the connected workflow
+  capability and enforce employee/office authorization on every staff request.
 - Information cards: white, light border, 8px radius, 20px padding / 16px mobile;
   13px muted labels, 14px navy values. Reserve tints for badges/interactive states.
 - Education: one card per record, School/Country then Degree/Study Period; stack on
@@ -216,6 +217,13 @@ mail remain English. Staff sign-in is separate.
   saved office/name/application-ID resolver shared with Status; a preview database
   flag does not isolate storage accounts. [Dropbox](../dropbox.md) owns storage rules.
 - Keep explicit final-report release and other workflow actions capability-gated.
+  Put status/customer requests and internal notes in Overview, confirmed quotes and
+  payment verification in Payment, and private PDF drafts/release in Documents.
+  Save feedback refreshes the drawer and list. Never expose a draft download to
+  customers; publication requires paid status and a report matching current inputs.
+- Customer Status shows the confirmed total and quote explanation, missing-material
+  request, and released report download. Hide “awaiting quote” after confirmation;
+  preserve the original estimate and paper delivery details for comparison.
 
 ### GPA calculator
 

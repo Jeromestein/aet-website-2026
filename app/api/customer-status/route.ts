@@ -1,5 +1,5 @@
 import { applicationUnavailableResponse } from '@/lib/application-release';
-import {formalCore,formalLegacy} from '@/lib/application-core/formal-store';
+import {formalCore,formalLegacy,formalApplication,formalPayments} from '@/lib/application-core/formal-store';
 import { withDocuments } from '@/lib/customer-status/documents';
 import { readIntake } from '@/lib/application/intake-server';
 import { NextResponse } from 'next/server';
@@ -35,7 +35,17 @@ export async function POST(request: Request) {
     const parsed = statusLookup.safeParse(raw);
     if (!parsed.success) throw new AppError('invalid_application_id');
     const id = parsed.data.applicationId;
-    if(new URL(request.url).searchParams.get('source')==='preview') return reply(withDocuments(projectIntakeStatus(await readIntake(id))));
+    if(new URL(request.url).searchParams.get('source')==='preview') {
+      const record=projectIntakeStatus(await readIntake(id));
+      if(formalCore()) {
+        const a=await formalApplication(id,false);
+        const [payment]=await db()`select max(paid_at) paid from (${formalPayments(db())}) p where application_id=${id} and status='paid'`;
+        record.status=a.status;record.payment=a.payment_status;record.amount=a.total;record.paid=payment.paid?new Date(payment.paid).toISOString():'';
+        const report=a.files.find((f:{kind:string})=>f.kind==='report');
+        record.workflow={canPay:!['cancelled','completed'].includes(a.status)&&['unpaid','pending'].includes(a.payment_status)&&a.total>0,message:a.customer_message,confirmedQuote:a.confirmed_quote,report:report?{id:report.id,name:report.name}:null};
+      }
+      return reply(withDocuments(record));
+    }
     if(!liveEnabled()&&formalCore()){const {row,educations}=await formalLegacy(id);return reply(withDocuments(projectStatus(row,educations,'preview')));}
     // Match the old formal lookup; do not route formal IDs into pre-evaluation.
     const rows = liveEnabled()

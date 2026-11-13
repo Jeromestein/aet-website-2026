@@ -34,4 +34,4 @@ export function intakeQuote(data:ApplicationDraft):Quote {
 }
 export const officeNames:Record<string,string>={miami:'Miami',la:'Los Angeles',sf:'San Francisco'};
 export const statusPath=(id:string,locale:string)=>`${locale==='en'?'':'/'+locale}/status?source=preview&applicationId=${encodeURIComponent(id)}`;
-export type IntakeReceipt={id:string;locale:'en'|'zh'|'es';status:string;createdAt:string;data:ApplicationDraft;quote:Quote;email:{state:'queued'|'sending'|'sent'|'failed';attempts:number;recipient:string};statusPath:string};
+export type IntakeReceipt={workflowEnabled?:boolean;id:string;locale:'en'|'zh'|'es';status:string;createdAt:string;data:ApplicationDraft;quote:Quote;email:{state:'queued'|'sending'|'sent'|'failed';attempts:number;recipient:string};statusPath:string};

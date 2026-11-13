@@ -12,7 +12,7 @@ import { configuration } from '../preeval/config';
 import { AppError, validFile } from '../preeval/domain';
 import { filePath, uploadFile } from '../preeval/dropbox';
 import { cookieName, keySchema } from './server';
-import { canDownloadReport, confirmQuote, payableTotal, staffSchema, type ApplicationRecord } from './workflow';
+import { formalStatusPath, canDownloadReport, confirmQuote, payableTotal, staffSchema, type ApplicationRecord } from './workflow';
 
 export async function access(id: string) {
   if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);
@@ -133,7 +133,7 @@ export async function staffAction(id: string, raw: unknown, actor: string) {
   });
 }
 export async function makeAccessLink(id: string, actor: string) {
-  if(formalCore()){await readFormal(id);return `${configuration().origin}/credential-evaluation-application/success?id=${id}`;}
+  if(formalCore()){const app=await readFormal(id);return configuration().origin+formalStatusPath(app as ApplicationRecord);}
   const token = randomBytes(32).toString('hex');
   const [app] = await db()`select locale from ${table("evaluation.applications")} where id=${id}`;
   if (!app) throw new AppError('not_found', 404);

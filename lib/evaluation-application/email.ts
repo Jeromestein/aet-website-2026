@@ -9,7 +9,7 @@ import { configuration, required } from "../preeval/config";
 import { db, table, type Row } from "../preeval/db";
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from "../email/delivery";
 import { officeCc } from "../email/office-routing";
-import { feeUpdateEmail, paymentConfirmationEmail, type PaymentReceipt } from "./email-template";
+import { feeUpdateEmail, paymentConfirmationEmail, workflowNotificationEmail, type PaymentReceipt } from "./email-template";
 
 /** Enqueue in the same transaction as the confirmed business event. */
 export async function queuePaymentEmail(tx: postgres.TransactionSql, applicationId: string, paymentId: string) {
@@ -24,12 +24,20 @@ export async function queueFeeUpdateEmail(tx: postgres.TransactionSql, applicati
 export async function renderFormalEmail(row: Row) {
   const config = configuration();
   if (row.recipient !== config.recipient) throw new EmailReviewRequired("recipient_changed");
-  if (!["payment", "fee_update"].includes(row.kind)) throw new EmailReviewRequired("unknown_email_kind");
+  if (!["payment", "fee_update", "information", "report"].includes(row.kind)) throw new EmailReviewRequired("unknown_email_kind");
   // Reuse the application's canonical reader, including its legacy-data mapping.
   const { application } = await import("./service");
   const app = await application(row.application_id, false);
-  const cc = officeCc(app.data.client.office, row.recipient);
-  const options = { notice: "Test-mode notification · This email belongs to the isolated local workflow. No live payment is requested." };
+  const cc = config.cloudPreview ? [] : officeCc(app.data.client.office, row.recipient);
+  const options = { notice: "Test-mode notification · This email belongs to the isolated Preview workflow. No live payment is requested." };
+  if(row.kind==='information') {
+    if(app.status!=='needs_information'||app.customer_message!==row.message)throw new EmailReviewRequired('information_request_superseded');
+    return {...await workflowNotificationEmail(app,'information',row.message,config.origin,options),cc};
+  }
+  if(row.kind==='report') {
+    if(app.status!=='completed'||app.payment_status!=='paid'||app.released_file_id!==row.file_id||app.input_version!==row.input_version)throw new EmailReviewRequired('report_withheld');
+    return {...await workflowNotificationEmail(app,'report','',config.origin,options),cc};
+  }
   if (row.kind === "payment") {
     const [payment] = await db()`select id,amount_cents,paid_at,status from ${formalCore()?db()`(${formalPayments(db())}) p`:table("evaluation.payments")}
       where id=${row.payment_id} and application_id=${app.id}`;
@@ -53,8 +61,11 @@ const resendTransport: EmailTransport = async mail => {
   if (error || !data) throw new Error("delivery_failed");
   return data.id;
 };
-export async function flushFormalEmails(transport: EmailTransport = resendTransport) {
-  if(formalCore()){const pending=await db()`select application_id from ${coreTable(db(),'aet_service_detail')} where service_type='evaluation' and (notification_state->'payment'->>'state' in ('queued','failed','sending') or notification_state->'fee_update'->>'state' in ('queued','failed','sending')) order by updated_at limit 5`;for(const row of pending)await flushCompactNotifications(transport,row.application_id,{serviceType:'evaluation',kinds:['payment','fee_update'],render:renderFormalEmail});return;}
+export async function flushFormalEmails(transport: EmailTransport = resendTransport, applicationId?:string) {
+  if(formalCore()){
+    const pending=applicationId?[{application_id:applicationId}]:await db()`select application_id from ${coreTable(db(),'aet_service_detail')} where service_type='evaluation' and exists(select 1 from jsonb_each(notification_state) n where n.key in ('payment','fee_update','information','report') and n.value->>'state' in ('queued','failed','sending')) order by updated_at limit 5`;
+    for(const row of pending)await flushCompactNotifications(transport,row.application_id,{serviceType:'evaluation',kinds:['payment','fee_update','information','report'],render:renderFormalEmail});return;
+  }
   if (configuration().cloudPreview) return;
   const sql = db(), lease = randomUUID();
   await sql`update ${table("evaluation.emails")} set state='failed',error='interrupted',locked_at=null,lease=null

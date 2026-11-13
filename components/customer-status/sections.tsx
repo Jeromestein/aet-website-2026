@@ -7,6 +7,7 @@ import type {Locale} from '@/i18n/routing';
 import type {CustomerStatus} from '@/lib/customer-status/model';
 import {sectionsCopy} from '@/lib/customer-status/sections-copy';
 import s from './status.module.css';
+import { FormalWorkflow } from './formal-workflow';
 import { SavedServiceDetails, ConfirmationEmail } from './saved-details';
 import countries from '@/lib/legacy-application/countries.json';
 export function StatusSections({record,locale,onBusyChange}:{record:CustomerStatus;locale:Locale;onBusyChange?:(busy:boolean)=>void}) {
@@ -24,6 +25,7 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
  const pronouns=({mr:'Mr. (he/him)',ms:'Ms. (she/her)',mx:'Mx. (they/them)'} as Record<string,string>)[record.evaluee.pronouns]||record.evaluee.pronouns;
  const birth=record.evaluee.birth;
  return <>
+  <FormalWorkflow record={record} locale={locale} part="message"/>
   <section className={s.card} aria-labelledby="documents-heading">
    <div className={s.sectionHeading}><Upload size={24}/><h2 id="documents-heading">{t.upload}{record.office&&<> · {record.office}</>}</h2></div>
    <p>{t.intro}</p><div className={s.requirements}><strong>{t.requirements}</strong><ul><li>{t.degrees}</li><li>{t.translations}</li></ul></div>
@@ -40,7 +42,7 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
    {record.details?<SavedServiceDetails record={record} locale={locale}/>:displayFields([t.delivery,t.additional],[t.notConnected,t.notConnected])}
    {!record.details&&<div className={s.amountRow}><span>{t.total}</span><strong>{money}</strong></div>}<p>{t.quote}</p>
   </section>
-  <section className={s.card} aria-labelledby="payment-heading"><div className={s.sectionHeading}><CreditCard size={24}/><h2 id="payment-heading">{t.payment}</h2>{record.payment!=='paid'&&<span className={s.previewBadge}>{t.soon}</span>}</div>
+  {record.workflow?<FormalWorkflow record={record} locale={locale} part="payment"/>:<section className={s.card} aria-labelledby="payment-heading"><div className={s.sectionHeading}><CreditCard size={24}/><h2 id="payment-heading">{t.payment}</h2>{record.payment!=='paid'&&<span className={s.previewBadge}>{t.soon}</span>}</div>
    {record.payment==='paid'?<div className={s.paidState}><CheckCircle2 size={26}/><div><strong>{t.paid}</strong><p>{t.paidNote}</p></div></div>:<>
     <p className={s.sectionNotice}><Info size={17}/>{portal?t.paymentNotice:({en:'Payment is not connected for this application. No payment is requested here.',zh:'此申请尚未接通付款，此处无需支付。',es:'El pago no está conectado para esta solicitud. No se solicita ningún pago aquí.'}[locale])}</p>
     {showZelle?<div className={s.zellePanel}><h3>{t.zelleDetails}</h3><p>{t.zelleHelp}</p>{openPortal()}<button className={s.backButton} type="button" onClick={()=>setShowZelle(false)}>{t.back}</button></div>:<>
@@ -50,7 +52,8 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
      {!portal?<button type="button" className={s.unavailable} disabled>{t.soon}</button>:method==='zelle'?<button type="button" className={s.portal} onClick={()=>setShowZelle(true)}>{t.continueZelle}<ArrowRight size={17}/></button>:openPortal(t.continueOnline)}
     </>}
    </>}
-  </section>
+  </section>}
+  <FormalWorkflow record={record} locale={locale} part="report"/>
   {record.email&&<ConfirmationEmail key={record.id+record.email.state} id={record.id} email={record.email} locale={locale}/>}
   <section className={s.card} aria-labelledby="client-heading"><div className={s.sectionHeading}><UserRound size={24}/><h2 id="client-heading">{t.client}</h2></div>{displayFields(t.clientFields,[record.client.name,country(record.client.country),record.client.street,record.client.city,record.client.phone,record.client.fax,record.client.email,purpose,record.client.notes])}</section>
   <section className={s.card} aria-labelledby="evaluee-heading"><div className={s.sectionHeading}><GraduationCap size={24}/><h2 id="evaluee-heading">{t.evaluee}</h2></div>{displayFields(t.personFields,[record.evaluee.first,record.evaluee.middle,record.evaluee.last,birth,pronouns])}<h3 className={s.educationTitle}>{t.education}</h3>{record.educations.length?record.educations.map((education,index)=><div className={s.educationCard} key={education.id||index} style={{marginBottom:16}}><h4>{t.degree} {index+1}</h4>{displayFields(t.educationFields,[country(education.country),education.degree,education.school,[education.start||missing,education.end||missing].join(' – ')])}</div>):<p>{emptyEducation}</p>}</section>

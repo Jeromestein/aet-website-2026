@@ -2,7 +2,7 @@ import { Text, render } from "react-email";
 import { BrandedEmailLayout } from "../email/branded-layout";
 import { EmailAmount, EmailContent, EmailDetail, EmailDivider, EmailHeading, EmailHero, EmailPanel, EmailReference, EmailSignoff, label, paragraph } from "../email/parts";
 import type { ApplicationData } from "./domain";
-import { receiptPath } from "./workflow";
+import { formalStatusPath } from "./workflow";
 import type { EmailPreviewOptions } from "../preeval/email-template";
 
 export type FormalEmailApplication = { id: string; locale: string; data: ApplicationData };
@@ -26,7 +26,7 @@ function paymentDate(value: string | Date) {
 type SharedProps = { app: FormalEmailApplication; origin: string } & EmailPreviewOptions;
 export function PaymentConfirmationEmail({ app, payment, origin, assetOrigin, notice }: SharedProps & { payment: PaymentReceipt }) {
   if (payment.status !== "paid" || !Number.isSafeInteger(payment.amount_cents) || payment.amount_cents <= 0 || !payment.paid_at) throw new Error("A confirmed payment record is required");
-  const statusUrl = origin.replace(/\/$/, "") + receiptPath(app.locale, app.id);
+  const statusUrl = origin.replace(/\/$/, "") + formalStatusPath(app);
   return <BrandedEmailLayout origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your payment has been received. Here are your payment details and next steps." notice={notice}>
     <EmailHero eyebrow="PAYMENT CONFIRMATION" description="Your payment is recorded. View your receipt and follow the next steps for your application." action={{ href: statusUrl, label: "View Application Status" }}>Payment<br />Received</EmailHero>
     <EmailContent>
@@ -47,7 +47,7 @@ export function PaymentConfirmationEmail({ app, payment, origin, assetOrigin, no
 }
 export function FeeUpdateEmail({ app, fee, origin, assetOrigin, notice }: SharedProps & { fee: FeeUpdate }) {
   if (fee.total !== null && (!Number.isSafeInteger(fee.total) || fee.total < 0)) throw new Error("Invalid fee amount");
-  const statusUrl = origin.replace(/\/$/, "") + receiptPath(app.locale, app.id);
+  const statusUrl = origin.replace(/\/$/, "") + formalStatusPath(app);
   return <BrandedEmailLayout origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="The service fee for your AET application has been updated. Review the details here." notice={notice}>
     <EmailHero eyebrow="SERVICE FEE UPDATE" description={fee.total === null ? "We’re reviewing your quote. You can check the latest details below." : "Your service fee has been updated. Review the amount and details before making payment."} action={{ href: statusUrl, label: fee.total === null ? "View Your Application" : "Review Fee & Payment Options" }}>Service Fee<br />{fee.total === null ? "In Review" : "Updated"}</EmailHero>
     <EmailContent>
@@ -68,4 +68,18 @@ export async function paymentConfirmationEmail(app: FormalEmailApplication, paym
 }
 export async function feeUpdateEmail(app: FormalEmailApplication, fee: FeeUpdate, origin: string, options: EmailPreviewOptions = {}) {
   return { subject: "AET Services Service Fee Update", html: await render(<FeeUpdateEmail app={app} fee={fee} origin={origin} {...options} />) };
+}
+
+export async function workflowNotificationEmail(app: FormalEmailApplication, kind: 'information'|'report', message: string, origin: string, options: EmailPreviewOptions = {}) {
+  const statusUrl=origin.replace(/\/$/, '')+formalStatusPath(app);
+  const heading=kind==='report'?'Your Evaluation Report Is Ready':'Additional Information Needed';
+  return {subject:'AET Services — '+heading,html:await render(
+    <BrandedEmailLayout origin={origin} statusUrl={statusUrl} preview={heading} {...options}>
+      <EmailHero eyebrow="CREDENTIAL EVALUATION" description={kind==='report'?'Your completed PDF report is available on your application.':'Please review our request and upload the required materials.'} action={{href:statusUrl,label:'View Application Status'}}>{heading}</EmailHero>
+      <EmailContent><Text style={paragraph}>Dear {app.data.client.name},</Text><EmailReference id={app.id}/>
+        {kind==='information'?<Text style={{...paragraph,whiteSpace:'pre-line'}}>{message}</Text>:<Text style={paragraph}>Open your saved application to download your report. Your selected paper delivery details remain available there.</Text>}
+        <EmailDivider/><ServiceSummary app={app}/><EmailSignoff/>
+      </EmailContent>
+    </BrandedEmailLayout>
+  )};
 }

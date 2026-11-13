@@ -1,8 +1,22 @@
 # Credential intake: database and email acceptance
 
-Current progress was reconciled on October 20, 2026. The dated October 17 tests
-below remain historical evidence. See the [current checklist](migration-checklist.md)
-and [progress analysis](status.md#module-progress) for the integrated dev scope.
+Current implementation: November 12, 2026. The unified entry supports both
+pre-evaluation and credential evaluation on the restricted main Preview. Credential
+staff review, supplement requests, fee confirmation, Sandbox payment/direct webhook,
+manual PDF publication and customer download have passed hosted acceptance.
+See [current evidence](archive/unified-credential-preview-2026-11-12.md),
+[checklist](migration-checklist.md) and [six-table model](database-architecture.md).
+
+Current storage is the existing six tables under `aet_preview_shared`, with
+notification receipts in service details. Preview mail goes only to the controlled
+test recipient, without office CC. The new workflow uses `/application`, customer
+`/status?source=preview`, and authenticated `/admin/CRM?source=preview`.
+Production intake/fulfillment remains closed and requires separate runtime work.
+
+**Historical reference below:** the October setup commands, schemas, port 3022,
+read-only restrictions and office CC describe the retired intake-only milestone.
+Do not apply these migrations or treat those names as the current setup. Use
+[development](development.md) for current main/Preview configuration.
 
 ## Scope
 

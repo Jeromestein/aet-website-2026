@@ -25,3 +25,8 @@ export function canDownloadReport(app: { status: string; payment_status: string;
   return app.status === 'completed' && app.payment_status === 'paid' && app.released_file_id === fileId;
 }
 export const receiptPath = (locale: string, id: string) => `${locale === 'en' ? '' : '/' + locale}/credential-evaluation-application/success?id=${id}`;
+
+/** Unified intakes keep all customer actions on their saved Status page. */
+export function formalStatusPath(app: {id:string;locale:string;data:ApplicationData & {intakeVersion?:number}}) {
+  return app.data.intakeVersion===2 ? `${app.locale==='en'?'':'/'+app.locale}/status?source=preview&applicationId=${app.id}` : receiptPath(app.locale,app.id);
+}

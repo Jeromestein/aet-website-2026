@@ -24,7 +24,7 @@ export function SavedServiceDetails({record,locale}:{record:CustomerStatus;local
  return <div className={s.savedDetails}>
   {(['document','course'] as const).filter(id=>request.services[id].selected).map(id=><div key={id} className={s.savedService}><h3>{names[id]}</h3><p>{formatTurnaround(quote.lines.find(line=>line.id===id)?.turnaround||{kind:'notApplicable'},p)}</p><p>{ec.linkedEducation}: {request.services[id].educationIndexes.map(i=>record.educations[i]?.degree).filter(Boolean).join(', ')}</p></div>)}
   <dl className={s.feeLines}>{quote.lines.map((line,i)=><div key={i}><dt>{lineName(line.id)}{line.quantity>1?' × '+line.quantity:''}</dt><dd>{range(line.min,line.max)}</dd></div>)}<div><dt><strong>{t.total}</strong></dt><dd><strong>{range(quote.min,quote.max)}</strong></dd></div></dl>
-  <p>{ec.feeScope}</p>{request.translation&&<p>{ec.translation} · {ec.awaitingQuote}</p>}{quote.needsQuote&&<p>{t.pending}</p>}
+  <p>{ec.feeScope}</p>{request.translation&&<p>{ec.translation}{!record.workflow?.confirmedQuote&&<> · {ec.awaitingQuote}</>}</p>}{quote.needsQuote&&!record.workflow?.confirmedQuote&&<p>{t.pending}</p>}
   <h3 className={s.educationTitle}>{dc.title}</h3><p>{p('services.'+evaluationReports.find(rate=>rate.id===delivery.report)!.label)}</p>
   {delivery.report==='paper'&&<><p>{[delivery.address.name,delivery.address.street,delivery.address.street2,delivery.address.city,delivery.address.region,delivery.address.postal,delivery.address.country].filter(Boolean).join(', ')}</p><p>{p('services.'+shipping.find(rate=>rate.id===delivery.shipping)!.label)}</p><p>{dc.extraCopies}: {delivery.extraCopies}</p></>}
  </div>;

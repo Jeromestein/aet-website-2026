@@ -1,5 +1,6 @@
-import {formalCore,indexFormalDocument,readFormal} from '../application-core/formal-store';
+import {formalCore,indexFormalDocument,commitFormalDocument,readFormal} from '../application-core/formal-store';
 import 'server-only';
+import {AppError} from '../preeval/domain';
 import { downloadBytes } from './download';
 import { startDocumentUpload, finishDocumentUpload } from '../preeval/ai-jobs';
 import { resolveStorage } from './storage';
@@ -144,8 +145,6 @@ function fileEntry(file: files.FileMetadata): FileEntry {
   return { id: file.id, name: file.name, size: file.size, uploadedAt: file.server_modified, pathDisplay: file.path_display ?? '' };
 }
 async function finishResult(dbx: Dropbox, context: ApplicationContext, file: files.FileMetadata) {
-  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()&&['cancelled','completed'].includes((await readFormal(context.id)).status))throw new DocumentError('readOnly',403);
-  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore())await indexFormalDocument(context.id,accountForOffice(context.office),file);
   let archive: 'not-required' | 'saved' | 'failed' = 'not-required';
   const storage = await resolveStorage(context);
   if (storage.archivePath) {
@@ -166,6 +165,10 @@ async function finishAIUpload(context: ApplicationContext, attempt: string | nul
 }
 async function commitAIUpload(context: ApplicationContext, attempt: string | null | undefined,
   commit: () => Promise<files.FileMetadata>) {
+  if(context.kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()){
+    try{return await commitFormalDocument(context.id,accountForOffice(context.office),commit);}
+    catch(error){if(error instanceof AppError&&error.code==='application_locked')throw new DocumentError('readOnly',403);throw error;}
+  }
   if (!attempt) return commit();
   let file!: files.FileMetadata;
   let accepted: boolean;

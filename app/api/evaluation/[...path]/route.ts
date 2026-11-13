@@ -72,12 +72,12 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       const current = staffRoute ? await staffAccess(id) : await access(id);
       if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);
       const [intake]=await db()`select data->>'intakeVersion' as version from ${formalCore()?db()`(${formalRows(db())}) a`:table('evaluation.applications')} where id=${id}`;
-      if(intake?.version==='2') throw new AppError('intake_preview_read_only',409);
+      if(intake?.version==='2'&&!formalCore()) throw new AppError('intake_preview_read_only',409);
       if (path[2] === 'admin' && path.length === 3 && !post) return response(await application(id, true));
-      if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); after(flushFormalEmails); return response({ ok: true }); }
+      if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); after(()=>flushFormalEmails(undefined,id)); return response({ ok: true }); }
       if (path[2] === 'access-link' && path.length === 3 && post) { await limit('formal-link:' + id, 10, 600); return response({ url: await makeAccessLink(id, current.actor) }); }
       if (path[2] === 'checkout' && path.length === 3 && post) { await limit('formal-checkout:' + id, 10, 600); return response({ url: await checkout(id) }); }
-      if (path[2] === 'reconcile' && path.length === 3 && post) { await limit('formal-reconcile:' + id, 30, 600); await reconcile(id); after(flushFormalEmails); return response({ ok: true }); }
+      if (path[2] === 'reconcile' && path.length === 3 && post) { await limit('formal-reconcile:' + id, 30, 600); await reconcile(id); after(()=>flushFormalEmails(undefined,id)); return response({ ok: true }); }
       if (path[2] === 'cancel' && path.length === 3 && post) { await cancel(id, current.actor); return response({ ok: true }); }
       if (upload) {
         await limit('formal-files:' + id, 40, 600);
