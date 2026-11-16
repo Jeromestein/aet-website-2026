@@ -262,5 +262,17 @@
     "captured_on": "2026-11-12",
     "file": "sources/2026-11-12/taicep_webinars.json",
     "sha256": "ac06dbd9e12ae83b1729c8aa4acfe8e829ffbfd3696005a6b167e2de3eb5fb75"
+  },
+  {
+    "url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
+    "captured_on": "2026-11-16",
+    "file": "sources/2026-11-16/montreal_invitation.json",
+    "sha256": "d90d91f898f816c49adec4719cce4a5dc0e8ffb02027a837e0d6389a351d18da"
+  },
+  {
+    "url": "https://us02web.zoom.us/webinar/register/WN_GEbls2MWREmYojyo3W9bSQ",
+    "captured_on": "2026-11-16",
+    "file": "sources/2026-11-16/chea_zoom_details.json",
+    "sha256": "63fac1995467e57156c2d59ac87d9a337c9d79d17f343648b8b951d5cd4df890"
   }
 ]

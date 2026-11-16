@@ -1,7 +1,7 @@
 {
-  "saved_on": "2026-11-12",
+  "saved_on": "2026-11-16",
   "source_chat": "codex://threads/01a11367-a7b9-7462-81ad-51943513b56c",
-  "note": "Recovered historical captures, not a live feed. AICE and related industry events; not all are AICE-hosted. Raw snapshots were captured November 8–12, 2026. Missing values are null. Date ranges are inclusive; time retains source wording and uncertainty. No illustrative UI fixtures or unannounced next-forum placeholder included.",
+  "note": "Saved public-source research, not a live feed. Original captures date from November 8–12, 2026; CHEA and Montreal records were verified and promoted from leads on November 16. saved_on records the archive update date, not re-verification of every event. AICE and related industry events; not all are AICE-hosted. Missing values remain null. Date ranges are inclusive; source time wording and uncertainty are preserved.",
   "events": [
     {
       "id": "gdn-preconference-20261019",
@@ -195,6 +195,27 @@
       "notes": "The event names Shelby Cearley; the AICE Affiliate snapshot lists Shelby L Cearley. This is a matching-name affiliation lead, not proof of AICE hosting. Login support email is not stored as an event contact."
     },
     {
+      "id": "montreal-recognition-20261117",
+      "title": "Foreign Professional Qualifications Recognition — Book Launch, Roundtable and Reception",
+      "organizer": "Frédérick Doucet (invitation author and host)",
+      "contact": null,
+      "event_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
+      "date": "2026-11-17",
+      "end_date": null,
+      "time": "18:00–20:00 Montreal local time (America/Toronto; EST, UTC−05:00 on this date)",
+      "source_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
+      "source_files": [
+        "sources/2026-11-16/montreal_invitation.json"
+      ],
+      "notes": "French-language, in-person book launch with a roundtable, reception and signing at Librairie Le Port de tête, 269 avenue du Mont-Royal Est, Montréal. The author’s invitation, reproduced by CICIC, confirms November 17, 2026, 18:00–20:00. Timezone is resolved from the Montreal venue. Guests include André Gariépy, France Houle and Frédérick Doucet. The English title is a descriptive translation. Related industry event; no AICE host or attendee is confirmed. Fee, registration requirements, deadline and contact email are not published in the captured invitation.",
+      "calendar": {
+        "start": "2026-11-17T18:00:00-05:00",
+        "end": "2026-11-17T20:00:00-05:00"
+      },
+      "verified_on": "2026-11-16",
+      "promoted_from": "montreal-recognition-20261117-lead"
+    },
+    {
       "id": "aacrao-edge-20261119",
       "title": "EDGE User Group: November 2026",
       "organizer": "AACRAO",
@@ -208,6 +229,26 @@
         "sources/2026-11-12/edge_nov.json"
       ],
       "notes": "Industry event; no verified AICE participant. Membership login support is not an event contact."
+    },
+    {
+      "id": "chea-aim-20261119",
+      "title": "AIM Regulations: What Accreditors and Institutions Need to Know",
+      "organizer": "Council for Higher Education Accreditation (CHEA)",
+      "contact": null,
+      "event_url": "https://us02web.zoom.us/webinar/register/WN_GEbls2MWREmYojyo3W9bSQ",
+      "date": "2026-11-19",
+      "end_date": null,
+      "time": "2:00 PM Eastern Time (America/New_York; EST); end time not published",
+      "source_url": "https://www.chea.org/webinar-aim-standards-practical-implementation",
+      "source_files": [
+        "sources/2026-11-16/chea_zoom_details.json"
+      ],
+      "notes": "Online webinar. Registration is free; the public Zoom registration data specifies no registration charge. Register in advance to receive joining information by confirmation email. Presenters: Megan R. Good, Will Miller, David Eubanks and Antoinette Flores; moderator: Stephen Hundley. Related industry event; no AICE host or attendee is confirmed. Registration deadline, eligibility for AET, end time and event contact email are not published in the checked sources.",
+      "calendar": {
+        "start": "2026-11-19T14:00:00-05:00"
+      },
+      "verified_on": "2026-11-16",
+      "promoted_from": "chea-aim-20261119-lead"
     },
     {
       "id": "aacrao-transfer-ai-20261120",

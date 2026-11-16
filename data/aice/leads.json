@@ -1,5 +1,5 @@
 {
-  "saved_on": "2026-11-12",
+  "saved_on": "2026-11-16",
   "source_chat": "codex://threads/01a11367-a7b9-7462-81ad-51943513b56c",
   "note": "Follow-up leads recovered from prior research messages. These are not fictional fixtures, but the original event announcement captures were not recovered. Dates here are reported leads, not newly verified facts. Do not merge into a confirmed calendar without checking the source. Additional historical announcements remain in research-notes.json.",
   "leads": [
@@ -52,38 +52,6 @@
       "source_url": "https://pe.linkedin.com/company/aice-association-of-international-credential-evaluators-inc.",
       "research_turn_id": "01a1d0b7-bd54-73d3-8110-9f12fee54610",
       "notes": "Reported from an AICE LinkedIn preview in search cache. No organizer event-page capture or registration URL was recovered. AICE recommendation does not establish AICE attendance. Email is the general GDN office contact, not a named event contact."
-    },
-    {
-      "contact": null,
-      "event_url": "https://www.chea.org/webinar-aim-standards-practical-implementation",
-      "end_date": null,
-      "time": null,
-      "source_files": [
-        "research-notes.json"
-      ],
-      "id": "chea-aim-20261119-lead",
-      "title": "美国高等教育认证规则研讨会",
-      "organizer": "Council for Higher Education Accreditation (CHEA)",
-      "date": "2026-11-19",
-      "source_url": "https://www.chea.org/webinar-aim-standards-practical-implementation",
-      "research_turn_id": "01a1a259-a99f-7d01-9bd0-c5f6e7792028",
-      "notes": "Title is the descriptive Chinese label in the recovered report, not asserted to be the exact official event title. The report supplies this official URL and November 19 date, but no original page capture was recovered. Time and contact remain unknown; no AICE attendance was verified."
-    },
-    {
-      "contact": null,
-      "event_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
-      "end_date": null,
-      "time": "18:00–20:00 EST, reported in the prior research",
-      "source_files": [
-        "research-notes.json"
-      ],
-      "id": "montreal-recognition-20261117-lead",
-      "title": "海外专业资格认可圆桌及酒会",
-      "organizer": "Frédérick Doucet (invitation author; formal organizer not established)",
-      "date": "2026-11-17",
-      "source_url": "https://www.linkedin.com/posts/activity-7523048567435931648-fJVH",
-      "research_turn_id": "01a1a259-a99f-7d01-9bd0-c5f6e7792028",
-      "notes": "Descriptive Chinese title retained from the report. Announcement was reported as a French-language Montreal event at Librairie Le Port de tête, reposted by AICE. Original post capture was not recovered. Attendance, email and booking details remain unverified."
     },
     {
       "contact": "info@groningendeclaration.org",

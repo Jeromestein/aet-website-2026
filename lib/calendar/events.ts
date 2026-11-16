@@ -62,7 +62,8 @@ export function eventTime(event: CalendarEvent, timeZone: string): string {
   if (!event.calendar?.start) return event.time || 'Time not published';
   const formatter = new Intl.DateTimeFormat('en-US', { timeZone, hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
   const start = new Date(event.calendar.start);
-  const time = event.calendar.end ? formatter.formatRange(start, new Date(event.calendar.end)) : formatter.format(start);
+  // ICU versions differ in the spaces they emit; keep server/client markup identical.
+  const time = (event.calendar.end ? formatter.formatRange(start, new Date(event.calendar.end)) : formatter.format(start)).replace(/\s+/g, ' ');
   return event.calendar.presentation === 'series_start' ? `First session: ${time}` : time;
 }
 

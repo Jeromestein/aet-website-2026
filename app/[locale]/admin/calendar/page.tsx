@@ -3,7 +3,7 @@ import CalendarWorkspace from '@/components/calendar/calendar-workspace';
 import { archiveSavedOn, calendarEvents } from '@/lib/calendar/load-events';
 
 export const metadata: Metadata = {
-  title: 'Events Calendar — AET Workspace',
+  title: 'Calendar — AET Workspace',
   description: 'AICE and international credential evaluation events from saved public sources.',
   robots: { index: false, follow: false },
 };
