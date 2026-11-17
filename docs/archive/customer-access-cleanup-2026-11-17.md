@@ -63,3 +63,39 @@ cleanup acceptance, not a Production launch or a completely green full suite.
 
 Do not restore customer sessions to address these fixtures. Update them separately
 against current Calendar, email-gallery and configured main Preview behavior.
+
+
+## Test baseline repair — follow-up
+
+The three test issues above were repaired in a separate test/documentation change.
+No application code, hosted configuration or database migrations changed.
+
+- Calendar checks now require unique IDs, valid dated entries, nonempty retained
+  source evidence and correct undated filtering, without a fixed event count.
+- The legacy email-preview bookmark is tested under its own boundary: 404 in
+  production/test, local redirect into the protected gallery with raw mode removed.
+  Existing gallery flag and staff-membership tests remain in the full suite.
+- Preview tests accept configured main/dev/feature-branch deployments and reject
+  Production, unapproved origins, privileged roles, incomplete schemas and public
+  grants. Every case restores its environment and uses a fresh runtime connection;
+  test rows are reset and temporary schema/grant mutations have finally cleanup.
+
+Verification:
+
+- `pnpm exec vitest run --no-file-parallelism`: **68 test files passed, one skipped;
+  1004 tests passed, 17 skipped, zero failures**. No test file was excluded.
+- Enabled `APPLICATION_CORE_TEST_PG_BIN`, `PREEVAL_F3_TEST_PG_BIN`,
+  `PREEVAL_F4_TEST_PG_BIN` and `PREEVAL_PUBLICATION_TEST_PG_BIN` with local
+  PostgreSQL 15 binaries. Refund and email-recovery URL opt-ins pointed to newly
+  created disposable loopback databases. All temporary clusters were stopped and
+  removed; no existing or hosted database was used.
+- The only skipped suite is `application-core-full-snapshot.test.ts`, which
+  requires an external `APPLICATION_CORE_FULL_SNAPSHOT` fixture. No hosted
+  customer-data snapshot was fetched or invented for this test run.
+- All nine Preview cases also passed shuffled test order with seed `171126`.
+- `pnpm typecheck`, `pnpm check:i18n` and whitespace checks passed.
+
+This follow-up resolves the recorded test failures, not the separate local
+Turbopack issue or the pending Production launch. No UI code changed, so no new
+browser acceptance was needed. No push, deployment or live provider transaction
+was performed.

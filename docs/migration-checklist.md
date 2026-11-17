@@ -25,8 +25,10 @@ preserves migration history and acceptance evidence.
   form into `/application?service=evaluation`; verify desktop/mobile navigation.
 - [x] Record the no-customer-session design rule and local regression evidence in
   [the cleanup record](archive/customer-access-cleanup-2026-11-17.md).
-- [ ] Refresh unrelated stale Calendar, email-preview release-boundary and old
-  six-table Preview fixture tests; this cleanup is not a fully green test baseline.
+- [x] Refresh Calendar invariants, email-preview boundaries and main Preview
+  fixtures; full local suite passed with 1004 tests and no failures. The 17
+  historical-snapshot cases remain conditional on an external fixture. See
+  [test repair acceptance](archive/customer-access-cleanup-2026-11-17.md#test-baseline-repair--follow-up).
 
 ## Staff email previews
 

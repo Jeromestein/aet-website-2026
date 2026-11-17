@@ -8,6 +8,7 @@ vi.mock('next/navigation', () => ({ redirect: auth.redirect, notFound: () => { t
 import { emailPreviewTemplates, sampleEmail } from '../lib/email/preview';
 import Page from '../app/[locale]/admin/email-preview/page';
 import Unavailable from '../components/staff/unavailable';
+import { GET as legacyPreview } from '../app/api/email-template-preview/route';
 const assets = 'https://www.americantranslationservice.com';
 beforeEach(() => { vi.clearAllMocks(); vi.stubEnv('EMAIL_PREVIEW_ENABLED', 'true'); });
 afterEach(() => vi.unstubAllEnvs());
@@ -56,5 +57,24 @@ describe('staff email gallery', () => {
     const pending = await sampleEmail('fee_update', assets, true);
     expect(pending.html).toContain('No payment is requested');
     expect(pending.html).not.toContain('Review Fee &amp; Payment Options');
+  });
+});
+
+describe('legacy email preview bookmark', () => {
+  it.each(['production', 'test'] as const)('returns 404 in %s without exposing templates', async mode => {
+    vi.stubEnv('NODE_ENV', mode);
+    const response = await legacyPreview(new Request('https://example.invalid/api/email-template-preview?raw=1'));
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe('');
+    expect(response.headers.get('location')).toBeNull();
+    expect(auth.session).not.toHaveBeenCalled();
+  });
+  it('redirects local bookmarks into the protected gallery and strips raw mode', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const response = await legacyPreview(new Request('http://localhost:3021/api/email-template-preview?raw=1&kind=report'));
+    expect(response.status).toBe(307);
+    expect(response.headers.get('location')).toBe('http://localhost:3021/admin/email-preview?kind=report');
+    expect(response.headers.get('cache-control')).toContain('no-store');
+    expect(response.headers.get('x-robots-tag')).toContain('noindex');
   });
 });

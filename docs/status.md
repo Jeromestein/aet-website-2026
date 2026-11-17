@@ -37,7 +37,11 @@ links remain reusable; retired token-only URLs now show recovery guidance.
 Employee login, office permissions and file/payment/report checks remain in place.
 No hosted database, migration, provider configuration or deployment was changed.
 The design guide explicitly forbids restoring this customer-session design.
-See [cleanup verification and remaining test issues](archive/customer-access-cleanup-2026-11-17.md).
+See [cleanup verification](archive/customer-access-cleanup-2026-11-17.md).
+The subsequent test-only repair passed the full local suite: 1004 passed, no
+failures, 17 historical-snapshot cases skipped without their external fixture.
+Calendar, email-preview and configured main Preview test expectations are current;
+Preview tests also pass in randomized order.
 This local cleanup does not change the joint Production release prerequisites.
 
 ## Guarded main integration — November 12

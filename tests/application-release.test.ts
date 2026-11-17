@@ -47,7 +47,8 @@ it('configures staff auth independently of application activation', () => {
   vi.stubEnv('APP_ORIGIN','https://unapproved.invalid'); expect(staffConfiguration).toThrow();
 });
 function files(dir: string): string[] { return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(join(dir,e.name)):[join(dir,e.name)]); }
-const excluded = /^app\/api\/(?:payment\/|staff-|internal\/customer-status\/)/;
+// Email bookmarks have a separate development-only boundary, covered by email-preview.test.tsx.
+const excluded = /^app\/api\/(?:payment\/|staff-|internal\/customer-status\/|email-template-preview\/)/;
 const routes = files('app/api').filter(p=>p.endsWith('/route.ts')&&!excluded.test(p));
 describe('closed application HTTP boundary, including callbacks and internal workers', () => {
   it.each(routes)('%s rejects direct calls before any provider request or awaiting params', async file => {

@@ -9,13 +9,24 @@ const event = (id: string) => events.find(item => item.id === id)!;
 
 describe('saved public calendar', () => {
   it('keeps undated announcements out and retains source evidence', () => {
-    expect(events).toHaveLength(20);
-    expect(new Set(events.map(item => item.id)).size).toBe(20);
+    expect(events.length).toBeGreaterThan(0);
+    expect(new Set(archive.events.map(item => item.id)).size).toBe(archive.events.length);
+    for (const item of events) {
+      expect(item.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(new Date(item.date).toISOString().slice(0, 10)).toBe(item.date);
+      if (item.end_date) expect(item.end_date >= item.date).toBe(true);
+    }
     for (const item of archive.events) {
+      expect(item.source_files.length).toBeGreaterThan(0);
       for (const source of item.source_files) {
         expect(existsSync(fileURLToPath(new URL('../data/aice/' + source, import.meta.url)))).toBe(true);
       }
     }
+  });
+  it('excludes an undated announcement without excluding a dated event', () => {
+    const dated = events[0];
+    const undated = { ...dated, id: 'synthetic-undated-announcement', date: null };
+    expect(datedEvents([undated, dated])).toEqual([dated]);
   });
   it('includes the final day of a conference across a month boundary', () => {
     const workshop = event('aacrao-workshop-20261031');
