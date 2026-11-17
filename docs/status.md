@@ -29,6 +29,17 @@ The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=tr
 the default is closed, independently of customer application release. See
 [email gallery configuration](email-templates.md#gallery-release-switch).
 
+## Terms and document requirements — November 17
+
+Terms of Use now states the applicant’s responsibility to confirm acceptance and
+report requirements, no guarantee of acceptance, and possible original/official
+electronic record requirements without state-specific limits. Both application
+codebases use the general document guidance in EN/ZH/ES Status notices.
+The legacy notice’s isolated local component preview passed in-app desktop and
+390px mobile checks, including expand/collapse and wrapping. The website’s
+`/terms` page returned 200 and displayed the new clauses in the in-app browser
+when the dev server was bound to `localhost`.
+
 ## Guarded main integration — November 12
 
 Dev is integrated into main and the guarded main deployment is live. New
