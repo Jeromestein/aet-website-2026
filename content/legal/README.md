@@ -17,7 +17,7 @@ date was supplied by these sources, so none was added.
 
 Per owner direction on September 30, 2026, only English documents are retained.
 The imported Spanish copies and Chinese fallback notice were removed; the legacy
-source checkout is unchanged. English text remains unmodified.
+source checkout is unchanged. The original import retained the English text; the owner-requested additions below extend it.
 
 The shared footer and Payment consent links point to `/privacy` and `/terms`
 in every site language. Former Chinese/Spanish routes, English PHP/HTML aliases,
@@ -42,5 +42,16 @@ The following source statements need owner review against the deployed services:
 - Contact currently provides email/office links rather than an intake form.
   Online application and upload references concern the separate portal.
 
-No policy commitments, refund rules, consent requirements or jurisdiction terms
-were rewritten, and no application or payment was submitted during verification.
+The original migration did not rewrite policy commitments, refund rules, consent
+requirements or jurisdiction terms, and did not submit an application or payment.
+
+## Owner-requested additions — November 17, 2026
+
+The Terms of Use `use-of-services` section now includes the applicant’s duty to
+confirm acceptance and report requirements before applying, no guarantee of
+acceptance by a receiving organization, and general original/official electronic
+record requirements. These additions are not limited to any state. Scans and
+photos do not substitute when originals or official electronic records are
+required; customers should confirm delivery instructions before sending originals.
+The existing refund, consent, retention and jurisdiction clauses are unchanged.
+The customer Status notice uses the same guidance in English, Chinese and Spanish.

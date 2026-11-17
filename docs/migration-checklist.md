@@ -15,6 +15,16 @@ Read [status](status.md) for current capability and [database architecture](data
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
 
+## Terms and document requirements
+
+- [x] Add applicant acceptance checks, no acceptance guarantee and general
+  original/official electronic record requirements to Terms of Use; align both
+  Status notices in EN/ZH/ES without naming states.
+- [x] Verify legacy notice expand/collapse and desktop/mobile wrapping through
+  an isolated local component preview without customer data.
+- [x] Verify the new website `/terms` in the local browser with the development
+  server bound to `localhost`.
+
 ## Customer access simplification
 
 - [x] Remove legacy customer Cookie issuance/validation, one-use token exchange,
