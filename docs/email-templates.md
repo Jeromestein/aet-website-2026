@@ -1,9 +1,19 @@
 # Business email templates
 
-All seven categories use code-owned React Email templates and the 2026 website
+All eight categories use code-owned React Email templates and the 2026 website
 palette, complete AET logo, structured content and linked footer. Render from
 current application/business records when sending; never store subject or HTML.
-The development-only gallery is `/api/email-template-preview` on port 3022.
+The staff-only gallery is `/admin/email-preview`, linked from CRM Tools as
+**Email Templates**. On main Preview it is available without a local server:
+https://aet-main-preview-meiyutechs-projects.vercel.app/admin/email-preview
+
+The gallery renders the actual React Email templates with fictional fixtures from
+`lib/email/preview.ts`; it does not read customer records, queue notifications or
+send emails. It supports desktop/mobile widths, confirmed/pending quotes and both
+service variants of information requests. Inline frames disable scripts and their
+email links are inactive. The page checks existing active staff membership before
+rendering and is not indexed or shared-cached. The old development-only API URL
+redirects to the protected page locally and remains unavailable on hosted builds.
 
 | Preview kind | Business email | Legacy equivalent | Source/trigger |
 | --- | --- | --- | --- |
@@ -14,6 +24,7 @@ The development-only gallery is `/api/email-template-preview` on port 3022.
 | `result` | Preliminary assessment | DEResultsConfirmation | Paid, currently releasable referenced result version |
 | `information` | Additional information request | New workflow notification | Referenced staff request, not the latest arbitrary message |
 | `access` | Customer application lookup | New workflow notification | Customer application ID and lookup link |
+| `report` | Formal evaluation report ready | New workflow notification | Paid, released formal PDF and saved Status link |
 
 Legacy templates were checked in `aet-app/src/app/(frontend)/(aet-app)/components/Email/templates`.
 Thanksgiving/Christmas promotional templates are excluded at the owner's request.
@@ -56,14 +67,14 @@ Business emails use the blue-gradient design approved on 2026-10-20.
   confirmed-payment details, fee ranges, quote-pending states and result caveats.
 - Use a light, quiet footer with company identity and Website, Application status,
   Contact and Privacy links. Keep pilot disclosures outside the letter.
-- Share this structure across all seven business templates. Use tables and inline
+- Share this structure across all eight business email categories. Use tables and inline
   styles; responsive padding targets generated table cells. Keep pale-blue panels
   for assessment results and information requests. Promotional and staff login
   emails remain excluded. Never invent payment dates or completion estimates.
 
 ## Public email assets
 
-All seven templates default to `EMAIL_ASSET_ORIGIN`, independently of application
+All eight categories default to `EMAIL_ASSET_ORIGIN`, independently of application
 and status-link origins. The fallback and example configuration are
 `https://www.americantranslationservice.com`. This public host already serves the
 exact header PNG and Poppins files from this repository. Localhost, HTTP, IP-based

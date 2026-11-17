@@ -15,6 +15,13 @@ Read [status](status.md) for current capability and [database architecture](data
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
 
+## Staff email previews
+
+- [x] Add an authenticated `/admin/email-preview` gallery and CRM Tools link for
+  all eight business email categories, both information-request versions and quote states.
+- [x] Verify the hosted main Preview gallery on desktop/mobile and confirm
+  Production remains on its previous deployment. See [email gallery acceptance](archive/email-gallery-preview-2026-11-17.md).
+
 ## Guarded integration into main
 
 - [x] Remove diagonal outbound-link arrows sitewide per the design guide; verify
