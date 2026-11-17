@@ -10,7 +10,7 @@ vi.mock("../lib/preeval/db", () => {
   });
   return { db: () => sql, table: (name: string) => name };
 });
-import { consumeLink, makeLink, makeSession, session } from "../lib/preeval/auth";
+import { makeLink, session, authorize } from "../lib/preeval/auth";
 
 beforeEach(() => { vi.resetAllMocks(); m.staff.mockResolvedValue(null); m.query.mockResolvedValue([]); });
 describe("password-only staff access", () => {
@@ -20,29 +20,14 @@ describe("password-only staff access", () => {
     expect(await session()).toBe(staff);
     expect(m.query).not.toHaveBeenCalled();
   });
-  it("rejects a legacy administrator cookie", async () => {
-    m.query.mockResolvedValue([{ role: "admin" }]);
-    expect(await session()).toBeNull();
-    expect(m.query.mock.calls[0][0]).toContain("role='customer'");
-  });
-  it("preserves a customer session", async () => {
+  it("ignores legacy customer and administrator cookies without querying session tables", async () => {
     m.query.mockResolvedValue([{ role: "customer", application_id: "application-1" }]);
-    expect(await session()).toMatchObject({ role: "customer", application_id: "application-1" });
-  });
-  it("rejects issuing staff tokens and legacy sessions before a write", async () => {
-    await expect(makeLink(null, "admin" as never, "staff@example.invalid", "en")).rejects.toMatchObject({ status: 403 });
-    await expect(makeSession(null, "admin" as never, "staff@example.invalid")).rejects.toMatchObject({ status: 403 });
+    expect(await session()).toBeNull();
+    await expect(authorize()).rejects.toMatchObject({status:401});
     expect(m.query).not.toHaveBeenCalled();
   });
-  it("rejects an old administrator link before creating a session", async () => {
-    m.query.mockResolvedValue([{ role: "admin" }]);
-    await expect(consumeLink("a".repeat(43))).rejects.toMatchObject({ code: "invalid_link" });
-    expect(m.query).toHaveBeenCalledTimes(1);
-    expect(m.query.mock.calls[0][0]).toContain("role='customer'");
-  });
-  it("still consumes a valid customer link", async () => {
-    m.query.mockResolvedValueOnce([{ role: "customer", application_id: "application-1", email: "customer@example.invalid", locale: "en" }]);
-    expect((await consumeLink("a".repeat(43))).row.role).toBe("customer");
-    expect(m.query).toHaveBeenCalledTimes(2);
+  it("rejects issuing a staff link before any write", async () => {
+    await expect(makeLink(null, "admin" as never, "staff@example.invalid", "en")).rejects.toMatchObject({ status: 403 });
+    expect(m.query).not.toHaveBeenCalled();
   });
 });

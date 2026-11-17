@@ -1,8 +1,8 @@
 import { requireApplicationPage } from '@/lib/application-page-access';
 import { copy } from "@/lib/preeval/copy";
 import type { Metadata } from "next";
-import PreEvaluationShell from "@/components/preeval/shell";
-import { ConsumeLink } from "@/components/preeval/customer";
+import ApplicationShell from "@/components/evaluation-application/shell";
+import { EvaluationAccess } from "@/components/evaluation-application/access";
 export async function generateMetadata({
   params,
 }: {
@@ -24,8 +24,8 @@ export default async function Page({
 
   const { locale } = await params;
   return (
-    <PreEvaluationShell locale={locale} narrow>
-      <ConsumeLink locale={locale} />
-    </PreEvaluationShell>
+    <ApplicationShell locale={locale} languages={false}>
+      <EvaluationAccess locale={locale} preEvaluation />
+    </ApplicationShell>
   );
 }

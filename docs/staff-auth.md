@@ -1,5 +1,13 @@
 # Staff authentication and Payload migration
 
+> November 17, 2026: the old `verify-business-cloud.mts` runner was retired
+> because it created legacy customer session/token fixtures and depended on the
+> removed multi-table Preview. Its historical command below is not runnable.
+> Employee login and office permissions remain covered by `tests/staff-*.test.ts`,
+> `tests/customer-access-retirement.test.ts` and the current six-table suites.
+> No employee accounts, Supabase Auth tables or login behavior were changed.
+
+
 
 ## Current account policy — October 20, 2026
 

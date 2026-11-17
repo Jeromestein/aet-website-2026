@@ -17,8 +17,8 @@ backend features are enabled; use [status](../status.md) for that boundary.
 Reuse the website `Navigation` and `SiteFooter` for pre-evaluation landing/form/
 status/access/result, formal application/access/receipt and payment-return pages.
 Scope form styles to their main content so shared colors stay intact. Preserve
-language/query behavior from the core guide; protected formal token exchange
-keeps language switching disabled while the private link is held in memory.
+language/query behavior from the core guide. Retired token-only URLs show localized
+recovery guidance instead of a token-exchange button.
 Staff use their own English-only workspace shell.
 
 ## General application
@@ -28,8 +28,8 @@ or `service=translation`. Pre-evaluation and formal intake share this entry;
 translation remains a non-submitting preview. Redirect the old dedicated
 pre-evaluation form to its selected service here; retain saved application links.
 Public website destinations remain controlled by the release gate.
-The older four-step formal pilot is a separate flow, documented in
-[evaluation-application.md](../evaluation-application.md).
+The retired four-step formal pilot redirects here. See
+[evaluation-application.md](../evaluation-application.md) for access boundaries.
 
 ### Steps and fields
 
@@ -90,6 +90,23 @@ must not look like submission failure; retain the saved application and expose t
 available retry. Customer access uses the ID/confirmation link, not a new account.
 Read test-recipient policy and enabled service scope from the intake guide; do not
 duplicate changing provider configuration in design rules.
+
+## Customer access policy
+
+- Do not introduce customer session cookies, one-use email-link exchange, or
+  arbitrary 24-hour access expiry for either application service. Do not require
+  the same browser or ask customers to renew a link to continue their application.
+- Reuse the accepted application-ID/confirmation-link flow. A link is an access
+  credential, not proof of identity; tell staff to share it only with its applicant.
+  Never describe a reusable link as single-use or say a new copy invalidates it.
+- Keep employee login, office permissions, application/file ownership checks,
+  payment validation, and paid/published-result gates. This rule does not retire
+  employee sessions, Stripe Checkout sessions, signed upload credentials, or
+  tab-scoped form draft retention.
+- Retired token-only URLs show recovery guidance and remove the fragment locally;
+  do not guess the application ID, recreate token tables or accept obsolete cookies.
+- Future internal-only access should reuse employee authentication when implemented;
+  this policy alone does not enable a gate or activate Production.
 
 ## Customer Status and documents
 

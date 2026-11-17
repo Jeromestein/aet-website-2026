@@ -1,5 +1,13 @@
 # Pre-evaluation runtime guide
 
+> November 17, 2026: customer session/token code is retired. Current customer
+> access uses the reusable application-ID link; employee authentication remains.
+> Historical acceptance sections below are evidence, not instructions to restore
+> retired pilot commands. Use `APPLICATION_CORE_TEST_PG_BIN=<postgres-bin>
+> pnpm test:preeval:integration` for the current disposable-database suite. No
+> hosted database changes are part of this cleanup.
+
+
 Start with the current configuration below. New pre-evaluation applications use
 `/application?service=pre-evaluation` (with the locale prefix when applicable).
 The old `/degree-equivalency-tool/application` form redirects there; saved
@@ -380,8 +388,7 @@ running by this acceptance.
   matching the legacy app. Confirmation emails include the ID, education summary,
   exact fee and a reusable application URL. No customer account, password or extra
   email-verification step is required. The ID is an access credential and should
-  remain private. Internal HTTP-only sessions last 24 hours; the same ID/link
-  transparently restores access after expiry. Result emails include the paid
+  remain private. No customer session cookie or access-expiry timer is used. Result emails include the paid
   equivalency and assessment basis.
 - The three-step form saves its fields and current step in the browser tab, with
   a Start over action. Refreshing restores the draft; optional files must be
@@ -499,14 +506,13 @@ have no residence-country column, so that value remains in the auxiliary table.
 No column was added to the original tables. See
 [the field mapping and compatibility boundary](legacy-form-compatibility.md). A random request
 ID and payload hash prevent duplicate retries or conflicting reuse. Customer
-sessions are scoped to one application; staff permissions are checked on every
+access is scoped to one application; staff permissions are checked on every
 protected API operation. The customer lookup endpoint validates a complete UUID,
-limits request size and request frequency, sets a private session cookie and
+limits request size and request frequency where configured, and
 returns a localized application URL. It neither sends email nor grants staff
 access. Customer responses explicitly project education fields: legacy `ai_output`
-must never bypass the unpaid/refunded result gate. Previously issued single-use
-links remain compatible; new customer messages use the reusable ID URL.
-Cross-origin mutations are rejected; submission, lookup, token, email and payment
+must never bypass the unpaid/refunded result gate. Old token-only URLs show recovery guidance; customer messages use the reusable ID URL.
+Cross-origin mutations are rejected; submission, lookup, email and payment
 actions are limited.
 
 New pre-evaluation files are private Dropbox objects under

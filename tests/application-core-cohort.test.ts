@@ -34,7 +34,6 @@ import { GET as getRoute, POST as postRoute } from '../app/api/pre-evaluation/[.
 import { rehearsePreevaluation, assertRehearsalDatabase } from '../scripts/database/preeval-backfill';
 import { createCoreShadowReader } from '../lib/application-core/reader';
 import { statusComparison, differingPaths } from '../lib/application-core/compare';
-import { makeLink, consumeLink } from '../lib/preeval/auth';
 import { writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
@@ -175,10 +174,9 @@ describe.skipIf(!pgBin)('historical cohort cutover (owned local database, never 
   const before=await sourceDigest(),reader=await createCoreShadowReader(m.sql!);
   const queries:Record<string,string>[]=[{}, {view:'equivalency'}, {view:'payments'}, {view:'documents'}, {sort:'oldest'}, {filter:'completed'}, {export:'csv'}];
   const oldCrm=await Promise.all(queries.map(q=>workspaceSnapshot(q,staff)));
-  const oldStates=new Map(),links=new Map();
+  const oldStates=new Map();
   for(const app of eligible()){
    oldStates.set(app.id,await application(app.id));
-   links.set(app.id,await makeLink(app.id,'customer',app.email,app.locale));
   }
   // Normal reads may repair old workflow state; freeze the migration baseline afterwards.
   const baseline=await sourceDigest(),reports=[];
@@ -187,14 +185,10 @@ describe.skipIf(!pgBin)('historical cohort cutover (owned local database, never 
   for(let i=0;i<queries.length;i++)expect(differingPaths(oldCrm[i],await workspaceSnapshot(queries[i],staff))).toEqual([]);
   for(const app of eligible()){
    expect(statusComparison(oldStates.get(app.id),await reader.status(app.id,{role:'customer',applicationId:app.id}))).toEqual([]);
-   const consumed=await consumeLink(links.get(app.id).split('#token=')[1]);
-   expect(consumed.row.application_id).toBe(app.id);m.cookie=consumed.token;
    const response=await getRoute(new Request('https://aet-website-2026-git-dev-test.vercel.app/api/pre-evaluation/applications/'+app.id),{params:Promise.resolve({path:['applications',app.id]})});
-   expect(response.status).toBe(200);expect((await response.json()).result).toEqual(oldStates.get(app.id).result);
-   await expect(consumeLink(links.get(app.id).split('#token=')[1])).rejects.toMatchObject({code:'invalid_link'});
+   expect(response.status).toBe(401);
    const lookupResponse=await lookup(new NextRequest('https://aet-website-2026-git-dev-test.vercel.app/api/pre-evaluation/lookup',{method:'POST',headers:{origin:'https://aet-website-2026-git-dev-test.vercel.app','content-type':'application/json'},body:JSON.stringify({applicationId:app.id,locale:app.locale})}));
-   expect(lookupResponse.status).toBe(200);expect((await lookupResponse.json()).url).toBe(resultPath(app.locale,app.id));
-   expect(lookupResponse.headers.get('set-cookie')).toContain('aet_preeval_session=');
+   expect(lookupResponse.status).toBe(410);expect(lookupResponse.headers.get('set-cookie')).toBeNull();
    const core=(await admin`select * from aet_preview_core.aet_core_applications where id=${app.id}`)[0];
    expect(core.request_hash).toBe(app.request_hash);expect(core.request_hash_version).toBe(0);
    await expect(reader.status(app.id,{role:'customer',applicationId:randomUUID()})).rejects.toMatchObject({status:403});

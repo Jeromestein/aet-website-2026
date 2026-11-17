@@ -146,8 +146,8 @@ business cards and forms use the [business UI dimensions](business-ui.md).
 - Customer pages share localized navigation/footer and EN `/`, ZH `/zh`, ES `/es`
   structure. Staff `/admin/*` pages stay English-only without locale prefixes.
 - An explicit locale wins, then saved preference, browser language and English.
-  Switching preserves page, query and fragment, except protected formal link
-  exchange while the token is in memory. Never change the customer's language
+  Switching preserves page, query and fragment. Retired customer access pages
+  discard obsolete token fragments without exchanging them. Never change the customer's language
   through staff navigation. Missing translations use English and are flagged.
 - Preserve institution names, full company wordmarks and application screenshots.
   Mark translated testimonials as translations; imported Blog bodies and legal

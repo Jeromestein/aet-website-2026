@@ -2,8 +2,7 @@ import { coreTable } from '../application-core/connection';
 import { sixTableMode } from '../application-core/convergence-mode';
 import { compact } from '../application-core/compact-files';
 import { z } from 'zod';
-import { createHash, randomBytes } from "node:crypto";
-import { cookies } from "next/headers";
+import { createHash } from "node:crypto";
 import { table, db, type Row } from "./db";
 import { AppError, resultPath } from "./domain";
 import { configuration } from "./config";
@@ -12,17 +11,9 @@ import { staffSession, requireStaffApplication } from "../staff/session";
 
 export const hash = (value: string) =>
   createHash("sha256").update(value).digest("hex");
-export const secret = () => randomBytes(32).toString("base64url");
-export const COOKIE = "aet_preeval_session";
+/** Only verified employee sessions are recognized; customer links are application-scoped. */
 export async function session() {
-  const staff = await staffSession();
-  if (staff) return staff as Row;
-  if(compact())return null;
-  const value = (await cookies()).get(COOKIE)?.value;
-  if (!value || !/^[\w-]{43}$/.test(value)) return null;
-  const [row] =
-    await db()`select * from ${table("preeval.sessions")} where hash=${hash(value)} and role='customer' and expires_at>now()`;
-  return row?.role === "customer" ? row : null;
+  return await staffSession() as Row | null;
 }
 export async function authorize(id?: string) {
   const current = await session();
@@ -40,57 +31,17 @@ export async function authorize(id?: string) {
   if (id && current.role === "admin" && current.offices) await requireStaffApplication("preeval", id);
   return current;
 }
-export async function makeSession(
-  applicationId: string | null,
-  role: "customer",
-  email: string,
-) {
-  if (role !== "customer") throw new AppError("access_denied", 403);
-  if(compact())throw new AppError('sessions_retired',410);
-  const token = secret();
-  await db()`insert into ${table("preeval.sessions")}(hash,application_id,role,email,expires_at) values (${hash(token)},${applicationId},${role},${email},now()+interval '24 hours')`;
-  return token;
-}
-export function sessionCookie(value: string) {
-  return {
-    name: COOKIE,
-    value,
-    httpOnly: true,
-    sameSite: "lax" as const,
-    secure: configuration().origin.startsWith("https:"),
-    path: "/",
-    maxAge: 86400,
-  };
-}
+/** Reusable customer link. Legacy customer token/session storage is retired. */
 export async function makeLink(
   applicationId: string | null,
   role: "customer",
-  email: string,
+  _email: string,
   locale: string,
 ) {
   if (role !== "customer") throw new AppError("access_denied", 403);
-  if(compact()){if(!applicationId||!z.uuid().safeParse(applicationId).success)throw new AppError('invalid_link');return configuration().origin+resultPath(locale,applicationId);}
-  const token = secret();
-  await db()`insert into ${table("preeval.tokens")}(hash,application_id,role,email,locale,expires_at) values (${hash(token)},${applicationId},${role},${email},${locale},now()+interval '24 hours')`;
-  return (
-    configuration().origin +
-    ((locale === "en" ? "" : "/" + locale) + "/access") +
-    "#token=" +
-    token
-  );
-}
-export async function consumeLink(token: string) {
-  if(compact())throw new AppError("legacy_link_retired",410);
-  if (!/^[\w-]{43}$/.test(token)) throw new AppError("invalid_link");
-  const raw = secret();
-  const row = await db().begin(async (sql) => {
-    const [t] =
-      await sql`update ${table("preeval.tokens")} set consumed_at=now() where hash=${hash(token)} and role='customer' and consumed_at is null and expires_at>now() returning *`;
-    if (!t || t.role !== "customer") throw new AppError("invalid_link");
-    await sql`insert into ${table("preeval.sessions")}(hash,application_id,role,email,expires_at) values (${hash(raw)},${t.application_id},${t.role},${t.email},now()+interval '24 hours')`;
-    return t;
-  });
-  return { token: raw, row: row as Row };
+  if (!compact()) throw new AppError("legacy_customer_access_retired", 410);
+  if (!applicationId || !z.uuid().safeParse(applicationId).success) throw new AppError("invalid_link");
+  return configuration().origin + resultPath(locale, applicationId);
 }
 export function sameOrigin(request: Request) {
   if (!requestMatchesApplicationOrigin(request.headers.get("origin"), configuration().origin))

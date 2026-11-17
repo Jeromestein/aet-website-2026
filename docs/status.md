@@ -14,7 +14,7 @@
 - Prepared for the owner's manual upload trial only. No Feed upload or campaign
   activation was performed.
 
-Updated November 12, 2026. The owner now requires **pre-evaluation and credential
+Updated November 17, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
 journey is verified on earlier dev Preview; the unified pre-evaluation choice is
 now verified end to end on main Preview at `67a9cf1`. The unified credential
@@ -28,6 +28,17 @@ See the [active checklist](migration-checklist.md) for tasks and
 The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
 the default is closed, independently of customer application release. See
 [email gallery configuration](email-templates.md#gallery-release-switch).
+
+## Customer access cleanup — November 17 (local only)
+
+Removed obsolete customer session Cookies, 24-hour access expiry, one-use token
+exchange and the old four-step formal form. Existing six-table application-ID
+links remain reusable; retired token-only URLs now show recovery guidance.
+Employee login, office permissions and file/payment/report checks remain in place.
+No hosted database, migration, provider configuration or deployment was changed.
+The design guide explicitly forbids restoring this customer-session design.
+See [cleanup verification and remaining test issues](archive/customer-access-cleanup-2026-11-17.md).
+This local cleanup does not change the joint Production release prerequisites.
 
 ## Guarded main integration — November 12
 

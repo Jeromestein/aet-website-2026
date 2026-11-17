@@ -44,6 +44,17 @@ beforeEach(() => {
   m.session.mockResolvedValue({ email: "staff@example.com" });
 });
 describe("staff authentication HTTP boundaries", () => {
+  it("ends only the employee session and returns the login destination", async () => {
+    const result = await post("logout", {});
+    expect(result.status).toBe(200);
+    expect(await result.json()).toEqual({ url: "/admin/login" });
+    expect(m.signOut).toHaveBeenCalledWith({ scope: "local" });
+    expect(m.prepare).not.toHaveBeenCalled();
+  });
+  it("rejects cross-origin employee logout", async () => {
+    expect((await post("logout", {}, "https://outside.invalid")).status).toBe(403);
+    expect(m.signOut).not.toHaveBeenCalled();
+  });
   it("rejects cross-origin mutation before touching credentials", async () => {
     expect(
       (

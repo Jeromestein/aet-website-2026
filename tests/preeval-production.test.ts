@@ -48,7 +48,7 @@ import { TOTAL_CENTS } from '../lib/preeval/domain';
 import { POST } from '../app/api/pre-evaluation/[...path]/route';
 
 const env = {
-  APP_ENV: 'production', APP_ORIGIN: 'https://app.americantranslationservice.com',
+  APPLICATIONS_ENABLED: 'true', APP_ENV: 'production', APP_ORIGIN: 'https://app.americantranslationservice.com',
   APPLICATION_DATABASE_MODE: 'production', APPLICATION_CORE_MODE: 'six-production',
   APPLICATION_DATABASE_URL: 'postgresql://aet_runtime.qrxztgdemfodemlcabcq:synthetic@aws-0-us-west-1.pooler.supabase.com:6543/postgres',
   APPLICATION_TEST_EMAIL: 'test-only@example.invalid', APPLICATION_CORE_PROVIDER_ACCOUNT: 'acct_synthetic_live',

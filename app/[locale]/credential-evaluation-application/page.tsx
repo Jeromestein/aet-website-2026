@@ -1,8 +1,7 @@
 import { requireApplicationPage } from '@/lib/application-page-access';
-import { environmentValue } from "../../../lib/application-environment.mjs";
+import { redirect } from 'next/navigation';
+import { pathFor } from '@/lib/preeval/domain';
 import { getTranslations } from 'next-intl/server';
-import ApplicationShell from '@/components/evaluation-application/shell';
-import { EvaluationApplication } from '@/components/evaluation-application/form';
 export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -13,5 +12,5 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   requireApplicationPage(false);
 
   const { locale } = await params;
-  return <ApplicationShell locale={locale}><EvaluationApplication locale={locale} enabled={environmentValue("APP_ENV") === 'local'} /></ApplicationShell>;
+  redirect(pathFor(locale, '/application') + '?service=evaluation');
 }

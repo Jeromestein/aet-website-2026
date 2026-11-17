@@ -20,7 +20,7 @@ import { POST as postRoute,GET as getRoute } from '../app/api/pre-evaluation/[..
 import { POST as lookupRoute } from '../app/api/pre-evaluation/lookup/route';
 import { AIError } from '../lib/preeval/ai-contract';
 import { activateConvergenceRehearsal,convergedTableName } from '../lib/application-core/convergence-mode';
-import { makeLink,consumeLink,limit } from '../lib/preeval/auth';
+import { makeLink,limit } from '../lib/preeval/auth';
 const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
   cookie:'',list:vi.fn(),start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
@@ -137,9 +137,9 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
     for(const role of ['anon','authenticated'])expect((await sql()`select has_schema_privilege(${role},'aet','usage') allowed`)[0].allowed).toBe(false);
   });
   it('uses non-expiring application URLs without cookies or customer session records',async()=>{
-    const {app,token}=await submit(input());expect(token).toBeNull();
+    const {app}=await submit(input());
     const link=await makeLink(app.id,'customer',app.email,'zh');expect(link).toContain(app.id);expect(link).not.toContain('#token');
-    await expect(consumeLink('old-secret')).rejects.toMatchObject({code:'legacy_link_retired'});
+
     await sql()`update aet.aet_core_applications set created_at=now()-interval '10 years' where id=${app.id}`;
     const response=await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+app.id),{params:Promise.resolve({path:['applications',app.id]})});
     expect(response.status).toBe(200);expect(response.headers.get('set-cookie')).toBeNull();

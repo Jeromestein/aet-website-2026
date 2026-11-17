@@ -464,7 +464,7 @@
     "print": "Print confirmation",
     "newApplication": "Start another application",
     "receiptUnavailable": "This confirmation is unavailable",
-    "receiptError": "Open this page in the same browser within 24 hours of submitting or using an access link. Contact AET for a new private access link. An application number alone does not grant access.",
+    "receiptError": "Use your confirmation link to reopen the application. If it is unavailable, contact AET for help.",
     "loading": "Loading your application…",
     "errors": {
       "required": "Complete this required field.",
@@ -538,9 +538,9 @@
     "cancel": "Cancel application",
     "cancelConfirm": "Cancel this unpaid application? Uploading documents and starting payment will no longer be available.",
     "keepApplication": "Keep application",
+    "checkApplication": "Check application status",
     "openApplication": "Open your application",
-    "accessNote": "Use your private link to access your application. This link works once and expires after 24 hours.",
-    "invalidLink": "This link is missing, expired or already used. Contact AET for a new access link.",
+    "accessNote": "Use the application link in your confirmation email, or enter your Application ID on the status page. If you only have an old access link, contact AET for help.",
     "status": {
       "submitted": "Submitted",
       "reviewing": "Under review",

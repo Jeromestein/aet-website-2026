@@ -1,6 +1,6 @@
 # AET Release Checklist
 
-Updated November 12, 2026. The first release is **pre-evaluation and credential
+Updated November 17, 2026. The first release is **pre-evaluation and credential
 evaluation together, through the unified `/application` entry**.
 Develop primarily on `main`, with local or configured Preview testing.
 Merging code does not activate new application workflows in Production.
@@ -14,6 +14,19 @@ any later destructive cleanup requires a separate explicit owner decision.
 Read [status](status.md) for current capability and [database architecture](database-architecture.md)
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
+
+## Customer access simplification
+
+- [x] Remove legacy customer Cookie issuance/validation, one-use token exchange,
+  24-hour access copy and retired pilot runners. Keep reusable application-ID links.
+- [x] Retain employee login, office permissions, application/file scoping and
+  payment/report gates; leave databases and historical migration files untouched.
+- [x] Show recovery guidance for old token-only links and redirect the old formal
+  form into `/application?service=evaluation`; verify desktop/mobile navigation.
+- [x] Record the no-customer-session design rule and local regression evidence in
+  [the cleanup record](archive/customer-access-cleanup-2026-11-17.md).
+- [ ] Refresh unrelated stale Calendar, email-preview release-boundary and old
+  six-table Preview fixture tests; this cleanup is not a fully green test baseline.
 
 ## Staff email previews
 

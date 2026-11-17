@@ -11,13 +11,10 @@ import { configuration, required } from "@/lib/preeval/config";
 import { AppError, resultPath, MAX_FILE_BYTES } from "@/lib/preeval/domain";
 import {
   authorize,
-  consumeLink,
   session,
-  sessionCookie,
   sameOrigin,
   limit,
   hash,
-  COOKIE,
 } from "@/lib/preeval/auth";
 import {
   applicationEmail,
@@ -131,6 +128,7 @@ async function handler(
         throw new AppError("invalid_request");
     }
     if (endpoint === "applications" && isPost) {
+      if (!compact()) throw new AppError("legacy_customer_access_retired", 410);
       await limit("submissions", 30, 3600);
       const result = await submit('data' in body ? preEvaluationInput(body) : body);
       const res = response(
@@ -140,7 +138,6 @@ async function handler(
         },
         201,
       );
-      if(result.token)res.cookies.set(sessionCookie(result.token));
       await scheduleAI(result.app.id);
       after(() => deliverApplicationEmails(result.app.id));
       return res;
@@ -161,23 +158,8 @@ async function handler(
       }
       return response({ ok: true });
     }
-    if (endpoint === "access/consume" && isPost) {
-      await limit("token-consume", 30, 600);
-      const { token, row } = await consumeLink(String(body.token || ""));
-      const res = response({
-        url: resultPath(row.locale, row.application_id),
-      });
-      res.cookies.set(sessionCookie(token));
-      return res;
-    }
-    if (endpoint === "logout" && isPost) {
-      const current = await authorize(
-        body.admin ? undefined : body.applicationId,
-      );
-      if(!compact())await db()`delete from ${table("preeval.sessions")} where hash=${current.hash}`;
-      const res = response({ ok: true });
-      res.cookies.set({ ...sessionCookie(""), maxAge: 0 });
-      return res;
+    if (["access/consume", "logout"].includes(endpoint) && isPost) {
+      throw new AppError("legacy_customer_access_retired", 410);
     }
     if (endpoint === "admin/applications" && !isPost) {
       const current = await authorize();

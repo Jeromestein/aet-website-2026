@@ -129,18 +129,15 @@ and `PREEVAL_PDFTOPPM_BIN` have been removed from the local file. Current direct
 API analysis does not read them. The template also omits unused Stripe publishable
 keys because hosted Checkout uses server-side secret keys.
 
-Old pre-evaluation lifecycle and formal-evaluation workflow/browser-fixture
-scripts take an explicit `--test-actor=email` command-line argument through
-`scripts/legacy-test-actor.ts`. There is no environment-variable fallback or
-website setting for this identity. Use a synthetic identity such as
-`--test-actor=lifecycle-test@example.invalid`; see
-[lifecycle test setup](pre-evaluation-local.md#lifecycle-test-only-audit-identity).
-The argument labels test audit entries or synthetic legacy authentication fixtures;
-it does not configure website staff membership or change the controlled recipient.
+The session-based pilot runners and `scripts/legacy-test-actor.ts` are retired.
+Use `APPLICATION_CORE_TEST_PG_BIN=<postgres-bin> pnpm test:evaluation:integration`
+or `pnpm test:preeval:integration` with that variable set. These runners require a
+local PostgreSQL toolchain and exercise disposable databases with provider doubles.
+They do not read `.env.local` or call hosted services. Historical migration fixtures
+may retain old session rows as data-preservation evidence; the runtime must not
+issue or consume those credentials. Do not restore the old customer Cookie,
+24-hour access deadline or token-exchange design from older branches.
 
-When integrating older feature branches, retain the removal of `admin` from
-shared website configuration and the environment template. Adapt old fixtures to
-the command-line helper instead of restoring an environment dependency.
 
 One-off verification switches and staff-session cookies should be supplied only
 to their explicit verification commands. The optional scoped email-recovery

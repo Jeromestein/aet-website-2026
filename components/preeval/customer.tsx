@@ -336,56 +336,6 @@ export function ApplicationForm({ locale }: { locale: string }) {
 export function AccessForm(props: { locale: string; initialId?: string }) {
   return <ApplicationLookup locale={props.locale} initialId={props.initialId} />;
 }
-export function ConsumeLink({ locale }: { locale: string }) {
-  const t = copy(locale),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState(""),
-    [ready, setReady] = useState(false);
-  const token = useRef("");
-  useEffect(() => {
-    token.current =
-      new URLSearchParams(window.location.hash.slice(1)).get("token") ||
-      token.current;
-    window.history.replaceState(null, "", window.location.pathname);
-    setReady(true);
-  }, []);
-  async function consume() {
-    setBusy(true);
-    try {
-      const data = await api("access/consume", { token: token.current });
-      window.location.replace(data.url);
-    } catch (e) {
-      setError(errorText(t, (e as Error).message));
-      setBusy(false);
-    }
-  }
-  return (
-    <>
-      <p className={s.eyebrow}>{t.eyebrow}</p>
-      <h1 className={s.title}>{t.accessTitle}</h1>
-      <div className={s.card}>
-        <LockKeyhole size={32} />
-        <p>{t.accessIntro}</p>
-        <button
-          className={s.button}
-          onClick={consume}
-          disabled={busy || !ready}
-        >
-          {busy ? t.loading : t.open}
-        </button>
-        {error && (
-          <p className={s.error} role="alert">
-            {error}
-          </p>
-        )}
-        <div className={s.buttons}>
-          <a href={pathFor(locale, "/status-check")}>{t.check}</a>
-          <a href="/admin/login">{t.adminTitle}</a>
-        </div>
-      </div>
-    </>
-  );
-}
 export function ApplicationResult({
   locale,
   id,
@@ -448,9 +398,6 @@ export function ApplicationResult({
       if (name === "checkout") {
         const result = await api("applications/" + id + "/checkout", {});
         location.assign(result.url);
-      } else if (name === "logout") {
-        await api("logout", { applicationId: id });
-        location.assign(pathFor(locale, "/status-check"));
       } else {
         await api("applications/" + id + "/" + name, body);
         await load();

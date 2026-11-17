@@ -52,7 +52,6 @@ import { checkout } from '../lib/preeval/payments';
 import { workspaceSnapshot } from '../lib/crm/workspace-server';
 import { flushEmails } from '../lib/preeval/email';
 import { convergeHistoricalPreevaluation } from '../scripts/database/converge-preeval-history';
-import { makeSession } from '../lib/preeval/auth';
 import { writeFileSync } from 'node:fs';
 
 const pgBin=process.env.APPLICATION_CORE_TEST_PG_BIN;
@@ -75,7 +74,7 @@ const staff={email:'staff@example.invalid',offices:['Boston','New York','Miami',
 
 describe.skipIf(!pgBin||!snapshotPath)('complete hosted Preview snapshot, offline physical retirement',()=>{
  let directory:string,started=false,snapshot:Row,verified:Row,options:Parameters<typeof convergeHistoricalPreevaluation>[1];
- let beforeStatus:Row[]=[],beforeFormal:Row[]=[],beforeCRM:Row[]=[],sessions:string[]=[];
+ let beforeStatus:Row[]=[],beforeFormal:Row[]=[],beforeCRM:Row[]=[];
  let report:Awaited<ReturnType<typeof convergeHistoricalPreevaluation>>;
  const sql=()=>m.sql!;
  const rows=(name:string)=>sql()`select to_jsonb(t) value from ${sql()(name)} t order by to_jsonb(t)::text`.then(r=>r.map(x=>x.value));
@@ -143,7 +142,8 @@ describe.skipIf(!pgBin||!snapshotPath)('complete hosted Preview snapshot, offlin
   for(const name of expected)expect(digest(await rows(local(name))),name).toBe(digest(source(name)));
   expect(beforeCRM[0].total).toBe(10);
   expect(verified.files).toHaveLength(6);expect(verified.payments).toHaveLength(5);expect(verified.emails).toHaveLength(13);
-  for(const a of source('aet_preview_preeval.applications'))sessions.push(await makeSession(a.id,'customer',a.email));
+  // Add historical rows only to verify migration preservation, never to authenticate customers.
+  for(const a of source('aet_preview_preeval.applications'))await sql()`insert into preeval.sessions(hash,application_id,role,email,expires_at) values (${createHash('sha256').update('archived:'+a.id).digest('hex')},${a.id},'customer',${a.email},now()+interval '24 hours')`;
  });
  it('rolls back a late failure without changing existing core or formal rows',async()=>{
   await sql().unsafe('create table aet.unexpected_table(id integer)');
@@ -180,8 +180,8 @@ describe.skipIf(!pgBin||!snapshotPath)('complete hosted Preview snapshot, offlin
     // Canonical Status intentionally omits the legacy upload-attempt timestamp.
     const fileProjection=(files:Row[])=>files.map(({id,name,mime_type,bytes,state})=>({id,name,mime_type,bytes,state}));
     expect(fileProjection(after.files)).toEqual(fileProjection(before.files));
-    m.cookie=sessions[i];
-    expect((await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+a.id),{params:Promise.resolve({path:['applications',a.id]})})).status).toBe(200);
+    m.cookie="retired-cookie";
+    expect((await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+a.id),{params:Promise.resolve({path:['applications',a.id]})})).status).toBe(401);
   }
   for(const [i,a] of source('aet_preview_evaluation.applications').entries())expect(await formalApplication(a.id,false)).toEqual(beforeFormal[i]);
   for(const name of expected.filter(n=>n.startsWith('aet_preview_evaluation.')||n.includes('.fce_')))expect(digest(await rows(local(name))),name).toBe(digest(source(name)));

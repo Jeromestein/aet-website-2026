@@ -86,7 +86,7 @@ export default function CRMWorkspace({ emailPreviewEnabled=false, preview=false,
     try { const response = await fetch('/api/staff-workspace?' + query + '&export=csv', { cache: 'no-store' }); if (!response.ok) throw new WorkspaceError((await response.json()).error, response.status); const url = URL.createObjectURL(await response.blob()); const link = document.createElement('a'); link.href = url; link.download = 'aet-applications.csv'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setToast('Exported applications matching your filters.'); } catch (e) { setToast(errorMessage(e)); } finally { setExporting(false); }
   }
   async function signOut() {
-    try { await request('/api/staff-auth/logout', {}); await request('/api/pre-evaluation/logout', { admin: true }).catch(e => { if (!(e instanceof WorkspaceError && e.status === 401)) throw e; }); location.assign('/admin/login'); } catch (e) { setToast(errorMessage(e)); }
+    try { await request('/api/staff-auth/logout', {}); location.assign('/admin/login'); } catch (e) { setToast(errorMessage(e)); }
   }
   const navigation = [{ id: 'applications', icon: LayoutDashboard }, { id: 'formal', icon: FileCheck2 }, { id: 'equivalency', icon: GraduationCap }, { id: 'payments', icon: CreditCard }] as const;
   return <div className={s.workspace + (sidebarCollapsed ? ' ' + s.workspaceCollapsed : '')} lang="en">

@@ -2,16 +2,14 @@ import { formalCore, readFormal, formalApplication } from '../application-core/f
 import { addFormalFile, formalStaffAction } from '../application-core/formal-actions';
 import { queueFeeUpdateEmail } from './email';
 import { fromLegacyFormal } from '../legacy-application/mapping';
-import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { cookies } from 'next/headers';
+import { createHash, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { table, db } from '../preeval/db';
-import { authorize, hash, session } from '../preeval/auth';
+import { authorize, session } from '../preeval/auth';
 import { requireStaffApplication } from '../staff/session';
 import { configuration } from '../preeval/config';
 import { AppError, validFile } from '../preeval/domain';
 import { filePath, uploadFile } from '../preeval/dropbox';
-import { cookieName, keySchema } from './server';
 import { formalStatusPath, canDownloadReport, confirmQuote, payableTotal, staffSchema, type ApplicationRecord } from './workflow';
 
 export async function access(id: string) {
@@ -22,12 +20,6 @@ export async function access(id: string) {
     return { admin: true, actor: staff.email as string };
   }
   if(formalCore()){await readFormal(id);return {admin:false,actor:'customer'};}
-  const key = (await cookies()).get(cookieName(id))?.value;
-  if (key && keySchema.safeParse(key).success) {
-    const [row] = await db()`select id from ${table("evaluation.applications")} where id=${id} and
-      ((access_hash=${hash(key)} and created_at>now()-interval '24 hours') or exists(select 1 from ${table("evaluation.sessions")} where application_id=${id} and hash=${hash(key)} and expires_at>now()))`;
-    if (row) return { admin: false, actor: 'customer' };
-  }
   return staffAccess(id);
 }
 export async function staffAccess(id: string) {
@@ -132,28 +124,8 @@ export async function staffAction(id: string, raw: unknown, actor: string) {
     if (body.action === 'quote') await queueFeeUpdateEmail(tx, id, event.id);
   });
 }
-export async function makeAccessLink(id: string, actor: string) {
-  if(formalCore()){const app=await readFormal(id);return configuration().origin+formalStatusPath(app as ApplicationRecord);}
-  const token = randomBytes(32).toString('hex');
-  const [app] = await db()`select locale from ${table("evaluation.applications")} where id=${id}`;
-  if (!app) throw new AppError('not_found', 404);
-  await db().begin(async tx => {
-    await tx`update ${table("evaluation.access_tokens")} set consumed_at=now() where application_id=${id} and consumed_at is null`;
-    await tx`insert into ${table("evaluation.access_tokens")}(hash,application_id,expires_at) values(${hash(token)},${id},now()+interval '24 hours')`;
-    await tx`insert into ${table("evaluation.audit")}(application_id,actor,action) values(${id},${actor},'access.link_created')`;
-  });
-  return `${configuration().origin}/${app.locale}/evaluation-access#token=${token}`;
-}
-export async function consumeAccess(token: string) {
-  if(formalCore())throw new AppError('invalid_link');
-  if (!keySchema.safeParse(token).success) throw new AppError('invalid_link');
-  const key = randomBytes(32).toString('hex');
-  const app = await db().begin(async tx => {
-    const [used] = await tx`update ${table("evaluation.access_tokens")} set consumed_at=now() where hash=${hash(token)} and expires_at>now() and consumed_at is null returning application_id`;
-    if (!used) throw new AppError('invalid_link');
-    await tx`insert into ${table("evaluation.sessions")}(hash,application_id,expires_at) values(${hash(key)},${used.application_id},now()+interval '24 hours')`;
-    const [row] = await tx`select id,locale from ${table("evaluation.applications")} where id=${used.application_id}`;
-    return row;
-  });
-  return { app, key };
+export async function makeAccessLink(id: string, _actor: string) {
+  if (!formalCore()) throw new AppError('legacy_customer_access_retired', 410);
+  const app = await readFormal(id);
+  return configuration().origin + formalStatusPath(app as ApplicationRecord);
 }

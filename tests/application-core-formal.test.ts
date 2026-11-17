@@ -74,8 +74,8 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   expect((await admin`select tablename from pg_tables where schemaname like 'aet_preview_%'`).length).toBe(6);
  });
  it('deduplicates both entry points and keeps education, prices and CRM in sync without old tables',async()=>{
-  const raw=input(),a=await saveApplication(raw,'a'.repeat(64));expect((await saveApplication(raw,'b'.repeat(64))).id).toBe(a.id);
-  await expect(saveApplication({...raw,data:{...raw.data,notes:'changed'}},'a'.repeat(64))).rejects.toMatchObject({code:'idempotency_conflict'});
+  const raw=input(),a=await saveApplication(raw);expect((await saveApplication(raw)).id).toBe(a.id);
+  await expect(saveApplication({...raw,data:{...raw.data,notes:'changed'}})).rejects.toMatchObject({code:'idempotency_conflict'});
   const r=await application(a.id,true);expect(r.quote).toEqual(quote(raw.data));expect(r.data.educations).toEqual(raw.data.educations);expect(r.payment_status).toBe('unpaid');expect(r.audit).toEqual([]);
   const legacy=await formalLegacy(a.id);expect(legacy.educations).toHaveLength(1);
   const workspace=await projectWorkspaceRecords(sql(),formalRecords(sql()),{view:'formal',q:a.id},{email:'staff@example.invalid',offices:['Miami'],include_unassigned:false},true);expect(workspace.total).toBe(1);expect(workspace.rows[0].amount).toBe(r.total);
@@ -90,7 +90,7 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   expect(transport).toHaveBeenCalledTimes(1);expect((await readIntake(created.id)).email.state).toBe('sent');
  });
  it('retries a failed dedicated upload into the same document slot and records its File ID',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64));const file=new File(['%PDF-1.7\nsynthetic'], 'test.pdf',{type:'application/pdf'});
+  const a=await saveApplication(input());const file=new File(['%PDF-1.7\nsynthetic'], 'test.pdf',{type:'application/pdf'});
   m.upload.mockRejectedValueOnce(new Error('synthetic failure'));
   await expect(addFile(a.id,file,'document','customer')).rejects.toMatchObject({code:'upload_failed'});
   m.upload.mockImplementation(async(args:any)=>({result:{'.tag':'file',id:'id:upload_'+a.id,rev:'1',path_display:args.path,name:'test.pdf',size:file.size,content_hash:'synthetic'}}));
@@ -102,7 +102,7 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   expect((await sql()`select storage_file_id,upload_version from aet_preview_shared.aet_documents where application_id=${a.id}`)[0]).toMatchObject({storage_file_id:'id:upload_'+a.id,upload_version:2});
  });
  it('serializes shared upload commits with staff changes and rejects uploads after completion',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64));
+  const a=await saveApplication(input());
   let entered!:()=>void,release!:()=>void;
   const started=new Promise<void>(r=>entered=r),gate=new Promise<void>(r=>release=r);
   const original=await application(a.id,true);
@@ -116,14 +116,14 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   const commit=vi.fn();await expect(commitFormalDocument(a.id,'AET_App',commit)).rejects.toMatchObject({code:'application_locked'});expect(commit).not.toHaveBeenCalled();
  });
  it('uses versioned staff writes and blocks premature report release',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64));let r=await application(a.id,true);
+  const a=await saveApplication(input());let r=await application(a.id,true);
   await staffAction(a.id,{action:'notes',version:r.version,notes:'Internal only'},'staff');
   await expect(staffAction(a.id,{action:'notes',version:r.version,notes:'stale'},'staff')).rejects.toMatchObject({code:'stale_version'});
   expect((await application(a.id,false)).staff_notes).toBeUndefined();r=await application(a.id,true);
   await expect(staffAction(a.id,{action:'status',version:r.version,status:'processing',message:''},'staff')).rejects.toMatchObject({code:'payment_and_documents_required'});
  });
  it('retains a single payment and receipt on repeated/out-of-order callbacks; refunds withhold reports',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64)),r=await application(a.id,true),session:any={id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
+  const a=await saveApplication(input()),r=await application(a.id,true),session:any={id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
   m.create.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open'});
   const charge:any={id:'ch_'+a.id,livemode:false,currency:'usd',amount:r.total,amount_refunded:0,payment_intent:session.payment_intent};
   m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.total,latest_charge:charge});
@@ -142,14 +142,14 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await applyCheckout(session,'evt_repeat','checkout.session.completed');expect((await application(a.id,true)).payment_status).toBe('refunded');
  });
  it('tracks shared uploads by File ID and detects changed content without duplicating files',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64));const metadata={id:'id:'+a.id,name:'degree.pdf',size:100,rev:'1',path_display:'/Team Files/WebsitesDev/Miami/Synthetic Applicant - '+a.id+'/degree.pdf'};
+  const a=await saveApplication(input());const metadata={id:'id:'+a.id,name:'degree.pdf',size:100,rev:'1',path_display:'/Team Files/WebsitesDev/Miami/Synthetic Applicant - '+a.id+'/degree.pdf'};
   await indexFormalDocument(a.id,'AET_App',metadata);const v=(await readFormal(a.id)).input_version;
   await indexFormalDocument(a.id,'AET_App',{...metadata,path_display:metadata.path_display.replace('degree.pdf','renamed.pdf'),name:'renamed.pdf'});expect((await readFormal(a.id)).input_version).toBe(v);expect((await application(a.id,true)).files).toHaveLength(1);
   await indexFormalDocument(a.id,'AET_App',{...metadata,rev:'2'});expect((await readFormal(a.id)).input_version).toBe(v+1);
-  const b=await saveApplication(input(),'a'.repeat(64));await expect(indexFormalDocument(b.id,'AET_App',metadata)).rejects.toMatchObject({code:'document_application_mismatch'});
+  const b=await saveApplication(input());await expect(indexFormalDocument(b.id,'AET_App',metadata)).rejects.toMatchObject({code:'document_application_mismatch'});
  });
  it('still cancels unpaid applications and rejects further dedicated uploads',async()=>{
-  const a=await saveApplication(input(),'a'.repeat(64));await cancel(a.id,'customer');expect((await readFormal(a.id)).status).toBe('cancelled');
+  const a=await saveApplication(input());await cancel(a.id,'customer');expect((await readFormal(a.id)).status).toBe('cancelled');
   await expect(addFile(a.id,new File(['%PDF-1.7\nsynthetic'], 'test.pdf',{type:'application/pdf'}),'document','customer')).rejects.toMatchObject({code:'application_locked'});
  });
  it('completes unified intake, information request, quote, payment and private PDF publication',async()=>{

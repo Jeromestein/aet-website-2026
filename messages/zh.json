@@ -464,7 +464,7 @@
     "print": "打印确认页",
     "newApplication": "填写新申请",
     "receiptUnavailable": "无法打开此确认页",
-    "receiptError": "请在提交申请或使用访问链接后的 24 小时内，通过同一浏览器打开此页面。如需新的专属访问链接，请联系 AET。仅凭申请编号无法访问申请。",
+    "receiptError": "请使用确认邮件中的申请链接重新打开申请。如仍无法访问，请联系 AET 获取帮助。",
     "loading": "正在加载申请…",
     "errors": {
       "required": "请填写此必填项。",
@@ -538,9 +538,9 @@
     "cancel": "取消申请",
     "cancelConfirm": "确定取消这份未付款的申请吗？取消后将无法继续上传材料或付款。",
     "keepApplication": "保留申请",
+    "checkApplication": "查询申请状态",
     "openApplication": "打开您的申请",
-    "accessNote": "通过专属链接查看申请。此链接仅可使用一次，有效期为 24 小时。",
-    "invalidLink": "链接缺失、已过期或已使用，请联系 AET 获取新的访问链接。",
+    "accessNote": "请使用确认邮件中的申请链接，或在状态页面输入申请编号。如果您只有旧的访问链接，请联系 AET 获取帮助。",
     "status": {
       "submitted": "已提交",
       "reviewing": "审核中",

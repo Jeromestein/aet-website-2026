@@ -3,7 +3,7 @@ import { compact } from '../../../../lib/application-core/compact-files';
 import { workflowRows } from "../../../../lib/application-core/converged-store";
 import { NextRequest, NextResponse } from "next/server";
 import { table, db } from "@/lib/preeval/db";
-import { limit, makeSession, sameOrigin, sessionCookie } from "@/lib/preeval/auth";
+import { limit, sameOrigin } from "@/lib/preeval/auth";
 import { customerLookupSchema } from "@/lib/preeval/customer-access";
 import { AppError, resultPath } from "@/lib/preeval/domain";
 
@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
 
   try {
     sameOrigin(request);
+    if (!compact()) throw new AppError("legacy_customer_access_retired", 410);
     await limit("customer-lookup:global", 200, 600);
     const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
     await limit("customer-lookup:" + address, 30, 600);
@@ -41,11 +42,7 @@ export async function POST(request: NextRequest) {
     const { applicationId, locale } = parsed.data;
     const [app] = await workflowRows(db(), applicationId, false);
     if (!app) throw new AppError("not_found", 404);
-    // Keep API/file authorization scoped to this application without customer accounts.
-    const token = compact()?null:await makeSession(app.id, "customer", app.email);
-    const response = respond({ url: resultPath(locale, app.id) });
-    if(token)response.cookies.set(sessionCookie(token));
-    return response;
+    return respond({ url: resultPath(locale, app.id) });
   } catch (error) {
     return error instanceof AppError
       ? respond({ error: error.code }, error.status)

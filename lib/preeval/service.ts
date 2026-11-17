@@ -9,7 +9,7 @@ import { saveLegacyPreeval } from "../legacy-application/store";
 import { pauseForUpload, retryAnalysis } from "./ai-jobs";
 import { randomUUID } from "node:crypto";
 import { table, db, audit, type Row } from "./db";
-import { hash, makeSession, authorize } from "./auth";
+import { hash, authorize } from "./auth";
 import {
   applicationSchema,
   AppError,
@@ -47,7 +47,7 @@ export async function submit(input: unknown) {
     return created;
   });
   await applicationEmail(app, "confirmation");
-  return { app, token: compact() ? null : await makeSession(app.id, "customer", app.email) };
+  return { app };
 }
 export async function application(id: string, staff = false) {
   const core = converged() || await isCoreApplication(id);

@@ -6,5 +6,5 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   requireApplicationPage(false);
 
   const { locale } = await params;
-  return <ApplicationShell locale={locale} languages={false}><EvaluationAccess /></ApplicationShell>;
+  return <ApplicationShell locale={locale} languages={false}><EvaluationAccess locale={locale} /></ApplicationShell>;
 }

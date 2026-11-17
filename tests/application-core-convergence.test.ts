@@ -12,7 +12,7 @@ import { POST as postRoute,GET as getRoute } from '../app/api/pre-evaluation/[..
 import { POST as lookupRoute } from '../app/api/pre-evaluation/lookup/route';
 import { AIError } from '../lib/preeval/ai-contract';
 import { activateConvergenceRehearsal,convergedTableName } from '../lib/application-core/convergence-mode';
-import { makeLink,consumeLink } from '../lib/preeval/auth';
+import { makeLink } from '../lib/preeval/auth';
 const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
   cookie:'',list:vi.fn(),start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
@@ -94,6 +94,7 @@ describe.skipIf(!pgBin)('pre-evaluation after physical table retirement (owned P
     await sql().begin(async tx=>{await tx.unsafe(retirement);});
     await activateConvergenceRehearsal(sql(),'acct_synthetic');expect(coreRuntimeEnabled()).toBe(true);
     vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new Error('External network forbidden')));
+    vi.stubEnv('APP_ENV','local');vi.stubEnv('APP_ORIGIN','http://localhost:3022');vi.stubEnv('VERCEL','');vi.stubEnv('VERCEL_ENV','');vi.stubEnv('APPLICATIONS_ENABLED','true');
     vi.stubEnv('PREEVAL_EMAIL_ENABLED','true');vi.spyOn(console,'error').mockImplementation(()=>{});
     const doc=await PDFDocument.create();doc.addPage();pdf=Buffer.from(await doc.save());
   },60000);
@@ -126,15 +127,12 @@ describe.skipIf(!pgBin)('pre-evaluation after physical table retirement (owned P
     expect(await sql()`select conname from pg_constraint where contype='f' and not convalidated`).toHaveLength(0);
     for(const role of ['anon','authenticated'])expect((await sql()`select has_schema_privilege(${role},'aet','usage') allowed`)[0].allowed).toBe(false);
   });
-  it('preserves one-use links, sessions and customer isolation after retirement',async()=>{
+  it('does not issue customer credentials in retired storage modes',async()=>{
     const {app}=await submit(input());
-    const link=await makeLink(app.id,'customer',app.email,'zh');
-    const token=link.split('#token=')[1];
-    expect((await consumeLink(token)).row.application_id).toBe(app.id);
-    await expect(consumeLink(token)).rejects.toMatchObject({code:'invalid_link'});
+    await expect(makeLink(app.id,'customer',app.email,'zh')).rejects.toMatchObject({code:'legacy_customer_access_retired'});
     const reader=await createCoreShadowReader(sql());
     await expect(reader.status(app.id,{role:'customer',applicationId:randomUUID()})).rejects.toMatchObject({code:'access_denied'});
-    expect(await sql()`select hash from aet.aet_sessions where application_id=${app.id}`).toHaveLength(2);
+    expect(await sql()`select hash from aet.aet_sessions where application_id=${app.id}`).toHaveLength(0);
   });
   it('indexes customer chunk uploads by File ID atomically and accepts an idempotent finish',async()=>{
     const {app}=await submit(input());
@@ -319,15 +317,12 @@ describe.skipIf(!pgBin)('pre-evaluation after physical table retirement (owned P
     await expect(applyCheckout({...session(a.id),amount_total:1},'evt_bad_'+a.id,'checkout.session.completed')).rejects.toMatchObject({code:'invalid_payment'});
     expect(await sql()`select id from aet.aet_payment_events`).toHaveLength(attempts.length);
   });
-  it('serves the actual lookup and Status routes with application-scoped sessions after deletion',async()=>{
-    const {app,token}=await submit(input());
-    const get=()=>getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+app.id),{params:Promise.resolve({path:['applications',app.id]})});
-    expect((await get()).status).toBe(401);m.cookie=token!;expect((await get()).status).toBe(200);
-    m.cookie=(await submit(input())).token!;expect((await get()).status).toBe(401);
-    const response=await lookupRoute(new NextRequest('http://localhost:3022/api/pre-evaluation/lookup',{method:'POST',
-      headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify({applicationId:app.id,locale:'zh'})}));
-    expect(response.status).toBe(200);expect((await response.json()).url).toContain('/zh/');
-    expect(response.cookies.get('aet_preeval_session')?.value).toBeTruthy();
+  it('fails closed on customer routes in retired storage modes',async()=>{
+    const {app}=await submit(input());
+    const response=await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+app.id),{params:Promise.resolve({path:['applications',app.id]})});
+    expect(response.status).toBe(401);
+    const lookup=await lookupRoute(new NextRequest('http://localhost:3022/api/pre-evaluation/lookup',{method:'POST',headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify({applicationId:app.id,locale:'zh'})}));
+    expect(lookup.status).toBe(410);expect(lookup.headers.get('set-cookie')).toBeNull();
   });
   it('handles refund before the completion callback and never reopens paid result access',async()=>{
     const a=await uploaded();await ai(a.id);await checkout(a.id);

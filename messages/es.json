@@ -464,7 +464,7 @@
     "print": "Imprimir confirmación",
     "newApplication": "Iniciar otra solicitud",
     "receiptUnavailable": "Este comprobante no está disponible",
-    "receiptError": "Abra esta página en el mismo navegador dentro de las 24 horas posteriores al envío o al uso de un enlace de acceso. Contacte a AET para obtener un nuevo enlace privado. El número de solicitud por sí solo no permite el acceso.",
+    "receiptError": "Use el enlace de confirmación para volver a abrir su solicitud. Si no puede acceder, contacte con AET.",
     "loading": "Cargando su solicitud…",
     "errors": {
       "required": "Complete este campo obligatorio.",
@@ -538,9 +538,9 @@
     "cancel": "Cancelar solicitud",
     "cancelConfirm": "¿Desea cancelar esta solicitud sin pagar? Ya no podrá cargar documentos ni iniciar el pago.",
     "keepApplication": "Conservar solicitud",
+    "checkApplication": "Consultar solicitud",
     "openApplication": "Abrir su solicitud",
-    "accessNote": "Use su enlace privado para acceder a la solicitud. Solo puede usarse una vez y vence después de 24 horas.",
-    "invalidLink": "El enlace falta, venció o ya fue utilizado. Contacte a AET para obtener uno nuevo.",
+    "accessNote": "Use el enlace de su correo de confirmación o introduzca su ID de solicitud en la página de estado. Si solo tiene un enlace de acceso antiguo, contacte con AET.",
     "status": {
       "submitted": "Enviada",
       "reviewing": "En revisión",

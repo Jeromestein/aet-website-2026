@@ -12,7 +12,6 @@ import { POST as postRoute,GET as getRoute } from '../app/api/pre-evaluation/[..
 import { POST as lookupRoute } from '../app/api/pre-evaluation/lookup/route';
 import { AIError } from '../lib/preeval/ai-contract';
 import { activateConvergenceRehearsal,convergedTableName } from '../lib/application-core/convergence-mode';
-import { makeLink,consumeLink } from '../lib/preeval/auth';
 const m=vi.hoisted(()=>({sql:undefined as ReturnType<typeof postgres>|undefined,
   cookie:'',list:vi.fn(),start:vi.fn(),append:vi.fn(),finish:vi.fn(),upload:vi.fn(),metadata:vi.fn(),download:vi.fn(),create:vi.fn(),retrieve:vi.fn(),intent:vi.fn()}));
 vi.mock('server-only',()=>({}));
@@ -57,7 +56,6 @@ const generated={analysis:{...result,basis:'documents' as const,facts:{instituti
 
 
 import { convergeHistoricalPreevaluation } from '../scripts/database/converge-preeval-history';
-import { makeSession } from '../lib/preeval/auth';
 import { applicationSchema,BASE_CENTS } from '../lib/preeval/domain';
 type Row=Record<string,any>;
 describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement, mixed=%s (owned PostgreSQL)',(mixed)=>{
@@ -74,8 +72,6 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
   let beforeStatus:Row[]=[];
   let beforeCRM:Row[]=[];
   let beforeOps:Record<string,Row[]>={};
-  let links:string[]=[];
-  let sessions:string[]=[];
   let report:Awaited<ReturnType<typeof convergeHistoricalPreevaluation>>;
   const tables:Record<string,string>={applications:'preeval.applications',educations:'preeval.educations',files:'preeval.files',payments:'preeval.payments',
     legacyApplications:'public.aet_core_applications',legacyEducations:'public.aet_core_educations',legacyPayments:'public.aet_core_payments',
@@ -200,6 +196,7 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
     await sql().unsafe(read('scripts/legacy/schema-fixture.sql'));await sql().unsafe(read('scripts/legacy/workflow-bridge.sql'));
     await sql().unsafe(read('supabase/migrations/20261106220126_shared_application_core.sql'));
     vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new Error('External network forbidden')));
+    vi.stubEnv('APP_ENV','local');vi.stubEnv('APP_ORIGIN','http://localhost:3022');vi.stubEnv('VERCEL','');vi.stubEnv('VERCEL_ENV','');vi.stubEnv('APPLICATIONS_ENABLED','true');
     vi.stubEnv('PREEVAL_EMAIL_ENABLED','true');vi.spyOn(console,'error').mockImplementation(()=>{});
     if(mixed){
       if(capturedPath)account=JSON.parse(readFileSync(join(dirname(capturedPath),'verified.json'),'utf8')).providerAccount;
@@ -209,8 +206,9 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
     await seed();originals.push(...newRows);
     m.intent.mockImplementation(async(id:string)=>paymentEvidence.find(p=>p.intent.id===id)!.intent);
     for(const a of originals){
-      links.push((await makeLink(a.id,'customer',a.email,'zh')).split('#token=')[1]);
-      sessions.push(await makeSession(a.id,'customer',a.email));
+      // Archival migration fixture only; these rows must never authorize current HTTP requests.
+      await sql()`insert into preeval.tokens(hash,application_id,role,email,locale,expires_at) values (${createHash('sha256').update('token:'+a.id).digest('hex')},${a.id},'customer',${a.email},'zh',now()+interval '24 hours')`;
+      await sql()`insert into preeval.sessions(hash,application_id,role,email,expires_at) values (${createHash('sha256').update('session:'+a.id).digest('hex')},${a.id},'customer',${a.email},now()+interval '24 hours')`;
       beforeStatus.push(await application(a.id));
     }
     for(const query of queries)
@@ -320,17 +318,12 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
         .toEqual(JSON.parse(JSON.stringify({rows:expected.rows,stats:expected.stats,counts:expected.counts,total:expected.total})));
     }
   });
-  it('keeps pre-existing sessions and one-use links valid and rejects foreign application access',async()=>{
-    for(const [i,a] of originals.entries()){
-      m.cookie=sessions[i];
+  it('preserves archived rows without accepting retired customer credentials',async()=>{
+    m.cookie='legacy-session';
+    for(const a of originals){
       const response=await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+a.id),{params:Promise.resolve({path:['applications',a.id]})});
-      expect(response.status).toBe(200);
-      expect((await consumeLink(links[i])).row.application_id).toBe(a.id);
-      await expect(consumeLink(links[i])).rejects.toMatchObject({code:'invalid_link'});
+      expect(response.status).toBe(401);
     }
-    m.cookie=sessions[0];
-    const other=await getRoute(new Request('http://localhost:3022/api/pre-evaluation/applications/'+originals[1].id),{params:Promise.resolve({path:['applications',originals[1].id]})});
-    expect(other.status).toBe(401);
   });
   it('replays signed legacy callbacks without new payments, AI runs or mail and preserves refunded state',async()=>{
     const sdk=new Stripe('sk_test_synthetic');

@@ -62,14 +62,15 @@ export const convergenceConfiguration = (sql: Sql) => {
   return active.get(sql);
 };
 export const convergedTableName = (sql: Sql, name: string) => {
+  if (['preeval.tokens', 'preeval.sessions', 'evaluation.access_tokens', 'evaluation.sessions'].includes(name))
+    throw new Error('Customer session/token storage is retired');
   if (!convergenceConfiguration(sql)) return null;
   const names: Record<string,string> = {
     'preeval.files':'aet_uploads', 'preeval.ai_runs':'aet_ai_runs',
     'preeval.emails':'aet_emails', 'preeval.payment_events':'aet_payment_events',
-    'preeval.tokens':'aet_access_tokens', 'preeval.sessions':'aet_sessions',
     'preeval.audit':'aet_audit', 'preeval.rate_limits':'aet_rate_limits',
   };
-  if (active.get(sql)?.compact && ['preeval.files','preeval.emails','preeval.tokens','preeval.sessions'].includes(name))
+  if (active.get(sql)?.compact && ['preeval.files','preeval.emails'].includes(name))
     throw new Error('Removed nine-table relation requested: '+name);
   if (paymentStateOnlyMode(sql) && name === 'preeval.payment_events')
     throw new Error('Retired payment events requested');

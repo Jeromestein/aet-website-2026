@@ -11,10 +11,9 @@ import { AppError, MAX_FILE_BYTES } from '@/lib/preeval/domain';
 import { table, db } from '@/lib/preeval/db';
 import { downloadFile } from '@/lib/preeval/dropbox';
 import { stripeClient } from '@/lib/preeval/payments';
-import { cookieName } from '@/lib/evaluation-application/server';
-import { access, staffAccess, application, addFile, staffAction, makeAccessLink, consumeAccess } from '@/lib/evaluation-application/service';
+import { access, staffAccess, application, addFile, staffAction, makeAccessLink } from '@/lib/evaluation-application/service';
 import { checkout, reconcile, cancel, handleStripeEvent } from '@/lib/evaluation-application/payments';
-import { canDownloadReport, receiptPath, type ApplicationRecord } from '@/lib/evaluation-application/workflow';
+import { canDownloadReport, type ApplicationRecord } from '@/lib/evaluation-application/workflow';
 import { flushFormalEmails } from '@/lib/evaluation-application/email';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,12 +43,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
     let body: unknown;
     if (post && !upload) { try { body = JSON.parse((await read(request)).toString()); } catch (e) { if (e instanceof AppError) throw e; throw new AppError('invalid_request'); } }
     if (endpoint === 'access/consume' && post) {
-      await limit('formal-access-consume', 30, 600);
-      const { token } = z.object({ token: z.string() }).strict().parse(body);
-      const { app, key } = await consumeAccess(token);
-      const res = response({ url: receiptPath(app.locale, app.id) });
-      res.cookies.set({ name: cookieName(app.id), value: key, httpOnly: true, sameSite: 'strict', secure: configuration().origin.startsWith('https:'), path: `/api/evaluation/applications/${app.id}`, maxAge: 86400 });
-      return res;
+      throw new AppError('legacy_customer_access_retired', 410);
     }
     if (endpoint === 'admin/applications' && !post) {
       const current = await authorize(); const url = new URL(request.url); const q = (url.searchParams.get('q') || '').slice(0, 100); const status = url.searchParams.get('status') || 'all';
@@ -67,7 +61,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
     }
     if (path[0] === 'applications' && path[1]) {
       const id = path[1];
-      // Staff routes always require a staff session even when a customer cookie also exists.
+      // Customer application links never authorize employee actions.
       const staffRoute = ['staff', 'reports', 'access-link', 'admin'].includes(path[2]);
       const current = staffRoute ? await staffAccess(id) : await access(id);
       if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);

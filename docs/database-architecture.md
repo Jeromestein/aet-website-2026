@@ -731,12 +731,12 @@ and the [November 11 acceptance](archive/database-formal-six-preview-2026-11-11.
 | `aet_payments.created_at` | Workflow `payments.created_at` where the record mapping is verified; absent from legacy shared payment table | Planned timestamp for payment-record creation; preserve trustworthy history and leave unknown legacy times distinguishable |
 | `aet_payments.updated_at` | Workflow `payments.updated_at` where the record mapping is verified; absent from legacy shared payment table | Planned timestamp of the last actual payment-record change; not the payment-success time |
 
-Current workflow `applications.locale` and existing token/session locale fields
-are actual implementation details, not proposed application fields. No new business
-locale field replaces them. Before a later authorized migration removes a stored
-language dependency, update its email, receipt and link consumers and preserve
-historical data/access compatibility. Current diagrams and the actual inventory
-retain those columns; this planning update does not alter their schema or code.
+The inventories below include historical migration inputs. Old customer session/
+token tables are not part of the current six-table runtime and are not to be
+recreated. Customer session code was retired on November 17, 2026 without changing
+any database. Current application locale comes from the saved application data;
+keep historical language fields as preserved data, not as runtime auth dependencies.
+Supabase employee authentication remains separate and must be retained.
 
 The existing `document_locations.application_id` and `kind` are migration inputs
 for resolving legacy application identities, not target file fields. Its `storage`

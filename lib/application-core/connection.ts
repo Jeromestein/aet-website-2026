@@ -26,7 +26,7 @@ export function coreSchema() {
   const config = coreRuntimeConfiguration();
   return config?.production ? 'aet' : config?.sixTables ? 'aet_preview_shared' : config ? 'aet_preview_core' : 'aet';
 }
-const tables = ['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments','aet_ai_runs','aet_uploads','aet_emails','aet_payment_events','aet_access_tokens','aet_sessions','aet_audit','aet_rate_limits'];
+const tables = ['aet_core_applications','aet_education','aet_service_detail','aet_documents','aet_payments','aet_ai_runs','aet_uploads','aet_emails','aet_payment_events','aet_audit','aet_rate_limits'];
 export function coreTable(sql: DB, name: string) {
   if (!tables.includes(name)) throw new Error('Invalid core table');
   return sql(`${coreSchema()}.${name}`);

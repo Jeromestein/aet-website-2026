@@ -1,15 +1,16 @@
 // Provider unit fixtures run with the release gate open; real gating is tested separately.
 vi.mock('../lib/application-release', () => ({ applicationUnavailableResponse: () => null }));
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-const m = vi.hoisted(() => ({ abandon: vi.fn(), unfinished: vi.fn(), origin: vi.fn(), schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
+const m = vi.hoisted(() => ({ compact: true, abandon: vi.fn(), unfinished: vi.fn(), origin: vi.fn(), schedule: vi.fn(), authorize: vi.fn(), submit: vi.fn(), application: vi.fn(), complete: vi.fn(), retry: vi.fn(), staff: vi.fn(), pause: vi.fn(), context: vi.fn(), uploadAllowed: vi.fn(), query: vi.fn(), after: vi.fn(), mail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn() }));
 vi.mock('server-only', () => ({}));
+vi.mock('../lib/application-core/compact-files', () => ({ compact: () => m.compact }));
 vi.mock('next/server', async original => ({ ...await original<typeof import('next/server')>(), after: m.after }));
 vi.mock('../lib/preeval/upload-recovery', () => ({ abandonUpload: m.abandon, unfinishedUploads: m.unfinished }));
 vi.mock('../lib/preeval/ai-scheduler', () => ({ scheduleAI: m.schedule }));
 vi.mock('../lib/preeval/ai-jobs', () => ({ completeUploads: m.complete, retryAnalysis: m.retry, pauseForUpload: m.pause }));
 vi.mock('../lib/preeval/config', () => ({ configuration: () => ({ cloudPreview: m.cloudPreview }), required: () => '' }));
 vi.mock('../lib/preeval/db', () => ({ db: () => m.query, table: (name: string) => name }));
-vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, consumeLink: vi.fn(), sessionCookie: () => ({ name: 'test', value: 'test' }), sameOrigin: m.origin, limit: vi.fn(), hash: vi.fn(), COOKIE: 'test' }));
+vi.mock('../lib/preeval/auth', () => ({ authorize: m.authorize, sameOrigin: m.origin, limit: vi.fn(), hash: vi.fn() }));
 vi.mock('../lib/preeval/email', () => ({ applicationEmail: vi.fn(), cloudPreview: false, construct: vi.fn(), paymentEvent: vi.fn(), formalEvent: vi.fn(), formalMail: vi.fn(), deliverApplicationEmails: m.mail }));
 vi.mock('../lib/preeval/service', () => ({ submit: m.submit, application: m.application, addFile: vi.fn(), staffAction: m.staff }));
 vi.mock('../lib/preeval/payments', () => ({ checkout: vi.fn(), reconcile: vi.fn(), handleStripeEvent: m.paymentEvent, stripeClient: () => ({ webhooks: { constructEvent: m.construct } }), cancelApplication: vi.fn() }));
@@ -32,9 +33,9 @@ function call(method: 'GET' | 'POST', path: string, body = {}) {
 }
 beforeEach(() => {
   vi.resetAllMocks();
-  m.cloudPreview = false;
+  m.cloudPreview = false; m.compact = true;
   m.authorize.mockResolvedValue({ role: 'customer', email: 'synthetic@example.invalid' });
-  m.submit.mockResolvedValue({ app: { id, locale: 'en' }, token: 'test' });
+  m.submit.mockResolvedValue({ app: { id, locale: 'en' } });
   m.application.mockResolvedValue({ ai_status: 'queued' });
   m.context.mockReturnValue({ data: { kind: 'pre-evaluation', id } });
   m.query.mockResolvedValue([{ id }]);
@@ -201,5 +202,20 @@ describe('upload recovery authorization boundaries', () => {
     expect(await (await recoveryList(request('GET', 'dropbox/upload-recovery'))).json()).toMatchObject({ uploads: [], pending: false });
     expect((await recoveryDiscard(request('POST', 'dropbox/upload-recovery', selected))).status).toBe(400);
     expect(m.abandon).not.toHaveBeenCalled(); expect(m.unfinished).not.toHaveBeenCalled();
+  });
+});
+
+describe('retired customer credentials', () => {
+  it.each(['access/consume', 'logout'])('rejects %s without writing a cookie or invoking staff logout', async endpoint => {
+    const result = await call('POST', endpoint, { token: 'old-token', admin: true });
+    expect(result.status).toBe(410);
+    expect(await result.json()).toEqual({ error: 'legacy_customer_access_retired' });
+    expect(result.headers.get('set-cookie')).toBeNull();
+    expect(m.query).not.toHaveBeenCalled();
+  });
+  it('rejects old-mode submission before persisting an application', async () => {
+    m.compact = false;
+    const result = await call('POST', 'applications', {});
+    expect(result.status).toBe(410); expect(m.submit).not.toHaveBeenCalled();
   });
 });

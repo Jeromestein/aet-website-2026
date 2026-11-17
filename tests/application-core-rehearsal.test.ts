@@ -202,8 +202,7 @@ describe.skipIf(!pgBin)('shared core phases 1–2 (owned PostgreSQL cluster)', (
 
   it('runs submit, upload, AI, Checkout, callback recovery and email; reconciles every checkpoint', async () => {
     const original = input();
-    const { app, token } = await submit(original);
-    expect(token).toHaveLength(43);
+    const { app } = await submit(original);
     expect((await submit(original)).app.id).toBe(app.id);
     await expect(submit({ ...original, lastName: 'Changed' })).rejects.toMatchObject({ code: 'duplicate_conflict' });
     const first = await project(app.id, original);
