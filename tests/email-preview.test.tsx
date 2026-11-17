@@ -1,16 +1,27 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppError } from '../lib/preeval/domain';
 vi.mock('server-only', () => ({}));
 vi.mock('../components/staff/unavailable', () => ({default: () => null}));
 const auth = vi.hoisted(() => ({ session: vi.fn(), redirect: vi.fn((url: string) => { throw new Error('redirect:' + url); }) }));
 vi.mock('../lib/staff/session', () => ({ staffSession: auth.session }));
-vi.mock('next/navigation', () => ({ redirect: auth.redirect }));
+vi.mock('next/navigation', () => ({ redirect: auth.redirect, notFound: () => { throw new Error("not-found"); } }));
 import { emailPreviewTemplates, sampleEmail } from '../lib/email/preview';
 import Page from '../app/[locale]/admin/email-preview/page';
 import Unavailable from '../components/staff/unavailable';
 const assets = 'https://www.americantranslationservice.com';
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => { vi.clearAllMocks(); vi.stubEnv('EMAIL_PREVIEW_ENABLED', 'true'); });
+afterEach(() => vi.unstubAllEnvs());
 describe('staff email gallery', () => {
+  it.each([undefined, '', 'false', 'TRUE'])('blocks direct access when the flag is %s, before staff lookup', async value => {
+    vi.stubEnv('EMAIL_PREVIEW_ENABLED', value);
+    auth.session.mockResolvedValue({role:'admin'});
+    await expect(Page({searchParams: Promise.resolve({kind:'report'})})).rejects.toThrow('not-found');
+    expect(auth.session).not.toHaveBeenCalled();
+  });
+  it('allows an authenticated employee when explicitly enabled', async () => {
+    auth.session.mockResolvedValue({role:'admin'});
+    expect((await Page({searchParams: Promise.resolve({})})).type).toBe('main');
+  });
   it('requires employee membership before accessing any preview variant', async () => {
     auth.session.mockResolvedValue(null);
     await expect(Page({ searchParams: Promise.resolve({kind:'report'}) })).rejects.toThrow('redirect:/admin/login');

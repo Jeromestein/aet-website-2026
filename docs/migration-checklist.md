@@ -17,6 +17,10 @@ preserves migration history and acceptance evidence.
 
 ## Staff email previews
 
+- [x] Gate the gallery route and CRM link with `EMAIL_PREVIEW_ENABLED` (default closed); retain employee authentication.
+- [x] Configure Preview `true` and Production `false`; verify 46 focused tests,
+  clean-snapshot type checking, local closed-route UI and hosted Preview CRM/gallery access.
+
 - [x] Add an authenticated `/admin/email-preview` gallery and CRM Tools link for
   all eight business email categories, both information-request versions and quote states.
 - [x] Verify the hosted main Preview gallery on desktop/mobile and confirm

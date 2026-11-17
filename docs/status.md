@@ -25,6 +25,10 @@ This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
+The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
+the default is closed, independently of customer application release. See
+[email gallery configuration](email-templates.md#gallery-release-switch).
+
 ## Guarded main integration — November 12
 
 Dev is integrated into main and the guarded main deployment is live. New

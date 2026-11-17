@@ -1,5 +1,6 @@
-import {beforeEach,describe,expect,it,vi} from 'vitest';
+import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import {AppError} from '../lib/preeval/domain';
+vi.mock('server-only',()=>({}));
 const m=vi.hoisted(()=>({session:vi.fn(),redirect:vi.fn((url:string)=>{throw new Error('redirect:'+url);})}));
 vi.mock('next/navigation',()=>({redirect:m.redirect}));
 vi.mock('../lib/staff/session',()=>({staffSession:m.session}));
@@ -26,4 +27,11 @@ describe.each([['login',Login],['workspace',Workspace]] as const)('%s service re
 it('retains sign-in requirements when the session is absent',async()=>{
   m.session.mockResolvedValue(null);
   await expect(Workspace({searchParams:Promise.resolve({})})).rejects.toThrow('redirect:/admin/login');
+});
+
+afterEach(()=>vi.unstubAllEnvs());
+it.each(['true','false',undefined])('passes the email gallery visibility to CRM for flag %s',async value=>{
+  vi.stubEnv('EMAIL_PREVIEW_ENABLED',value);m.session.mockResolvedValue({role:'admin'});
+  const page=await Workspace({searchParams:Promise.resolve({})});
+  expect(page.props.emailPreviewEnabled).toBe(value==='true');
 });

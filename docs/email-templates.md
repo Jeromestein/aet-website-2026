@@ -30,6 +30,15 @@ Legacy templates were checked in `aet-app/src/app/(frontend)/(aet-app)/component
 Thanksgiving/Christmas promotional templates are excluded at the owner's request.
 Staff email-link login and password recovery remain removed.
 
+## Gallery release switch
+
+`EMAIL_PREVIEW_ENABLED=true` enables the gallery and its CRM Tools link. Missing,
+false or malformed values hide the link and return the not-found page for direct
+access, before authentication is queried. Employee authentication is still required
+when enabled. Set `true` on Preview and `false` on Production; redeploy the affected
+environment after changing the value. This switch does not enable customer
+applications or send email.
+
 ## Planned language policy
 
 **Owner decision — November 6, 2026; implementation pending.** All automatic

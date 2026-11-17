@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { ArrowLeft, Mail, Monitor, Smartphone, ShieldCheck } from 'lucide-react';
 import { staffSession } from '@/lib/staff/session';
 import { AppError } from '@/lib/preeval/domain';
 import StaffUnavailable from '@/components/staff/unavailable';
 import EmailFrame from '@/components/email-preview/email-frame';
 import { emailPreviewTemplates, sampleEmail } from '@/lib/email/preview';
+import { emailPreviewEnabled } from '@/lib/email/preview-release';
 import { emailAssetOrigin } from '@/lib/email/assets';
 import s from './preview.module.css';
 
@@ -14,6 +15,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Email Templates | AET Workspace', robots: { index: false, follow: false } };
 
 export default async function EmailPreviewPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  if (!emailPreviewEnabled()) notFound();
   let current;
   try { current = await staffSession(); }
   catch (error) {
