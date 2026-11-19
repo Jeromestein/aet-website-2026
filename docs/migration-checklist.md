@@ -15,6 +15,12 @@ Read [status](status.md) for current capability and [database architecture](data
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
 
+## CRM application history
+
+- [x] Combine historical and new applications before search, ordering, page counts and CSV export.
+- [x] Enforce assigned offices and explicit unassigned access for historical applications.
+- [x] Open historical records read-only and keep new application writes in the six-table schema.
+
 ## Terms and document requirements
 
 - [x] Add applicant acceptance checks, no acceptance guarantee and general

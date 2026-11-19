@@ -4,6 +4,7 @@ import { authorize } from '@/lib/preeval/auth';
 import { AppError } from '@/lib/preeval/domain';
 import { workspaceSnapshot } from '@/lib/crm/workspace-server';
 import { workspaceCsv } from '@/lib/crm/contracts';
+import { productionMode } from '@/lib/preeval/production';
 import { liveEnabled } from '@/lib/crm/live-db';
 import { liveSnapshot } from '@/lib/crm/live-server';
 import { requireIntakePreview } from '@/lib/application/intake-server';
@@ -13,10 +14,11 @@ export const dynamic = 'force-dynamic';
 const headers = { 'Cache-Control':'private, no-store','Referrer-Policy':'no-referrer','X-Robots-Tag':'noindex, nofollow' };
 export async function GET(request: Request) {
   try {
-    const staff = liveEnabled() ? await requireStaff() : await authorize();
+    const production = productionMode();
+    const staff = production || liveEnabled() ? await requireStaff() : await authorize();
     const query = Object.fromEntries(new URL(request.url).searchParams);
     const preview=query.source==='preview';delete query.source;if(preview)requireIntakePreview();
-    const result = liveEnabled() && !preview ? await liveSnapshot(query, staff as Awaited<ReturnType<typeof requireStaff>>) : await workspaceSnapshot(query, staff);
+    const result = !production && liveEnabled() && !preview ? await liveSnapshot(query, staff as Awaited<ReturnType<typeof requireStaff>>) : await workspaceSnapshot(query, staff, production && !preview);
     if (query.export === 'csv') return new Response(workspaceCsv(result.rows), { headers: { ...headers,'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="aet-applications.csv"','X-Content-Type-Options':'nosniff' } });
     return NextResponse.json(result,{headers});
   } catch(error) {

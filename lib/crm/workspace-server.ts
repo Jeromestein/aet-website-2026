@@ -19,12 +19,14 @@ export const workspaceQuery = z.object({
 }).strict();
 
 /** Scope the entire dataset before computing metrics, lists, files or exports. */
-export async function workspaceSnapshot(raw: Record<string,string>, staff: Row): Promise<WorkspaceSnapshot> {
+export async function workspaceSnapshot(raw: Record<string,string>, staff: Row, includeHistory = false): Promise<WorkspaceSnapshot> {
   const sql = db();
+  if (includeHistory && (!coreRuntimeEnabled() || !configuration().production || !z.uuid().safeParse(staff.id).success || !Array.isArray(staff.offices)))
+    throw new AppError('access_denied', 403);
   if (coreRuntimeEnabled()) {
     const { createCoreShadowReader } = await import('../application-core/reader');
     return (await createCoreShadowReader(sql)).workspace(raw,{role:'staff',email:staff.email,
-      offices:staff.offices || officeNames,includeUnassigned:staff.offices ? Boolean(staff.include_unassigned) : true});
+      offices:staff.offices || officeNames,includeUnassigned:staff.offices ? Boolean(staff.include_unassigned) : true}, includeHistory ? staff.id : undefined);
   }
   return projectWorkspaceRecords(sql, legacyRecords(sql), raw, staff, configuration().cloudPreview);
 }
@@ -82,7 +84,7 @@ export function legacyRecords(sql: Sql | TransactionSql) {
 }
 
 /** Shared query engine: scope before metrics, filters, pagination and export. */
-export async function projectWorkspaceRecords(sql: Sql | TransactionSql, records: PendingQuery<Row[]>, raw: Record<string,string>, staff: Row, cloudPreview: boolean): Promise<WorkspaceSnapshot> {
+export async function projectWorkspaceRecords(sql: Sql | TransactionSql, records: PendingQuery<Row[]>, raw: Record<string,string>, staff: Row, cloudPreview: boolean, includesHistory = false): Promise<WorkspaceSnapshot> {
   const query = workspaceQuery.parse(raw);
   const allowedOffices: string[] = staff.offices || officeNames;
   const includeUnassigned = staff.offices ? Boolean(staff.include_unassigned) : true;
@@ -91,11 +93,11 @@ export async function projectWorkspaceRecords(sql: Sql | TransactionSql, records
   const pageSize = query.export ? 5000 : WORKSPACE_PAGE_SIZE;
   const [result] = await sql`
     with records as (${records}    ), scoped as (
-      select *, status not in ('completed','cancelled') and (status in ('submitted','reviewing','needs_information') or payment_status in ('unpaid','pending') or (kind='formal' and jsonb_array_length(files)=0)) attention
+      select *, status not in ('completed','cancelled') and (status in ('submitted','reviewing','needs_information') or payment_status in ('unpaid','pending') or (kind='formal' and ${includesHistory ? sql`not historical` : sql`true`} and jsonb_array_length(files)=0)) attention
       from records where (office=any(${allowedOffices}::text[]) or (office is null and ${includeUnassigned}))
         and (${query.office}='all' or office=${query.office} or (${query.office}='unassigned' and office is null))
     ), viewed as (
-      select * from scoped where (${query.view} not in ('formal','equivalency','documents') or (${query.view}='formal' and kind='formal') or (${query.view}='equivalency' and kind='preeval') or (${query.view}='documents' and jsonb_array_length(files)>0))
+      select * from scoped where (${query.view} not in ('formal','equivalency','documents') or (${query.view}='formal' and kind in ('formal','external')) or (${query.view}='equivalency' and kind='preeval') or (${query.view}='documents' and jsonb_array_length(files)>0))
     ), filtered as (
       select * from viewed where (${query.filter}='all' or (${query.filter}='attention' and attention) or (${query.filter}='processing' and status in ('processing','reviewing')) or (${query.filter}='completed' and status='completed'))
         and concat_ws(' ',name,email,id::text,service,office,educations::text,case office when 'Boston' then 'BOS' when 'New York' then 'NYC' when 'Miami' then 'MIA' when 'San Francisco' then 'SF' when 'Los Angeles' then 'LA' end) ilike ${pattern}

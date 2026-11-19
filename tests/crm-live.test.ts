@@ -23,8 +23,9 @@ describe('shared legacy business rules',()=>{
 describe('live staff endpoint',()=>{
  it('requires a current Supabase staff membership before reading',async()=>{mocks.requireStaff.mockRejectedValue(new AppError('access_denied',401));expect((await GET(new Request('http://localhost:3022/api/staff-records/formal/a'),context)).status).toBe(401);expect(mocks.liveDetail).not.toHaveBeenCalled();});
  it('does not serve records when live mode is off',async()=>{mocks.liveEnabled.mockReturnValue(false);expect((await GET(new Request('http://localhost:3022'),context)).status).toBe(404);expect(mocks.liveDetail).not.toHaveBeenCalled();});
- it('rejects a cross-origin mutation before saving',async()=>{await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'https://other.invalid'},body:'{}'}),context);expect(mocks.liveUpdate).not.toHaveBeenCalled();});
- it('limits mutation size',async()=>{expect((await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'http://localhost:3022'},body:'x'.repeat(33000)}),context)).status).toBe(413);expect(mocks.liveUpdate).not.toHaveBeenCalled();});
- it('returns conflicts without leaking provider details',async()=>{mocks.liveUpdate.mockRejectedValue(new AppError('stale_version',409));const r=await POST(new Request('http://localhost:3022',{method:'POST',headers:{origin:'http://localhost:3022'},body:'{}'}),context);expect(r.status).toBe(409);expect(await r.json()).toEqual({error:'stale_version'});});
+ it('rejects every legacy edit before invoking a writer',async()=>{
+   const r=POST();expect(r.status).toBe(405);expect(r.headers.get('allow')).toBe('GET');
+   expect(await r.json()).toEqual({error:'legacy_read_only'});expect(mocks.liveUpdate).not.toHaveBeenCalled();
+ });
  it('disables caching on authenticated records',async()=>{const r=await GET(new Request('http://localhost:3022'),context);expect(r.headers.get('cache-control')).toBe('private, no-store');});
 });

@@ -1,11 +1,9 @@
-import { resolveStorage } from '../dropbox/storage';
-import { contextFor } from '../dropbox/application';
 import 'server-only';
 import {completionFor} from './completion';
 import type postgres from 'postgres';
 import {createHash} from 'node:crypto';
 import {liveDb} from './live-db';
-import {cents,services,timestamp,preferredPayment,statusAllowed,liveChange,liveReference,type LiveKind} from './live-domain';
+import {cents,services,timestamp,preferredPayment,liveReference,type LiveKind} from './live-domain';
 import {workspaceQuery} from './workspace-server';
 import {canAccessOffice,type StaffSession} from '../staff/session';
 import {AppError} from '../preeval/domain';
@@ -48,44 +46,15 @@ export async function liveSnapshot(raw:Record<string,string>,staff:StaffSession)
  return {rows:rows.slice((page-1)*pageSize,page*pageSize),total,page,pageSize,counts,stats,staff:{email:staff.email,offices:staff.offices,includeUnassigned:staff.include_unassigned},cloudPreview:false,liveData:true};
  });
 }
-export async function loadLiveRecord(tx:Tx,kind:LiveKind,id:string,staff:StaffSession,lock=false){
+export async function loadLiveRecord(tx:Tx,kind:LiveKind,id:string,staff:StaffSession){
  liveReference.parse({kind,id});
- const [row]=await tx`select * from ${tx(tables[kind])} where id::text=${id} ${lock?tx`for update`:tx``}`;
+ const [row]=await tx`select * from ${tx(tables[kind])} where id::text=${id}`;
  if(!row)throw new AppError('not_found',404);scoped(staff,row.office||null);
- const educations=(kind==='formal'||kind==='preeval')?await tx`select * from ${tx(kind==='formal'?'public.fce_educations':'public.aet_core_educations')} where application_id::text=${id} order by id ${lock&&kind==='preeval'?tx`for update`:tx``}`:[];
- const payments=kind==='preeval'?await tx`select * from public.aet_core_payments where application_id::text=${id} order by id ${lock?tx`for share`:tx``}`:[];
+ const educations=(kind==='formal'||kind==='preeval')?await tx`select * from ${tx(kind==='formal'?'public.fce_educations':'public.aet_core_educations')} where application_id::text=${id} order by id`:[];
+ const payments=kind==='preeval'?await tx`select * from public.aet_core_payments where application_id::text=${id} order by id`:[];
  return {row,educations,payments};
 }
 export async function liveDetail(kind:LiveKind,id:string,staff:StaffSession){return liveDb().begin('isolation level repeatable read read only',async tx=>{
  const record=await loadLiveRecord(tx,kind,id,staff);const audit=await tx`select actor,action,created_at from aet_crm.audit where kind=${kind} and record_id=${id} order by created_at desc limit 50`;
  return {...record,summary:liveRow(kind,record.row,record.educations,record.payments),version:recordVersion(record),audit,offices:staff.offices,includeUnassigned:staff.include_unassigned};
 });}
-/** One transaction writes the shared legacy row and its private audit entry. No mail/provider calls. */
-export async function changeInTransaction(tx:Tx,kind:LiveKind,id:string,raw:unknown,staff:StaffSession){
- const input=liveChange.parse(raw);const current=await loadLiveRecord(tx,kind,id,staff,true);
- if(recordVersion(current)!==input.version)throw new AppError('stale_version',409);
- const r=current.row;const summary=liveRow(kind,r,current.educations,current.payments);let changes:Row={};
- if(input.action==='status'){
-  if(kind==='payment'||!statusAllowed(r.status,summary.payment_status,input.status))throw new AppError('invalid_transition',409);
-  changes={status:input.status};
- }else if(input.action==='office'){
-  if(kind!=='formal'&&kind!=='external')throw new AppError('unsupported_action',400);scoped(staff,input.office);
-  if(kind==='formal' && r.office) await resolveStorage(contextFor({...r,submitted_at:timestamp(r.submitted_at),created_at:timestamp(r.created_at)},'evaluation'));
-  changes={office:input.office};
- }else if(input.action==='amount'){
-  if(kind!=='formal'||r.status!=='submitted'||r.payment_status==='paid'||r.payment_status==='refunded')throw new AppError('quote_locked',409);
-  changes={due_amount:input.amount===null?null:(input.amount/100).toFixed(2)};
- }else if(input.action==='notes'){
-  if(kind==='formal')changes={purpose_other:input.notes};else if(kind==='external'||kind==='payment')changes={notes:input.notes};else throw new AppError('unsupported_action',400);
- }else if(input.action==='result'){
-  if(kind!=='preeval'||['completed','cancelled'].includes(r.status))throw new AppError('application_locked',409);
-  const e=current.educations.find(e=>e.id===input.educationId);if(!e)throw new AppError('access_denied',403);
-  await tx`update public.aet_core_educations set ai_output=${tx.json(input.result)} where id=${e.id} and application_id=${id}`;
-  changes={updated_at:new Date().toISOString()};
- }
- await tx`update ${tx(tables[kind])} set ${tx(changes)} where id::text=${id}`;
- const after=await loadLiveRecord(tx,kind,id,staff);
- await tx`insert into aet_crm.audit(kind,record_id,actor,action,before_version,after_version,changes) values(${kind},${id},${staff.email},${input.action},${input.version},${recordVersion(after)},${tx.json(input.action==='result'?{educationId:input.educationId,before:current.educations.find(e=>e.id===input.educationId)?.ai_output,after:input.result}:{before:Object.fromEntries(Object.keys(changes).map(k=>[k,r[k]])),after:changes})})`;
- return {ok:true};
-}
-export async function liveUpdate(kind:LiveKind,id:string,raw:unknown,staff:StaffSession){return liveDb().begin(async tx=>{await tx`set local lock_timeout='3s'`;return changeInTransaction(tx,kind,id,raw,staff);});}

@@ -155,6 +155,12 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     // An empty copy of the accepted six-table contract, in this owned cluster only.
     const schema=readFileSync(new URL('../scripts/database/initialize-production.sql',import.meta.url),'utf8');
     await admin.unsafe(schema);
+    await admin.unsafe(readFileSync(new URL('../scripts/legacy/schema-fixture.sql',import.meta.url),'utf8'));
+    await admin.unsafe(`create schema aet_private;
+      create table aet_private.staff_accounts(auth_user_id uuid primary key, offices text[], active boolean, include_unassigned boolean);
+      create table public.fce_external_orders(id uuid primary key default gen_random_uuid(),first_name text,middle_name text,last_name text,
+        purpose text,due_amount numeric,office text,status text,payment_status text,created_at timestamptz,updated_at timestamptz);`);
+    await admin.unsafe(readFileSync(new URL('../scripts/database/production-crm-history.sql',import.meta.url),'utf8'));
     runtime=postgres({...options,username:'aet_runtime'}); m.sql=runtime;
     await activateSixTableRuntime(runtime);
   },60000);
@@ -205,6 +211,48 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     await admin.unsafe('revoke select on aet.aet_documents from anon');
     await activateSixTableRuntime(runtime);
     expect(formalCore()).toBe(true);
+  });
+  it('combines office-scoped history and new orders before search, sorting, totals, pagination and export', async () => {
+    const { workspaceSnapshot } = await import('../lib/crm/workspace-server');
+    const miami = {id:randomUUID(),email:'office@example.invalid',offices:['Miami'],include_unassigned:false};
+    const unassigned = {...miami,id:randomUUID(),offices:[],include_unassigned:true};
+    await admin`insert into aet_private.staff_accounts values
+      (${miami.id},array['Miami'],true,false),(${unassigned.id},array[]::text[],true,true)`;
+    await admin`insert into public.fce_external_orders(first_name,last_name,office,status,created_at,updated_at)
+      select 'MixedFixture',i::text,case when i=22 then 'Boston' else 'Miami' end,'submitted','2020-01-01','2020-01-01'
+      from generate_series(1,22) i`;
+    const [legacyPre] = await admin`insert into public.aet_core_applications(first_name,last_name,email) values
+      ('MixedFixture','Former','former@example.invalid') returning id`;
+    await admin`insert into public.aet_core_educations(application_id,school_name,degree_obtained,country_of_study,study_start_date,study_end_date)
+      values(${legacyPre.id},'Unique College','Bachelor','US','{}','{}')`;
+    const [oldFormal] = await admin`insert into public.fce_applications(name,first_name,last_name,pronouns,date_of_birth,
+      email,country,street_address,city,region,zip_code,phone,purpose,delivery_method,service_type,office,created_at,updated_at)
+      values('Contact','MixedFixture','Graduate','ms','2000-01-01','graduate@example.invalid','US','Main','Miami','FL','33101','305-555-0100',
+      'education','no_delivery_needed','{"coursebyCourse":{"firstDegree":{"speed":"8day"}}}','Miami','2020-01-01','2020-01-01') returning id`;
+    const app = await submitConverged({...input(),firstName:'MixedFixture',unified:{office:'miami',notes:''}});
+    const lookup = (query: Record<string,string>, staff=miami) => workspaceSnapshot(query,staff,true);
+    const all = await lookup({q:'MixedFixture',export:'csv'});
+    expect(all.total).toBe(23);
+    expect(all.rows[0]).toMatchObject({id:app.id,historical:false});
+    expect(all.rows.find(row=>row.id===oldFormal.id)).toMatchObject({name:'Ms. MixedFixture Graduate',service:'Course by Course',historical:true});
+    expect(all.rows.every(row=>row.office==='Miami')).toBe(true);
+    const first = await lookup({q:'MixedFixture',sort:'oldest'}), second = await lookup({q:'MixedFixture',sort:'oldest',page:'2'});
+    expect(first.rows).toHaveLength(20);expect(second.rows).toHaveLength(3);
+    expect(second.rows.at(-1)?.id).toBe(app.id);
+    expect(new Set([...first.rows,...second.rows].map(row=>row.id)).size).toBe(23);
+    const alphabetical = await lookup({q:'MixedFixture',sort:'name',export:'csv'});
+    const names = alphabetical.rows.map(row=>row.name.toLowerCase());
+    expect(names).toEqual([...names].sort());
+    expect((await lookup({q:oldFormal.id})).rows[0].historical).toBe(true);
+    expect((await lookup({q:'Unique College'})).total).toBe(0);
+    expect((await lookup({q:'Unique College'},unassigned)).rows[0]).toMatchObject({id:legacyPre.id,kind:'preeval',office:null});
+    await expect(lookup({office:'Boston'})).rejects.toMatchObject({status:403});
+    await admin`update aet_private.staff_accounts set active=false where auth_user_id=${miami.id}`;
+    expect(await runtime`select id from aet.crm_history(${miami.id}::uuid)`).toHaveLength(0);
+    const [rights] = await runtime`select has_table_privilege(current_user,'public.fce_applications','UPDATE') writes,
+      has_function_privilege('anon','aet.crm_history(uuid)','EXECUTE') anonymous,
+      has_function_privilege('authenticated','aet.crm_history(uuid)','EXECUTE') customer`;
+    expect(rights).toMatchObject({writes:false,anonymous:false,customer:false});
   });
   it('accepts a formal intake and confirms live payment for its saved applicant', async () => {
     const { initialDraft } = await import('../lib/application/model');

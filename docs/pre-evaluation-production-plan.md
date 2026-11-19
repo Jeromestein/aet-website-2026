@@ -11,7 +11,10 @@ The additive [application schema](../scripts/database/initialize-production.sql)
 and [staff permissions](../scripts/database/production-staff-membership.sql)
 were applied to separate login roles. The business role cannot write to historical
 or Preview tables. The staff role reads active memberships and maintains login
-attempt limits. Production column definitions, indexes, table constraints and
+attempt limits. Apply the [CRM history function](../scripts/database/production-crm-history.sql)
+after provisioning staff membership and the application schema. It gives the new CRM
+read access to historical applications within the employee’s office scope. Historical
+applications stay in their original tables. Production column definitions, indexes, table constraints and
 triggers were compared with the accepted Preview schema. See the
 [active checklist](migration-checklist.md) for outstanding live acceptance.
 
@@ -45,7 +48,7 @@ release, subject to checking its existing Vercel binding before activation:
 | Existing dedicated pre-evaluation links | `/degree-equivalency-tool/application` (retain compatibility) |
 | Result | `/degree-equivalency-tool/application/success?applicationId=ID` |
 | Retrieve an application | `/status-check` |
-| New-order staff workspace | `/admin/CRM` |
+| Unified staff workspace | `/admin/CRM` |
 | Stripe live event destination | `/api/pre-evaluation/stripe-webhook` |
 
 Customer pages also support `/zh` and `/es`; the API and staff paths are unprefixed.

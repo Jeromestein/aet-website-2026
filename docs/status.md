@@ -29,7 +29,11 @@ an empty intake and an unsigned Stripe callback, and an unknown application ID
 returns 404. The release passed 1,005 local tests, with 17 conditional skips.
 Actual applicant email receipt, file transfer, payment and staff PDF delivery
 remain for the owner's live acceptance.
-This is the current summary, not a release log.
+The Production CRM combines new evaluation applications with historical formal
+applications, imported orders and pre-evaluations. Employees can search, sort,
+page and export the records visible to their offices. Historical pre-evaluations
+require unassigned access because the original records have no office field.
+Historical details are read-only. New submissions use the six-table schema.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
@@ -162,7 +166,7 @@ runtime/configuration and real-customer acceptance are still open.
 | AICE calendar | Public `/admin/calendar` (Calendar) reads 22 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes four unverified leads and two undated records; CHEA and Montreal added November 16 ([source update](../data/aice/README.md#november-16-update)); artificial preview feed removed ([initial verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form controls | Global custom select arrow (14px right inset, 44px text clearance) and rounded field focus halo; composite shells share one ring. Local in-app desktop/mobile checks passed for CRM sample filters, calendar and Payment; earlier application/Blog focus checks passed | Hosted deployment not performed; CRM visual check used fictional preview records |
 | Link icon cleanup | Removed 33 diagonal outbound-arrow icons/text markers across website, CRM, Calendar, application samples, Payment and email preview; removed obsolete arrow-only table column and styling. Local desktop/mobile visual checks passed for CRM sidebar, calendar details and homepage service cards | Local source changes only; not deployed |
-| CRM and staff | Password login, office permissions, Live/Test views, scoped live edits, document/payment details and CSV | v2 Test intake supports office-scoped review, quote and report release; legacy employee migration/cutover stays off |
+| CRM and staff | Password login, office permissions, Live/Test views, read-only history, document/payment details and CSV | v2 Test intake supports office-scoped review, quote and report release; legacy employee migration/cutover stays off |
 | Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Credential linked Sandbox Checkout/direct webhook accepted; live credential runtime and business rules remain open |
 | Email | Staff-only eight-category React Email gallery at `/admin/email-preview` accepted on main Preview November 17; [verification](archive/email-gallery-preview-2026-11-17.md). Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | Applicant-address routing is tested offline on dev; five formal lifecycle notifications delivered in Preview; hosted real-customer acceptance remains open; scheduled recovery is deferred |
 | Fulfillment and migration | Delivery choices saved; older formal pilot can release a PDF; legacy GPA route restored | New-intake PDF delivery accepted in Preview; paper dispatch stays manual; Production cutover and old-app retirement remain open |
@@ -341,9 +345,7 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Operational boundaries
 
-- **Live CRM affects existing business records.** Intake preview schemas do not
-  isolate Dropbox accounts or office email CC. Staff authentication, live CRM
-  and intake retain separate configured database connections.
+- **Historical applications are read-only in the new CRM.** Production reads them through an office-scoped database function. The existing application still manages its original records. Intake preview schemas do not isolate Dropbox accounts or office email CC.
 - **Email scheduling remains deferred by owner decision.** Keep F5 as TODO;
   reconsider only after a substantial unsent backlog or recurring failure is
   observed. Do not design, implement or activate further scheduling now.

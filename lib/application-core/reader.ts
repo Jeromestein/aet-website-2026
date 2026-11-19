@@ -64,7 +64,7 @@ export async function createCoreShadowReader(sql: Sql) {
           education: educations[0], files, created_at: app.created_at, updated_at: app.updated_at };
       });
     },
-    async workspace(raw: Record<string,string>, actor: Extract<CoreActor,{role:'staff'}>) {
+    async workspace(raw: Record<string,string>, actor: Extract<CoreActor,{role:'staff'}>, historyStaffId?: string) {
       if (actor.role !== 'staff' || !Array.isArray(actor.offices)) throw new AppError('access_denied',403);
       return sql.begin('isolation level repeatable read read only', async tx => {
         const records = tx`select 'preeval'::text kind,a.id,concat_ws(' ',case a.pronouns when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else null end,a.first_name,nullif(trim(a.middle_name),''),a.last_name) name,
@@ -85,8 +85,18 @@ export async function createCoreShadowReader(sql: Sql) {
             and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
         const combined = converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
-        return projectWorkspaceRecords(tx, combined, raw, { email: actor.email, offices: actor.offices,
-          include_unassigned: actor.includeUnassigned }, !productionMode());
+        // Only the staff workspace supplies a verified Auth ID for historical reads.
+        const workspace = historyStaffId ? tx`
+          select current_rows.*, false as historical from (${combined}) current_rows
+          union all
+          select h.*, true as historical from aet.crm_history(${historyStaffId}::uuid) h
+          where not exists (
+            select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=h.id
+            and ((h.kind='formal' and a.primary_service='evaluation') or
+                 (h.kind='preeval' and a.primary_service='pre-evaluation'))
+          )` : combined;
+        return projectWorkspaceRecords(tx, workspace, raw, { email: actor.email, offices: actor.offices,
+          include_unassigned: actor.includeUnassigned }, !productionMode(), Boolean(historyStaffId));
       });
     },
   };

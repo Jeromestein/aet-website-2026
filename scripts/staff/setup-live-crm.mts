@@ -24,7 +24,7 @@ try{
   await tx.unsafe(`grant usage on schema public to ${role}`);
   for(const [name,columns] of Object.entries(grants)){
    await tx.unsafe(`grant select on public.${name} to ${role}`);
-   if(columns.length)await tx.unsafe(`grant update (${columns.join(',')}) on public.${name} to ${role}`);
+   if(columns.length)await tx.unsafe(`revoke update (${columns.join(',')}) on public.${name} from ${role}`);
    // Add only policies for the new server role. Existing policies and table definitions stay intact.
    const found=await tx`select 1 from pg_policies where schemaname='public' and tablename=${name} and policyname='aet_crm_server'`;
    if(!found.length)await tx.unsafe(`create policy aet_crm_server on public.${name} to ${role} using (true) with check (true)`);
@@ -36,7 +36,7 @@ try{
   await tx`revoke all on all tables in schema aet_crm from public,anon,authenticated`;
   await tx`alter table aet_crm.audit enable row level security`;
   await tx.unsafe(`grant usage on schema aet_crm to ${role}`);
-  await tx.unsafe(`grant select,insert on aet_crm.audit to ${role}`);
+  await tx.unsafe(`grant select on aet_crm.audit to ${role}`);
   const policy=await tx`select 1 from pg_policies where schemaname='aet_crm' and tablename='audit' and policyname='server_audit'`;
   if(!policy.length)await tx.unsafe(`create policy server_audit on aet_crm.audit to ${role} using (true) with check (true)`);
   const [rights]=await tx`select has_table_privilege(${role},'public.users','SELECT') or has_table_privilege(${role},'auth.users','SELECT') or has_table_privilege(${role},'aet_private.staff_accounts','SELECT') as exposed`;
