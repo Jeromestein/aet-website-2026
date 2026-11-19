@@ -6,7 +6,7 @@ import { folderPath, seal, type ApplicationContext } from './server';
 async function lookup(applicationId: unknown, kind: unknown) {
   if (typeof applicationId !== 'string' || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(applicationId) ||
     !['evaluation', 'pre-evaluation'].includes(String(kind))) throw new DocumentError('invalid');
-  if(kind==='evaluation'&&process.env.APPLICATION_CORE_MODE==='six-preview'&&formalCore()){const {row}=await formalLegacy(applicationId);return {...row,submitted_at:new Date(row.submitted_at).toISOString()};}
+  if(kind==='evaluation'&&['six-production','six-preview'].includes(process.env.APPLICATION_CORE_MODE || '')&&formalCore()){const {row}=await formalLegacy(applicationId);return {...row,submitted_at:new Date(row.submitted_at).toISOString()};}
   const base = process.env.AET_APPLICATIONS_SUPABASE_URL;
   const key = process.env.AET_APPLICATIONS_SUPABASE_ANON_KEY;
   if (!base || !key) throw new DocumentError('unavailable', 503);
@@ -44,7 +44,7 @@ export function contextFor(row: Record<string, string | null>, kind: Application
     ...(kind === 'pre-evaluation' && row.email
       ? { legacyFolderKey: safeSegment(row.email) } : {}),
     submittedAt: (kind === 'evaluation' ? row.submitted_at || row.created_at : row.created_at) || '',
-    canUpload: kind === 'pre-evaluation' || ['submitted', 'processing', ...(process.env.APPLICATION_CORE_MODE === 'six-preview' ? ['reviewing', 'needs_information'] : [])].includes(row.status?.toLowerCase() ?? ''),
+    canUpload: kind === 'pre-evaluation' || ['submitted', 'processing', ...(['six-production','six-preview'].includes(process.env.APPLICATION_CORE_MODE || '') ? ['reviewing', 'needs_information'] : [])].includes(row.status?.toLowerCase() ?? ''),
   };
   // Persisting the identity must not require Dropbox OAuth credentials.
   // Signing access and provider operations validate account configuration.

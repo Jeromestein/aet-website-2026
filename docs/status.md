@@ -14,13 +14,15 @@
 - Prepared for the owner's manual upload trial only. No Feed upload or campaign
   activation was performed.
 
-Updated November 17, 2026. The owner now requires **pre-evaluation and credential
+Updated November 19, 2026. The owner now requires **pre-evaluation and credential
 evaluation to launch together through `/application`**. The dedicated pre-evaluation
 journey is verified on earlier dev Preview; the unified pre-evaluation choice is
 now verified end to end on main Preview at `67a9cf1`. The unified credential
 journey also passed main Preview acceptance on November 12, including staff review,
 payment and manual PDF publication. Both use the six-table model. Translation remains deferred;
-Production has not been activated for these new workflows.
+The private Production schema and restricted runtime are provisioned. The unified
+entry is intended for direct-link acceptance before any public CTA cutover.
+Real payment, applicant email receipt and staff PDF delivery require live acceptance.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.

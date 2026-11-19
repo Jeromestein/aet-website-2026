@@ -1,5 +1,6 @@
 import { formalCore } from '../application-core/formal-store';
 import {checkoutFormalCore,applyFormalCheckout,refundFormalCore,reconcileFormalCore,cancelFormalCore} from '../application-core/formal-payments';
+import { paymentModeMatches } from '../preeval/payment-mode';
 import type Stripe from 'stripe';
 import { applyChargeRefund, syncCheckoutRefund } from '../preeval/stripe-refunds';
 import { table, db } from '../preeval/db';
@@ -75,7 +76,7 @@ export async function reconcile(id: string) {
   }
 }
 export async function handleStripeEvent(event: Stripe.Event) {
-  if (event.livemode) throw new AppError('live_event_rejected');
+  if (formalCore() ? !paymentModeMatches(event) : event.livemode) throw new AppError(event.livemode ? 'live_event_rejected' : 'test_event_rejected');
   if (['checkout.session.completed', 'checkout.session.async_payment_succeeded', 'checkout.session.expired', 'checkout.session.async_payment_failed'].includes(event.type)) {
     await applyCheckout(event.data.object as Stripe.Checkout.Session, event.id, event.type);
   } else if (event.type === 'charge.refunded') {

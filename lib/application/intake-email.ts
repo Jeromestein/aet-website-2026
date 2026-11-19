@@ -28,8 +28,8 @@ export async function renderIntakeEmail(applicationId: string) {
   const application = await readIntake(applicationId);
   return {
     from: `${required("RESEND_DEFAULT_FROM_NAME")} <${required("RESEND_DEFAULT_FROM_ADDRESS")}>`,
-    cc: configuration().cloudPreview ? [] : officeCc(application.data.office, TEST_RECIPIENT),
-    ...await confirmationEmail(application.id, application.locale, application.data, application.quote, configuration().origin),
+    cc: configuration().cloudPreview ? [] : officeCc(application.data.office, application.email.recipient),
+    ...await confirmationEmail(application.id, application.locale, application.data, application.quote, configuration().origin, undefined, configuration().production),
   };
 }
 

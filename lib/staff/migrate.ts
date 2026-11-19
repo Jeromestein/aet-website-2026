@@ -25,6 +25,12 @@ export async function prepareStaffIdentity(
   replacement?: string,
 ): Promise<MigrationResult> {
   const email = normalizeEmail(emailInput);
+  if (process.env.VERCEL_ENV === "production" && process.env.STAFF_LEGACY_MIGRATION_ENABLED === "false") {
+    const [account] = await staffDb()`select auth_user_id, migration_state from aet_private.staff_accounts
+      where active and email=${email}`;
+    if (!account || account.migration_state === "blocked") return "invalid";
+    return account.auth_user_id ? "ready" : "paused";
+  }
   return staffDb().begin(async (sql) => {
     await sql`set local lock_timeout='5s'`;
     const [account] =

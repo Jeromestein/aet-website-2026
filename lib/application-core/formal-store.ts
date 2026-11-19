@@ -8,10 +8,9 @@ import { convergedPaymentState } from './converged-payment-state';
 import { AppError } from '../preeval/domain';
 import { canDownloadReport, payableTotal } from '../evaluation-application/workflow';
 import { toLegacyFormal, toLegacyEducation } from '../legacy-application/mapping';
-import { configuration } from '../preeval/config';
-import { productionMode } from '../preeval/production';
+import { applicationRecipient } from '../preeval/recipients';
 export type FormalDB = Sql | TransactionSql;
-export const formalCore = () => !productionMode() && sixTableMode(db());
+export const formalCore = () => sixTableMode(db());
 export const formalPayments = (sql: FormalDB) => sql`select p.*,checkout_session_id as session_id,payment_intent_id as payment_intent,payment_status as status from ${coreTable(sql,'aet_payments')} p where source='formal-evaluation'`;
 export const formalFiles = (sql: FormalDB) => sql`select d.*,original_filename as name,size_bytes::int as bytes,upload_state as state,storage_path as dropbox_path,
   case when access_scope='staff_only' then 'report' else 'document' end as kind,
@@ -96,7 +95,8 @@ export async function queueFormalNotification(sql:FormalDB,id:string,kind:string
   const [s]=await sql`select id,notification_state from ${coreTable(sql,'aet_service_detail')} where application_id=${id} and service_type='evaluation' for update`;
   const old=s.notification_state[kind];if(old?.key===key)return;
   if(old&&old.state!=='sent'&&old.attempts>0)throw new AppError('notification_review_required',409);
-  s.notification_state[kind]={id:randomUUID(),kind,key,recipient:configuration().recipient,state:'queued',attempts:0,available_at:new Date().toISOString(),...extra};
+  const [application] = await sql`select email from ${coreTable(sql,'aet_core_applications')} where id=${id}`;
+  s.notification_state[kind]={id:randomUUID(),kind,key,recipient:applicationRecipient(application.email),state:'queued',attempts:0,available_at:new Date().toISOString(),...extra};
   await sql`update ${coreTable(sql,'aet_service_detail')} set notification_state=${sql.json(s.notification_state)} where id=${s.id}`;
 }
 /** Refresh file metadata discovered in an authorized folder; never reassign a File ID. */

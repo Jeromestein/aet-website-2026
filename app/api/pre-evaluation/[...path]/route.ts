@@ -102,8 +102,8 @@ async function handler(
         throw new AppError("invalid_signature");
       }
       await handleStripeEvent(event);
-      // Both migrated services use the same verified dev Preview test endpoint.
-      if (!configuration().production && (!configuration().cloudPreview || formalCore())) {
+      // The signed endpoint dispatches events for both application services.
+      if (formalCore() || (!configuration().production && !configuration().cloudPreview)) {
         await handleFormalEvent(event);
         after(flushFormalEmails);
       }

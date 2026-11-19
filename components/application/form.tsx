@@ -36,7 +36,7 @@ function Field({ id, label, requiredMark, fullWidth, optional, hint, error, chil
   </div>;
 }
 
-export function GeneralApplication({ locale, initialService }: { locale: Locale; initialService: ServiceId | '' }) {
+export function GeneralApplication({ locale, initialService, production = false }: { production?: boolean; locale: Locale; initialService: ServiceId | '' }) {
   const c = applicationCopy[locale];
   const ic = intakeCopy[locale];
   const pc = preevaluationCopy(locale);
@@ -198,11 +198,11 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
   if(submitted) {
     const preeval = submitted.service === 'pre-evaluation';
     const destination = preeval ? resultPath(locale, submitted.id) + '#documents' : statusPath(submitted.id, locale);
-    return <div className={s.shell}><section className={s.receipt}><p className={s.eyebrow}>{preeval ? pc.eyebrow : ic.test}</p><h1>{ic.saved}</h1><p>{ic.id}: <strong>{submitted.id}</strong></p><p>{preeval ? pc.savedHint : ic.note}</p>{!preeval && <p>{ic.pilotNote}</p>}<a className={s.primary} href={destination}>{preeval ? c.submit : ic.open}<ArrowRight size={18}/></a>{!preeval && <p>{ic.next}</p>}<button className={s.secondary} onClick={reset}>{ic.newApplication}</button></section></div>;
+    return <div className={s.shell}><section className={s.receipt}><p className={s.eyebrow}>{preeval ? pc.eyebrow : production ? ic.status : ic.test}</p><h1>{ic.saved}</h1><p>{ic.id}: <strong>{submitted.id}</strong></p><p>{preeval ? pc.savedHint : ic.note}</p>{!preeval && !production && <p>{ic.pilotNote}</p>}<a className={s.primary} href={destination}>{preeval ? c.submit : ic.open}<ArrowRight size={18}/></a>{!preeval && !production && <p>{ic.next}</p>}<button className={s.secondary} onClick={reset}>{ic.newApplication}</button></section></div>;
   }
   return <div className={s.shell}>
     <div className={s.introduction}><p className={s.eyebrow}>{c.eyebrow}</p><h1>{c.title}</h1><p>{c.intro}</p></div>
-    {(data.service === 'evaluation' || data.service === 'translation') && <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{data.service==='evaluation'?ic.pilot:c.preview}</strong><span>{data.service==='evaluation'?ic.pilotNote:c.previewNote}</span></p></div>}
+    {((data.service === 'evaluation' && !production) || data.service === 'translation') && <div className={s.preview}><Info size={17} aria-hidden="true" /><p><strong>{data.service==='evaluation'?ic.pilot:c.preview}</strong><span>{data.service==='evaluation'?ic.pilotNote:c.previewNote}</span></p></div>}
     <nav className={s.steps} aria-label={c.progress}><ol>{labels.map((label, index) => <li key={label} className={index === step ? s.currentStep : index < step ? s.completedStep : ''}>
       <button type="button" onClick={() => navigate(index)} aria-current={index === step ? 'step' : undefined} disabled={!ready || submitting}>
         <span className={s.stepNumber}>{index < step ? <Check size={19} aria-hidden="true" /> : index + 1}</span><span>{label}</span>
@@ -289,7 +289,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
             {data.service === 'evaluation' && <>
               <section className={s.acceptanceNotice} aria-labelledby="before-apply-title"><div><Info size={18} aria-hidden="true" /><h3 id="before-apply-title">{c.beforeApply}</h3></div><p>{c.beforeApplyDescription}</p></section>
             </>}
-            <div className={s.uploadLater}><Upload size={19} aria-hidden="true" /><div><strong>{c.documentsNotice}</strong><p>{data.service==='evaluation'?ic.before:c.uploadLater}</p></div></div>
+            <div className={s.uploadLater}><Upload size={19} aria-hidden="true" /><div><strong>{c.documentsNotice}</strong><p>{data.service==='evaluation' && !production?ic.before:c.uploadLater}</p></div></div>
           </>}
           {step === 2 && <>
             <section className={s.reviewSection}><div className={s.reviewHeading}><h3>{c.contactHeading}</h3><button type="button" onClick={() => navigate(0)} aria-label={c.edit + ' · ' + c.contactHeading}>{c.edit}<Pencil size={14} aria-hidden="true" /></button></div><dl className={s.reviewGrid}>
@@ -323,7 +323,7 @@ export function GeneralApplication({ locale, initialService }: { locale: Locale;
               <label className={s.termsChoice}><input {...accessibility('preevaluationTerms')} type="checkbox" required checked={data.preevaluationTerms} onChange={event => { setData(current => ({...current, preevaluationTerms:event.target.checked})); setErrors(current => { const next={...current}; delete next.preevaluationTerms; return next; }); }} /><span>{pc.terms} <a href={getPathname({locale,href:'/terms'})} target="_blank" rel="noopener noreferrer">{pc.termsLink}</a></span></label>
               {errors.preevaluationTerms && <p className={s.fieldError} id="preevaluationTerms-error">{c.required}</p>}
             </section>}
-            <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3>{data.service==='evaluation'?<p><Mail size={19}/>{ic.before}</p>:<><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></>}</div>
+            <div className={s.afterConfirmation}><h3>{c.laterTitle}</h3>{data.service==='evaluation' && !production?<p><Mail size={19}/>{ic.before}</p>:<><p><Mail size={19} aria-hidden="true" />{c.laterEmail}</p><p><Upload size={19} aria-hidden="true" />{c.laterFiles}</p></>}</div>
           </>}
         </fieldset>
         <div className={s.actions}>

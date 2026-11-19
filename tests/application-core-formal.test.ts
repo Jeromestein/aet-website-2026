@@ -123,7 +123,7 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await expect(staffAction(a.id,{action:'status',version:r.version,status:'processing',message:''},'staff')).rejects.toMatchObject({code:'payment_and_documents_required'});
  });
  it('retains a single payment and receipt on repeated/out-of-order callbacks; refunds withhold reports',async()=>{
-  const a=await saveApplication(input()),r=await application(a.id,true),session:any={id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
+  const a=await saveApplication(input()),r=await application(a.id,true),session:any={mode:'payment',id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
   m.create.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open'});
   const charge:any={id:'ch_'+a.id,livemode:false,currency:'usd',amount:r.total,amount_refunded:0,payment_intent:session.payment_intent};
   m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.total,latest_charge:charge});
@@ -166,7 +166,7 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await staffAction(r.id,{action:'quote',base:r.quote.min,additional:3500,explanation:'Synthetic translation quote',version:r.version},'staff');
   await flushFormalEmails(transport,r.id);r=await application(r.id,true);
   expect(r.total).toBe(r.quote.min+3500);
-  const session:any={id:'cs_'+r.id,livemode:false,client_reference_id:r.id,metadata:{pilot:'aet-formal-2026-local',applicationId:r.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+r.id};
+  const session:any={mode:'payment',id:'cs_'+r.id,livemode:false,client_reference_id:r.id,metadata:{pilot:'aet-formal-2026-local',applicationId:r.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+r.id};
   m.create.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open'});
   m.retrieve.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open',payment_status:'unpaid'});
   await checkout(r.id);await checkout(r.id);

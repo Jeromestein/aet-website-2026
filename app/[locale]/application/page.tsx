@@ -21,7 +21,7 @@ export default async function ApplicationPage({ params, searchParams }: Props) {
     <a className={s.skip} href="#application-main">{applicationCopy[locale].skip}</a>
     <Navigation />
     <main id="application-main" className={s.main}>
-      <GeneralApplication locale={locale} initialService={serviceFromQuery(query.service)} />
+      <GeneralApplication production={process.env.VERCEL_ENV === 'production'} locale={locale} initialService={serviceFromQuery(query.service)} />
     </main>
     <SiteFooter />
   </>;

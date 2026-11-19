@@ -153,8 +153,7 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     admin=postgres({...options,username:'core_rehearsal'});
     await admin.unsafe('create role anon; create role authenticated; create role aet_runtime login; create table public.legacy_guard(id int);');
     // An empty copy of the accepted six-table contract, in this owned cluster only.
-    const schema=readFileSync(new URL('../supabase/migrations/20261111010750_preview_six_table_core.sql',import.meta.url),'utf8')
-      .replaceAll('aet_preview_shared','aet').replaceAll('aet_preview_runtime','aet_runtime');
+    const schema=readFileSync(new URL('../scripts/database/initialize-production.sql',import.meta.url),'utf8');
     await admin.unsafe(schema);
     runtime=postgres({...options,username:'aet_runtime'}); m.sql=runtime;
     await activateSixTableRuntime(runtime);
@@ -205,7 +204,40 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     await expect(activateSixTableRuntime(runtime)).rejects.toThrow('grants');
     await admin.unsafe('revoke select on aet.aet_documents from anon');
     await activateSixTableRuntime(runtime);
-    expect(formalCore()).toBe(false);
+    expect(formalCore()).toBe(true);
+  });
+  it('accepts a formal intake and confirms live payment for its saved applicant', async () => {
+    const { initialDraft } = await import('../lib/application/model');
+    const { selectEvaluationService } = await import('../lib/application/evaluation');
+    const { saveIntake } = await import('../lib/application/intake-server');
+    const { checkoutFormalCore } = await import('../lib/application-core/formal-payments');
+    const { sendIntakeEmail } = await import('../lib/application/intake-email');
+    const { flushFormalEmails } = await import('../lib/evaluation-application/email');
+    const data = { ...initialDraft('evaluation'), contactName:'Test Applicant', email:'formal@example.invalid',
+      phone:'+1 305 555 0100', office:'miami', pronouns:'mx', firstName:'Test', lastName:'Applicant',
+      purpose:'education', educations:[{school:'Test University',country:'GB',degree:'Bachelor',start:'2014-09',end:'2018-06'}] };
+    data.evaluationRequest = selectEvaluationService(data.evaluationRequest,'document',1);
+    const input = {requestId:randomUUID(),locale:'en',data};
+    const {id} = await saveIntake(input);
+    expect(await saveIntake(input)).toMatchObject({id,created:false});
+    const mail = vi.fn().mockResolvedValue('synthetic-id');
+    await sendIntakeEmail(id,mail);
+    expect(mail.mock.calls[0][0]).toMatchObject({recipient:data.email});
+    expect(mail.mock.calls[0][0].html).not.toContain('Payments are disabled');
+    await checkoutFormalCore(id);
+    expect(m.create.mock.calls[0][0]).toMatchObject({customer_email:data.email,metadata:{pilot:'aet-formal-2026-production'}});
+    const paid = {...sessions.get('cs_'+id)!,amount_total:11000,status:'complete',payment_status:'paid'} as Stripe.Checkout.Session;
+    const pi='pi_'+id;
+    m.intent.mockResolvedValue({id:pi,livemode:true,status:'succeeded',currency:'usd',amount:11000,
+      latest_charge:{livemode:true,payment_intent:pi,currency:'usd',amount:11000,amount_refunded:0}});
+    expect((await webhook(paid,env.STRIPE_TEST_WEBHOOK_SECRET)).status).toBe(400);
+    expect((await webhook(paid)).status).toBe(200);
+    expect((await webhook(paid)).status).toBe(200);
+    expect(await runtime`select payment_status,provider_mode from aet.aet_payments where application_id=${id}`)
+      .toMatchObject([{payment_status:'paid',provider_mode:'live'}]);
+    await flushFormalEmails(mail,id);
+    expect(mail).toHaveBeenCalledTimes(2);
+    expect(mail.mock.calls[1][0].recipient).toBe(data.email);
   });
   it('delivers real-address confirmation and paid-result mail once using six tables', async () => {
     const a=await ready(); const transport=vi.fn().mockResolvedValue('synthetic-mail-id');

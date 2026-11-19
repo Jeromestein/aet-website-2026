@@ -34,6 +34,7 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
     const { path } = await params; const endpoint = path.join('/'); const post = request.method === 'POST';
     if (post && endpoint !== 'stripe-webhook') sameOrigin(request);
     if (endpoint === 'stripe-webhook' && post) {
+      if (configuration().production) throw new AppError('not_found',404); // Live events use the shared application webhook.
       const signature = request.headers.get('stripe-signature'); if (!signature) throw new AppError('invalid_signature');
       let event; const raw = await read(request, 1048576);
       try { event = stripeClient(formalCore()?'pre-evaluation':'formal-evaluation').webhooks.constructEvent(raw, signature, required('STRIPE_TEST_WEBHOOK_SECRET')); } catch { throw new AppError('invalid_signature'); }

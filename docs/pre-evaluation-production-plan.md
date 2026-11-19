@@ -1,14 +1,19 @@
 # Pre-evaluation Production Configuration Plan
 
-Prepared November 11, 2026, against dev `ec57042`. **Plan only: nothing in
-Production has been changed.** This document records the proposed settings and
-release order; it is not an executable environment file or deployment approval.
+The November 11 plan below records the original release design. On November 19,
+the joint direct-link release was authorized on the www origin. Credential
+evaluation shares the six-table runtime and live Stripe destination with
+pre-evaluation. It uses the saved applicant email, private application documents,
+employee office permissions and PDF publication. Public website Apply buttons
+continue to use the existing application during manual acceptance.
 
-**Scope update:** the owner now requires pre-evaluation and credential evaluation
-to launch together through `/application`. The manifest below covers the existing
-pre-evaluation runtime only. It must be extended for credential intake, payment,
-applicant mail and report delivery after dev implementation; it is not sufficient
-for the joint launch. See the [active checklist](migration-checklist.md).
+The additive [application schema](../scripts/database/initialize-production.sql)
+and [staff permissions](../scripts/database/production-staff-membership.sql)
+were applied to separate login roles. The business role cannot write to historical
+or Preview tables. The staff role reads active memberships and maintains login
+attempt limits. Production column definitions, indexes, table constraints and
+triggers were compared with the accepted Preview schema. See the
+[active checklist](migration-checklist.md) for outstanding live acceptance.
 
 ## First-release decisions
 

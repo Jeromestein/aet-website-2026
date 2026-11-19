@@ -1,3 +1,4 @@
+import { legacyApplicationUrl } from '@/lib/application-release';
 import { requireApplicationPage } from '@/lib/application-page-access';
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -56,7 +57,7 @@ export default async function Page({
             <p className={landing.intro}>{t.intro}</p>
             <div className={landing.actions}>
               <a className={s.button + " " + s.primary}
-                href={pathFor(locale, "/application?service=pre-evaluation")}>
+                href={process.env.VERCEL_ENV === "production" ? legacyApplicationUrl(true) : pathFor(locale, "/application?service=pre-evaluation")}>
                 {t.start}<ArrowRight size={18} aria-hidden="true" />
               </a>
               <a className={landing.statusLink} href={pathFor(locale, "/status-check")}>

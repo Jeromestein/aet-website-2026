@@ -24,7 +24,7 @@ export function FormalWorkflow({record,locale,part}:{record:CustomerStatus;local
  return <section className={s.card}><div className={s.sectionHeading}><CreditCard size={24}/><h2>{t.payment}</h2></div>
   {record.amount!==null&&<div className={s.amountRow}><span>{t.total}</span><strong>{new Intl.NumberFormat(locale,{style:'currency',currency:'USD'}).format(record.amount/100)}</strong></div>}
   {w.confirmedQuote&&<p style={{whiteSpace:'pre-wrap'}}>{w.confirmedQuote.explanation}</p>}
-  {record.payment==='paid'?<p className={s.paid}>{t.paid}</p>:w.canPay?<><p>{t.test}</p><button type="button" className={s.portal} disabled={busy} onClick={()=>void action('checkout')}>{t.pay}</button></>:<p>{record.amount===null?t.pending:t.closed}</p>}
+  {record.payment==='paid'?<p className={s.paid}>{t.paid}</p>:w.canPay?<>{!w.production && <p>{t.test}</p>}<button type="button" className={s.portal} disabled={busy} onClick={()=>void action('checkout')}>{t.pay}</button></>:<p>{record.amount===null?t.pending:t.closed}</p>}
   {record.payment==='pending'&&<button type="button" disabled={busy} onClick={()=>void action('reconcile')}>{t.checking}</button>}
   {error&&<p role="alert" className={s.error}>{error}</p>}{notice&&<p role="status">{notice}</p>}
  </section>;

@@ -5,7 +5,7 @@ import { EmailHero, privateIdNote } from "../email/parts";
 import { countryLabel } from "../legacy-application/countries";
 import { officeNames, statusPath, type IntakeReceipt } from "./intake";
 
-type Props = Pick<IntakeReceipt, "id" | "data" | "quote"> & { locale: string; origin: string; assetOrigin?: string };
+type Props = Pick<IntakeReceipt, "id" | "data" | "quote"> & { locale: string; origin: string; assetOrigin?: string; production?: boolean };
 const paragraph: CSSProperties = { margin: "0 0 16px", fontSize: "15px", lineHeight: "25px", color: colors.muted };
 const label: CSSProperties = { margin: "0 0 10px", fontSize: "11px", lineHeight: "16px", letterSpacing: "1.6px", fontWeight: 600, color: colors.muted };
 function Detail({ title, children }: { title: string; children: ReactNode }) {
@@ -15,7 +15,7 @@ function NextStep({ number, title, children }: { number: string; title: string; 
   return <Row style={{ marginBottom: "15px" }}><Column style={{ width: "34px", verticalAlign: "top", fontSize: "12px", lineHeight: "22px", fontWeight: 600, color: "#507FA6" }}>{number}</Column><Column><Text style={{ margin: "0 0 3px", fontSize: "14px", lineHeight: "22px", fontWeight: 600 }}>{title}</Text><Text style={{ ...paragraph, margin: 0, fontSize: "13px", lineHeight: "21px" }}>{children}</Text></Column></Row>;
 }
 
-export function IntakeConfirmationEmail({ id, locale, data, quote, origin, assetOrigin }: Props) {
+export function IntakeConfirmationEmail({ id, locale, data, quote, origin, assetOrigin, production }: Props) {
   const statusUrl = origin.replace(/\/$/, "") + statusPath(id, locale);
   const selected = [
     data.evaluationRequest.services.document.selected && "Document by Document Evaluation",
@@ -23,7 +23,7 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
   ].filter(Boolean) as string[];
   const amount = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
   return (
-    <BrandedEmailLayout notice="Test application · Stored separately from live applications. Use the Status page to upload test documents. Payments are disabled; no payment has been collected." origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your AET application has been received. Review your application summary and next steps.">
+    <BrandedEmailLayout notice={production ? undefined : "Test application · Stored separately from live applications. Use the Status page to upload test documents. Payments are disabled; no payment has been collected."} origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your AET application has been received. Review your application summary and next steps.">
       <EmailHero eyebrow="CREDENTIAL EVALUATION" description="Your application is saved. Review your details and follow your progress in one place." action={{ href: statusUrl, label: "View Application Status" }} note={privateIdNote}>Application<br />Received</EmailHero>
       <Section className="email-gutter" style={{ padding: "28px 36px 30px" }}>
         <Text style={{ ...paragraph, color: colors.ink, marginBottom: "8px" }}>Dear {data.contactName},</Text>
@@ -51,16 +51,16 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
         </Section>
         <Heading as="h2" style={{ margin: "0 0 18px", fontSize: "18px", lineHeight: "25px", fontWeight: 600, letterSpacing: "-0.4px" }}>What Happens Next?</Heading>
         <NextStep number="01" title="Review Your Details">Open your application to check the information and services you selected.</NextStep>
-        <NextStep number="02" title="Upload Test Documents">Open the Status page to upload test documents and check your saved files. Payments are disabled for this test application.</NextStep>
+        <NextStep number="02" title={production ? "Upload Documents" : "Upload Test Documents"}>Open the Status page to upload your documents and check your saved files.</NextStep>
         <Text style={{ margin: "22px 0 0", fontSize: "14px", lineHeight: "22px", color: colors.muted }}>Best regards,<br /><strong style={{ color: colors.ink }}>The AET Team</strong></Text>
       </Section>
     </BrandedEmailLayout>
   );
 }
 
-export async function confirmationEmail(id: string, locale: string, data: Props["data"], quote: Props["quote"], origin: string, assetOrigin?: string) {
+export async function confirmationEmail(id: string, locale: string, data: Props["data"], quote: Props["quote"], origin: string, assetOrigin?: string, production = false) {
   return {
-    subject: `[AET TEST] Application received — ${id}`,
-    html: await render(<IntakeConfirmationEmail id={id} locale={locale} data={data} quote={quote} origin={origin} assetOrigin={assetOrigin} />),
+    subject: `${production ? "AET" : "[AET TEST]"} Application received — ${id}`,
+    html: await render(<IntakeConfirmationEmail id={id} locale={locale} data={data} quote={quote} origin={origin} assetOrigin={assetOrigin} production={production} />),
   };
 }

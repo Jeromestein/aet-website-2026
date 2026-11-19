@@ -5,6 +5,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type postgres from "postgres";
 import { Resend } from "resend";
+import { applicationRecipient } from '../preeval/recipients';
 import { configuration, required } from "../preeval/config";
 import { db, table, type Row } from "../preeval/db";
 import { deliveryHash, EmailReviewRequired, type EmailTransport } from "../email/delivery";
@@ -23,13 +24,13 @@ export async function queueFeeUpdateEmail(tx: postgres.TransactionSql, applicati
 }
 export async function renderFormalEmail(row: Row) {
   const config = configuration();
-  if (row.recipient !== config.recipient) throw new EmailReviewRequired("recipient_changed");
   if (!["payment", "fee_update", "information", "report"].includes(row.kind)) throw new EmailReviewRequired("unknown_email_kind");
   // Reuse the application's canonical reader, including its legacy-data mapping.
   const { application } = await import("./service");
   const app = await application(row.application_id, false);
+  if (row.recipient !== applicationRecipient(app.data.client.email)) throw new EmailReviewRequired('recipient_changed');
   const cc = config.cloudPreview ? [] : officeCc(app.data.client.office, row.recipient);
-  const options = { notice: "Test-mode notification · This email belongs to the isolated Preview workflow. No live payment is requested." };
+  const options = config.production ? {} : { notice: "Test-mode notification · This email belongs to the isolated Preview workflow. No live payment is requested." };
   if(row.kind==='information') {
     if(app.status!=='needs_information'||app.customer_message!==row.message)throw new EmailReviewRequired('information_request_superseded');
     return {...await workflowNotificationEmail(app,'information',row.message,config.origin,options),cc};

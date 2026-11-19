@@ -10,7 +10,8 @@ import { initialData } from '../evaluation-application/domain';
 import { toLegacyFormal, toLegacyEducation, type LegacyFormalProjection } from '../legacy-application/mapping';
 import { intakeSchema, normalizeIntake, intakeFingerprint, intakeQuote, officeNames, statusPath, TEST_RECIPIENT, type IntakeReceipt } from './intake';
 export function requireIntakePreview() {
-  if(!configuration().cloudPreview) throw new AppError('preview_unavailable',503);
+  const config = configuration();
+  if(!config.cloudPreview && !(config.production && formalCore())) throw new AppError('preview_unavailable',503);
 }
 const hash=(value:string)=>createHash('sha256').update(value).digest('hex');
 export async function saveIntake(raw:unknown) {
@@ -53,7 +54,7 @@ export async function saveIntake(raw:unknown) {
 }
 export async function readIntake(id:string):Promise<IntakeReceipt> {
   requireIntakePreview();
-  if(formalCore()){const a=await readFormal(id);if(a.submission_version!==2)throw new AppError('not_found',404);const e=a.notification_state.confirmation||{};return {workflowEnabled:true,id:a.id,locale:a.locale,status:a.status,createdAt:new Date(a.created_at).toISOString(),data:a.data.intake,quote:a.quote,email:{state:e.state||'queued',attempts:e.attempts||0,recipient:e.recipient||TEST_RECIPIENT},statusPath:statusPath(id,a.locale)};}
+  if(formalCore()){const a=await readFormal(id);if(a.submission_version!==2)throw new AppError('not_found',404);const e=a.notification_state.confirmation||{};return {workflowEnabled:true,id:a.id,locale:a.locale,status:a.status,createdAt:new Date(a.created_at).toISOString(),data:a.data.intake,quote:a.quote,email:{state:e.state||'queued',attempts:e.attempts||0,recipient:e.recipient||a.email},statusPath:statusPath(id,a.locale)};}
   const [row]=await db()`select a.id,a.locale,a.status,a.created_at,a.data->'intake' as data,a.quote,e.state,e.attempts,e.recipient
     from ${table('evaluation.applications')} a join ${table('evaluation.intake_emails')} e on e.application_id=a.id where a.id=${id} and a.data->>'intakeVersion'='2'`;
   if(!row) throw new AppError('not_found',404);

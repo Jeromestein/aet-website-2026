@@ -1,6 +1,6 @@
 # AET Release Checklist
 
-Updated November 17, 2026. The first release is **pre-evaluation and credential
+Updated November 19, 2026. The first release is **pre-evaluation and credential
 evaluation together, through the unified `/application` entry**.
 Develop primarily on `main`, with local or configured Preview testing.
 Merging code does not activate new application workflows in Production.
@@ -108,7 +108,7 @@ Earlier evidence: [six-table pre-evaluation](archive/database-six-preview-2026-1
 [latest shared-table acceptance](archive/database-formal-six-preview-2026-11-11.md),
 [upload/publication recovery](archive/preview-recovery-acceptance-2026-11-06.md).
 
-### Pre-evaluation Production runtime — implemented, not activated
+### Pre-evaluation Production runtime
 
 - [x] Add explicit Production runtime configuration without activating it; keep
   local/dev Preview on isolated data, test payments and controlled recipients.
@@ -142,8 +142,8 @@ These checks do not activate hosted Production.
   new credential intake; reuse existing payment/workflow components where compatible.
 - [x] Let staff upload/publish the finished PDF and notify the customer; expose
   authorized report download and retain the selected paper-delivery details.
-- [ ] Extend credential intake/fulfillment to the isolated Production runtime and
-  real applicant recipients. Current credential paths remain Preview/local only.
+- [x] Enable credential intake, applicant notifications, private documents, live
+  Checkout and signed payment reconciliation on the isolated Production runtime.
 - [x] Verify unified pre-evaluation on main Preview: selected office, customer/CRM
   agreement, document download, paid result and both delivered emails.
 - [x] Verify the complete credential journey from `/application` on main Preview:
@@ -168,7 +168,7 @@ These checks do not activate hosted Production.
 
 ### Release gates — after development, separately authorized
 
-- [ ] Prepare an additive, empty Production copy of the current accepted Preview
+- [x] Prepare an additive, empty Production copy of the current accepted Preview
   six-table structure and a restricted runtime role; compare schema parity and
   verify grants/backups. Preserve old Production tables/data and Preview tables.
 - [ ] Configure the chosen public origin, Production-only secrets, direct live
