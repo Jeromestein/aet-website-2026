@@ -166,7 +166,12 @@ These checks do not activate hosted Production.
 - [x] Confirm Stripe Dashboard as the manual refund workflow; retain existing
   webhook/state synchronization without building a new refund module.
 
-### Release gates — after development, separately authorized
+### Production direct-link release and remaining acceptance
+
+- [x] Deploy main `00362c1` with `APPLICATIONS_ENABLED=true`. Verify anonymous
+  English/Chinese intake, both office selectors, staff login protection and old
+  public Apply links. Verify the live webhook destination, verified sender,
+  AI model access and the three dedicated Dropbox office folders.
 
 - [x] Prepare an additive, empty Production copy of the current accepted Preview
   six-table structure and a restricted runtime role; compare schema parity and

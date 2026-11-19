@@ -20,9 +20,15 @@ journey is verified on earlier dev Preview; the unified pre-evaluation choice is
 now verified end to end on main Preview at `67a9cf1`. The unified credential
 journey also passed main Preview acceptance on November 12, including staff review,
 payment and manual PDF publication. Both use the six-table model. Translation remains deferred;
-The private Production schema and restricted runtime are provisioned. The unified
-entry is intended for direct-link acceptance before any public CTA cutover.
-Real payment, applicant email receipt and staff PDF delivery require live acceptance.
+Production release `00362c1` serves the unified [application](https://www.americantranslationservice.com/application)
+with `APPLICATIONS_ENABLED=true`. On November 19, the English and Chinese
+entries returned 200. Both service choices displayed their three offices without
+employee login. The homepage and pre-evaluation marketing CTA still use the old
+application. Anonymous CRM access redirects to staff login. Production rejects
+an empty intake and an unsigned Stripe callback, and an unknown application ID
+returns 404. The release passed 1,005 local tests, with 17 conditional skips.
+Actual applicant email receipt, file transfer, payment and staff PDF delivery
+remain for the owner's live acceptance.
 This is the current summary, not a release log.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
