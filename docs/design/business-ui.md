@@ -23,9 +23,9 @@ Staff use their own English-only workspace shell.
 
 ## General application
 
-Localized `/application` accepts `service=pre-evaluation`, `service=evaluation`
-or `service=translation`. Pre-evaluation and formal intake share this entry;
-translation remains a non-submitting preview. Redirect the old dedicated
+Localized `/application` offers pre-evaluation and formal evaluation. The
+service picker and URL preselection use these same two choices. Existing
+standalone translation drafts reopen at service selection with contact details retained. Redirect the old dedicated
 pre-evaluation form to its selected service here; retain saved application links.
 Public website destinations remain controlled by the release gate.
 The retired four-step formal pilot redirects here. See
@@ -42,7 +42,7 @@ The retired four-step formal pilot redirects here. See
 
 | Control | Rule |
 | --- | --- |
-| Offices | Native dropdown, disabled until a service is chosen. Evaluation/pre-evaluation: Miami, Los Angeles, San Francisco. Translation: those three plus Boston and New York. Exclude Beijing. Clear an ineligible office on service change/draft restore while retaining other answers. |
+| Offices | Native dropdown, disabled until a service is chosen. Evaluation/pre-evaluation: Miami, Los Angeles, San Francisco. Exclude Beijing. Clear an ineligible office on service change/draft restore while retaining other answers. |
 | Name | Required Mr./Ms./Mx. dropdown before required first/last names; optional middle name and date of birth. Chinese labels are Chinese-only, with the optional marker beside middle name. Align desktop name inputs. |
 | Education | All education fields required. School and country share a desktop row; degree name spans the next full row. Stack on phones. Include identity/education in drafts and review. |
 | Dropdowns | Follow the [global field rules](README.md#interaction-accessibility-and-language): custom chevron inset 14px, 44px right text padding and a single rounded blue focus ring; preserve native select behavior. |

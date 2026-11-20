@@ -3,11 +3,12 @@ import { isCountryCode } from '@/lib/legacy-application/countries';
 import { emptyEvaluationRequest, evaluationRequestSchema, migrateEvaluationRequest, validateEvaluationRequest, type EvaluationError } from './evaluation';
 import { deliverySchema, emptyDelivery, validateDelivery, type DeliveryError } from './delivery';
 
-export const serviceIds = ['pre-evaluation', 'evaluation', 'translation'] as const;
+export const selectableServices = ['pre-evaluation', 'evaluation'] as const;
+export const serviceIds = [...selectableServices, 'translation'] as const;
 export type ServiceId = typeof serviceIds[number];
 export const pronounIds = ['mr', 'ms', 'mx'] as const;
 export const serviceFromQuery = (value: unknown): ServiceId | '' =>
-  typeof value === 'string' && serviceIds.includes(value as ServiceId) ? value as ServiceId : '';
+  selectableServices.find(service => service === value) ?? '';
 
 const text = z.string().max(300);
 // Owner-approved routing: evaluation in Miami/California; translation in five US offices.
@@ -96,6 +97,9 @@ export function restoreDraft(raw: string, now = Date.now()) {
     if (!input.data.evaluationRequest) saved.data.evaluationRequest = migrateEvaluationRequest(saved.data.evaluationType, saved.data.educations.length);
     if (saved.data.evaluationRequest.services.document.selected && saved.data.evaluationRequest.services.course.selected) {
       saved.data.evaluationRequest.services = emptyEvaluationRequest().services;
+    }
+    if (saved.data.service === 'translation') {
+      return { ...saved, step: 0, data: { ...saved.data, service: '' as const, office: '' } };
     }
     if (saved.data.service) saved.data = selectService(saved.data, saved.data.service);
     // Never restore a later step past invalid or incomplete answers.

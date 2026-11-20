@@ -65,7 +65,7 @@ describe('general application preview', () => {
   it('restores only current, structurally valid drafts and checks earlier steps', () => {
     const now = Date.now();
     const stored = { version: 1, updatedAt: now, step: 2, data: contact() };
-    expect(restoreDraft(JSON.stringify(stored), now)?.step).toBe(1);
+    expect(restoreDraft(JSON.stringify(stored), now)).toMatchObject({ step: 0, data: { service: '', office: '', contactName: stored.data.contactName, email: stored.data.email } });
     expect(restoreDraft(JSON.stringify({ ...stored, data: { ...contact(), office: 'bj' } }), now)).toMatchObject({ step: 0, data: { office: '', email: 'preview@example.com' } });
     expect(restoreDraft(JSON.stringify({ ...stored, data: initialDraft() }), now)?.step).toBe(0);
     expect(restoreDraft(JSON.stringify({ ...stored, updatedAt: now - 86400001 }), now)).toBeNull();
@@ -74,7 +74,8 @@ describe('general application preview', () => {
   });
   it('accepts only known service query parameters', () => {
     expect(serviceFromQuery('pre-evaluation')).toBe('pre-evaluation');
-    expect(serviceFromQuery('translation')).toBe('translation');
+    expect(serviceFromQuery('evaluation')).toBe('evaluation');
+    expect(serviceFromQuery('translation')).toBe('');
     expect(serviceFromQuery(['evaluation', 'translation'])).toBe('');
     expect(serviceFromQuery('unknown')).toBe('');
   });

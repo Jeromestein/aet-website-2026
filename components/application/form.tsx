@@ -9,7 +9,7 @@ import { EvaluationServices, EvaluationFees } from './evaluation-services';
 import { ReportDeliveryFields, DeliveryReview } from './report-delivery';
 import { deliveryCopy } from '@/lib/application/delivery-copy';
 import type { ReportDelivery } from '@/lib/application/delivery';
-import { DRAFT_KEY, emptyEducation, initialDraft, pronounIds, restoreDraft, selectService, serviceIds, serviceOffices, validateStep, type ApplicationDraft, type EducationDraft, type FormErrors, type ServiceId } from '@/lib/application/model';
+import { DRAFT_KEY, emptyEducation, initialDraft, pronounIds, restoreDraft, selectService, selectableServices, serviceOffices, validateStep, type ApplicationDraft, type EducationDraft, type FormErrors, type ServiceId } from '@/lib/application/model';
 import { countryLabel, countryOptions } from '@/lib/legacy-application/countries';
 import type { Locale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
@@ -221,7 +221,7 @@ export function GeneralApplication({ locale, initialService, production = false 
               <div className={s.grid}>{input('email', c.email, { requiredMark: true, type: 'email', autoComplete: 'email', placeholder: c.emailPlaceholder, hint: c.emailHint })}{input('phone', c.phone, { requiredMark: true, type: 'tel', autoComplete: 'tel', placeholder: c.phonePlaceholder, hint: c.phoneHint })}</div>
             </section>
             <fieldset className={s.section}><legend className={s.sectionLegend}>{c.serviceHeading}</legend><p className={s.sectionHint}>{c.serviceHint}</p>
-              <div className={s.services}>{serviceIds.map(id => { const service = services[id]; const Icon = service.icon; return <label key={id} className={s.service + (data.service === id ? ' ' + s.selected : '')}>
+              <div className={s.services}>{selectableServices.map(id => { const service = services[id]; const Icon = service.icon; return <label key={id} className={s.service + (data.service === id ? ' ' + s.selected : '')}>
                 <input type="radio" name="service" value={id} checked={data.service === id} onChange={() => chooseService(id)} aria-describedby={errors.service ? 'service-error' : undefined} />
                 <span className={s.serviceTop}><Icon size={24} strokeWidth={1.6} aria-hidden="true" /><span className={s.radioMark}>{data.service === id && <Check size={13} strokeWidth={3} aria-hidden="true" />}</span></span>
                 <strong>{service.title}</strong><span className={s.serviceDescription}>{service.description}</span>

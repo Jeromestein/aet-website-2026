@@ -59,7 +59,7 @@ fieldset > .sectionHint { margin-top: 0; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
 .nameGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .monthSelect { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; }
-.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .service { display: flex; flex-direction: column; position: relative; padding: 18px 15px; border: 1px solid var(--line); border-radius: 11px; cursor: pointer; transition: background .15s, border-color .15s; }
 .service:hover { border-color: #98b4cc; background: var(--paper); }
 .service input { position: absolute; opacity: 0; width: 1px; height: 1px; }
