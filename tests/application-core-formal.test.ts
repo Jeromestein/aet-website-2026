@@ -14,7 +14,7 @@ vi.mock('../lib/staff/session',()=>({staffSession:async()=>null,requireStaffAppl
 vi.mock('../lib/dropbox/server',()=>({requireEnabled:()=>{},clientForOffice:async()=>({filesUpload:m.upload,filesGetMetadata:m.metadata}),seal:()=>'',folderPath:()=>''}));
 vi.mock('stripe',async(importOriginal)=>{const actual=await importOriginal<typeof import('stripe')>();return{default:class extends actual.default{constructor(...args:ConstructorParameters<typeof actual.default>){super(...args);this.checkout.sessions.create=m.create;this.checkout.sessions.retrieve=m.retrieve;this.paymentIntents.retrieve=m.intent;this.checkout.sessions.list=m.list;}}};});
 import {activateSixTablePreview} from '../lib/application-core/convergence-mode';
-import {formalRows,readFormal,formalApplication,formalLegacy,indexFormalDocument,commitFormalDocument} from '../lib/application-core/formal-store';
+import {canEditFormalAmount,formalRows,readFormal,formalApplication,formalLegacy,indexFormalDocument,commitFormalDocument} from '../lib/application-core/formal-store';
 import {saveApplication} from '../lib/evaluation-application/server';
 import {initialData,quote} from '../lib/evaluation-application/domain';
 import {staffAction,application,addFile} from '../lib/evaluation-application/service';
@@ -33,6 +33,14 @@ const pg=process.env.APPLICATION_CORE_TEST_PG_BIN,copy=process.env.APPLICATION_F
 const input=()=>{const d=initialData();Object.assign(d.client,{name:'Synthetic Client',email:'synthetic@example.invalid',phone:'617-555-0100',country:'US',street:'123 Test Street',city:'Boston',region:'MA',postal:'02110',office:'Miami',purpose:'education'});Object.assign(d.evaluee,{title:'mx',first:'Synthetic',last:'Applicant',birth:'2000-01-01'});d.educations=[{school:'Synthetic University',country:'US',degree:'Bachelor',start:'2018-09',end:'2022-06'}];d.services.document.tier='standard';d.terms=true;return {requestId:randomUUID(),locale:'en',data:d};};
 const normalize=(value:any):any=>Array.isArray(value)?value.map(normalize):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,normalize(value[k])])):value;
 const digest=(v:any)=>createHash('sha256').update(JSON.stringify(normalize(v))).digest('hex');
+describe('formal amount edit eligibility',()=>{
+ it('allows an unpaid open order only before its first checkout',()=>{
+  expect(canEditFormalAmount('reviewing','unpaid',false)).toBe(true);
+  expect(canEditFormalAmount('submitted','unpaid',true)).toBe(false);
+  for(const status of ['completed','cancelled'])expect(canEditFormalAmount(status,'unpaid',false)).toBe(false);
+  for(const payment of ['pending','paid','waived','partially_refunded','refunded'])expect(canEditFormalAmount('submitted',payment,false)).toBe(false);
+ });
+});
 describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
  let dir:string,admin:ReturnType<typeof postgres>,runtime:ReturnType<typeof postgres>,started=false,snapshot:any,providers:any;
  const sql=()=>m.sql!;
@@ -121,6 +129,35 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await expect(staffAction(a.id,{action:'notes',version:r.version,notes:'stale'},'staff')).rejects.toMatchObject({code:'stale_version'});
   expect((await application(a.id,false)).staff_notes).toBeUndefined();r=await application(a.id,true);
   await expect(staffAction(a.id,{action:'status',version:r.version,status:'processing',message:''},'staff')).rejects.toMatchObject({code:'payment_and_documents_required'});
+ });
+ it('adjusts a fixed fee, notifies the applicant and locks the new Stripe price after checkout',async()=>{
+  const {id}=await saveApplication(input());
+  const before=await application(id,true);
+  expect(before.canEditAmount).toBe(true);
+  const change={action:'adjust_amount',version:before.version,total:14000,explanation:'Updated evaluation fee.'};
+  await expect(staffAction(id,{...change,total:49},'staff')).rejects.toThrow();
+  await staffAction(id,change,'staff');
+  await expect(staffAction(id,change,'staff')).rejects.toMatchObject({code:'stale_version'});
+  const after=await application(id,false);
+  expect(after.quote).toEqual(before.quote);
+  expect(after.total).toBe(14000);
+  expect(after.confirmed_quote).toMatchObject({kind:'adjusted',total:14000,explanation:change.explanation});
+  await expect(staffAction(id,{...change,version:after.version},'staff')).rejects.toMatchObject({code:'amount_unchanged'});
+  m.create.mockResolvedValue({id:'cs_test_'+id,livemode:false,url:'https://checkout.stripe.com/test',status:'open'});
+  await checkout(id);
+  expect(m.create.mock.lastCall?.[0].line_items[0].price_data.unit_amount).toBe(14000);
+  const mail=vi.fn().mockResolvedValue('mail_adjusted');
+  await flushFormalEmails(mail,id);
+  await flushFormalEmails(mail,id);
+  expect(mail).toHaveBeenCalledTimes(1);
+  expect(mail.mock.calls[0][0].html).toContain('$140.00');
+  const current=await application(id,true);
+  expect(current.canEditAmount).toBe(false);
+  const attempt={...change,total:12000,version:current.version};
+  await expect(staffAction(id,attempt,'staff')).rejects.toMatchObject({code:'quote_locked'});
+  await sql()`update aet_preview_shared.aet_payments set payment_status='expired' where application_id=${id}`;
+  expect((await application(id,true)).canEditAmount).toBe(false);
+  await expect(staffAction(id,attempt,'staff')).rejects.toMatchObject({code:'quote_locked'});
  });
  it('retains a single payment and receipt on repeated/out-of-order callbacks; refunds withhold reports',async()=>{
   const a=await saveApplication(input()),r=await application(a.id,true),session:any={mode:'payment',id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};

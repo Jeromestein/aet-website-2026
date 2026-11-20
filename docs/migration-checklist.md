@@ -146,6 +146,10 @@ These checks do not activate hosted Production.
   status changes to new v2 intake in the restricted six-table Preview.
 - [x] Enable application-linked Checkout and signed payment reconciliation for
   new credential intake; reuse existing payment/workflow components where compatible.
+- [x] Verify staff fee adjustments on main Preview for formal orders before first
+  checkout. A USD 110.00 test order changed to USD 95.50 in CRM, customer Status
+  and Stripe Sandbox. The fee email was delivered. The open Checkout blocked a
+  second edit from an already-open staff page. Production release is pending.
 - [x] Let staff upload/publish the finished PDF and notify the customer; expose
   authorized report download and retain the selected paper-delivery details.
 - [x] Enable credential intake, applicant notifications, private documents, live

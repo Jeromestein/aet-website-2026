@@ -46,7 +46,16 @@ export async function renderFormalEmail(row: Row) {
       throw new EmailReviewRequired("payment_receipt_unavailable");
     return { ...await paymentConfirmationEmail(app, payment as PaymentReceipt, config.origin, options), cc };
   }
-  if(formalCore()){const current=app.confirmed_quote;if(!current||app.status==='cancelled'||app.payment_status!=='unpaid'||current.base!==row.quote?.base||current.additional!==row.quote?.additional||current.explanation!==row.quote?.explanation)throw new EmailReviewRequired('fee_update_superseded');return {...await feeUpdateEmail(app,current,config.origin,options),cc};}
+  if (formalCore()) {
+    const current = app.confirmed_quote;
+    const saved = row.quote;
+    if (!current || !saved || app.status === 'cancelled' ||
+        (current.kind !== 'adjusted' && app.payment_status !== 'unpaid') ||
+        current.kind !== saved.kind || current.total !== saved.total || current.base !== saved.base ||
+        current.additional !== saved.additional || current.explanation !== saved.explanation)
+      throw new EmailReviewRequired('fee_update_superseded');
+    return { ...await feeUpdateEmail(app, current, config.origin, options), cc };
+  }
   const [event] = await db()`select detail from ${table("evaluation.audit")}
     where id=${row.audit_id} and application_id=${app.id} and action='staff.quote'`;
   const current = app.confirmed_quote;

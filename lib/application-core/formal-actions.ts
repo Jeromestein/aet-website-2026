@@ -4,8 +4,8 @@ import { db } from '../preeval/db';
 import { AppError, validFile } from '../preeval/domain';
 import { filePath, uploadFile } from '../preeval/dropbox';
 import { coreTable } from './connection';
-import { formalFiles, formalPayments, readFormal, touchFormal, queueFormalNotification } from './formal-store';
-import { confirmQuote, staffSchema } from '../evaluation-application/workflow';
+import { formalFiles, formalPayments, canEditFormalAmount, readFormal, touchFormal, queueFormalNotification } from './formal-store';
+import { confirmQuote, staffSchema, type ConfirmedQuote } from '../evaluation-application/workflow';
 export async function addFormalFile(id:string,file:File,kind:'document'|'report') {
   const bytes=Buffer.from(await file.arrayBuffer());
   if(!validFile(bytes,file.type)||(kind==='report'&&file.type!=='application/pdf'))throw new AppError('invalid_file');
@@ -52,9 +52,13 @@ export async function formalStaffAction(id:string,raw:unknown){
     if(a.version!==body.version)throw new AppError('stale_version',409);
     if(a.status==='cancelled')throw new AppError('application_locked',409);
     if(body.action==='notes')await tx`update ${coreTable(tx,'aet_service_detail')} set staff_notes=${body.notes} where id=${a.service_id}`;
-    if(body.action==='quote'){
-      if(a.payment_status!=='unpaid'||(await tx`select id from (${formalPayments(tx)}) p where application_id=${id} and status in ('creating','open','paid')`).length)throw new AppError('quote_locked',409);
-      const q=confirmQuote(a.quote,a.data,body.base,body.additional,body.explanation);
+    if(body.action==='quote' || body.action==='adjust_amount'){
+      const attempts=await tx`select id from (${formalPayments(tx)}) p where application_id=${id} limit 1`;
+      if(!canEditFormalAmount(a.status,a.payment_status,attempts.length>0))throw new AppError('quote_locked',409);
+      if(body.action==='adjust_amount' && a.amount_cents===body.total)throw new AppError('amount_unchanged',409);
+      const q: ConfirmedQuote = body.action==='adjust_amount'
+        ? {kind:'adjusted',total:body.total,explanation:body.explanation}
+        : confirmQuote(a.quote,a.data,body.base,body.additional,body.explanation);
       await tx`update ${coreTable(tx,'aet_service_detail')} set details=jsonb_set(details,'{confirmed_quote}',${tx.json(q)}::jsonb),amount_cents=${q.total},pricing_source='manual' where id=${a.service_id}`;
       await queueFormalNotification(tx,id,'fee_update','fee:'+id+':'+(a.version+1),{quote:q});
     }

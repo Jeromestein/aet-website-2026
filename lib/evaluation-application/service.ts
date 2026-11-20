@@ -96,6 +96,7 @@ export async function addFile(id: string, file: File, kind: 'document' | 'report
 export async function staffAction(id: string, raw: unknown, actor: string) {
   if(formalCore())return formalStaffAction(id,raw);
   const body = staffSchema.parse(raw);
+  if (body.action === 'adjust_amount') throw new AppError('legacy_read_only', 409);
   await db().begin(async tx => {
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
     if (!app) throw new AppError('not_found', 404);

@@ -238,7 +238,9 @@
 .smallButton { font-size: 12px !important; padding: 8px 10px !important; color: #4f7d9d; background: #edf4f9 !important; border-radius: 5px; }
 .paymentSummary { background: #f5f8fb; border: 1px solid #e3ebf2; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; align-items: flex-start; }
 .paymentSummary > span:first-child { color: #8298aa; font-size: 14px; }
-.paymentSummary > strong { font-size: 38px; font-weight: 600; margin: 8px 0 12px; letter-spacing: -1px; }
+.quoteAmountRow, .quoteActions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.paymentSummary > form { width: 100%; margin-top: 16px; }
+.quoteAmountRow > strong, .paymentSummary > strong { font-size: 38px; font-weight: 600; margin: 8px 0 12px; letter-spacing: -1px; }
 .detailPayment { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #e9eff4; color: #61819a; font-size: 13px; }
 .detailPayment small { display: block; font-size: 13px; color: #95a5b2; margin-top: 4px; }
 .activity { border-left: 1px solid #dfe8ef; margin-left: 7px; }

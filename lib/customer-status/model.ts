@@ -1,3 +1,4 @@
+import type { ConfirmedQuote } from '@/lib/evaluation-application/workflow';
 import { z } from 'zod';
 import { paymentDeadline } from './payment-window';
 import { officeNames, type IntakeReceipt } from '@/lib/application/intake';
@@ -10,7 +11,7 @@ export type CustomerStatus = {
  portalUrl: string | null;
  details?: {request: IntakeReceipt['data']['evaluationRequest']; delivery: IntakeReceipt['data']['evaluationDelivery']; quote: IntakeReceipt['quote']};
  email?: IntakeReceipt['email'];
- workflow?: {production?:boolean;canPay:boolean;message:string;confirmedQuote:{base:number;additional:number;total:number;explanation:string}|null;report:{id:string;name:string}|null};
+ workflow?: {production?:boolean;canPay:boolean;message:string;confirmedQuote:ConfirmedQuote|null;report:{id:string;name:string}|null};
  id: string; status: string; payment: string; submitted: string; paid: string; office: string | null; services: string; amount: number | null; completion: Completion | null; deadline: string | null;
  client: {name:string;country:string;street:string;city:string;phone:string;fax:string;email:string;purpose:string;notes:string};
  evaluee: {first:string;middle:string;last:string;birth:string;pronouns:string};
