@@ -1,7 +1,8 @@
 import { applicationUnavailableResponse } from '@/lib/application-release';
 import {formalCore,formalRows,formalFiles} from '@/lib/application-core/formal-store';
 import {coreFileMetadata,officeForConnection} from '@/lib/application-core/documents';
-import {clientForOffice} from '@/lib/dropbox/server';
+import {dropboxPreviewUrl} from '@/lib/dropbox/shared';
+import {clientForOffice, requireEnabled} from '@/lib/dropbox/server';
 import {downloadBytes} from '@/lib/dropbox/download';
 import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
@@ -9,7 +10,7 @@ import { configuration, required } from '@/lib/preeval/config';
 import { authorize, sameOrigin, limit } from '@/lib/preeval/auth';
 import { AppError, MAX_FILE_BYTES } from '@/lib/preeval/domain';
 import { table, db } from '@/lib/preeval/db';
-import { downloadFile } from '@/lib/preeval/dropbox';
+import { downloadFile, officeForStoredPath } from '@/lib/preeval/dropbox';
 import { stripeClient } from '@/lib/preeval/payments';
 import { access, staffAccess, application, addFile, staffAction, makeAccessLink } from '@/lib/evaluation-application/service';
 import { checkout, reconcile, cancel, handleStripeEvent } from '@/lib/evaluation-application/payments';
@@ -68,6 +69,18 @@ async function handler(request: Request, { params }: { params: Promise<{ path: s
       if (!z.uuid().safeParse(id).success) throw new AppError('not_found', 404);
       const [intake]=await db()`select data->>'intakeVersion' as version from ${formalCore()?db()`(${formalRows(db())}) a`:table('evaluation.applications')} where id=${id}`;
       if(intake?.version==='2'&&!formalCore()) throw new AppError('intake_preview_read_only',409);
+      if (!post && path[2] === 'admin' && path[3] === 'documents' && path.length === 5) {
+        if (!z.uuid().safeParse(path[4]).success) throw new AppError('not_found', 404);
+        const core = formalCore();
+        const [file] = await db()`select * from ${core ? db()`(${formalFiles(db())}) f` : table('evaluation.files')}
+          where application_id=${id} and id=${path[4]} and kind='document' and state='ready'`;
+        if (!file) throw new AppError('not_found', 404);
+        requireEnabled();
+        const metadata = core ? await coreFileMetadata(file) :
+          (await (await clientForOffice(officeForStoredPath(file.dropbox_path))).filesGetMetadata({path: file.dropbox_path})).result;
+        if (metadata['.tag'] !== 'file' || !metadata.path_display) throw new AppError('document_unavailable', 404);
+        return response({previewUrl: dropboxPreviewUrl(metadata.path_display), uploadedAt: metadata.server_modified});
+      }
       if (path[2] === 'admin' && path.length === 3 && !post) return response(await application(id, true));
       if (path[2] === 'staff' && path.length === 3 && post) { await staffAction(id, body, current.actor); after(()=>flushFormalEmails(undefined,id)); return response({ ok: true }); }
       if (path[2] === 'access-link' && path.length === 3 && post) { await limit('formal-link:' + id, 10, 600); return response({ url: await makeAccessLink(id, current.actor) }); }

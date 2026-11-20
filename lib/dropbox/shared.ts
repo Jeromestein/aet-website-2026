@@ -7,6 +7,10 @@ export function formatFileSize(bytes: number, locale = 'en-US'): string {
   return `${value.toLocaleString(locale, { maximumFractionDigits: unit === 'B' ? 0 : 2 })} ${unit}`;
 }
 
+export function dropboxPreviewUrl(path: string) {
+  return `https://www.dropbox.com/preview${path.split('/').map(encodeURIComponent).join('/')}`;
+}
+
 export const ACCEPTED_FILES = '.jpg,.jpeg,.png,.pdf,.doc,.docx';
 export const offices = ['Miami', 'Los Angeles', 'San Francisco', 'Boston', 'New York'] as const;
 export type Office = typeof offices[number];

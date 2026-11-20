@@ -574,3 +574,9 @@
 @media (prefers-reduced-motion: reduce) {
   .sidebar, .mainShell, .websiteLink { transition: none; }
 }
+
+.documentNameLink { display: inline-flex; align-items: baseline; gap: 6px; color: var(--action-blue); text-decoration: none; }
+.documentNameLink svg { flex: none; align-self: flex-start; margin-top: 0.15em; }
+.documentNameLink:hover { color: var(--ink); }
+.documentDownload { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; background: #edf4f9; color: var(--action-blue); }
+.documentDownload:hover { background: #e0edf6; color: var(--ink); }

@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from 'react';
 import {Check,Copy} from 'lucide-react';
+import { NewWindowIcon } from './new-window-icon';
 import s from './crm.module.css';
 
 export function ApplicationActions({id,statusHref}:{id:string;statusHref?:string}) {
@@ -12,11 +13,7 @@ export function ApplicationActions({id,statusHref}:{id:string;statusHref?:string
   <button type="button" onClick={copy} aria-label="Copy application ID" title="Copy application ID">{copied?<Check size={14}/>:<Copy size={14}/>}<span>{copied?'Copied':'Copy ID'}</span></button>
   {statusHref && (
     <a href={statusHref} target="_blank" rel="noopener noreferrer">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M4 9H3v11h14v-2" />
-        <rect x="7" y="3" width="15" height="12" rx="1.5" />
-        <path d="M7 7h15" />
-      </svg>
+      <NewWindowIcon />
       <span>Status<span className={s.srOnly}> (opens in a new tab)</span></span>
     </a>
   )}
