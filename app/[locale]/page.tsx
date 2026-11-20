@@ -32,8 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'metadata' });
-  const metadata = pageMetadata({ path: '/', locale, title: t('title'), description: t('description') });
-  return { ...metadata, openGraph: { ...metadata.openGraph, description: t('ogDescription') } };
+  return pageMetadata({
+    path: '/', locale, title: t('title'), description: t('description'),
+    openGraphDescription: t('ogDescription'),
+  });
 }
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {

@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { routing, type Locale } from '@/i18n/routing';
 import { getOtherServiceContent, serviceSlugs, type ServiceSlug } from '@/lib/other-services';
 import authoredArticles from '@/content/blog/authored/articles.json';
+import chinesePageCopy from '@/content/seo/zh-page-metadata.json';
+
+const chineseMetadata: Partial<Record<string, { title: string; description: string }>> = chinesePageCopy;
 
 /** Production origin confirmed by the owner on September 30, 2026. */
 export const siteOrigin = 'https://www.americantranslationservice.com';
@@ -45,10 +48,13 @@ export function shareImagePath(path: string, locale: Locale) {
   return `/share/${locale}${path === '/' ? '/index' : path}.png`;
 }
 
-export function pageMetadata({ path, locale, title, description, type = 'website' }: {
-  path: string; locale: Locale; title: string; description?: string;
+export function pageMetadata({ path, locale, title: defaultTitle, description: defaultDescription, openGraphDescription, type = 'website' }: {
+  path: string; locale: Locale; title: string; description?: string; openGraphDescription?: string;
   type?: 'website' | 'article';
 }): Metadata {
+  const copy = locale === 'zh' ? chineseMetadata[path] : undefined;
+  const title = copy?.title ?? defaultTitle;
+  const description = copy?.description ?? defaultDescription;
   const translated = indexableLocales(path).includes(locale);
   const contentLocale = translated ? locale : 'en';
   const canonical = absoluteUrl(localizedPath(path, contentLocale));
@@ -58,7 +64,7 @@ export function pageMetadata({ path, locale, title, description, type = 'website
     alternates: { canonical, languages: translated ? languageAlternates(path) : undefined },
     robots: isPreview || !translated ? { index: false, follow: true } : undefined,
     openGraph: {
-      title, description, url: canonical, type,
+      title, description: copy?.description ?? openGraphDescription ?? description, url: canonical, type,
       images: [{ url: absoluteUrl(shareImagePath(path, contentLocale)), width: 1200, height: 630, alt: title }],
       siteName: 'American Education & Translation Services (AET)',
       locale: { en: 'en_US', zh: 'zh_CN', es: 'es' }[contentLocale],

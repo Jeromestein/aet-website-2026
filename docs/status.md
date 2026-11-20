@@ -156,7 +156,7 @@ runtime/configuration and real-customer acceptance are still open.
 
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
-| Public website | Localized service pages, shared pricing, content migration, redirects and SEO foundations | Retained-content review, official-host acceptance and ownership/indexing checks |
+| Public website | Localized service pages, shared pricing, content migration and redirects. On November 20, local checks matched the page, Open Graph and Twitter titles and descriptions to the [Chinese SEO copy](../content/seo/zh-page-metadata.json) for all 21 requested URLs. | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
 | Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Unified entry accepted on main Preview November 12; next: joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
