@@ -6,7 +6,7 @@ import { syncCoreWorkflow } from "../application-core/runtime";
 import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
 import { table, db } from "./db";
 import { required, configuration, requireExternalServices } from "./config";
-import { TOTAL_CENTS, AppError, resultPath } from "./domain";
+import { TOTAL_CENTS, AppError, resultPath, type Language } from "./domain";
 import { applicationEmail } from "./email";
 
 // Existing formal-evaluation callers retain the cloud-preview restriction.
@@ -53,8 +53,8 @@ export async function publishIfReady(id: string) {
   });
   if (app) await applicationEmail(app, "result");
 }
-export async function checkout(id: string) {
-  if (converged()) return checkoutConverged(id);
+export async function checkout(id: string, locale?: Language) {
+  if (converged()) return checkoutConverged(id, locale);
   const sql = db();
   const stripe = stripeClient("pre-evaluation");
   return await sql.begin(async (tx) => {
@@ -103,11 +103,11 @@ export async function checkout(id: string) {
         },
         success_url:
           configuration().origin +
-          resultPath(app.locale, id) +
+          resultPath(locale ?? app.locale, id) +
           "&checkout=success",
         cancel_url:
           configuration().origin +
-          resultPath(app.locale, id) +
+          resultPath(locale ?? app.locale, id) +
           "&checkout=cancelled",
         expires_at: Math.floor(Date.now() / 1000) + 1800,
       },

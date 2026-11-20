@@ -8,7 +8,7 @@ import { z } from "zod";
 import { table, db } from "@/lib/preeval/db";
 import { preEvaluationWebhookSecret, preEvaluationPaymentTag } from '@/lib/preeval/payment-mode';
 import { configuration, required } from "@/lib/preeval/config";
-import { AppError, resultPath, MAX_FILE_BYTES } from "@/lib/preeval/domain";
+import { AppError, resultPath, locales, MAX_FILE_BYTES } from "@/lib/preeval/domain";
 import {
   authorize,
   session,
@@ -206,7 +206,9 @@ async function handler(
       }
       if (path[2] === "checkout" && isPost) {
         await limit("checkout:" + id, 10, 600);
-        return response({ url: await checkout(id) });
+        const language = z.enum(locales).optional().safeParse(body.locale);
+        if (!language.success) throw new AppError("invalid_request");
+        return response({ url: await checkout(id, language.data) });
       }
       if (path[2] === "reconcile" && isPost) {
         await limit("reconcile:" + id, 20, 600);

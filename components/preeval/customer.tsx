@@ -11,8 +11,6 @@ import {
   LockKeyhole,
 } from "lucide-react";
 import { copy, errorText, stateLabel } from "@/lib/preeval/copy";
-import { lookupApplication } from "@/lib/preeval/customer-access";
-import ApplicationLookup from "./application-lookup";
 import { uploadDocuments, validateDocuments } from "@/lib/preeval/upload-client";
 import {
   BASE_CENTS,
@@ -333,9 +331,6 @@ export function ApplicationForm({ locale }: { locale: string }) {
     </>
   );
 }
-export function AccessForm(props: { locale: string; initialId?: string }) {
-  return <ApplicationLookup locale={props.locale} initialId={props.initialId} />;
-}
 export function ApplicationResult({
   locale,
   id,
@@ -354,14 +349,7 @@ export function ApplicationResult({
     fileInput = useRef<HTMLInputElement>(null);
   async function load() {
     try {
-      let result;
-      try { result = await api("applications/" + id); }
-      catch (error) {
-        if ((error as Error).message !== "access_denied") throw error;
-        await lookupApplication(id, locale);
-        result = await api("applications/" + id);
-      }
-      setApp(result);
+      setApp(await api("applications/" + id));
       setLoadError("");
       return true;
     } catch (e) {
@@ -396,7 +384,7 @@ export function ApplicationResult({
     setError("");
     try {
       if (name === "checkout") {
-        const result = await api("applications/" + id + "/checkout", {});
+        const result = await api("applications/" + id + "/checkout", {locale});
         location.assign(result.url);
       } else {
         await api("applications/" + id + "/" + name, body);
@@ -438,7 +426,7 @@ export function ApplicationResult({
             <p className={s.error} role="alert">
               {error || loadError}
             </p>
-            <AccessForm locale={locale} initialId={id} />
+            <a className={s.secondary} href={pathFor(locale, "/status")}>{t.checkAnother}</a>
           </>
         ) : (
           <p role="status">{t.loading}</p>
@@ -608,7 +596,7 @@ export function ApplicationResult({
         >
           {t.refresh}
         </button>
-        <a className={s.secondary} href={pathFor(locale, "/status-check")}>{t.checkAnother}</a>
+        <a className={s.secondary} href={pathFor(locale, "/status")}>{t.checkAnother}</a>
         {!["paid", "partially_refunded"].includes(app.payment_status) &&
           app.status !== "cancelled" && (
             <button

@@ -14,8 +14,7 @@ backend features are enabled; use [status](../status.md) for that boundary.
 
 ## Shared customer shell
 
-Reuse the website `Navigation` and `SiteFooter` for pre-evaluation landing/form/
-status/access/result, formal application/access/receipt and payment-return pages.
+Reuse the website `Navigation` and `SiteFooter` for pre-evaluation intake and status, formal application/access/receipt and payment-return pages.
 Scope form styles to their main content so shared colors stay intact. Preserve
 language/query behavior from the core guide. Retired token-only URLs show localized
 recovery guidance instead of a token-exchange button.
@@ -140,12 +139,9 @@ Supporting documents remain optional. Show an explicit continue-without-document
 choice only before any upload begins on a new unified application. Pending or
 failed uploads and staff-requested materials must use the existing recovery flow.
 
-Use `public/images/graduates.jpg` as a wide photographic landing hero: navy gradient
-behind white copy and orange application action, central/right graduates visible.
-A compact white fee card crosses the lower edge with three steps alongside. On
-phones crop central graduates, transition to navy behind copy and place the fee
-card below the hero. Keep descriptive localized alt text and full fee breakdown;
-never overlay pricing on the photo. Application/status actions stay inside the hero.
+Use `/application` for intake and `/status` for both services. Route by the
+Application ID and show the relevant documents, payment and result controls.
+Old pre-evaluation start and lookup addresses redirect to these pages.
 
 Customers use the complete Application ID or reusable confirmation link. Add no
 registration, password or extra email-verification step; label lookup as application

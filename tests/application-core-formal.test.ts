@@ -23,6 +23,7 @@ import {flushFormalEmails} from '../lib/evaluation-application/email';
 import {initialDraft} from '../lib/application/model';
 import {selectEvaluationService} from '../lib/application/evaluation';
 import {formalStatusPath} from '../lib/evaluation-application/workflow';
+import {POST as lookupStatus} from '../app/api/customer-status/route';
 import {readIntake,saveIntake} from '../lib/application/intake-server';
 import {sendIntakeEmail} from '../lib/application/intake-email';
 import {formalRecords,projectWorkspaceRecords} from '../lib/crm/workspace-server';
@@ -94,6 +95,10 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   data.evaluationRequest=selectEvaluationService(data.evaluationRequest,'document',1);
   const raw={requestId:randomUUID(),locale:'zh',data};const created=await saveIntake(raw);expect((await saveIntake(raw)).id).toBe(created.id);
   const receipt=await readIntake(created.id);expect(receipt.data.contactName).toBe(data.contactName);expect(receipt.locale).toBe('zh');expect(receipt.workflowEnabled).toBe(true);
+  const status=await lookupStatus(new Request('https://aet-test.vercel.app/api/customer-status',{method:'POST',
+    headers:{origin:'https://aet-test.vercel.app','content-type':'application/json'},body:JSON.stringify({applicationId:created.id})}));
+  expect(status.status).toBe(200);
+  expect(await status.json()).toMatchObject({id:created.id,payment:'unpaid',client:{name:data.contactName}});
   const transport=vi.fn().mockResolvedValue('mail_intake_six');await sendIntakeEmail(created.id,transport);await sendIntakeEmail(created.id,transport);
   expect(transport).toHaveBeenCalledTimes(1);expect((await readIntake(created.id)).email.state).toBe('sent');
  });

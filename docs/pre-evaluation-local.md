@@ -10,8 +10,8 @@
 
 Start with the current configuration below. New pre-evaluation applications use
 `/application?service=pre-evaluation` (with the locale prefix when applicable).
-The old `/degree-equivalency-tool/application` form redirects there; saved
-application/success URLs remain compatible. This integration passed
+Old start and form URLs redirect there. Saved result links now redirect to
+`/status?applicationId=ID`. This integration passed
 [fresh hosted main Preview acceptance](archive/unified-preeval-preview-2026-11-12.md). Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
@@ -405,12 +405,12 @@ running by this acceptance.
 ## Open locally
 
 Use the main checkout at `/Users/plusone/Desktop/Code/aet-website-2026`.
-Its current preview and local application origins use port 3022:
+Its local development server uses port 3021:
 
-- Customer start: <http://localhost:3022/degree-equivalency-tool>
-- Application status: <http://localhost:3022/status-check>
-- Staff sign-in: <http://localhost:3022/admin/login>
-- Staff records: <http://localhost:3022/admin/CRM>
+- Customer start: <http://localhost:3021/application?service=pre-evaluation>
+- Application status: <http://localhost:3021/status>
+- Staff sign-in: <http://localhost:3021/admin/login>
+- Staff records: <http://localhost:3021/admin/CRM>
 - Previous fictional CRM preview: `/admin/CRM/preview`, behind the same staff
   authentication. Other services in that preview remain fictional.
 
@@ -431,13 +431,10 @@ noindex and excluded from the public sitemap.
 
 ## Legacy URL compatibility
 
-The three pre-evaluation paths (start, application and success) are retained,
-including the `applicationId` query parameter through language redirects. This
-does not establish complete AET App URL parity: the old formal `/status` route,
-checkout routes and four standalone staff-tool URLs still return 404. The new
-`/status-check` is pre-evaluation-only. See the
-[October 15 route audit](app-url-compatibility.md) for the mapping and follow-up
-work; existing production email links and app-domain routing need separate checks.
+The local start and application paths redirect to the unified intake. The former
+success and `/status-check` paths redirect to `/status`, preserving the locale,
+application ID and recognized checkout/upload parameters. The
+[October 15 route audit](app-url-compatibility.md) records historical behavior.
 
 ## Earlier local-database setup and processes
 

@@ -1,34 +1,20 @@
-import { requireApplicationPage } from '@/lib/application-page-access';
-import { copy } from "@/lib/preeval/copy";
-import type { Metadata } from "next";
-import PreEvaluationShell from "@/components/preeval/shell";
-import ApplicationLookup from "@/components/preeval/application-lookup";
-export async function generateMetadata({
-  params,
-}: {
+import { redirect } from "next/navigation";
+import { requireApplicationPage } from "@/lib/application-page-access";
+import { pathFor } from "@/lib/preeval/domain";
+
+export const metadata = {robots: {index: false, follow: false}, referrer: "no-referrer"} as const;
+
+type Query = Record<string, string | string[] | undefined>;
+
+export default async function LegacyStatusPage({ params, searchParams }: {
   params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  return {
-    title: copy(locale).statusTitle + " | AET",
-    robots: { index: false, follow: false },
-    referrer: "no-referrer",
-  };
-}
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<{ applicationId?: string }>;
+  searchParams: Promise<Query>;
 }) {
   requireApplicationPage(true);
-
-  const { locale } = await params,
-    { applicationId } = await searchParams;
-  return (
-    <PreEvaluationShell locale={locale} narrow>
-      <ApplicationLookup locale={locale} initialId={applicationId} autoOpen />
-    </PreEvaluationShell>
-  );
+  const [{ locale }, query] = await Promise.all([params, searchParams]);
+  const retained = new URLSearchParams();
+  if (typeof query.applicationId === "string") retained.set("applicationId", query.applicationId);
+  if (query.checkout === "success" || query.checkout === "cancelled") retained.set("checkout", query.checkout);
+  if (query.upload === "retry") retained.set("upload", "retry");
+  redirect(pathFor(locale, "/status") + (retained.size ? "?" + retained.toString() : ""));
 }

@@ -77,9 +77,9 @@ configuration and does not require opening customer applications.
 | Entry | Purpose |
 | --- | --- |
 | `/` and localized service pages | Public website, prices and service information |
-| `/application` | Unified application; formal-evaluation submission is connected |
-| `/status?applicationId=ID` | Formal application lookup and documents |
-| `/degree-equivalency-tool` and `/status-check` | Dedicated pre-evaluation application and lookup |
+| `/application` | Apply for pre-evaluation or formal credential evaluation |
+| `/status` | Look up either service by Application ID. Confirmation links open the matching documents, payment and results. |
+| `/degree-equivalency-tool` and `/status-check` | Compatibility redirects to the unified application and status pages |
 | `/admin/login` and `/admin/CRM` | Staff authentication and office-scoped CRM |
 | `/admin/calendar` | Public events calendar; no employee login |
 | `/payment` | Standalone website payment; not a new-intake payment integration |

@@ -1,3 +1,4 @@
+import { POST as lookupStatus } from '../app/api/customer-status/route';
 import { initialDraft } from '../lib/application/model';
 import { preEvaluationInput } from '../lib/application/preevaluation';
 import { simplifyPreevaluationSix } from '../scripts/database/simplify-preeval-six';
@@ -172,7 +173,11 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
     await addFile(id,file(),'customer');await completeUploads(id);await ai(id);
     expect(analyze.mock.calls[0][0]).toMatchObject({school:'Core University',start:'2018-09'});
     expect((await application(id)).result).toBeNull();expect((await service(id)).result.status).toBe('draft');
-    await Promise.all([checkout(id),checkout(id)]);expect(m.create).toHaveBeenCalledTimes(1);charge(id);
+    await Promise.all([checkout(id,'zh'),checkout(id,'zh')]);expect(m.create).toHaveBeenCalledTimes(1);
+    expect(m.create.mock.calls[0][0]).toMatchObject({
+      success_url:`http://localhost:3022/zh/status?applicationId=${id}&checkout=success`,
+      cancel_url:`http://localhost:3022/zh/status?applicationId=${id}&checkout=cancelled`,
+    });charge(id);
     await applyCheckout(session(id),`evt_${id}`,'checkout.session.completed');await applyCheckout(session(id),`evt_${id}`,'checkout.session.completed');
     const status=await application(id);expect(status).toMatchObject({locale:'en',first_name:'Core',email:original.email,status:'completed',payment_status:'paid',result});
     const workspace=await workspaceSnapshot({q:id},{email:'staff@example.invalid',offices:[],include_unassigned:true});
@@ -197,7 +202,11 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
     const post=(body:unknown)=>postRoute(new Request('http://localhost:3022/api/pre-evaluation/applications',{
       method:'POST',headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify(body)}),{params:Promise.resolve({path:['applications']})});
     const response=await post(payload);expect(response.status).toBe(201);
-    const saved=await response.json();expect(saved.url).toContain('/zh/degree-equivalency-tool/application/success?applicationId=');
+    const saved=await response.json();expect(saved.url).toBe('/zh/status?applicationId='+saved.id);
+    const lookup=await lookupStatus(new Request('http://localhost:3022/api/customer-status',{method:'POST',
+      headers:{origin:'http://localhost:3022','content-type':'application/json'},body:JSON.stringify({applicationId:saved.id})}));
+    expect(lookup.status).toBe(200);
+    expect(await lookup.json()).toEqual({kind:'pre-evaluation',id:saved.id});
     expect((await (await post(payload)).json()).id).toBe(saved.id);
     expect((await post({...payload,data:{...data,office:'miami'}})).status).toBe(409);
     const [core]=await sql()`select * from aet.aet_core_applications where id=${saved.id}`;

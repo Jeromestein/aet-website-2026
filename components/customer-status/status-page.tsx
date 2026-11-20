@@ -1,4 +1,6 @@
 "use client";
+import dynamic from 'next/dynamic';
+import preeval from '../preeval/preeval.module.css';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Search, CircleCheck, Clock3 } from 'lucide-react';
@@ -9,7 +11,9 @@ import { statusLookup, type CustomerStatus } from '@/lib/customer-status/model';
 import s from './status.module.css';
 import { intakeCopy } from '@/lib/application/intake-copy';
 import { StatusSections } from './sections';
-async function readStatus(applicationId: string, preview: boolean, signal?: AbortSignal): Promise<CustomerStatus> {
+const PreEvaluationResult = dynamic(() => import('../preeval/customer').then(module => module.ApplicationResult));
+type LookupResult = CustomerStatus | { kind: 'pre-evaluation'; id: string };
+async function readStatus(applicationId: string, preview: boolean, signal?: AbortSignal): Promise<LookupResult> {
  const response = await fetch('/api/customer-status'+(preview?'?source=preview':''), {
   method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({applicationId}), cache:'no-store', signal,
  });
@@ -20,18 +24,22 @@ async function readStatus(applicationId: string, preview: boolean, signal?: Abor
 export function StatusPage({locale, initialId,preview=false}: {locale: Locale; initialId: string;preview?:boolean}) {
  const documents = useTranslations('documents');
  const t = statusCopy[locale]; const [id,setId] = useState(initialId); const [record,setRecord] = useState<CustomerStatus|null>(null);
+ const [preEvaluationId,setPreEvaluationId] = useState('');
  const [uploading,setUploading] = useState(false);
  const [busy,setBusy] = useState(false); const [error,setError] = useState(''); const [now,setNow] = useState(0);
  const active = useRef<AbortController|null>(null); const prefix = locale === 'en' ? '' : '/' + locale;
  async function check(value: string, updateUrl = false) {
-  active.current?.abort(); setUploading(false); setRecord(null); setError('');
+  active.current?.abort(); setUploading(false); setPreEvaluationId(''); setRecord(null); setError('');
   const parsed = statusLookup.safeParse({applicationId:value});
   if(!parsed.success) {setBusy(false);setError(t.invalid);return;}
   const controller = new AbortController(); active.current = controller; setBusy(true);
-  if(updateUrl) {const url = new URL(location.href);url.searchParams.set('applicationId',parsed.data.applicationId);history.replaceState(null,'',url);}
+  if(updateUrl) {const url = new URL(prefix+'/status', location.origin);if(preview) url.searchParams.set('source','preview');url.searchParams.set('applicationId',parsed.data.applicationId);history.replaceState(null,'',url);}
   try {
    const data = await readStatus(parsed.data.applicationId,preview,controller.signal);
-   if(!controller.signal.aborted) {setRecord(data);setNow(Date.now());}
+   if(!controller.signal.aborted) {
+    if ('kind' in data) setPreEvaluationId(data.id);
+    else {setRecord(data);setNow(Date.now());}
+   }
   } catch(e) {if(!controller.signal.aborted) {const code=(e as Error).message;setError(code==='not_found'?t.missing:code==='too_many_requests'?t.limited:t.failed);}}
   finally {if(!controller.signal.aborted) setBusy(false);}
  }
@@ -45,6 +53,7 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
  async function refreshPayment() {
   if(!record) return;
   const latest = await readStatus(record.id,preview,active.current?.signal);
+  if ('kind' in latest) return;
   // Update payment fields in place so an active document upload keeps its session.
   setRecord(current => current !== record ? current : {
    ...current, payment:latest.payment, paid:latest.paid, amount:latest.amount, deadline:latest.deadline,
@@ -53,13 +62,18 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
   setNow(Date.now());
  }
  function submit(e:FormEvent){e.preventDefault();void check(id,true);}
+ if (preEvaluationId) return <div className={preeval.page}>
+  <main id="main-content" className={`${preeval.main} ${preeval.publicMain} ${preeval.narrow}`}>
+   <PreEvaluationResult key={preEvaluationId} locale={locale} id={preEvaluationId}/>
+  </main>
+ </div>;
  return <main className={s.main} id="main-content">
   <header className={s.intro}><p className={s.eyebrow}>{t.eyebrow}</p><h1>{t.title}</h1><p>{t.intro}</p></header>
-  <div className={s.layout}>
-   <aside className={s.aside}><h2>{t.next}</h2><ol>{t.steps.map((step,i)=><li key={step}><span>{i+1}</span><div><h3>{step}</h3><p>{t.descriptions[i]}</p></div></li>)}</ol>
+  <div className={record ? s.layout : s.lookupOnly}>
+   {record && <aside className={s.aside}><h2>{t.next}</h2><ol>{t.steps.map((step,i)=><li key={step}><span>{i+1}</span><div><h3>{step}</h3><p>{t.descriptions[i]}</p></div></li>)}</ol>
     {windowState!=='none'&&<div className={s.warning}><strong><Clock3 size={18}/>{windowState==='expired'?t.payments.expired:t.paymentRequired}</strong><p>{windowState==='pending'?t.remaining:t.expired}</p>{windowState==='pending'&&<div className={s.timer} aria-label={t.remaining}>{timer}</div>}</div>}
     <p className={s.help}>{t.help}</p>
-   </aside>
+   </aside>}
    <div className={s.content}>
     {!record&&<form className={s.card} onSubmit={submit} aria-busy={busy}><label htmlFor="applicationId">{t.id}</label><div className={s.lookup}><input id="applicationId" name="applicationId" value={id} onChange={e=>{active.current?.abort();setBusy(false);setId(e.target.value);setRecord(null);setError('');}} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" maxLength={64} aria-invalid={!!error} aria-describedby={error?'status-error':undefined}/><button disabled={busy}><Search size={18}/>{busy?t.loading:t.check}</button></div>{error&&<p id="status-error" role="alert" className={s.error}>{error}</p>}{busy&&<p role="status">{t.loading}</p>}</form>}
     {record&&<>
@@ -70,10 +84,9 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
      <StatusSections key={record.source+record.id} record={record} locale={locale} onBusyChange={setUploading} onRefreshPayment={refreshPayment}/>
      <div className={s.statusActions}>
       <button type="button" disabled={uploading||busy} onClick={()=>void check(record.id)}>{documents('refresh')}</button>
-      <button type="button" disabled={uploading} onClick={()=>{setRecord(null);setError('');}}>{documents('otherApplication')}</button>
+      <button type="button" disabled={uploading} onClick={()=>location.assign(prefix+'/status')}>{documents('otherApplication')}</button>
      </div>
     </>}
-    <p className={s.preliminary}>{t.preliminary} <a href={prefix+'/status-check'}>{t.preliminaryLink}</a></p>
    </div>
   </div>
  </main>;

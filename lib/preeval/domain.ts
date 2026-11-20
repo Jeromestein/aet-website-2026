@@ -55,9 +55,7 @@ export function pathFor(locale: string, path: string) {
   return (locale === "en" ? "" : "/" + locale) + path;
 }
 export const resultPath = (locale: string, id: string) =>
-  pathFor(locale, "/degree-equivalency-tool/application/success") +
-  "?applicationId=" +
-  id;
+  pathFor(locale, "/status") + "?applicationId=" + encodeURIComponent(id);
 export function canRelease(payment: string, status: string) {
   return payment === "paid" && status !== "cancelled";
 }

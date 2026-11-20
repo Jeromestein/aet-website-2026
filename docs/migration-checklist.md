@@ -138,6 +138,8 @@ These checks do not activate hosted Production.
   and desktop/mobile form checks passed; fresh hosted acceptance is linked above.
 - [x] Redirect the old pre-evaluation form and `/apply` into localized `/application`;
   retain saved status/result links and existing Production release gates.
+- [x] Use one customer `/status` lookup for both services, including pre-evaluation
+  submission, confirmation links, Stripe returns and old result bookmarks.
 - [x] Save pre-evaluation contact/office/notes, require residence country and terms,
   display USD 19.88, defer AI until documents are ready or explicitly skipped,
   and preserve service-specific retries plus existing formal retry fingerprints.

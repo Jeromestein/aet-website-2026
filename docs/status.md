@@ -121,8 +121,10 @@ The six-table count describes the new business model, not the whole project.
 ## Unified entry — main Preview accepted, November 12
 
 New pre-evaluation applications now start at `/application?service=pre-evaluation`.
-The old dedicated form URL redirects there; existing application IDs, status,
-upload, checkout and result links continue to work. `/apply` redirects to the
+On the updated site, both services use `/status?applicationId=ID`. The ID
+selects the appropriate documents, payment and results. Older pre-evaluation
+start/form links redirect to the unified intake. Lookup and saved result links
+redirect to Status and preserve the checkout return and upload-retry state. `/apply` redirects to the
 formal choice after its existing release gate. Public Production CTAs and release
 gates are unchanged.
 

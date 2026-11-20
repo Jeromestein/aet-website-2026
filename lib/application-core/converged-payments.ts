@@ -6,7 +6,7 @@ import type Stripe from 'stripe';
 import type { TransactionSql } from 'postgres';
 import { db,type Row } from '../preeval/db';
 import { configuration } from '../preeval/config';
-import { AppError,TOTAL_CENTS,resultPath } from '../preeval/domain';
+import { AppError,TOTAL_CENTS,resultPath,type Language } from '../preeval/domain';
 import { verifiedPreEvaluationStripeClient } from '../preeval/payments';
 import { applicationRecipient } from '../preeval/recipients';
 import { preEvaluationPaymentMode, preEvaluationPaymentTag, paymentModeMatches } from '../preeval/payment-mode';
@@ -31,7 +31,7 @@ function validateCharge(c:Stripe.Charge,intent:string,p:Row) {
   if(!paymentModeMatches(c) || intentId(c.payment_intent)!==intent || c.currency!=='usd' || c.amount!==p.amount_cents ||
     !Number.isSafeInteger(c.amount_refunded) || c.amount_refunded<0 || c.amount_refunded>p.amount_cents)throw new AppError('invalid_payment');
 }
-export async function checkoutConverged(id:string) {
+export async function checkoutConverged(id:string, locale?: Language) {
   return db().begin(async tx=>{
     const a=await readConverged(id,tx,true);if(!a)throw new AppError('not_found',404);
     if(a.payment_status==='waived')throw new AppError('payment_not_required',409);
@@ -51,7 +51,7 @@ export async function checkoutConverged(id:string) {
       line_items:[{price_data:{currency:'usd',product_data:{name:'Degree Equivalency Service',description:'19.00 + Stripe Fee: 0.88'},unit_amount:p.amount_cents},quantity:1}],
       client_reference_id:id,customer_email:applicationRecipient(a.email),
       metadata:{applicationId:id,paymentType:'degree-equivalency',pilot:preEvaluationPaymentTag()},
-      success_url:configuration().origin+resultPath('en',id)+'&checkout=success',cancel_url:configuration().origin+resultPath('en',id)+'&checkout=cancelled',
+      success_url:configuration().origin+resultPath(locale ?? a.locale,id)+'&checkout=success',cancel_url:configuration().origin+resultPath(locale ?? a.locale,id)+'&checkout=cancelled',
       expires_at:Math.floor(Date.now()/1000)+1800},{idempotencyKey:'preeval-checkout-'+p.id});
     if(!paymentModeMatches(session) || !session.url)throw new AppError('invalid_payment');
     await tx`update ${coreTable(tx,'aet_payments')} set checkout_session_id=${session.id},payment_status='open',updated_at=now() where id=${p.id}`;

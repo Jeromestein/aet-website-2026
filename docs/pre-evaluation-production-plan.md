@@ -46,8 +46,8 @@ release, subject to checking its existing Vercel binding before activation:
 | --- | --- |
 | Apply | `/application` once both service paths are connected and accepted |
 | Existing dedicated pre-evaluation links | `/degree-equivalency-tool/application` (retain compatibility) |
-| Result | `/degree-equivalency-tool/application/success?applicationId=ID` |
-| Retrieve an application | `/status-check` |
+| Result | `/status?applicationId=ID` |
+| Retrieve an application | `/status` |
 | Unified staff workspace | `/admin/CRM` |
 | Stripe live event destination | `/api/pre-evaluation/stripe-webhook` |
 
