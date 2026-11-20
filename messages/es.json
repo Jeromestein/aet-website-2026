@@ -525,6 +525,8 @@
     "testPayment": "Solo para pruebas locales. El pago usa el modo de prueba de Stripe; no se realiza ningún cobro real.",
     "awaitQuote": "Los servicios seleccionados requieren una cotización confirmada. Su evaluador confirmará el total antes de habilitar el pago.",
     "confirmedTotal": "Total de servicios y envío (USD)",
+    "officeAdjustment": "Ajuste de la oficina",
+    "adjustedTotal": "Total ajustado",
     "baseAmount": "Servicios y envío según la tarifa del sitio",
     "additionalAmount": "Traducción / servicios personalizados",
     "pay": "Continuar al pago de prueba · {amount}",

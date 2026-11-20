@@ -525,6 +525,8 @@
     "testPayment": "当前为本地测试，使用 Stripe 测试付款，不会收取真实款项。",
     "awaitQuote": "您选择的服务需要确认报价。评估人员确认总额后，即可继续付款。",
     "confirmedTotal": "所选服务及配送总额（美元）",
+    "officeAdjustment": "办公室调价",
+    "adjustedTotal": "调整后总额",
     "baseAmount": "网站定价服务及配送",
     "additionalAmount": "翻译／定制服务",
     "pay": "继续测试付款 · {amount}",

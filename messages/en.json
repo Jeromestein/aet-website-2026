@@ -525,6 +525,8 @@
     "testPayment": "Local testing only. Checkout uses Stripe test mode; no live payment is collected.",
     "awaitQuote": "Your selections require a confirmed quote. Your evaluator will confirm the total before payment becomes available.",
     "confirmedTotal": "Total for selected services and delivery (USD)",
+    "officeAdjustment": "Office fee adjustment",
+    "adjustedTotal": "Adjusted total",
     "baseAmount": "Website-priced services and delivery",
     "additionalAmount": "Translation / customized services",
     "pay": "Continue to test payment · {amount}",

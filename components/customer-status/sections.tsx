@@ -40,7 +40,7 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
    <div className={s.serviceSummary}>{record.services}</div>
    {displayFields([t.purpose,t.notes],[purpose,record.client.notes])}
    {record.details?<SavedServiceDetails record={record} locale={locale}/>:displayFields([t.delivery,t.additional],[t.notConnected,t.notConnected])}
-   {!record.details&&<div className={s.amountRow}><span>{t.total}</span><strong>{money}</strong></div>}<p>{t.quote}</p>
+   {!record.details&&<div className={s.amountRow}><span>{t.total}</span><strong>{money}</strong></div>}{!record.workflow?.confirmedQuote&&<p>{t.quote}</p>}
   </section>
   {record.workflow?<FormalWorkflow record={record} locale={locale} part="payment"/>:<section className={s.card} aria-labelledby="payment-heading"><div className={s.sectionHeading}><CreditCard size={24}/><h2 id="payment-heading">{t.payment}</h2>{record.payment!=='paid'&&<span className={s.previewBadge}>{t.soon}</span>}</div>
    {record.payment==='paid'?<div className={s.paidState}><CheckCircle2 size={26}/><div><strong>{t.paid}</strong><p>{t.paidNote}</p></div></div>:<>

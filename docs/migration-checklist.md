@@ -149,7 +149,9 @@ These checks do not activate hosted Production.
 - [x] Verify staff fee adjustments on main Preview for formal orders before first
   checkout. A USD 110.00 test order changed to USD 95.50 in CRM, customer Status
   and Stripe Sandbox. The fee email was delivered. The open Checkout blocked a
-  second edit from an already-open staff page. Production release is pending.
+  second edit from an already-open staff page. Staff fee editing shipped in `0059f00`.
+- [x] Verify the customer fee breakdown locally for increases, discounts and
+  final quotes on estimates with a range. Keep one divider above the total.
 - [x] Let staff upload/publish the finished PDF and notify the customer; expose
   authorized report download and retain the selected paper-delivery details.
 - [x] Enable credential intake, applicant notifications, private documents, live

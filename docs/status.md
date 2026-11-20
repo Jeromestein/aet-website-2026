@@ -40,6 +40,8 @@ See the [active checklist](migration-checklist.md) for tasks and
 On main Preview, office-authorized staff can edit a formal application's final
 amount in Payment until its first checkout. Customer Status, the fee update
 email and Stripe Sandbox showed the revised amount in the November 20 test.
+The customer Status fee breakdown now shows the office adjustment and revised
+total together. The English desktop and Chinese mobile layouts passed local checks.
 See the [Preview CRM](https://aet-main-preview-meiyutechs-projects.vercel.app/admin/CRM?source=preview).
 
 The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
