@@ -80,16 +80,21 @@ export async function createCoreShadowReader(sql: Sql) {
             from ${coreTable(tx,'aet_documents')} d where d.application_id=a.id and d.access_scope='customer_input' and d.storage_file_id is not null),'[]') files,
           coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.checkout_session_id,'amount_cents',p.amount_cents,
             'status',p.payment_status,'created_at',p.created_at) order by p.created_at desc,p.id)
-            from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments
+            from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments, null::jsonb timing
           from ${coreTable(tx,'aet_core_applications')} a ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'
             and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
         const combined = converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
         // Only the staff workspace supplies a verified Auth ID for historical reads.
+        // Older database deployments can still list history while the timing projection rolls out.
+        const [historyVersion] = historyStaffId
+          ? await tx`select to_regprocedure('aet.crm_history_with_timing(uuid)') is not null as timed` : [];
         const workspace = historyStaffId ? tx`
           select current_rows.*, false as historical from (${combined}) current_rows
           union all
-          select h.*, true as historical from aet.crm_history(${historyStaffId}::uuid) h
+          select h.*, true as historical from (${historyVersion.timed
+            ? tx`select * from aet.crm_history_with_timing(${historyStaffId}::uuid)`
+            : tx`select old.*, null::jsonb as timing from aet.crm_history(${historyStaffId}::uuid) old`}) h
           where not exists (
             select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=h.id
             and ((h.kind='formal' and a.primary_service='evaluation') or

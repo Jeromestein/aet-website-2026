@@ -17,7 +17,7 @@ export const testPaymentExemption = (sql:DB) => productionMode()?sql`false`:comp
     and original.actor='synthetic-e2e-test' and original.action='test.payment_fixture'
     and original.detail @> '{"synthetic":true,"noCharge":true}'::jsonb
     and not exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id))`;
-const paymentScope = (sql: DB) => productionMode()
+export const paymentScope = (sql: DB) => productionMode()
   ? sql`p.provider='stripe' and p.provider_mode='live' and p.provider_account=${process.env.APPLICATION_CORE_PROVIDER_ACCOUNT || ''}`
   : sql`true`;
 export const convergedPaymentState = (sql:DB) => sql`case

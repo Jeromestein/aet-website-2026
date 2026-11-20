@@ -15,6 +15,13 @@ describe('estimated processing timeline',()=>{
     expect(calc(row('3day','2026-10-17T16:00:00Z'))?.dueDate).toBe('2026-10-21');
     expect(calc(row('3day','2026-12-04T18:01:00Z'))?.dueDate).toBe('2026-12-09');
   });
+  it('starts new West Coast cases at the office cutoff and retains Eastern dates for legacy rows',()=>{
+    const paid=row('3day','2026-11-16T20:00:00Z');
+    expect(completionFor('formal',paid,now,'Los Angeles')?.dueDate).toBe('2026-11-18');
+    expect(completionFor('formal',paid,now,'San Francisco')?.dueDate).toBe('2026-11-18');
+    expect(completionFor('formal',paid,now,'Miami')?.dueDate).toBe('2026-11-19');
+    expect(calc(paid)?.dueDate).toBe('2026-11-19');
+  });
   it('preserves same-day and next-day weekend rules',()=>{
     expect(calc(row('sameday'))?.dueDate).toBe('2026-10-14');
     expect(calc(row('24hour','2026-10-16T16:00:00Z'))?.dueDate).toBe('2026-10-19');
@@ -37,6 +44,7 @@ describe('estimated processing timeline',()=>{
     const r=row();
     const snapshot={version:1,currency:'USD',min:10000,max:10000,needsQuote:false,lines:[{id:'document',quantity:1,min:10000,max:10000,turnaround:{kind:'businessDays',value:3}}]};
     expect(calc({...r,service_type:{...r.service_type,websiteQuote:snapshot}})?.dueDate).toBe('2026-10-16');
+    expect(calc({...r,service_type:{websiteQuote:{...snapshot,version:2}}})?.dueDate).toBe('2026-10-16');
     expect(calc({...r,service_type:{...r.service_type,websiteQuote:{version:99}}})).toBeNull();
   });
   it('exposes completion only through the applicable live record projection',()=>{

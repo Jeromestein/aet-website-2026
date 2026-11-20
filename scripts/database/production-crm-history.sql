@@ -1,11 +1,13 @@
 -- Private list projection. The caller passes the authenticated employee's Auth ID.
 -- Old AET remains the writer. No base-table grants or data copying are required.
-CREATE FUNCTION aet.crm_history(staff_id uuid)
+BEGIN;
+
+CREATE OR REPLACE FUNCTION aet.crm_history_with_timing(staff_id uuid)
 RETURNS TABLE (
   kind text, id uuid, name text, email text, office text, "intakeVersion" integer,
   status text, payment_status text, created_at timestamptz, updated_at timestamptz,
   purpose text, country text, amount integer, service text, "mailDelivery" boolean,
-  educations jsonb, files jsonb, payments jsonb
+  educations jsonb, files jsonb, payments jsonb, timing jsonb
 )
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = ''
 AS $history$
@@ -15,18 +17,18 @@ AS $history$
   ), applications AS (
     SELECT 'formal' AS kind, a.id, a.pronouns, a.first_name, a.middle_name, a.last_name,
       a.email, a.office, a.status, a.payment_status, a.created_at, a.updated_at, a.purpose,
-      a.country, a.due_amount, a.service_type, a.delivery_method
+      a.country, a.due_amount, a.service_type, a.delivery_method, a.paid_at
     FROM public.fce_applications a JOIN staff s ON
       a.office = ANY(s.offices) OR (a.office IS NULL AND s.include_unassigned)
     UNION ALL
     SELECT 'external', a.id, NULL, a.first_name, a.middle_name, a.last_name, NULL,
       a.office, a.status, a.payment_status, a.created_at, a.updated_at, a.purpose,
-      NULL, a.due_amount, NULL, NULL
+      NULL, a.due_amount, NULL, NULL, NULL
     FROM public.fce_external_orders a JOIN staff s ON
       a.office = ANY(s.offices) OR (a.office IS NULL AND s.include_unassigned)
     UNION ALL
     SELECT 'preeval', a.id, NULL, a.first_name, a.middle_name, a.last_name, a.email,
-      NULL, a.status, NULL, a.created_at, a.updated_at, a.purpose, NULL, NULL, NULL, NULL
+      NULL, a.status, NULL, a.created_at, a.updated_at, a.purpose, NULL, NULL, NULL, NULL, NULL
     FROM public.aet_core_applications a JOIN staff s ON s.include_unassigned
   ), education AS (
     SELECT 'formal' AS kind, e.id, e.application_id, e.school_name, e.country_of_study,
@@ -57,7 +59,9 @@ AS $history$
       'country',e.country_of_study,'start',concat_ws('-',e.study_start_date->>'year',e.study_start_date->>'month'),
       'end',concat_ws('-',e.study_end_date->>'year',e.study_end_date->>'month')) ORDER BY e.id)
       FROM education e WHERE e.application_id=a.id AND e.kind=a.kind),'[]'::jsonb),
-    '[]'::jsonb, coalesce(history.payments,'[]'::jsonb)
+    '[]'::jsonb, coalesce(history.payments,'[]'::jsonb),
+    CASE WHEN a.kind='formal' AND a.paid_at IS NOT NULL THEN
+      jsonb_build_object('paid_at',a.paid_at,'service_type',a.service_type) END
   FROM applications a
   LEFT JOIN LATERAL (
     SELECT (array_agg(p.payment_status ORDER BY (p.payment_status='paid') DESC NULLS LAST, p.paid_at DESC NULLS LAST, p.id))[1] preferred_status,
@@ -68,5 +72,26 @@ AS $history$
   ) history ON true
 $history$;
 
+REVOKE ALL ON FUNCTION aet.crm_history_with_timing(uuid) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION aet.crm_history_with_timing(uuid) TO aet_runtime;
+
+-- Keep the original row shape available to existing deployments.
+CREATE OR REPLACE FUNCTION aet.crm_history(staff_id uuid)
+RETURNS TABLE (
+  kind text, id uuid, name text, email text, office text, "intakeVersion" integer,
+  status text, payment_status text, created_at timestamptz, updated_at timestamptz,
+  purpose text, country text, amount integer, service text, "mailDelivery" boolean,
+  educations jsonb, files jsonb, payments jsonb
+)
+LANGUAGE sql STABLE SECURITY INVOKER SET search_path = ''
+AS $history$
+  SELECT h.kind,h.id,h.name,h.email,h.office,h."intakeVersion",h.status,h.payment_status,
+    h.created_at,h.updated_at,h.purpose,h.country,h.amount,h.service,h."mailDelivery",
+    h.educations,h.files,h.payments
+  FROM aet.crm_history_with_timing(staff_id) h
+$history$;
+
 REVOKE ALL ON FUNCTION aet.crm_history(uuid) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION aet.crm_history(uuid) TO aet_runtime;
+
+COMMIT;

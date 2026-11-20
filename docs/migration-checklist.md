@@ -20,6 +20,8 @@ preserves migration history and acceptance evidence.
 - [x] Combine historical and new applications before search, ordering, page counts and CSV export.
 - [x] Enforce assigned offices and explicit unassigned access for historical applications.
 - [x] Open historical records read-only and keep new application writes in the six-table schema.
+- [x] Show estimated deadlines in the merged CRM Status column and mobile cards for eligible paid formal orders.
+- [ ] Apply the [updated history function](../scripts/database/production-crm-history.sql) and verify deadlines for a paid historical order and a paid new order in the hosted CRM.
 
 ## Terms and document requirements
 

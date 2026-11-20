@@ -243,21 +243,30 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     const alphabetical = await lookup({q:'MixedFixture',sort:'name',export:'csv'});
     const names = alphabetical.rows.map(row=>row.name.toLowerCase());
     expect(names).toEqual([...names].sort());
-    expect((await lookup({q:oldFormal.id})).rows[0].historical).toBe(true);
+    expect((await lookup({q:oldFormal.id})).rows[0]).toMatchObject({historical:true,completion:null});
+    await admin`update public.fce_applications set payment_status='paid',paid_at='2026-11-16T15:00:00Z' where id=${oldFormal.id}`;
+    const [timed] = (await lookup({q:oldFormal.id})).rows;
+    expect(timed.completion?.dueDate).toBe('2026-11-25');
+    expect(timed).not.toHaveProperty('timing');
+    expect((await lookup({q:oldFormal.id},unassigned)).total).toBe(0);
     expect((await lookup({q:'Unique College'})).total).toBe(0);
     expect((await lookup({q:'Unique College'},unassigned)).rows[0]).toMatchObject({id:legacyPre.id,kind:'preeval',office:null});
     await expect(lookup({office:'Boston'})).rejects.toMatchObject({status:403});
     await admin`update aet_private.staff_accounts set active=false where auth_user_id=${miami.id}`;
     expect(await runtime`select id from aet.crm_history(${miami.id}::uuid)`).toHaveLength(0);
+    expect(await runtime`select id from aet.crm_history_with_timing(${miami.id}::uuid)`).toHaveLength(0);
     const [rights] = await runtime`select has_table_privilege(current_user,'public.fce_applications','UPDATE') writes,
       has_function_privilege('anon','aet.crm_history(uuid)','EXECUTE') anonymous,
-      has_function_privilege('authenticated','aet.crm_history(uuid)','EXECUTE') customer`;
-    expect(rights).toMatchObject({writes:false,anonymous:false,customer:false});
+      has_function_privilege('authenticated','aet.crm_history(uuid)','EXECUTE') customer,
+      has_function_privilege('anon','aet.crm_history_with_timing(uuid)','EXECUTE') timing_anonymous,
+      has_function_privilege('authenticated','aet.crm_history_with_timing(uuid)','EXECUTE') timing_customer`;
+    expect(rights).toMatchObject({writes:false,anonymous:false,customer:false,timing_anonymous:false,timing_customer:false});
   });
   it('accepts a formal intake and confirms live payment for its saved applicant', async () => {
     const { initialDraft } = await import('../lib/application/model');
     const { selectEvaluationService } = await import('../lib/application/evaluation');
     const { saveIntake } = await import('../lib/application/intake-server');
+    const { workspaceSnapshot } = await import('../lib/crm/workspace-server');
     const { checkoutFormalCore } = await import('../lib/application-core/formal-payments');
     const { sendIntakeEmail } = await import('../lib/application/intake-email');
     const { flushFormalEmails } = await import('../lib/evaluation-application/email');
@@ -272,6 +281,9 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     await sendIntakeEmail(id,mail);
     expect(mail.mock.calls[0][0]).toMatchObject({recipient:data.email});
     expect(mail.mock.calls[0][0].html).not.toContain('Payments are disabled');
+    const staff = {email:'staff@example.invalid',offices:['Miami'],include_unassigned:false};
+    const readCase = async () => (await workspaceSnapshot({q:id},staff)).rows[0];
+    expect((await readCase()).completion).toBeNull();
     await checkoutFormalCore(id);
     expect(m.create.mock.calls[0][0]).toMatchObject({customer_email:data.email,metadata:{pilot:'aet-formal-2026-production'}});
     const paid = {...sessions.get('cs_'+id)!,amount_total:11000,status:'complete',payment_status:'paid'} as Stripe.Checkout.Session;
@@ -283,6 +295,7 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     expect((await webhook(paid)).status).toBe(200);
     expect(await runtime`select payment_status,provider_mode from aet.aet_payments where application_id=${id}`)
       .toMatchObject([{payment_status:'paid',provider_mode:'live'}]);
+    expect((await readCase()).completion?.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     await flushFormalEmails(mail,id);
     expect(mail).toHaveBeenCalledTimes(2);
     expect(mail.mock.calls[1][0].recipient).toBe(data.email);

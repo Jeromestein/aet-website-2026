@@ -2,14 +2,15 @@ import {quoteSchema} from './detail-presentation';
 
 export type Completion = {dueDate:string; daysRemaining:number; percent:number; tone:'green'|'amber'|'red'};
 const dayMs=86_400_000;
-const eastern=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
-function localParts(date:Date) { return Object.fromEntries(eastern.formatToParts(date).map(p=>[p.type,p.value])); }
+const calendar=(timeZone:string)=>new Intl.DateTimeFormat('en-CA',{timeZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+const eastern=calendar('America/New_York'), pacific=calendar('America/Los_Angeles');
+function localParts(date:Date, officeCalendar:Intl.DateTimeFormat) { return Object.fromEntries(officeCalendar.formatToParts(date).map(p=>[p.type,p.value])); }
 function dayNumber(parts:Record<string,string>) { return Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day))/dayMs; }
 const weekend=(day:number)=>[0,6].includes(new Date(day*dayMs).getUTCDay());
 const allowed:Record<string,string[]>={foreignCredentialEvaluation:['7day','3day','24hour','sameday'],coursebyCourse:['8day','5day','3day','24hour','sameday'],professionalExperience:['21day','7day','3day'],positionEvaluation:['10day','5day','3day','2day']};
 
-/** Read-only deadline projection. Preserve legacy Eastern cutoff and weekday rules. */
-export function completionFor(kind:string,row:Record<string,any>,now=new Date()):Completion|null {
+/** Historical orders retain the Eastern cutoff; new orders follow the handling office. */
+export function completionFor(kind:string,row:Record<string,any>,now=new Date(),office?:string|null):Completion|null {
   if(kind!=='formal'||['completed','cancelled'].includes(row.status)||!row.paid_at) return null;
   const paid=new Date(row.paid_at);
   if(!Number.isFinite(paid.getTime())||!Number.isFinite(now.getTime()))return null;
@@ -39,7 +40,8 @@ export function completionFor(kind:string,row:Record<string,any>,now=new Date())
   }
   // Unknown or unbounded turnaround must never become an invented deadline.
   if((!days&&!hours&&!sameDay)||days>365||(hours!==0&&hours!==24))return null;
-  const part=localParts(paid),paidDay=dayNumber(part);
+  const officeCalendar=office==='Los Angeles'||office==='San Francisco'?pacific:eastern;
+  const part=localParts(paid,officeCalendar),paidDay=dayNumber(part);
   const afterCutoff=Number(part.hour)>13||(Number(part.hour)===13&&(Number(part.minute)>0||Number(part.second)>0));
   const start=paidDay+(afterCutoff?1:0);
   let due=start;
@@ -49,7 +51,7 @@ export function completionFor(kind:string,row:Record<string,any>,now=new Date())
     let remaining=days-(weekend(due)?0:1);
     while(remaining>0){due++;if(!weekend(due))remaining--;}
   }
-  const today=dayNumber(localParts(now)),daysRemaining=due-today;
+  const today=dayNumber(localParts(now,officeCalendar)),daysRemaining=due-today;
   // Show elapsed calendar time over this case's payment-to-deadline window,
   // not a fabricated percentage of completed evaluation work.
   const percent=due===paidDay?(today>=due?100:0):Math.round(Math.max(0,Math.min(1,(today-paidDay)/(due-paidDay)))*100);

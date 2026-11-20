@@ -1,3 +1,5 @@
+import { completionFor } from './completion';
+import { paymentScope } from '../application-core/converged-payment-state';
 import { formalCore, formalRows, formalFiles, formalPayments } from '../application-core/formal-store';
 import 'server-only';
 import { coreRuntimeEnabled } from '../application-core/runtime';
@@ -44,7 +46,11 @@ export function formalRecords(sql: Sql | TransactionSql) {
         case when (a.data->'services'->>'customized')::boolean then 'Customized Evaluation' end) service,
       coalesce(a.data->'delivery'->>'shipping','') not in ('','no_delivery_needed') as "mailDelivery",a.data->'educations' educations,
       coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind',f.kind,'name',f.name,'bytes',f.bytes) order by f.created_at) from (${formalFiles(sql)}) f where f.application_id=a.id and f.state='ready'),'[]'::jsonb) files,
-      coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from (${formalPayments(sql)}) p where p.application_id=a.id),'[]'::jsonb) payments
+      coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from (${formalPayments(sql)}) p where p.application_id=a.id),'[]'::jsonb) payments,
+      case when a.payment_status='paid' then jsonb_build_object(
+        'service_type',jsonb_build_object('websiteQuote',jsonb_build_object('version',1) || a.quote),
+        'paid_at',(select max(p.paid_at) from (${formalPayments(sql)}) p
+          where p.application_id=a.id and p.status='paid' and ${paymentScope(sql)})) end as timing
     from (${formalRows(sql)}) a`;
   return sql`
       select 'formal'::text kind,a.id,coalesce(nullif(trim(concat_ws(' ',
@@ -67,7 +73,11 @@ export function formalRecords(sql: Sql | TransactionSql) {
         case when l.id is not null then coalesce(l.delivery_method,'') not in ('','no_delivery_needed') else coalesce(a.data->'delivery'->>'shipping','') not in ('','no_delivery_needed') end as "mailDelivery",
         case when l.id is null then coalesce(a.data->'educations','[]'::jsonb) else coalesce((select jsonb_agg(jsonb_build_object('degree',e.degree_obtained,'school',e.school_name,'country',e.country_of_study,'start',concat(e.study_start_date->>'year','-',e.study_start_date->>'month'),'end',concat(e.study_end_date->>'year','-',e.study_end_date->>'month')) order by e.id) from ${table('public.fce_educations')} e where e.application_id=a.id),'[]'::jsonb) end educations,
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind',f.kind,'name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('evaluation.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb) files,
-        coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('evaluation.payments')} p where p.application_id=a.id),'[]'::jsonb) payments
+        coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('evaluation.payments')} p where p.application_id=a.id),'[]'::jsonb) payments,
+      case when a.payment_status='paid' then jsonb_build_object(
+        'service_type',jsonb_build_object('websiteQuote',jsonb_build_object('version',1) || a.quote),
+        'paid_at',(select max(p.paid_at) from ${table('evaluation.payments')} p
+          where p.application_id=a.id and p.status='paid')) end as timing
       from ${table('evaluation.applications')} a left join ${table('public.fce_applications')} l on l.id=a.id
 `;
 }
@@ -78,7 +88,7 @@ export function legacyRecords(sql: Sql | TransactionSql) {
         1,a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,${TOTAL_CENTS},'Pre-Evaluation',false,
         coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',case when e.id is not null then concat(e.study_start_date->>'year','-',e.study_start_date->>'month') else p.start_date end,'end',case when e.id is not null then concat(e.study_end_date->>'year','-',e.study_end_date->>'month') else p.end_date end) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind','document','name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('preeval.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb),
-        coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('preeval.payments')} p where p.application_id=a.id),'[]'::jsonb)
+        coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('preeval.payments')} p where p.application_id=a.id),'[]'::jsonb), null::jsonb
       from ${table('preeval.applications')} a left join ${table('public.aet_core_applications')} l on l.id=a.id
 `;
 }
@@ -114,5 +124,11 @@ export async function projectWorkspaceRecords(sql: Sql | TransactionSql, records
         'unquoted',count(*) filter(where amount is null and status<>'cancelled'),
         'documents',coalesce(sum(jsonb_array_length(files)),0)) from scoped) stats`;
   if (query.export && result.total > pageSize) throw new AppError('export_too_large',413);
-  return { ...result, pageSize, staff: { email: staff.email, offices: allowedOffices, includeUnassigned }, cloudPreview } as WorkspaceSnapshot;
+  const now = new Date();
+  const rows = result.rows.map(({ timing, ...row }: Row) => {
+    const office = row.historical ? undefined : row.office;
+    const completion = timing ? completionFor(row.kind, { ...timing, status: row.status }, now, office) : null;
+    return { ...row, completion };
+  });
+  return { ...result, rows, pageSize, staff: { email: staff.email, offices: allowedOffices, includeUnassigned }, cloudPreview } as WorkspaceSnapshot;
 }

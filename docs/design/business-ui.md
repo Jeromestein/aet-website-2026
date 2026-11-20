@@ -215,11 +215,11 @@ mail remain English. Staff sign-in is separate.
   scroll locally rather than dropping columns.
 - Below Status show estimated timing with a 6px elapsed-time bar, remaining/overdue
   days and muted completion date. Green: >2 calendar days; amber: 0–2; red: overdue.
-  This measures elapsed payment-to-deadline time, not work completed. Preserve the
-  legacy Eastern 1 pm/weekday calculation and saved turnaround snapshots; it is
-  distinct from the new application catalog's office-local cutoff. Do not invent
-  dates for unknown services, missing payment time, completed/cancelled or unsupported
-  cases. Reuse the authorized snapshot and manual refresh.
+  Calculate elapsed time from payment to the estimated deadline. Historical formal
+  orders follow the original 1 pm Eastern cutoff. New formal orders use the saved
+  turnaround and the handling office's 1 pm cutoff. Omit timing for missing payment
+  dates, unknown turnaround, completed or cancelled cases, and other order types.
+  Show the same timing in mobile cards and preserve the existing case notes.
 - Keep drawer width, identity header, service/status badges, six tabs and open/close
   behavior shared across Live/Test. No embedded customer “Application saved” receipt.
   Matching visuals do not enable writes; gate v2 operations on the connected workflow

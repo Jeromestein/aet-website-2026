@@ -34,6 +34,10 @@ applications, imported orders and pre-evaluations. Employees can search, sort,
 page and export the records visible to their offices. Historical pre-evaluations
 require unassigned access because the original records have no office field.
 Historical details are read-only. New submissions use the six-table schema.
+The merged CRM list now has a locally verified deadline bar under Status on
+desktop and mobile. Paid formal orders with a known turnaround show the days
+remaining and estimated completion date. Hosted rollout for historical orders
+requires the [updated read-only history function](../scripts/database/production-crm-history.sql).
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
