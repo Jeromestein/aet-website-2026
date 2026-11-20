@@ -80,7 +80,9 @@ const en = {
   documents: "Supporting documents",
   upload: "Upload document",
   uploadHint:
-    "A clear diploma or degree certificate can help the assessment. PDF, JPG or PNG; up to 20 MB per file, 5 files, 10 pages per PDF, 20 pages total and 30 MB combined. Documents are optional.",
+    "A clear diploma or degree certificate can help the assessment. Documents are optional.",
+  uploadLimits: "Up to 20 MB each · 5 files per application",
+  uploadTotals: "10 pages per PDF · 20 pages and 30 MB total",
   uploadDone: "Documents saved. Your assessment will start automatically.",
   cancelledCheckout:
     "Payment was not completed. Your saved application is still available.",
@@ -205,7 +207,9 @@ const zh: Copy = {
   documents: "补充材料",
   upload: "上传文件",
   uploadHint:
-    "清晰的毕业证或学位证有助于评估。支持 PDF、JPG、PNG；每份不超过 20 MB，最多 5 个文件，每份 PDF 最多 10 页，总计最多 20 页、30 MB。文件为选填。",
+    "清晰的毕业证或学位证有助于评估。文件为选填。",
+  uploadLimits: "单个文件最多 20 MB，每份申请最多 5 个文件",
+  uploadTotals: "每份 PDF 最多 10 页，总计最多 20 页、30 MB",
   uploadDone: "文件已保存，评估将自动开始。",
   cancelledCheckout: "付款未完成，已保存的申请仍可访问。",
   cancel: "取消未付款申请",
@@ -329,7 +333,9 @@ const es: Copy = {
   documents: "Documentos de apoyo",
   upload: "Subir documento",
   uploadHint:
-    "Un diploma legible puede ayudar. PDF, JPG o PNG; hasta 20 MB por archivo, 5 archivos, 10 páginas por PDF y 20 páginas y 30 MB en total. Los documentos son opcionales.",
+    "Un diploma legible puede ayudar. Los documentos son opcionales.",
+  uploadLimits: "Hasta 20 MB por archivo · 5 archivos por solicitud",
+  uploadTotals: "10 páginas por PDF · 20 páginas y 30 MB en total",
   uploadDone: "Documentos guardados. Su evaluación comenzará automáticamente.",
   cancelledCheckout: "El pago no se completó. Su solicitud sigue guardada.",
   cancel: "Cancelar solicitud sin pagar",

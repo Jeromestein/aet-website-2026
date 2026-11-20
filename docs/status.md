@@ -133,6 +133,8 @@ residence country, one education and customer notes in existing canonical fields
 Review includes USD 19.88 and required terms. Successful submission opens the saved
 application's document section; AI waits for upload completion or an explicit
 no-documents choice on a pristine application. Failed uploads cannot be skipped.
+Pre-evaluation and formal Status share the saved-file list, drop zone and upload
+queue. Each flow displays its own file limits and submits to its own upload API.
 Office-scoped CRM shows the saved contact fields and customer notes.
 
 Local checks: 111 focused tests plus 31 six-table integration cases passed,

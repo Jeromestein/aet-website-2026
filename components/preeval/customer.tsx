@@ -1,12 +1,15 @@
 "use client";
 import { UploadRecovery } from "@/components/documents/upload-recovery";
+import { PreevalDocumentUploader } from "./document-uploader";
+import { FileDropzone } from "@/components/documents/upload-panel";
+import documentStyles from "@/components/documents/documents.module.css";
+import { useTranslations } from "next-intl";
 import { ApplicationDate } from "@/components/application-date";
 import { countryOptions, countryLabel } from "@/lib/legacy-application/countries";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   CheckCircle2,
-  FileText,
   LoaderCircle,
   LockKeyhole,
 } from "lucide-react";
@@ -66,6 +69,7 @@ export function Prices({ locale }: { locale: string }) {
   );
 }
 export function ApplicationForm({ locale }: { locale: string }) {
+  const fileCopy = useTranslations("documents");
   const t = copy(locale),
     [step, setStep] = useState(0),
     [busy, setBusy] = useState(false),
@@ -247,19 +251,19 @@ export function ApplicationForm({ locale }: { locale: string }) {
                   </label>
                 ))}
               </div>
-              {step === 1 && <div>
-                <label className={s.field}>{t.documents}
-                  <input type="file" multiple accept="application/pdf,image/jpeg,image/png" onChange={event => {
-                    const selected = Array.from(event.target.files || []);
-                    if (selected.length > 5 || selected.some(file => file.size > 20 * 1024 * 1024 || !['application/pdf','image/jpeg','image/png'].includes(file.type))) {
-                      setError(t.invalid_file); event.target.value = ''; setDocuments([]); return;
-                    }
-                    setDocuments(selected); setError('');
+              {step === 1 && <div className={documentStyles.embedded}><section className={documentStyles.panel}>
+                <h3>{t.documents}</h3>
+                <FileDropzone disabled={busy} accept=".pdf,.jpg,.jpeg,.png" rules={<span>{t.documentsBeforeSubmit}</span>}
+                  onSelect={files => {
+                    const selected = [...documents, ...Array.from(files)];
+                    try { validateDocuments(selected); setDocuments(selected); setError(''); }
+                    catch (e) { setError(errorText(t, (e as Error).message)); }
                   }} />
-                </label>
-                <p className={s.helper}>{t.documentsBeforeSubmit}</p>
-                {documents.map((file,index)=><p key={index}>{file.name}</p>)}
-              </div>}
+                {!!documents.length && <ul className={documentStyles.queue}>{documents.map((file,index) =>
+                  <li key={index} className={documentStyles.headingRow}><strong className={documentStyles.fileName}>{file.name}</strong>
+                    <button type="button" disabled={busy} aria-label={fileCopy('removeNamed',{name:file.name})}
+                      onClick={() => setDocuments(current => current.filter((_,i) => i !== index))}>{fileCopy('remove')}</button></li>)}</ul>}
+              </section></div>}
             </>
           ) : (
             <>
@@ -344,9 +348,7 @@ export function ApplicationResult({
     [loadError, setLoadError] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(""),
-    [notice, setNotice] = useState(""),
-    [cancelled, setCancelled] = useState(false),
-    fileInput = useRef<HTMLInputElement>(null);
+    [cancelled, setCancelled] = useState(false);
   async function load() {
     try {
       setApp(await api("applications/" + id));
@@ -394,27 +396,6 @@ export function ApplicationResult({
       setError(errorText(t, (e as Error).message));
     } finally {
       setBusy("");
-    }
-  }
-  const uploading = useRef(false);
-  async function upload(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (uploading.current || busy) return;
-    uploading.current = true;
-    setBusy("upload");
-    setError("");
-    setNotice("");
-    try {
-      await uploadDocuments(id, Array.from(fileInput.current?.files || []), api);
-      if (fileInput.current) fileInput.current.value = "";
-      setNotice(t.uploadDone);
-      await load();
-    } catch (e) {
-      setError(errorText(t, (e as Error).message));
-    } finally {
-      await load();
-      setBusy("");
-      uploading.current = false;
     }
   }
   if (!app)
@@ -467,11 +448,6 @@ export function ApplicationResult({
       {(error || loadError) && (
         <p role="alert" className={s.error}>
           {error || loadError}
-        </p>
-      )}
-      {notice && (
-        <p role="status" className={s.success}>
-          {notice}
         </p>
       )}
       <section className={s.card}>
@@ -552,41 +528,13 @@ export function ApplicationResult({
       <section id="documents" className={s.card} style={{scrollMarginTop: 110}}>
         <h2>{locale === "en" ? "Supporting Documents" : t.documents}</h2>
         <p className={s.helper}>{t.uploadHint}</p>
-        <ul className={s.files}>
-          {app.files.map((f: any) => (
-            <li key={f.id}>
-              <FileText size={18} />
-              <span>{f.name}</span>
-              {f.state === "ready" ? (
-                <a href={"/api/pre-evaluation/files/" + f.id + "?applicationId=" + encodeURIComponent(id)}>{t.download}</a>
-              ) : (
-                <span className={s.badge}>{label(f.state)}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-        {app.can_skip_documents && <button type="button" className={s.secondary} disabled={!!busy} onClick={() => action('uploads-complete', {withoutDocuments:true})}>{t.skipDocuments}</button>}
-        <UploadRecovery endpoint={`/api/pre-evaluation/applications/${id}/upload-recovery`}
-          completeEndpoint={`/api/pre-evaluation/applications/${id}/uploads-complete`} revision={app} disabled={!!busy}
-          onBusyChange={value => setBusy(value ? 'recovery' : '')} onChange={() => { setError(''); void load(); }} />
-        {app.status !== "cancelled" && (
-          <form onSubmit={upload} className={s.form}>
-            <label className={s.field}>
-              {t.upload}
-              <input
-                ref={fileInput}
-                type="file"
-                name="file"
-                multiple
-                accept=".pdf,.jpg,.jpeg,.png"
-                required
-              />
-            </label>
-            <button className={s.secondary} disabled={!!busy}>
-              {busy === "upload" ? t.loading : t.upload}
-            </button>
-          </form>
-        )}
+        <PreevalDocumentUploader key={id} id={id} locale={locale} files={app.files} canUpload={app.status !== 'cancelled'}
+          busy={busy} setBusy={setBusy} reload={load} api={api}>
+          {app.can_skip_documents && <button type="button" className={s.secondary} disabled={!!busy} onClick={() => action('uploads-complete', {withoutDocuments:true})}>{t.skipDocuments}</button>}
+          <UploadRecovery endpoint={`/api/pre-evaluation/applications/${id}/upload-recovery`}
+            completeEndpoint={`/api/pre-evaluation/applications/${id}/uploads-complete`} revision={app} disabled={!!busy}
+            onBusyChange={value => setBusy(value ? 'recovery' : '')} onChange={() => { setError(''); void load(); }} />
+        </PreevalDocumentUploader>
       </section>
       <div className={s.buttons}>
         <button

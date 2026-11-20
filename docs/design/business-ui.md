@@ -121,6 +121,10 @@ production payment link or an invented deadline. Clearly label test payments;
 keep staff notes and unreleased reports private. Implementation scope comes from
 [current status](../status.md), not the older intake-only milestone.
 
+Use the same uploaded-file list, drop zone, queue and upload action on customer
+Status and the pre-evaluation result page. Each flow displays its own accepted
+formats and limits. Ready pre-evaluation files link to the authorized download.
+
 Document selection/upload actions are orange; saved rows, checkmarks and completion
 feedback are green. Keep file limits and office help compact/readable on phones.
 Completion audio supplements visible feedback. Preserve the saved application's

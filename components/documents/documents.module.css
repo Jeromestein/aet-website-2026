@@ -44,8 +44,9 @@
 .embedded .primary { width: 100%; }
 
 /* Distinct action, saved, and help states for the customer uploader. */
-.savedName { display: flex; align-items: flex-start; gap: 9px; }
-.savedName > svg { flex-shrink: 0; color: #16804a; margin-top: 3px; }
+.listName { display: flex; align-items: flex-start; gap: 9px; }
+.listName > svg { flex-shrink: 0; margin-top: 3px; }
+.savedIcon { color: #16804a; }
 .rules { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: 0 0 14px; font-size: 12px; color: #626e79; line-height: 1.6; }
 .rules span + span { border-left: 1px solid #d8dde0; padding-left: 12px; }
 .dropzone { padding: 23px; border-color: #e4a68a; background: #fffaf6; }

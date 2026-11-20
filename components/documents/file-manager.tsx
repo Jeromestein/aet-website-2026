@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check, CircleCheck, UploadCloud, Info } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
-import { CHUNK_SIZE, ACCEPTED_FILES, formatFileSize, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
+import { useTranslations } from 'next-intl';
+import { CHUNK_SIZE, ACCEPTED_FILES, DocumentError, validateFile, type ErrorCode, type FileEntry, type FilePage } from '@/lib/dropbox/shared';
 import styles from './documents.module.css';
 import type { UploadRecovery as Recovery } from '@/lib/preeval/upload-recovery';
+import { UploadedFileRow, UploadedFilesPanel, UploadPanel, UploadQueueRow } from './upload-panel';
 import { UploadRecovery } from './upload-recovery';
 import { contentHash, base64 } from '@/lib/dropbox/upload-client';
 
@@ -38,7 +38,6 @@ function delay(ms: number, signal: AbortSignal) {
 /** showPreviewLink is for a trusted staff host, not a customer-controlled URL flag. */
 export function FileManager({ token, canUpload = true, showPreviewLink = false, onBusyChange, embedded = false }: { embedded?: boolean; token: string; canUpload?: boolean; showPreviewLink?: boolean; onBusyChange?: (busy: boolean) => void }) {
   const t = useTranslations('documents');
-  const locale = useLocale();
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [listBusy, setListBusy] = useState(false);
@@ -50,12 +49,10 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
   const [recoveryRevision, setRecoveryRevision] = useState(0);
   const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [recoveryPending, setRecoveryPending] = useState(true);
-  const [dragging, setDragging] = useState(false);
   const recovery = useRef<Recovery | null>(null);
   const cancelled = useRef(new Set<string>());
   const active = useRef<AbortController | null>(null);
   const listController = useRef<AbortController | null>(null);
-  const input = useRef<HTMLInputElement>(null);
   const mounted = useRef(true);
   const completionAudio = useRef<AudioContext | null>(null);
 
@@ -89,7 +86,6 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
       setSelectionError(null);
       setQueue(previous => [...previous, ...incoming.map(file => ({ id: crypto.randomUUID(), file, status: 'pending' as const, percent: 0 }))]);
     } catch (error) { setSelectionError(errorCode(error)); }
-    if (input.current) input.current.value = '';
   }
   function update(id: string, patch: Partial<QueueFile>) {
     setQueue(previous => previous.map(row => row.id === id ? { ...row, ...patch } : row));
@@ -238,64 +234,33 @@ export function FileManager({ token, canUpload = true, showPreviewLink = false, 
     update(row.id, { status: 'cancelled' });
   }
   const allSaved = !busy && !recoveryBusy && !recoveryPending && !batchError && queue.length > 0 && queue.every(row => row.status === 'success');
-  const formatSize = (size: number) => formatFileSize(size, locale);
   return <div className={embedded ? `${styles.manager} ${styles.embedded}` : styles.manager} aria-busy={busy}>
-    <section aria-labelledby="uploaded-title" className={styles.panel}>
-      <div className={styles.headingRow}><h2 id="uploaded-title">{t('files')}</h2>
-        <button type="button" onClick={() => { void refresh(); setRecoveryRevision(value => value + 1); }} disabled={listBusy}>{t('refresh')}</button></div>
+    <UploadedFilesPanel disabled={listBusy} onRefresh={() => { void refresh(); setRecoveryRevision(value => value + 1); }}>
       {listBusy && <p role="status">{t('loading')}</p>}
       {listError && <p className={styles.error} role="alert">{t(`errors.${listError}`)}</p>}
       {!listBusy && !listError && !files.length && <p>{t('empty')}</p>}
-      {!!files.length && <ul className={styles.files}>{files.map(file => <li key={file.id}>
-        <div className={`${styles.fileName} ${styles.savedName}`}><CircleCheck size={19} aria-hidden="true"/>{showPreviewLink && file.pathDisplay
+      {!!files.length && <ul className={styles.files}>{files.map(file => <UploadedFileRow key={file.id} size={file.size} uploadedAt={file.uploadedAt}
+        name={showPreviewLink && file.pathDisplay
           ? <a href={`https://www.dropbox.com/preview${file.pathDisplay.split('/').map(encodeURIComponent).join('/')}`} target="_blank" rel="noopener noreferrer">{file.name}</a>
-          : <strong>{file.name}</strong>}</div>
-        <div className={styles.fileDetails}><span>{formatSize(file.size)}</span>
-          <time dateTime={file.uploadedAt}>{new Date(file.uploadedAt).toLocaleString(locale)}</time></div>
-      </li>)}</ul>}
+          : file.name} />)}</ul>}
       {nextCursor && <button type="button" disabled={listBusy} onClick={() => void refresh(nextCursor)}>{t('more')}</button>}
-    </section>
+    </UploadedFilesPanel>
     {canUpload && <UploadRecovery endpoint="/api/dropbox/upload-recovery" completeEndpoint="/api/dropbox/upload-batch" token={token}
       revision={recoveryRevision} disabled={busy || recoveryBusy} onList={value => { recovery.current = value; setRecoveryPending(value.pending); }} onBusyChange={value => { setRecoveryBusy(value); onBusyChange?.(value); }}
       onAbandon={name => setQueue(previous => previous.filter(row => row.file.name !== name || !['failed', 'cancelled'].includes(row.status)))}
       onChange={() => { setBatchError(null); void refresh(); }} />}
-    {canUpload ? <section className={styles.panel} aria-labelledby="upload-title">
-      <h2 id="upload-title">{t('uploadTitle')}</h2>
-      <div id="file-rules" className={styles.rules}><span>PDF · JPG · PNG · DOC(X)</span><span>{t('limits')}</span><span>{t('chunks')}</span></div>
-      <div className={`${styles.dropzone} ${dragging ? styles.dragging : ''}`}
-        onDragOver={event => { event.preventDefault(); if (!busy) setDragging(true); }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={event => { event.preventDefault(); setDragging(false); select(event.dataTransfer.files); }}>
-        <UploadCloud className={styles.uploadIcon} size={32} aria-hidden="true"/>
-        <p>{t('drop')}</p>
-        <button type="button" className={styles.chooseButton} disabled={busy || recoveryBusy} onClick={() => input.current?.click()}>{t('choose')}</button>
-        <input hidden id="document-files" ref={input} type="file" multiple accept={ACCEPTED_FILES} disabled={busy || recoveryBusy}
-          aria-describedby="file-rules" aria-label={t('choose')} onChange={event => select(event.target.files)} />
-      </div>
-      <aside className={styles.uploadHelp}>
-        <Info size={17} aria-hidden="true"/>
-        <div><p>{t('retryHelp')}</p><div className={styles.contacts}>
-          <span><b>{t('westOffices')}</b><a href="mailto:ca2@aet21.com">ca2@aet21.com</a></span>
-          <span><b>{t('otherOffices')}</b><a href="mailto:info@americantranslationservice.com">info@americantranslationservice.com</a></span>
-        </div></div>
-      </aside>
-      {allSaved && <div className={styles.successBanner} role="status"><CircleCheck size={26} aria-hidden="true"/><div><strong>{t('complete')}</strong><p>{t('completeDetail', {count: queue.length})}</p></div></div>}
+    {canUpload ? <UploadPanel accept={ACCEPTED_FILES} disabled={busy || recoveryBusy} onSelect={select}
+      rules={<><span>PDF · JPG · PNG · DOC(X)</span><span>{t('limits')}</span><span>{t('chunks')}</span></>}
+      uploading={busy} completed={allSaved ? queue.length : 0} canSubmit={!!batchError || queue.some(row => row.status !== 'success')} onUpload={upload}>
       {batchError && <p className={styles.error} role="alert">{t(`errors.${batchError}`)}</p>}
       {selectionError && <p className={styles.error} role="alert">{t(`errors.${selectionError}`)}</p>}
-      {!!queue.length && <ul className={styles.queue}>{queue.map(row => <li key={row.id} className={row.status === 'success' ? styles.successRow : undefined}>
-        <div className={styles.headingRow}><strong className={styles.fileName}>{row.file.name}</strong>
-          {!busy ? <button type="button" disabled={recoveryBusy} onClick={() => void remove(row)} aria-label={t('removeNamed', { name: row.file.name })}>{t('remove')}</button>
-            : ['pending', 'hashing', 'uploading'].includes(row.status) && <button type="button" onClick={() => cancel(row)} aria-label={t('cancelNamed', { name: row.file.name })}>{t('cancel')}</button>}</div>
-        <div className={styles.fileDetails}><span>{formatSize(row.file.size)}</span><span role="status" className={row.status === 'success' ? styles.successBadge : undefined}>{row.status === 'success' && <Check size={15} aria-hidden="true"/>}{t(`status.${row.status}`)} {row.percent > 0 && `${row.percent}%`}</span></div>
-        <progress value={row.percent} max={100} aria-label={t('progressNamed', { name: row.file.name })} />
+      {!!queue.length && <ul className={styles.queue}>{queue.map(row => <UploadQueueRow key={row.id} file={row.file} status={row.status} percent={row.percent}
+        controls={!busy ? <button type="button" disabled={recoveryBusy} onClick={() => void remove(row)} aria-label={t('removeNamed', { name: row.file.name })}>{t('remove')}</button>
+          : ['pending', 'hashing', 'uploading'].includes(row.status) && <button type="button" onClick={() => cancel(row)} aria-label={t('cancelNamed', { name: row.file.name })}>{t('cancel')}</button>}>
         {row.error && <p className={styles.error} role="alert">{t(`errors.${row.error}`)}</p>}
         {row.archiveFailed && <p className={styles.warning} role="status">{t('archiveFailed')}</p>}
-      </li>)}</ul>}
-      <button type="button" className={`${styles.primary} ${allSaved ? styles.completeButton : ''}`} disabled={busy || recoveryBusy || (!batchError && !queue.some(row => row.status !== 'success'))} onClick={() => void upload()}>
-        {allSaved && <Check size={19} aria-hidden="true"/>}{busy ? t('uploading') : allSaved ? t('complete') : t('upload')}
-      </button>
-      {!allSaved && <p className={styles.note}>{t('keepOpen')}</p>}
-    </section> : <p className={styles.panel} role="status">{t('errors.readOnly')}</p>}
+      </UploadQueueRow>)}</ul>}
+    </UploadPanel> : <p className={styles.panel} role="status">{t('errors.readOnly')}</p>}
   </div>;
 }
 

@@ -3,7 +3,7 @@ import { contentHash, base64 } from '../dropbox/upload-client';
 import { MAX_FILE_BYTES } from './domain';
 
 type UploadReply = { uploadKey?: string; offset?: number; complete?: boolean };
-type Api = (path: string, body: unknown) => Promise<UploadReply>;
+export type UploadApi = (path: string, body: unknown) => Promise<UploadReply>;
 export function validateDocuments(files: File[]) {
   if (!files.length || files.length > 5) throw new Error('file_limit');
   for (const file of files) {
@@ -12,9 +12,11 @@ export function validateDocuments(files: File[]) {
     catch { throw new Error('invalid_file'); }
   }
 }
+export type UploadPhase = 'hashing' | 'uploading' | 'saving' | 'success' | 'failed';
 /** Both customer entry points use bounded requests, including small files.
  * Only replay append/finish: the server fences offsets and committed file IDs. */
-export async function uploadDocuments(id: string, files: File[], api: Api) {
+export async function uploadDocuments(id: string, files: File[], api: UploadApi,
+  onProgress?: (file: File, phase: UploadPhase, percent: number) => void) {
   validateDocuments(files);
   const endpoint = `applications/${id}/file-upload`;
   const signal = new AbortController().signal;
@@ -30,16 +32,22 @@ export async function uploadDocuments(id: string, files: File[], api: Api) {
     let key: string | undefined;
     let finishing = false;
     try {
+      onProgress?.(file, 'hashing', 0);
       const started = await api(endpoint, { action: 'start', fileName: file.name, fileSize: file.size, mime: file.type, contentHash: await contentHash(file, signal) });
-      if (started.complete) continue;
+      if (started.complete) { onProgress?.(file, 'success', 100); continue; }
+      onProgress?.(file, 'uploading', 0);
       key = started.uploadKey;
       for (let offset = 0; offset < file.size; offset += CHUNK_SIZE) {
         const next = await retry({ action: 'append', uploadKey: key, chunkIndex: Math.floor(offset / CHUNK_SIZE), chunkData: await base64(file.slice(offset, offset + CHUNK_SIZE)) });
         key = next.uploadKey;
+        onProgress?.(file, 'uploading', Math.floor(Math.min(file.size, offset + CHUNK_SIZE) / file.size * 100));
       }
+      onProgress?.(file, 'saving', 100);
       finishing = true;
       await retry({ action: 'finish', uploadKey: key });
+      onProgress?.(file, 'success', 100);
     } catch (error) {
+      onProgress?.(file, 'failed', 0);
       // A lost finish response may mean the file is already saved. A subsequent
       // start resolves that by content hash; never cancel a possible commit.
       if (key && !finishing) await api(endpoint, { action: 'cancel', uploadKey: key }).catch(() => {});
