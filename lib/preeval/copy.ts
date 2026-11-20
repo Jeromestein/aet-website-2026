@@ -90,7 +90,7 @@ const en = {
   cancelPrompt: "Cancel this unpaid application?",
   new: "New application",
   logout: "Sign out",
-  formal: "Try To Continue To Credential Evaluation",
+  formal: "Continue To Credential Evaluation",
   learnAboutEvaluation: "Learn More About Credential Evaluation",
   genericError: "We could not complete this action. Please try again.",
   loading: "Please wait…",
