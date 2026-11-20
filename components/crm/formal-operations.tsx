@@ -3,6 +3,7 @@ import {useState,type FormEvent} from 'react';
 import {FileText} from 'lucide-react';
 import type {ApplicationRecord} from '@/lib/evaluation-application/workflow';
 import {date,label,money} from '@/lib/crm/contracts';
+import { FormalPaymentSummary } from './formal-payment-summary';
 import {Badge,errorMessage,request} from './ui';
 import s from './crm.module.css';
 
@@ -41,9 +42,9 @@ export function FormalOperations({record,tab,onSaved}:{record:FormalRecord;tab:s
    {record.files.filter(f=>f.kind==='report').map(f=><div className={s.detailDocument} key={f.id}><FileText size={22}/><div><strong>{f.name}</strong><Badge tone={record.released_file_id===f.id?'green':'neutral'}>{record.released_file_id===f.id?'Released':f.input_version!==record.input_version?'Outdated draft':'Draft'}</Badge><a href={base+'/files/'+f.id}>Download PDF</a></div>{record.released_file_id!==f.id&&<button className={s.smallButton} disabled={record.status!=='processing'||record.payment_status!=='paid'||f.input_version!==record.input_version} onClick={()=>void run('staff',{action:'release',fileId:f.id,version:record.version},'Report published. Customer notification queued.')}>Release report</button>}</div>)}
    </section>}
    {tab==='payment'&&<>
-    <div className={s.paymentSummary}><span>Current total</span><strong>{record.total===null?'Awaiting quote':money(record.total)}</strong><Badge tone={record.payment_status==='paid'?'green':'amber'}>{label(record.payment_status)}</Badge></div>
+    <FormalPaymentSummary key={record.id} record={record} onSaved={onSaved} />
     {record.confirmed_quote&&<p>{record.confirmed_quote.explanation}</p>}
-    {record.quote.needsQuote&&record.payment_status==='unpaid'&&!locked&&<section><h3>Confirm quote</h3><p className={s.helperText}>Original estimate: {money(record.quote.min)} – {money(record.quote.max)}. Include any separately quoted translation fee below.</p><form className={s.form} key={'quote'+record.version} onSubmit={e=>form(e,'quote')}>
+    {record.quote.needsQuote&&record.confirmed_quote?.kind!=='adjusted'&&(record.canEditAmount??(record.payment_status==='unpaid'&&!locked))&&<section><h3>Confirm quote</h3><p className={s.helperText}>Original estimate: {money(record.quote.min)} – {money(record.quote.max)}. Include any separately quoted translation fee below.</p><form className={s.form} key={'quote'+record.version} onSubmit={e=>form(e,'quote')}>
      <label>Website-priced services (USD)<input name="base" type="number" min={record.quote.min/100} max={record.quote.max/100} step="0.01" defaultValue={(record.confirmed_quote?.base??record.quote.min)/100} required/></label>
      <label>Additional translation services (USD)<input name="additional" type="number" min={record.data.services.translation?0.01:0} max={record.data.services.translation?9999.99:0} step="0.01" defaultValue={(record.confirmed_quote?.additional??0)/100} required/></label>
      <label>Explanation<textarea name="explanation" minLength={3} maxLength={2000} defaultValue={record.confirmed_quote?.explanation||''} required/></label><button className={s.secondaryButton}>Confirm quote</button>

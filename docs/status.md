@@ -37,6 +37,11 @@ Historical details are read-only. New submissions use the six-table schema.
 See the [active checklist](migration-checklist.md) for tasks and
 [documentation index](README.md) for module guides.
 
+On main Preview, office-authorized staff can edit a formal application's final
+amount in Payment until its first checkout. Customer Status, the fee update
+email and Stripe Sandbox showed the revised amount in the November 20 test.
+See the [Preview CRM](https://aet-main-preview-meiyutechs-projects.vercel.app/admin/CRM?source=preview).
+
 The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
 the default is closed, independently of customer application release. See
 [email gallery configuration](email-templates.md#gallery-release-switch).

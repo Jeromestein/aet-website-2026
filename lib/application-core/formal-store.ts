@@ -75,12 +75,18 @@ export async function submitFormal(data:Row,quote:Row,requestId:string,requestHa
     return {id,created:true};
   });
 }
+export function canEditFormalAmount(status: string, paymentStatus: string, hasPaymentAttempt: boolean) {
+  return status !== 'cancelled' && status !== 'completed' && paymentStatus === 'unpaid' && !hasPaymentAttempt;
+}
 export async function formalApplication(id:string,admin:boolean) {
   const row=await readFormal(id);
   const files=await db()`select id,kind,name,bytes,input_version,created_at from (${formalFiles(db())}) f where application_id=${id} and state='ready' order by created_at`;
   row.files=files.filter(f=>admin||f.kind==='document'||canDownloadReport(row as never,f.id));
   row.total=payableTotal(row as never);
-  if(admin){row.payments=await db()`select id,session_id,amount_cents,status,created_at from (${formalPayments(db())}) p where application_id=${id} order by created_at desc`;row.audit=[];}
+  if(admin){row.payments=await db()`select id,session_id,amount_cents,status,created_at from (${formalPayments(db())}) p where application_id=${id} order by created_at desc`;
+    row.canEditAmount=canEditFormalAmount(row.status,row.payment_status,row.payments.length>0);
+    row.audit=[];
+  }
   else {delete row.staff_notes;delete row.notification_state;delete row.submitted_snapshot;delete row.request_hash;delete row.result;row.released_file_id=row.files.find((f:Row)=>f.kind==='report')?.id||null;}
   return row;
 }
