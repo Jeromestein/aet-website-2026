@@ -45,7 +45,7 @@ export default function StaffAuthForm({
       <div className={s.eyebrow}>
         <LockKeyhole size={15} /> AET STAFF
       </div>
-      <h1 id="staff-title">Welcome back</h1>
+      <h1 id="staff-title">Welcome Back</h1>
       <p className={s.intro}>
         Sign in to manage applications and support your clients.
       </p>

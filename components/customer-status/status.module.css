@@ -17,3 +17,33 @@
 .statusActions button { min-height: 44px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--action-blue); font: inherit; cursor: pointer; }
 .statusActions button:disabled { opacity: .55; cursor: not-allowed; }
 .statusActions button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.paymentActions {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 22px;
+}
+.paymentActions .portal { margin: 0; min-width: 0; }
+.refreshPayment {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 48px;
+  min-height: 48px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--action-blue);
+  cursor: pointer;
+}
+.refreshPayment:hover:enabled { background: var(--blue); border-color: var(--accent); }
+.refreshPayment:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.refreshPayment:disabled { opacity: .6; cursor: not-allowed; }
+@media (prefers-reduced-motion: no-preference) {
+  .refreshPayment[aria-busy="true"] svg { animation: paymentRefreshSpin 1s linear infinite; }
+  @keyframes paymentRefreshSpin { to { transform: rotate(360deg); } }
+}
+@media (max-width: 700px) {
+  .paymentActions .portal { padding-inline: 12px; }
+}

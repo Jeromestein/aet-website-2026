@@ -10,7 +10,7 @@ import s from './status.module.css';
 import { FormalWorkflow } from './formal-workflow';
 import { SavedServiceDetails, ConfirmationEmail } from './saved-details';
 import countries from '@/lib/legacy-application/countries.json';
-export function StatusSections({record,locale,onBusyChange}:{record:CustomerStatus;locale:Locale;onBusyChange?:(busy:boolean)=>void}) {
+export function StatusSections({record,locale,onBusyChange,onRefreshPayment}:{record:CustomerStatus;locale:Locale;onRefreshPayment:()=>Promise<void>;onBusyChange?:(busy:boolean)=>void}) {
  const t=sectionsCopy[locale];
  const documents=useTranslations('documents');
  const [method,setMethod]=useState('zelle'),[showZelle,setShowZelle]=useState(false);
@@ -44,7 +44,7 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
    {record.details?<SavedServiceDetails record={record} locale={locale}/>:displayFields([t.delivery,t.additional],[t.notConnected,t.notConnected])}
    {!record.details&&<div className={s.amountRow}><span>{t.total}</span><strong>{money}</strong></div>}{!record.workflow?.confirmedQuote&&<p>{t.quote}</p>}
   </section>
-  {record.workflow?<FormalWorkflow record={record} locale={locale} part="payment"/>:<section className={s.card} aria-labelledby="payment-heading"><div className={s.sectionHeading}><CreditCard size={24}/><h2 id="payment-heading">{t.payment}</h2>{record.payment!=='paid'&&<span className={s.previewBadge}>{t.soon}</span>}</div>
+  {record.workflow?<FormalWorkflow record={record} locale={locale} part="payment" onRefreshPayment={onRefreshPayment}/>:<section className={s.card} aria-labelledby="payment-heading"><div className={s.sectionHeading}><CreditCard size={24}/><h2 id="payment-heading">{t.payment}</h2>{record.payment!=='paid'&&<span className={s.previewBadge}>{t.soon}</span>}</div>
    {record.payment==='paid'?<div className={s.paidState}><CheckCircle2 size={26}/><div><strong>{t.paid}</strong><p>{t.paidNote}</p></div></div>:<>
     <p className={s.sectionNotice}><Info size={17}/>{portal?t.paymentNotice:({en:'Payment is not connected for this application. No payment is requested here.',zh:'此申请尚未接通付款，此处无需支付。',es:'El pago no está conectado para esta solicitud. No se solicita ningún pago aquí.'}[locale])}</p>
     {showZelle?<div className={s.zellePanel}><h3>{t.zelleDetails}</h3><p>{t.zelleHelp}</p>{openPortal()}<button className={s.backButton} type="button" onClick={()=>setShowZelle(false)}>{t.back}</button></div>:<>

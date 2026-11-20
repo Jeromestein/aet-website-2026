@@ -10,7 +10,7 @@ type Run = {
 };
 export default function AnalysisHistory({ runs }: { runs: Run[] }) {
   if (!runs.length) return null;
-  return <section><h3>AI analysis history</h3>{runs.map(run => <details key={run.id}>
+  return <section><h3>AI Analysis History</h3>{runs.map(run => <details key={run.id}>
     <summary>{run.state} · {run.model || 'Legacy assessment'} · {new Date(run.created_at).toLocaleString('en-US')}</summary>
     <p className={s.helperText}>Input version {run.input_version} · {run.prompt_version || 'Legacy prompt'} · {run.output?.basis?.replaceAll('_', ' ') || 'Assessment'}</p>
     {run.error && <p className={s.formError}>{run.error}</p>}

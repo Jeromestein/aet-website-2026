@@ -61,7 +61,7 @@
     },
     "la": {
       "name": "Los Angeles Office",
-      "title": "Los Angeles Office – HQ in California and west coast"
+      "title": "Los Angeles Office – HQ in California and West Coast"
     },
     "sf": {
       "name": "San Francisco Office",
@@ -81,7 +81,7 @@
     }
   },
   "other": {
-    "title": "Other Contact (No certified translation/credential evaluation)",
+    "title": "Other Contact (No Certified Translation/Credential Evaluation)",
     "nyc": "NYC Contact",
     "taiyuan": "Taiyuan Contact",
     "mobile": "Cell"

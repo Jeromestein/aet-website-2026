@@ -1,19 +1,19 @@
 import type { Locale } from '@/i18n/routing';
 
 const en = {
-  title: 'Choose your evaluation service', hint: 'Choose one evaluation service, then select a processing time.', sampleReport: 'View Evaluation Sample',
+  title: 'Choose Your Evaluation Service', hint: 'Choose one evaluation service, then select a processing time.', sampleReport: 'View Evaluation Sample',
   compareServices: 'Compare document-by-document and course-by-course evaluations',
   turnaround: 'Processing time', selectTier: 'Choose a processing time', qualifications: 'Qualifications to evaluate',
   qualificationHint: 'Select from the education records above.', included: 'One qualification is included in the base fee.',
   additional: 'Each additional qualification: {amount}', count: '{count} qualification(s)',
   translation: 'I also need document translation', translationHint: 'Translation is quoted separately after we review your documents.',
   selectionError: 'Choose one evaluation service.', tierError: 'Choose an available processing time.', educationError: 'Select at least one of the education records above.',
-  selectedServices: 'Selected services', fees: 'Fee estimate', subtotal: 'Estimated subtotal (USD)',
+  selectedServices: 'Selected services', fees: 'Fee Estimate', subtotal: 'Estimated subtotal (USD)',
   feeScope: 'Includes the selected evaluation, report and shipping. Payment processing fees are not included.',
   pending: 'Additional services await a quote; they are not included in the subtotal.', awaitingQuote: 'Awaiting quote',
   incomplete: 'Complete the processing time and qualification selections to calculate these fees.', empty: 'Your selected services and fees will appear here.',
   baseFee: 'Base service fee', additionalFees: 'Additional qualifications', serviceTotal: 'Service subtotal',
-  linkedEducation: 'Qualifications included', reviewTitle: 'Services and fees',
+  linkedEducation: 'Qualifications included', reviewTitle: 'Services and Fees',
 };
 type EvaluationCopy = { [Key in keyof typeof en]: string };
 const zh: EvaluationCopy = {

@@ -74,7 +74,7 @@ export default async function Page({
           </ol>
           <section className={landing.offer} aria-labelledby="preeval-price-heading">
             <div className={landing.offerHeading}>
-              <h2 id="preeval-price-heading">PRE-EVALUATION</h2>
+              <h2 id="preeval-price-heading">{locale === "en" ? "Pre-Evaluation" : "PRE-EVALUATION"}</h2>
               <div className={landing.price}>$19 <small>USD</small></div>
             </div>
             <Prices locale={locale} />

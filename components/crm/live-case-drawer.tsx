@@ -43,7 +43,7 @@ export default function LiveCaseDrawer({ target, initial, initialTab = 'overview
         statusHref={row.kind === 'formal' ? 'https://app.americantranslationservice.com/status?applicationId=' + encodeURIComponent(row.id) : undefined}
         tabs={tabs} tab={tab} onTab={setTab}/>
       <div className={s.detailContent}>
-        {tab === 'overview' && <section><h3>Client information</h3><dl className={s.detailGrid}>
+        {tab === 'overview' && <section><h3>Client Information</h3><dl className={s.detailGrid}>
           <div><dt>Evaluee name</dt><dd>{row.name}</dd></div>
           <div><dt>Email</dt><dd>{row.email || 'Not recorded'}</dd></div>
           <div><dt>Office</dt><dd>{row.office || 'Unassigned'}</dd></div>
@@ -53,13 +53,13 @@ export default function LiveCaseDrawer({ target, initial, initialTab = 'overview
           {detail?.row.street_address && <div><dt>Address</dt><dd>{[detail.row.street_address,detail.row.street_address2,detail.row.city,detail.row.region,detail.row.zip_code,detail.row.country].filter(Boolean).join(', ')}</dd></div>}
           {(detail?.row.purpose_other || detail?.row.notes) && <div><dt>Notes</dt><dd>{detail.row.purpose_other || detail.row.notes}</dd></div>}
         </dl></section>}
-        {tab === 'education' && <section><h3>Education history</h3>{detail ? <EducationHistory educations={detail.educations}/> :
+        {tab === 'education' && <section><h3>Education History</h3>{detail ? <EducationHistory educations={detail.educations}/> :
           row.educations.length ? row.educations.map((e,i) => <article key={i} className={s.educationHistoryCard}><strong>{e.degree}</strong><p>{[e.school,e.country].filter(Boolean).join(' · ')}</p><p>{[e.start,e.end].filter(Boolean).join(' – ')}</p></article>) : <p>No education records found.</p>}</section>}
         {tab === 'service' && <section>{detail && row.kind === 'formal' ? <SelectedServices application={detail.row}/> :
-          <><h3>Requested service</h3><p>{row.service}</p><p>{label(row.purpose)}</p></>}
+          <><h3>Requested Service</h3><p>{row.service}</p><p>{label(row.purpose)}</p></>}
           {row.kind === 'preeval' && detail?.educations.map(e => e.ai_output ? <div key={e.id}><h3>{e.school_name}</h3><p>{typeof e.ai_output === 'string' ? e.ai_output : JSON.stringify(e.ai_output)}</p></div> : null)}
         </section>}
-        {tab === 'payment' && <section><h3>Recorded payment</h3><p>{recordedAmount} · {label(row.payment_status)}</p>
+        {tab === 'payment' && <section><h3>Recorded Payment</h3><p>{recordedAmount} · {label(row.payment_status)}</p>
           {detail?.row.payment_id && <p>{detail.row.payment_id} · {date(detail.row.paid_at || '')}</p>}
           {row.payments.map(p => <div className={s.detailPayment} key={p.id}><span>{label(p.status)} · {date(p.created_at)}</span><strong>{money(p.amount_cents)}</strong></div>)}
         </section>}

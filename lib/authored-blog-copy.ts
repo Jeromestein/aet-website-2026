@@ -6,7 +6,7 @@ export const authoredBlogCopy = {
     reviewed: 'Official requirements checked', article: 'Article',
     phone: 'Call {phone}', contact: 'Contact AET', apply: 'Apply for Evaluation',
     ai: {
-      title: 'Explore this article with AI', google: 'Google AI Mode',
+      title: 'Explore This Article With AI', google: 'Google AI Mode',
       open: 'Open {platform} in a new tab',
       hint: 'Copy the question for Claude or Grok, or if your chosen tool does not fill it in. Sign-in may be required.',
       view: 'View or copy the question', question: 'Question and article link', copy: 'Copy question',

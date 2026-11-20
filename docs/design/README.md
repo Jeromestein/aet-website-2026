@@ -76,6 +76,25 @@ The general application's green forward/black Back buttons are an explicit
 
 ## Typography and spacing
 
+### English heading capitalization
+
+Use Title Case for authored English page, section, dialog and card titles on
+the public website, in application and Status flows, in CRM and in branded
+emails. Capitalize the first and last word and major words, including verbs
+and pronouns. Lowercase articles, coordinating conjunctions, infinitive “to”
+and short prepositions such as “at”, “by”, “for”, “in”, “of” and “on” in
+the middle of a title. Examples include “Check Your Evaluation Status”,
+“Documents and Payment” and “What’s Next?”.
+
+Write the capitalization in the English copy source. Use sentence case for
+complete reader questions in FAQs and articles, instructions, body copy and
+status messages. Buttons, navigation, field labels and badges keep their
+established UI wording. Preserve proper names, acronyms, approved service
+names, customer-entered values, quotations and imported editorial titles.
+Chinese and Spanish follow their own language conventions.
+
+### Type scale
+
 Host fonts locally with `font-display: swap` and retain licenses. Values below
 are CSS-pixel targets at a 16px root; use fluid rem limits without shrinking the
 root. Poppins uses Arial/sans-serif fallback; decorative display roles are defined

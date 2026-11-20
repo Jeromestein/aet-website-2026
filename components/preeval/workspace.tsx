@@ -119,7 +119,7 @@ export default function PreEvaluationWorkspace() {
       </div>
       <p className={s.eyebrow}>AET WORKSPACE</p>
       <h1 className={s.title}>
-        Pre-evaluations<span style={{ color: "var(--orange)" }}>.</span>
+        Pre-Evaluations<span style={{ color: "var(--orange)" }}>.</span>
       </h1>
       <p className={s.intro}>
         Manage applications, supporting documents and preliminary results in one
@@ -315,7 +315,7 @@ export default function PreEvaluationWorkspace() {
                 </dl>
               </section>
               <section className={s.card}>
-                <h2>Preliminary result</h2>
+                <h2>Preliminary Result</h2>
                 <p className={s.helper}>
                   Paid applications receive the generated result automatically.
                   Corrections are saved with an audit record and a new result
@@ -411,7 +411,7 @@ export default function PreEvaluationWorkspace() {
                 )}
               </section>
               <section className={s.card}>
-                <h2>Internal notes</h2>
+                <h2>Internal Notes</h2>
                 <form
                   className={s.form}
                   onSubmit={(e: FormEvent<HTMLFormElement>) => {
@@ -436,7 +436,7 @@ export default function PreEvaluationWorkspace() {
                 </form>
               </section>
               <section className={s.card}>
-                <h2>Request information</h2>
+                <h2>Request Information</h2>
                 <form
                   className={s.form}
                   onSubmit={(e: FormEvent<HTMLFormElement>) => {
@@ -466,7 +466,7 @@ export default function PreEvaluationWorkspace() {
                 </form>
               </section>
               <section className={s.card}>
-                <h2>Email delivery</h2>
+                <h2>Email Delivery</h2>
                 <ul className={s.files}>
                   {selected.emails.map((m: any) => (
                     <li key={m.id}>

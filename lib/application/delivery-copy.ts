@@ -1,7 +1,7 @@
 import type { Locale } from '@/i18n/routing';
 
 const en = {
-  title: 'Report & delivery', hint: 'Choose how you would like to receive your report.', format: 'Report format',
+  title: 'Report & Delivery', hint: 'Choose how you would like to receive your report.', format: 'Report format',
   emailHint: 'The PDF report will be sent to the email address entered in Step 1.',
   mailingTitle: 'Mailing address', mailingHint: 'Enter the recipient and full delivery address for your paper report.',
   recipient: 'Recipient / organization', country: 'Country / region', street: 'Street address', street2: 'Apartment, suite, floor, etc.',

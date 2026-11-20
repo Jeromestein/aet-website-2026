@@ -18,15 +18,15 @@ export const institutionDirectory: Record<Locale, DirectoryContent> = { en, zh, 
 
 export const directoryCopy = {
   en: {
-    label: 'Institutions', eyebrow: 'Credential evaluation', heading: 'Find an institution.',
-    summary: 'Explore the full list', entries: 'directory entries', categories: 'categories',
-    qualification: 'Before you apply',
+    label: 'Institutions', eyebrow: 'Credential evaluation', heading: 'Find an Institution.',
+    summary: 'Explore the Full List', entries: 'directory entries', categories: 'categories',
+    qualification: 'Before You Apply',
     qualificationText: 'Requirements vary by institution, program and purpose. Confirm that your receiving institution accepts the report type you need before ordering an evaluation. Inclusion in this list does not guarantee acceptance.',
     search: 'Search institutions', placeholder: 'Search by name, location or keyword',
     all: 'All institutions', count: '{count} of {total} entries', reset: 'Clear filters',
     empty: 'No institutions found', emptyHint: 'Try a different name or keyword, or clear the filters to view the full list.',
     notes: 'Application & timing notes', contact: 'Contact Us', apply: 'Apply Online',
-    closingTitle: 'Find the right report for your next step.', back: 'Back to directory',
+    closingTitle: 'Find the Right Report for Your Next Step.', back: 'Back to directory',
   },
   zh: {
     label: '机构列表', eyebrow: '学历评估', heading: '查找相关机构。',

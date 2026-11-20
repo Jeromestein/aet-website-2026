@@ -22,15 +22,15 @@ export const articleTitle = (article: BlogArticle, locale: Locale) => article.ti
 
 export const blogCopy = {
   en: {
-    title: 'Credential evaluation guides', eyebrow: 'AET Blog',
+    title: 'Credential Evaluation Guides', eyebrow: 'AET Blog',
     description: 'Understand your foreign credentials in the U.S. Explore evaluation purposes, report types, and the next steps for your education or career.',
     featured: 'Featured guide', featuredDescription: 'Explore why credential evaluation matters and the differences between document-by-document, course-by-course, and professional experience evaluations.',
     other: 'Other topics', returnEvaluation: 'Back to credential evaluation',
-    heading: 'Credential evaluation articles', all: 'All topics', search: 'Search articles',
+    heading: 'Credential Evaluation Articles', all: 'All Topics', search: 'Search articles',
     placeholder: 'Search by title or city', count: '{count} articles', read: 'Read article',
     empty: 'No articles found', emptyHint: 'Try another title, city, or topic.', reset: 'Clear filters',
     general: 'General guide',
-    topics: { translation: 'Translation', evaluation: 'Credential evaluation', interpretation: 'Interpretation', expert: 'Expert opinion letters' },
+    topics: { translation: 'Translation', evaluation: 'Credential evaluation', interpretation: 'Interpretation', expert: 'Expert Opinion Letters' },
   },
   zh: {
     title: '学历认证指南', eyebrow: 'AET 博客',

@@ -25,10 +25,10 @@ export default function GPACalculator() {
   return <div className={s.page} lang="en">
     <header className={s.header}><a href="/admin/CRM" aria-label="AET workspace"><img src="/brand/aet-logo-header.svg" width="230" height="53" alt="American Education and Translation Services,CORP (AET)" /></a><a className={s.back} href="/admin/CRM"><ArrowLeft size={16} aria-hidden="true" />Back to CRM</a></header>
     <main className={s.main}>
-      <div className={s.heading}><span className={s.eyebrow}>AET WORKSPACE / TOOLS</span><h1>GPA calculator<span>.</span></h1><p>Paste your course list to calculate GPA using the original AET grading scale.</p></div>
+      <div className={s.heading}><span className={s.eyebrow}>AET WORKSPACE / TOOLS</span><h1>GPA Calculator<span>.</span></h1><p>Paste your course list to calculate GPA using the original AET grading scale.</p></div>
       <div className={s.grid}>
         <section className={s.card} aria-labelledby="course-heading">
-          <div className={s.cardHeading}><span className={s.icon}><Calculator size={22} aria-hidden="true" /></span><div><h2 id="course-heading">Enter course information</h2><p>One course per line. Paste directly from Excel or plain text.</p></div></div>
+          <div className={s.cardHeading}><span className={s.icon}><Calculator size={22} aria-hidden="true" /></span><div><h2 id="course-heading">Enter Course Information</h2><p>One course per line. Paste directly from Excel or plain text.</p></div></div>
           <label className={s.label} htmlFor="gpa-input">Course name · Credits / Units · Grade</label>
           <p id="gpa-format" className={s.hint}>Separate columns with tabs or spaces. Course names can contain spaces.</p>
           <textarea ref={inputRef} id="gpa-input" className={s.input} value={input} maxLength={200000} spellCheck={false} autoCapitalize="off" autoCorrect="off" aria-describedby={'gpa-format' + (issues.length ? ' gpa-errors' : '')} aria-invalid={issues.length > 0} placeholder={'College English 2.50 C\nAdvanced Mathematics\t3.00\tB+'} onChange={e => { setInput(e.target.value); setResult(null); setIssues([]); setCopyStatus(''); }} />

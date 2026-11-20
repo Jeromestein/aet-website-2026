@@ -3,7 +3,7 @@ import type { Locale } from '@/i18n/routing';
 /** Adapted from the four legacy e-office-*-content.html pages; contact facts live in contact.ts. */
 export const officeContent = {
   en: {
-    about: 'About this office', contact: 'Contact information', services: 'Our services', history: 'Company history', guarantee: 'Our guarantee',
+    about: 'About This Office', contact: 'Contact Information', services: 'Our Services', history: 'Company History', guarantee: 'Our Guarantee',
     quote: 'Request a free estimate', all: 'All offices', pricing: 'View pricing',
     intro: 'Founded in 2009 by an immigrant and NAFSA member, Mr. Jeremy Yan, American Education and Translation Services has long known the struggles of immigrants in the USA.',
     regions: { miami: 'Miami is home to our headquarters for translation and foreign credential evaluation services.', boston: 'Our Boston office serves as the headquarters in North USA, providing translation and credential evaluation services to the New England region.', la: 'Our Los Angeles office serves as the headquarters in California and the west coast, providing translation and credential evaluation services to Southern California. The office is located in Irvine.', bj: 'Our Beijing office serves as the headquarters in China, supporting Chinese clients seeking services in the United States.' },

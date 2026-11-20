@@ -108,7 +108,7 @@ export default async function OtherServicePage({ params }: Props) {
     </details> : section.id === 'partners'
       ? <InstitutionCarousel key={section.id} id={section.id} variant="embedded" title={section.title} contactLabel={t('home.contact')} />
       : <section key={section.id} id={section.id} className={styles.section} aria-labelledby={`${section.id}-title`}>
-        <h2 id={`${section.id}-title`}>{section.title}</h2><SectionContent service={service} section={section} />
+        <h2 id={`${section.id}-title`}>{locale === 'en' ? section.englishHeading ?? section.title : section.title}</h2><SectionContent service={service} section={section} />
       </section>)}</div>
     {service === 'visa-service' && <section id="price" className={styles.section} aria-labelledby="visa-price-title"><h2 id="visa-price-title">{t('pricing.title')}</h2><VisaPricing /></section>}
   </ServicePage>;

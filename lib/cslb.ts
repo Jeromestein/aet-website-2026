@@ -4,7 +4,7 @@ export const cslbBlogPath = '/blog/cslb-foreign-credential-evaluation';
 
 export const cslbEntry = {
   "en": {
-    "title": "Applying for a California contractor license?",
+    "title": "Applying for a California Contractor License?",
     "body": "Explore how foreign education may count toward CSLB experience requirements and what to confirm before ordering an evaluation.",
     "action": "Read the CSLB article"
   },

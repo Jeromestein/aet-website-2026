@@ -562,7 +562,7 @@ export function ApplicationResult({
         )}
       </section>
       <section id="documents" className={s.card} style={{scrollMarginTop: 110}}>
-        <h2>{t.documents}</h2>
+        <h2>{locale === "en" ? "Supporting Documents" : t.documents}</h2>
         <p className={s.helper}>{t.uploadHint}</p>
         <ul className={s.files}>
           {app.files.map((f: any) => (

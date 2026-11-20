@@ -16,7 +16,7 @@ import visaZh from '@/content/visa-service/zh.json';
 
 export const serviceSlugs = ['technical-translation', 'interpretation', 'expert-opinion-letters', 'general-translation', 'notarization', 'visa-service'] as const;
 export type ServiceSlug = typeof serviceSlugs[number];
-export type ServiceSection = { id: string; title: string; html: string; scenarios?: string[] };
+export type ServiceSection = { id: string; title: string; englishHeading?: string; html: string; scenarios?: string[] };
 export type ServiceContent = { source: string; title: string; sections: ServiceSection[] };
 
 const contents: Record<ServiceSlug, Partial<Record<Locale, ServiceContent>>> = {

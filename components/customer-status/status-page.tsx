@@ -9,6 +9,14 @@ import { statusLookup, type CustomerStatus } from '@/lib/customer-status/model';
 import s from './status.module.css';
 import { intakeCopy } from '@/lib/application/intake-copy';
 import { StatusSections } from './sections';
+async function readStatus(applicationId: string, preview: boolean, signal?: AbortSignal): Promise<CustomerStatus> {
+ const response = await fetch('/api/customer-status'+(preview?'?source=preview':''), {
+  method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({applicationId}), cache:'no-store', signal,
+ });
+ const data = await response.json();
+ if(!response.ok) throw new Error(data.error);
+ return data;
+}
 export function StatusPage({locale, initialId,preview=false}: {locale: Locale; initialId: string;preview?:boolean}) {
  const documents = useTranslations('documents');
  const t = statusCopy[locale]; const [id,setId] = useState(initialId); const [record,setRecord] = useState<CustomerStatus|null>(null);
@@ -22,9 +30,7 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
   const controller = new AbortController(); active.current = controller; setBusy(true);
   if(updateUrl) {const url = new URL(location.href);url.searchParams.set('applicationId',parsed.data.applicationId);history.replaceState(null,'',url);}
   try {
-   const response = await fetch('/api/customer-status'+(preview?'?source=preview':''),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsed.data),cache:'no-store',signal:controller.signal});
-   const data = await response.json();
-   if(!response.ok) throw new Error(data.error);
+   const data = await readStatus(parsed.data.applicationId,preview,controller.signal);
    if(!controller.signal.aborted) {setRecord(data);setNow(Date.now());}
   } catch(e) {if(!controller.signal.aborted) {const code=(e as Error).message;setError(code==='not_found'?t.missing:code==='too_many_requests'?t.limited:t.failed);}}
   finally {if(!controller.signal.aborted) setBusy(false);}
@@ -36,6 +42,16 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
  const windowState=record?paymentWindow(record,now):'none';
  const timer=[Math.floor(remaining/3600),Math.floor(remaining/60)%60,remaining%60].map(n=>String(n).padStart(2,'0')).join(' : ');
  const label=(map:Record<string,string>,key:string)=>map[key]||t.unknown;
+ async function refreshPayment() {
+  if(!record) return;
+  const latest = await readStatus(record.id,preview,active.current?.signal);
+  // Update payment fields in place so an active document upload keeps its session.
+  setRecord(current => current !== record ? current : {
+   ...current, payment:latest.payment, paid:latest.paid, amount:latest.amount, deadline:latest.deadline,
+   status:latest.status, completion:latest.completion, workflow:latest.workflow,
+  });
+  setNow(Date.now());
+ }
  function submit(e:FormEvent){e.preventDefault();void check(id,true);}
  return <main className={s.main} id="main-content">
   <header className={s.intro}><p className={s.eyebrow}>{t.eyebrow}</p><h1>{t.title}</h1><p>{t.intro}</p></header>
@@ -51,7 +67,7 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
       <dl className={s.facts}><div><dt>{t.payment}</dt><dd className={record.payment==='paid'?s.paid:s.pending}>{label(t.payments,record.payment)}</dd></div><div><dt>{t.submitted}</dt><dd>{date(record.submitted)}</dd></div><div><dt>{t.office}</dt><dd>{record.office||t.unknown}</dd></div><div><dt>{t.paid}</dt><dd>{record.paid?date(record.paid):t.notPaid}</dd></div><div><dt>{t.service}</dt><dd>{record.services}</dd></div>{record.amount!==null&&record.payment!=='paid'&&<div><dt>{t.amount}</dt><dd>{new Intl.NumberFormat(locale,{style:'currency',currency:'USD'}).format(record.amount/100)}</dd></div>}</dl>
       {record.completion&&<div className={s.estimate}><strong>{t.due}: {record.completion.dueDate}</strong><p>{t.estimate}</p></div>}
      </section>
-     <StatusSections key={record.source+record.id} record={record} locale={locale} onBusyChange={setUploading}/>
+     <StatusSections key={record.source+record.id} record={record} locale={locale} onBusyChange={setUploading} onRefreshPayment={refreshPayment}/>
      <div className={s.statusActions}>
       <button type="button" disabled={uploading||busy} onClick={()=>void check(record.id)}>{documents('refresh')}</button>
       <button type="button" disabled={uploading} onClick={()=>{setRecord(null);setError('');}}>{documents('otherApplication')}</button>
