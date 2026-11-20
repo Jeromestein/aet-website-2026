@@ -52,9 +52,13 @@ export async function coreUploadPath(id: string, fileId: string, name: string, t
   return `${directory}/${safeSegment(fileId)}-${safeSegment(name)}`;
 }
 /** Authorization of applicationId occurs in the caller. A File ID is never a token. */
-export async function downloadCoreFile(applicationId: string, recordId: string) {
+export async function coreSupportingFile(applicationId: string, recordId: string) {
   const [file]=await db()`select * from ${coreTable(db(),'aet_documents')} where id=${recordId} and application_id=${applicationId} and access_scope='customer_input' and storage_file_id is not null`;
   if (!file) throw new AppError('not_found',404);
+  return file;
+}
+export async function downloadCoreFile(applicationId: string, recordId: string) {
+  const file=await coreSupportingFile(applicationId, recordId);
   const metadata=await coreFileMetadata(file);
   const client=await clientForOffice(officeForConnection(file.storage_location));
   const result=(await client.filesDownload({path:metadata.id})).result;

@@ -39,7 +39,10 @@ import { abandonUpload, unfinishedUploads } from "@/lib/preeval/upload-recovery"
 import { completeUploads, retryAnalysis } from "@/lib/preeval/ai-jobs";
 import { scheduleAI } from "@/lib/preeval/ai-scheduler";
 import { coreRuntimeEnabled, isCoreApplication, coreAdminApplications } from "@/lib/application-core/runtime";
-import { downloadCoreFile } from "@/lib/application-core/documents";
+import { coreTable } from "@/lib/application-core/connection";
+import { requireStaffApplication } from "@/lib/staff/session";
+import { staffDocumentPreview } from "@/lib/crm/document-preview";
+import { coreSupportingFile, downloadCoreFile } from "@/lib/application-core/documents";
 import { downloadFile } from "@/lib/preeval/dropbox";
 
 export const runtime = "nodejs";
@@ -183,8 +186,27 @@ async function handler(
       return response({ rows, total: rows[0]?.total || 0, page });
     }
     if (path[0] === "applications" && path[1]) {
-      const id = uuid(path[1]),
-        current = await authorize(id);
+      const id = uuid(path[1]);
+      if (!isPost && path.length === 5 && path[2] === "admin" && path[3] === "documents") {
+        await requireStaffApplication("preeval", id);
+        const fileId = uuid(path[4]);
+        const sql = db();
+        if (compact()) {
+          const [file] = await sql`select d.storage_location,d.storage_file_id from ${coreTable(sql, 'aet_documents')} d
+            join ${coreTable(sql, 'aet_core_applications')} a on a.id=d.application_id
+            where a.primary_service='pre-evaluation' and a.id=${id} and d.id=${fileId}
+              and d.access_scope='customer_input' and d.upload_state='ready'`;
+          if (!file?.storage_file_id) throw new AppError("not_found", 404);
+          return response(await staffDocumentPreview(file, true));
+        }
+        const [file] = await sql`select dropbox_path from ${table("preeval.files")}
+          where application_id=${id} and id=${fileId} and state='ready'`;
+        if (!file) throw new AppError("not_found", 404);
+        const core = await isCoreApplication(id);
+        const storedFile = core ? await coreSupportingFile(id, fileId) : file;
+        return response(await staffDocumentPreview(storedFile, core));
+      }
+      const current = await authorize(id);
       if (path.length === 2 && !isPost) {
         const app = await application(id, current.role === "admin");
         if (['queued', 'running'].includes(app.ai_status)) await scheduleAI(id);
