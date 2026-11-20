@@ -311,6 +311,14 @@
   line-height: 1.4;
   margin: 20px 0;
 }
+.resultActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 12px;
+  margin-top: 28px;
+  text-align: center;
+  text-wrap: balance;
+}
 .details {
   display: grid;
   grid-template-columns: 1fr 1fr;

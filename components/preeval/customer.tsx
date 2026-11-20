@@ -483,13 +483,14 @@ export function ApplicationResult({
             <strong>{app.result.result}</strong>
             <h3>{t.reasoning}</h3>
             <p>{app.result.reasoning}</p>
-            <a
-              href={pathFor(locale, '/application') + '?service=evaluation'}
-              className={s.secondary}
-            >
-              {t.formal}
-              <ArrowRight size={17} />
-            </a>
+            <div className={s.resultActions}>
+              <a className={s.button} href={pathFor(locale, '/application') + '?service=evaluation'}>
+                {t.formal}
+              </a>
+              <a className={s.secondary} href={pathFor(locale, '/evaluation')}>
+                {t.learnAboutEvaluation}
+              </a>
+            </div>
           </>
         ) : (
           <>
