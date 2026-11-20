@@ -36,8 +36,10 @@ export function StatusSections({record,locale,onBusyChange}:{record:CustomerStat
 
   </section>
   <section className={s.card} aria-labelledby="services-heading"><div className={s.sectionHeading}><FileText size={24}/><h2 id="services-heading">{t.services}</h2></div>
-   {!record.details&&<p className={s.sectionNotice}><Info size={17}/>{t.detailNotice}</p>}
-   <div className={s.serviceSummary}>{record.services}</div>
+   {!record.details&&<>
+    <p className={s.sectionNotice}><Info size={17}/>{t.detailNotice}</p>
+    <div className={s.serviceSummary}>{record.services}</div>
+   </>}
    {displayFields([t.purpose,t.notes],[purpose,record.client.notes])}
    {record.details?<SavedServiceDetails record={record} locale={locale}/>:displayFields([t.delivery,t.additional],[t.notConnected,t.notConnected])}
    {!record.details&&<div className={s.amountRow}><span>{t.total}</span><strong>{money}</strong></div>}{!record.workflow?.confirmedQuote&&<p>{t.quote}</p>}
