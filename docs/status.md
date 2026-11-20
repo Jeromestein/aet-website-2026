@@ -20,15 +20,15 @@ journey is verified on earlier dev Preview; the unified pre-evaluation choice is
 now verified end to end on main Preview at `67a9cf1`. The unified credential
 journey also passed main Preview acceptance on November 12, including staff review,
 payment and manual PDF publication. Both use the six-table model. Translation remains deferred;
-Production release `00362c1` serves the unified [application](https://www.americantranslationservice.com/application)
-with `APPLICATIONS_ENABLED=true`. On November 19, the English and Chinese
-entries returned 200. Both service choices displayed their three offices without
-employee login. The homepage and pre-evaluation marketing CTA still use the old
-application. Anonymous CRM access redirects to staff login. Production rejects
-an empty intake and an unsigned Stripe callback, and an unknown application ID
-returns 404. The release passed 1,005 local tests, with 17 conditional skips.
-Actual applicant email receipt, file transfer, payment and staff PDF delivery
-remain for the owner's live acceptance.
+Production briefly opened the unified application for manual acceptance on
+November 19. It is now closed with `APPLICATIONS_ENABLED=false`. The English
+and Chinese application pages redirect to the legacy formal application, and the
+dedicated pre-evaluation page redirects to the legacy pre-evaluation tool.
+The intake API returns 503. The gate also pauses new-system uploads, customer
+status lookups and application payment callbacks. The homepage links to both
+legacy services. Live acceptance of applicant email, file transfer, payment and
+staff PDF delivery remains pending.
+
 The Production CRM combines new evaluation applications with historical formal
 applications, imported orders and pre-evaluations. Employees can search, sort,
 page and export the records visible to their offices. Historical pre-evaluations

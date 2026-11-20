@@ -178,6 +178,9 @@ These checks do not activate hosted Production.
   English/Chinese intake, both office selectors, staff login protection and old
   public Apply links. Verify the live webhook destination, verified sender,
   AI model access and the three dedicated Dropbox office folders.
+- [x] Close the Production pilot with `APPLICATIONS_ENABLED=false` on November 19.
+  Verify the English and Chinese redirects, the legacy pre-evaluation destination,
+  intake API rejection, and the signed-in staff CRM list (1,226 applications).
 
 - [x] Prepare an additive, empty Production copy of the current accepted Preview
   six-table structure and a restricted runtime role; compare schema parity and
