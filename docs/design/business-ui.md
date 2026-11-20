@@ -203,8 +203,11 @@ mail remain English. Staff sign-in is separate.
 - Education and Service remain separate: academic degree/institution/country/study
   period are not application purpose. Explicitly show missing records as plain text.
 - Clicking a row opens its drawer; keyboard Enter/Space also works. Omit the final
-  arrow column. Education/Service/Payment have independent blue underlined triggers,
-  persistent chevrons, destination labels and full hover/focus highlights/touch targets.
+  arrow column. Education, Service and Payment each open their own drawer tab.
+  Use a small leading right-panel icon and blue text with a full hover/focus
+  highlight and touch target. Align the three desktop targets at the top and
+  their secondary lines at the bottom of each row when a title wraps.
+  Keep empty education values as plain text.
   Payment precedes Status and opens its own tab; preserve payment-state colors.
   Mobile cards keep the same shortcuts, education/service and Updated At.
 - A small blue truck in Service indicates recorded mailing, using legacy or saved
@@ -227,7 +230,9 @@ mail remain English. Staff sign-in is separate.
   phones, use country names and month/year. Service order: purpose, notes,
   turnaround/fees, delivery, extras, total, fee note. Prefer saved quotes/amounts;
   never infer unknown prices or mutate business records for display.
-- Place Copy ID and customer Status below the drawer ID. Only supported formal
+- Place Copy ID and customer Status in a dedicated row below the identity
+  block. Both actions use 14px semibold system UI text, a 22px line height,
+  matching icon spacing and 44px targets. Only supported formal
   evaluations get the Status link; test links retain their preview context.
 - Documents show Dropbox names, sizes, update dates and manual refresh; open preview
   through the office account. Recheck staff application access per request. Use the

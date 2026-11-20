@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDownToLine, ArrowRight, Calculator, CheckCheck, ChevronLeft, ChevronRight, Clock3, CreditCard, FlaskConical, FileCheck2, FileText, FolderOpen, Globe, GraduationCap, LayoutDashboard, LogOut, Mail, MapPin, Menu, PanelLeftClose, PanelLeftOpen, Plus, RotateCcw, Search, Truck, Upload, X } from 'lucide-react';
+import { ArrowDownToLine, ArrowRight, Calculator, CheckCheck, ChevronLeft, ChevronRight, Clock3, CreditCard, FlaskConical, FileCheck2, FileText, FolderOpen, Globe, GraduationCap, LayoutDashboard, LogOut, Mail, MapPin, Menu, PanelLeftClose, PanelLeftOpen, PanelRight, Plus, RotateCcw, Search, Truck, Upload, X } from 'lucide-react';
 import { WORKSPACE_PAGE_SIZE, date, label, money, purposeLabel, type CaseReference, type WorkspaceFilter, type WorkspaceRow, type WorkspaceSnapshot, type WorkspaceView } from '@/lib/crm/contracts';
 import { Badge, OfficeBadge, WorkspaceDialog, WorkspaceError, errorMessage, request } from './ui';
 import IntakeDrawer from './intake-drawer';
@@ -24,12 +24,18 @@ function DetailTrigger({ row, section, onOpen }: { row: WorkspaceRow; section: '
   const title = section === 'education' ? row.educations[0]?.degree || 'Not provided' : row.service;
   const hint = section === 'education' ? row.educations[0]?.school || 'No education records' : purposeLabel(row.purpose);
   if (section === 'education' && !row.educations.length) return <div className={s.detailCellEmpty}><span className={s.cellTitle}>{title}</span><small className={s.cellHint}>{hint}</small></div>;
-  return <button type="button" className={s.detailCell} aria-label={`View ${section} for ${row.name}`} aria-haspopup="dialog" onClick={onOpen}><span className={s.cellTitle}><span>{title}{section==='service'&&row.mailDelivery&&<span className={s.mailIcon} title="Need to mail hard copy" role="img" aria-label="Mail delivery requested"><Truck size={17}/></span>}</span><ChevronRight size={16} /></span><small className={s.cellHint}>{hint}</small></button>;
+  return <button type="button" className={s.detailCell} aria-label={`View ${section} for ${row.name}`} aria-haspopup="dialog" onClick={onOpen}>
+    <span className={s.cellTitle}>
+      <PanelRight size={14} aria-hidden="true" />
+      <span>{title}{section==='service'&&row.mailDelivery&&<span className={s.mailIcon} title="Need to mail hard copy" role="img" aria-label="Mail delivery requested"><Truck size={17}/></span>}</span>
+    </span>
+    <small className={s.cellHint}>{hint}</small>
+  </button>;
 }
 
 function PaymentTrigger({ row, liveData, onOpen }: { row: WorkspaceRow; liveData?: boolean; onOpen: () => void }) {
   return <button type="button" className={`${s.detailCell} ${s.paymentTrigger}`} aria-label={`View payment for ${row.name}`} aria-haspopup="dialog" onClick={onOpen}>
-    <span className={s.cellTitle}><span className={s.amount}>{(liveData || row.historical) && row.amount === null ? 'Not recorded' : money(row.amount)}</span><ChevronRight size={16} /></span>
+    <span className={s.cellTitle}><PanelRight size={14} aria-hidden="true" /><span className={s.amount}>{(liveData || row.historical) && row.amount === null ? 'Not recorded' : money(row.amount)}</span></span>
     <small className={row.payment_status === 'paid' ? s.paymentPaid : s.paymentPending}>{row.payment_status === 'paid' && <CheckCheck size={12} />}{label(row.payment_status)}</small>
   </button>;
 }

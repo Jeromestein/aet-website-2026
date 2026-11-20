@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDownToLine, ArrowLeft, ArrowRight, Calculator, Check,
-  CheckCheck, ChevronLeft, ChevronRight, CircleCheck, Clock3,
+  CheckCheck, ChevronLeft, ChevronRight, CircleCheck, Clock3, PanelRight,
   CreditCard, FileCheck2, FileText, FolderOpen, GraduationCap, LayoutDashboard,
   Link2, Mail, MapPin, Menu, Plus, RotateCcw, Search, Upload, X,
 } from 'lucide-react';
@@ -37,7 +37,7 @@ function DetailTrigger({ row, section, onOpen }: { row: Application; section: 'e
     return <div className={s.detailCellEmpty}><span className={s.cellTitle}>{title}</span><small className={s.cellHint}>{hint}</small></div>;
   }
   return <button type="button" className={s.detailCell} aria-label={'View ' + section + ' for ' + row.name} aria-haspopup="dialog" title={'View ' + section + ' details'} onClick={onOpen}>
-    <span className={s.cellTitle}><span>{title}</span><ChevronRight size={16} strokeWidth={2} aria-hidden="true" /></span>
+    <span className={s.cellTitle}><PanelRight size={14} aria-hidden="true" /><span>{title}</span></span>
     <small className={s.cellHint}>{hint}</small>
   </button>;
 }
