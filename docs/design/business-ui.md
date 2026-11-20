@@ -224,6 +224,10 @@ mail remain English. Staff sign-in is separate.
   behavior shared across Live/Test. No embedded customer “Application saved” receipt.
   Matching visuals do not enable writes; gate v2 operations on the connected workflow
   capability and enforce employee/office authorization on every staff request.
+- The blue service badge shows saved selections in this order: Document by
+  Document, Course by Course, Expert Opinion Letter, Position Evaluation,
+  Translation, Customized Evaluation, Pre-Evaluation. Join selections with
+  commas and show FCE when no recognized service is present.
 - Information cards: white, light border, 8px radius, 20px padding / 16px mobile;
   13px muted labels, 14px navy values. Reserve tints for badges/interactive states.
 - Education: one card per record, School/Country then Degree/Study Period; stack on

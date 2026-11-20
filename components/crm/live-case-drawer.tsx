@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { date, label, money, type CaseReference, type WorkspaceRow } from '@/lib/crm/contracts';
+import { serviceBadgeLabel } from '@/lib/crm/service-badge';
 import { CaseDetailHeader } from './case-detail-header';
 import { CaseDocuments } from './documents';
 import { EducationHistory, SelectedServices } from './record-details';
@@ -37,7 +38,7 @@ export default function LiveCaseDrawer({ target, initial, initialTab = 'overview
   return <WorkspaceDialog open onClose={onClose} title={(row?.name || 'Application') + ' application details'} drawer>
     {error && <p role="alert" className={s.formError}>{error}</p>}
     {row ? <>
-      <CaseDetailHeader id={row.id} name={row.name} office={row.office} service={row.service}
+      <CaseDetailHeader id={row.id} name={row.name} office={row.office} service={serviceBadgeLabel(row.kind === 'preeval' ? 'Pre-Evaluation' : row.service)}
         status={row.status} paymentStatus={row.payment_status} caption="Legacy record · Read only"
         statusHref={row.kind === 'formal' ? 'https://app.americantranslationservice.com/status?applicationId=' + encodeURIComponent(row.id) : undefined}
         tabs={tabs} tab={tab} onTab={setTab}/>

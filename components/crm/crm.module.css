@@ -201,8 +201,9 @@
 .detailIdentity h2 { font-size: 23px; }
 .detailIdentity p { color: #8b9eac; font-size: 13px; margin-top: 4px; }
 .detailIdentity p span { margin: 0 8px; }
-.detailBadges { display: flex; gap: 7px; margin-bottom: 22px; }
+.detailBadges { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 7px; margin-bottom: 22px; }
 .detailBadges .badge { font-size: 13px; padding: 5px 9px; }
+.detailBadges .blue { max-width: 100%; white-space: normal; }
 .detailTabs { display: flex; gap: 18px; overflow-x: auto; border-bottom: 1px solid var(--crm-border); margin-bottom: 25px; }
 .detailTabs button { padding: 12px 0; font-size: 13px; font-weight: 600; color: #677d8e; flex-shrink: 0; border-bottom: 2px solid transparent; }
 .detailTabs .detailTabActive { color: #355c7b; border-bottom-color: #355c7b; }
@@ -367,7 +368,6 @@
   .educationRecord .detailGrid { grid-template-columns: 1fr; }
   .detailIdentity h2 { font-size: 21px; }
   .detailTabs button { padding-block: 14px; font-size: 13px; }
-  .detailBadges { flex-wrap: wrap; }
   .dialog input, .dialog select, .dialog textarea { font-size: 16px; }
   .detailDocument { gap: 9px; }
   .smallButton { min-height: 40px; }
