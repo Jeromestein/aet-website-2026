@@ -24,7 +24,7 @@ export function IntakeConfirmationEmail({ id, locale, data, quote, origin, asset
   const amount = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
   return (
     <BrandedEmailLayout notice={production ? undefined : "Test application · Stored separately from live applications. Use the Status page to upload test documents. Payments are disabled; no payment has been collected."} origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="Your AET application has been received. Review your application summary and next steps.">
-      <EmailHero eyebrow="CREDENTIAL EVALUATION" description="Your application is saved. Review your details and follow your progress in one place." action={{ href: statusUrl, label: "View Application Status" }} note={privateIdNote}>Application<br />Received</EmailHero>
+      <EmailHero eyebrow="CREDENTIAL EVALUATION" description="Your application is saved. Review your details and follow your progress in one place." action={{ href: statusUrl, label: "View Status" }} note={privateIdNote}>Application<br />Received</EmailHero>
       <Section className="email-gutter" style={{ padding: "28px 36px 30px" }}>
         <Text style={{ ...paragraph, color: colors.ink, marginBottom: "8px" }}>Dear {data.contactName},</Text>
         <Text style={paragraph}>Thank you for choosing AET. Your application has been saved successfully. Here’s your application summary.</Text>

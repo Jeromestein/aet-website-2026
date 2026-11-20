@@ -43,10 +43,15 @@ export function PreEvaluationEmail({ app, education, kind, origin, message = "",
     : kind === "information" ? "A few more details will help us continue your review. See what’s needed below."
     : kind === "confirmation" ? "Your education details are saved. Continue your application to take the next step."
     : "Your details and progress, together in one place. Use the link below to return to your application.";
-  const actionLabel = kind === "information" ? "Review Request & Upload" : kind === "confirmation" ? "Continue Your Application" : "View Your Application";
+  const actionLabels: Record<CustomerEmailKind, string> = {
+    confirmation: "Continue",
+    result: result ? "View Result" : "View Status",
+    access: "View Status",
+    information: "Review Request",
+  };
   return (
     <BrandedEmailLayout origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview={headline} notice={notice}>
-      <EmailHero eyebrow={kind === "access" ? "YOUR AET APPLICATION" : "DEGREE EQUIVALENCY"} description={description} action={{ href: statusUrl, label: actionLabel }} note={privateIdNote}>{headline}</EmailHero>
+      <EmailHero eyebrow={kind === "access" ? "YOUR AET APPLICATION" : "DEGREE EQUIVALENCY"} description={description} action={{ href: statusUrl, label: actionLabels[kind] }} note={privateIdNote}>{headline}</EmailHero>
       <EmailContent>
         <Text style={{ ...paragraph, color: "#18334E", marginBottom: "8px" }}>Dear {[app.first_name, app.middle_name, app.last_name].filter(Boolean).join(" ")},</Text>
         <Text style={paragraph}>{kind === "result" && !result ? "Open your application for the latest status. A preliminary result is not currently available." : intros[kind]}</Text>

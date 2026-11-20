@@ -70,6 +70,7 @@ Business emails use the blue-gradient design approved on 2026-10-20.
   fallbacks. Image/font URLs use the shared public HTTPS asset origin.
 - Lead with a navy-to-blue gradient, subtle light at the top right, a short white
   Title Case heading, one explanatory sentence and one orange pill-shaped action.
+  Use one or two familiar words for the button, such as “View Status” or “View Fees”.
   Keep a solid navy fallback. Headings/actions remain real HTML text, not artwork.
 - Place the greeting, readable application reference, service/education details,
   compact ruled amount section, next steps and signoff in the white body. Retain

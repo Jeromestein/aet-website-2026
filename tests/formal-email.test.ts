@@ -23,7 +23,7 @@ describe("formal business templates", () => {
   });
   it("shows pending quotes without a payment request", async () => {
     const {html} = await feeUpdateEmail(app, {total:null, explanation:"Reviewing documents"}, "https://example.invalid");
-    expect(html).toContain("QUOTE IN REVIEW"); expect(html).toContain("No payment is requested"); expect(html).not.toContain("Review Fee &amp; Payment Options"); expect(html).not.toContain("$0.00");
+    expect(html).toContain("QUOTE IN REVIEW"); expect(html).toContain("No payment is requested"); expect(html).not.toContain("View Fees"); expect(html).not.toContain("$0.00");
   });
 });
 describe("formal delivery records", () => {

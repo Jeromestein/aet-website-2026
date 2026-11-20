@@ -56,7 +56,7 @@ describe('staff email gallery', () => {
   it('shows a pending quote without requesting payment', async () => {
     const pending = await sampleEmail('fee_update', assets, true);
     expect(pending.html).toContain('No payment is requested');
-    expect(pending.html).not.toContain('Review Fee &amp; Payment Options');
+    expect(pending.html).not.toContain('View Fees');
   });
 });
 
