@@ -32,7 +32,7 @@ export function PaymentConfirmationEmail({ app, payment, origin, assetOrigin, no
     <EmailContent>
       <Text style={{ ...paragraph, color: "#18334E", marginBottom: "8px" }}>Dear {app.data.client.name},</Text>
       <Text style={paragraph}>Thank you for your payment. We’ve recorded it against your AET application. Please keep this email for your records.</Text>
-      <EmailReference id={app.id} />
+      <EmailReference id={app.id} divider={false} />
       <EmailAmount title="AMOUNT RECEIVED" cents={payment.amount_cents}><Text style={{ margin: 0, fontSize: "12px", lineHeight: "20px", color: "#5B6D7E" }}>Payment confirmed</Text></EmailAmount>
       <EmailDetail title="Confirmed on">{paymentDate(payment.paid_at)}</EmailDetail>
       <EmailDetail title="Payment ID"><span style={{ fontFamily: "Consolas, Monaco, monospace", fontSize: "12px", wordBreak: "break-all" }}>{payment.id}</span></EmailDetail>
@@ -47,16 +47,18 @@ export function PaymentConfirmationEmail({ app, payment, origin, assetOrigin, no
 }
 export function FeeUpdateEmail({ app, fee, origin, assetOrigin, notice }: SharedProps & { fee: FeeUpdate }) {
   if (fee.total !== null && (!Number.isSafeInteger(fee.total) || fee.total < 0)) throw new Error("Invalid fee amount");
+  const explanation = fee.explanation?.trim();
   const statusUrl = origin.replace(/\/$/, "") + formalStatusPath(app);
   return <BrandedEmailLayout origin={origin} assetOrigin={assetOrigin} statusUrl={statusUrl} preview="The service fee for your AET application has been updated. Review the details here." notice={notice}>
     <EmailHero eyebrow="SERVICE FEE UPDATE" description={fee.total === null ? "We’re reviewing your quote. You can check the latest details below." : "Your service fee has been updated. Review the amount and details before making payment."} action={{ href: statusUrl, label: fee.total === null ? "View Status" : "View Fees" }}>Service Fee<br />{fee.total === null ? "In Review" : "Updated"}</EmailHero>
     <EmailContent>
       <Text style={{ ...paragraph, color: "#18334E", marginBottom: "8px" }}>Dear {app.data.client.name},</Text>
       <Text style={paragraph}>{fee.total === null ? "We’re reviewing the service fee for your AET application. Here’s the latest update and a summary of your selected services." : "The service fee for your AET application has been updated. You’ll find the current amount and service details below."}</Text>
-      <EmailReference id={app.id} />
+      <EmailReference id={app.id} divider={fee.total === null} />
       {fee.total === null ? <EmailPanel><Text style={label}>QUOTE IN REVIEW</Text><Text style={{ ...paragraph, margin: 0 }}>Your final service fee is still being reviewed. No payment is requested until the quote has been confirmed.</Text></EmailPanel> : <EmailAmount title="UPDATED SERVICE FEE" cents={fee.total}><Text style={{ margin: 0, fontSize: "12px", lineHeight: "20px", color: "#5B6D7E" }}>Review the current amount on your application before paying.</Text></EmailAmount>}
-      {fee.explanation && <><EmailHeading>About This Update</EmailHeading><Text style={{ ...paragraph, whiteSpace: "pre-line", overflowWrap: "anywhere" }}>{fee.explanation}</Text></>}
-      <EmailDivider /><ServiceSummary app={app} />
+      {explanation && <><EmailHeading>About This Update</EmailHeading><Text style={{ ...paragraph, whiteSpace: "pre-line", overflowWrap: "anywhere" }}>{explanation}</Text></>}
+      {(explanation || fee.total === null) && <EmailDivider />}
+      <ServiceSummary app={app} />
       <EmailDivider />
       <Text style={paragraph}>If you have questions about this update or the selected services, contact our team before making payment.</Text>
       <EmailSignoff />

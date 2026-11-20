@@ -55,7 +55,7 @@ export function PreEvaluationEmail({ app, education, kind, origin, message = "",
       <EmailContent>
         <Text style={{ ...paragraph, color: "#18334E", marginBottom: "8px" }}>Dear {[app.first_name, app.middle_name, app.last_name].filter(Boolean).join(" ")},</Text>
         <Text style={paragraph}>{kind === "result" && !result ? "Open your application for the latest status. A preliminary result is not currently available." : intros[kind]}</Text>
-        <EmailReference id={app.id} />
+        <EmailReference id={app.id} divider={kind !== "confirmation" || rows.length > 0} />
         {kind === "information" && <EmailPanel><Text style={label}>INFORMATION REQUESTED</Text><Text style={{ ...paragraph, margin: 0, color: "#18334E", whiteSpace: "pre-line", overflowWrap: "anywhere" }}>{message}</Text></EmailPanel>}
         {result && <><EmailPanel><Text style={label}>PRELIMINARY U.S. EQUIVALENCY</Text><Text style={{ margin: 0, fontSize: "25px", lineHeight: "33px", fontWeight: 600, color: "#18334E", overflowWrap: "anywhere" }}>{result.result}</Text></EmailPanel><EmailHeading>Assessment Basis</EmailHeading><Text style={{ ...paragraph, whiteSpace: "pre-line", overflowWrap: "anywhere" }}>{result.reasoning}</Text><EmailDivider /></>}
         {rows.length > 0 && <><EmailHeading>Your Education</EmailHeading>{rows.map(([title, value]) => <EmailDetail key={title} title={title}>{value}</EmailDetail>)}</>}

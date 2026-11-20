@@ -23,8 +23,8 @@ export function EmailHero({ eyebrow, children, description, action, note }: {
 export function EmailContent({ children }: { children: ReactNode }) {
   return <Section className="email-gutter" style={{ padding: "28px 36px 30px" }}>{children}</Section>;
 }
-export function EmailReference({ id }: { id: string }) {
-  return <Section style={{ margin: "24px 0 18px", paddingBottom: "16px", borderBottom: `1px solid ${colors.line}` }}><Text style={{ ...label, marginBottom: "6px" }}>APPLICATION ID</Text><Text style={{ margin: 0, fontSize: "12px", lineHeight: "19px", fontFamily: "Consolas, Monaco, monospace", color: colors.muted, wordBreak: "break-all" }}>{id}</Text></Section>;
+export function EmailReference({ id, divider = true }: { id: string; divider?: boolean }) {
+  return <Section style={{ margin: divider ? "24px 0 18px" : "24px 0 0", paddingBottom: divider ? "16px" : 0, borderBottom: divider ? `1px solid ${colors.line}` : undefined }}><Text style={{ ...label, marginBottom: "6px" }}>APPLICATION ID</Text><Text style={{ margin: 0, fontSize: "12px", lineHeight: "19px", fontFamily: "Consolas, Monaco, monospace", color: colors.muted, wordBreak: "break-all" }}>{id}</Text></Section>;
 }
 export function EmailDetail({ title, children }: { title: string; children: ReactNode }) {
   return <Row><Column className="email-detail-label" style={{ width: "116px", verticalAlign: "top", padding: "7px 12px 7px 0", color: colors.muted, fontSize: "13px", lineHeight: "21px" }}>{title}</Column><Column style={{ padding: "7px 0", fontSize: "14px", lineHeight: "21px", color: colors.ink, verticalAlign: "top", overflowWrap: "anywhere" }}>{children}</Column></Row>;
