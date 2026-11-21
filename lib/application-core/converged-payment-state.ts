@@ -20,6 +20,12 @@ export const testPaymentExemption = (sql:DB) => productionMode()?sql`false`:comp
 export const paymentScope = (sql: DB) => productionMode()
   ? sql`p.provider='stripe' and p.provider_mode='live' and p.provider_account=${process.env.APPLICATION_CORE_PROVIDER_ACCOUNT || ''}`
   : sql`true`;
+// Completed charges take priority over an abandoned attempt for the same order.
+export const recordedCheckoutTotal = (sql: DB) => sql`(select p.amount_cents from ${coreTable(sql,'aet_payments')} p
+  where p.application_id=a.id and ${paymentScope(sql)} and p.payment_status in ('paid','refunded','partially_refunded','creating','open','pending','expired')
+  order by case when p.payment_status in ('paid','refunded','partially_refunded') then 0
+    when p.payment_status='expired' then 2 else 1 end, p.created_at desc nulls last,p.id limit 1)`;
+
 export const convergedPaymentState = (sql:DB) => sql`case
   when exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id and ${paymentScope(sql)} and p.payment_status='refunded') then 'refunded'
   when exists(select 1 from ${coreTable(sql,'aet_payments')} p where p.application_id=a.id and ${paymentScope(sql)} and p.payment_status='partially_refunded') then 'partially_refunded'

@@ -1,12 +1,13 @@
 import { productionMode } from '../preeval/production';
-import { convergedPaymentState, testPaymentExemption } from './converged-payment-state';
+import { convergedPaymentState, testPaymentExemption, recordedCheckoutTotal } from './converged-payment-state';
 import { converged,statusConverged } from "./converged-store";
 import { table } from '../preeval/db';
 import { coreTable, assertCoreConnection } from './connection';
 import 'server-only';
 import type { Sql, TransactionSql } from 'postgres';
 import { z } from 'zod';
-import { AppError, TOTAL_CENTS } from '../preeval/domain';
+import { projectedTotal } from '../preeval/saved-pricing';
+import { AppError, PREVIOUS_BASE_CENTS } from '../preeval/domain';
 import { projectWorkspaceRecords, legacyRecords, formalRecords } from '../crm/workspace-server';
 
 // Context is supplied by authenticated server code, never request JSON.
@@ -70,7 +71,7 @@ export async function createCoreShadowReader(sql: Sql) {
         const records = tx`select 'preeval'::text kind,a.id,concat_ws(' ',case a.pronouns when 'mr' then 'Mr.' when 'ms' then 'Ms.' when 'mx' then 'Mx.' else null end,a.first_name,nullif(trim(a.middle_name),''),a.last_name) name,
           a.email,a.office,1 as "intakeVersion",a.status,${paymentState(tx)} as payment_status,a.created_at,a.updated_at,
           'Preliminary degree equivalency'::text purpose,a.residence_country as country,
-          case when ${converged() ? testPaymentExemption(tx) : tx`false`} then 0 else coalesce((select p.amount_cents from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id order by p.created_at desc nulls last,p.id limit 1),${TOTAL_CENTS}) end amount,
+          case when ${converged() ? testPaymentExemption(tx) : tx`false`} then 0 else coalesce(${recordedCheckoutTotal(tx)},${projectedTotal(tx, tx`coalesce(s.amount_cents,${PREVIOUS_BASE_CENTS}::int)`)}) end amount,
           'Pre-Evaluation'::text service,false as "mailDelivery",
           coalesce((select jsonb_agg(jsonb_build_object('degree',e.degree_obtained,'school',e.school_name,'country',e.country_of_study,
             'start',concat(e.study_start_date->>'year','-',lpad(e.study_start_date->>'month',2,'0')),
@@ -81,8 +82,8 @@ export async function createCoreShadowReader(sql: Sql) {
           coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.checkout_session_id,'amount_cents',p.amount_cents,
             'status',p.payment_status,'created_at',p.created_at) order by p.created_at desc,p.id)
             from ${coreTable(tx,'aet_payments')} p where p.application_id=a.id),'[]') payments, null::jsonb timing
-          from ${coreTable(tx,'aet_core_applications')} a ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'
-            and exists(select 1 from ${coreTable(tx,'aet_service_detail')} s where s.application_id=a.id and s.service_type='pre-evaluation')`;
+          from ${coreTable(tx,'aet_core_applications')} a join ${coreTable(tx,'aet_service_detail')} s on s.application_id=a.id and s.service_type='pre-evaluation'
+            ${converged() ? tx`` : tx`join ${table("preeval.applications")} w on w.id=a.id and a.office is not distinct from w.office`} where a.primary_service='pre-evaluation'`;
         const combined = converged() ? tx`${records} union all ${formalRecords(tx)}` : tx`${records} union all select l.* from (${legacyRecords(tx)}) l
           where l.kind <> 'preeval' or not exists(select 1 from ${coreTable(tx,'aet_core_applications')} a where a.id=l.id)`;
         // Only the staff workspace supplies a verified Auth ID for historical reads.

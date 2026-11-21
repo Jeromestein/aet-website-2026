@@ -1,7 +1,7 @@
 import { coreTable } from './connection';
 import { sixTableMode } from './convergence-mode';
 import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } from './compact-files';
-import { convergedPaymentState, convergedReleaseEligible } from './converged-payment-state';
+import { convergedPaymentState, convergedReleaseEligible, recordedCheckoutTotal } from './converged-payment-state';
 import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import type { Sql, TransactionSql } from 'postgres';
@@ -26,6 +26,7 @@ export async function lockApplication(tx: DB, id: string) {
 export async function readConverged(id: string, sql: DB = db(), lock = false): Promise<Row | undefined> {
   if (lock) await lockApplication(sql,id);
   const [app] = await sql`select a.*,a.residence_country as country,s.id as service_id,s.staff_notes as notes,s.details->>'customer_notes' as customer_notes,
+    s.amount_cents as base_cents,${recordedCheckoutTotal(sql)} as checkout_cents,
     s.status,s.input_version,s.result as saved_result,s.result->'content' as result,
     ${compact()?sql`s.result_version`:sql`coalesce((s.result->>'version')::int,0)`} result_version,
     j.state as ai_status,j.error as ai_error,j.uploads_pending,j.attempts as ai_attempts,j.lease as ai_active_run,

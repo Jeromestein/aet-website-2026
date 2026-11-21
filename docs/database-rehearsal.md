@@ -74,8 +74,8 @@ establish data isolation.
   NULL when unknown; document `updated_at` records actual import/metadata refresh.
 - Keep service prices distinct from payment totals. An explicit verified price
   can record automatic/manual provenance; without it, price remains NULL and is
-  reported. The current synthetic pre-evaluation fixture uses USD 19.00 for the
-  service and USD 19.88 for Checkout, including the existing fee.
+  reported. Historical test orders retain the USD 19.00 service price and USD 19.88
+  checkout total. New test orders use USD 18.00 and USD 18.85 respectively.
 - Supply a verified provider account explicitly. This runner only imports test
   payments; it does not infer office routing, import standalone payments or
   reclassify historic summaries as verified transactions. Preserve recorded

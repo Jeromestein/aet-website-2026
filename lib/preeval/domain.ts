@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { isCountryCode } from "../legacy-application/countries";
+import { checkoutTotal } from "../application/checkout-pricing";
 
-export const BASE_CENTS = 1900;
-// Preserve the legacy gross-up: (19 + 0.30) / (1 - 0.029).
-export const TOTAL_CENTS = Math.round((BASE_CENTS + 30) / (1 - 0.029));
+export const BASE_CENTS = 1800;
+export const PREVIOUS_BASE_CENTS = 1900;
+export const TOTAL_CENTS = checkoutTotal(BASE_CENTS);
 export const FEE_CENTS = TOTAL_CENTS - BASE_CENTS;
 export const MAX_FILE_BYTES = 20 * 1024 * 1024;
 export const locales = ["en", "zh", "es"] as const;

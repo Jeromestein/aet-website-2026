@@ -97,7 +97,7 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
         if(rows.length)await sql().unsafe(`insert into ${name} overriding system value select * from jsonb_populate_recordset(null::${name},$1::text::jsonb)`,[JSON.stringify(rows)]);
       }
       originals=all.applications.filter((a:Row)=>eligible.has(a.id));
-      for(const a of originals)evidence.set(a.id,{verifiedServicePrice:{amountCents:BASE_CENTS,currency:'USD',source:'automatic'},
+      for(const a of originals)evidence.set(a.id,{verifiedServicePrice:{amountCents:1900,currency:'USD',source:'automatic'},
         files:verified.files.filter((f:Row)=>all.files.some((r:Row)=>r.application_id===a.id&&r.id===f.legacyFileId))});
     }else{
       for(let i=0;i<(mixed?4:3);i++){
@@ -117,12 +117,12 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
           await sql()`insert into preeval.files(id,application_id,name,mime_type,bytes,sha256,dropbox_path,state)
             values (${f},${a},'degree.pdf','application/pdf',200,${'hash'+i},${'/synthetic/'+a+'/degree.pdf'},'ready')`;
           if(!exempt){
-          await sql()`insert into preeval.payments(id,application_id,session_id,payment_intent,amount_cents,status) values (${p},${a},${'cs_'+a},${'pi_'+a},${TOTAL_CENTS},'paid')`;
+          await sql()`insert into preeval.payments(id,application_id,session_id,payment_intent,amount_cents,status) values (${p},${a},${'cs_'+a},${'pi_'+a},${1988},'paid')`;
           await sql()`insert into public.aet_core_payments(id,application_id,due_amount,payment_status,paid_at,payment_id)
-            values (${p},${a},${TOTAL_CENTS/100},'paid','2026-10-01T12:00:00.123456Z',${'pi_'+a}) on conflict(id) do update set paid_at=excluded.paid_at`;
-          const session={id:'cs_'+a,livemode:false,mode:'payment',client_reference_id:a,metadata:{pilot:'aet-2026-local',applicationId:a},currency:'usd',amount_total:TOTAL_CENTS,
+            values (${p},${a},${1988/100},'paid','2026-10-01T12:00:00.123456Z',${'pi_'+a}) on conflict(id) do update set paid_at=excluded.paid_at`;
+          const session={id:'cs_'+a,livemode:false,mode:'payment',client_reference_id:a,metadata:{pilot:'aet-2026-local',applicationId:a},currency:'usd',amount_total:1988,
             payment_status:'paid',status:'complete',payment_intent:'pi_'+a};
-          const intent={id:'pi_'+a,livemode:false,status:'succeeded',currency:'usd',amount:TOTAL_CENTS,latest_charge:{id:'ch_'+a,livemode:false,currency:'usd',amount:TOTAL_CENTS,amount_refunded:0,payment_intent:'pi_'+a}};
+          const intent={id:'pi_'+a,livemode:false,status:'succeeded',currency:'usd',amount:1988,latest_charge:{id:'ch_'+a,livemode:false,currency:'usd',amount:1988,amount_refunded:0,payment_intent:'pi_'+a}};
           paymentEvidence.push({id:p,applicationId:a,session,intent});
           await sql()`insert into preeval.payment_events(id,type) values (${`evt_history_${a}`},'checkout.session.completed')`;
           }
@@ -140,7 +140,7 @@ describe.skipIf(!pgBin).each([false,true])('populated pre-evaluation retirement,
         if(exempt)await sql()`insert into preeval.audit(application_id,actor,action,detail) values (${a},'synthetic-e2e-test','test.payment_fixture',
           '{"synthetic":true,"noCharge":true,"purpose":"Synthetic release test without Stripe"}')`;
         const [row]=await sql()`select * from preeval.applications where id=${a}`;originals.push(row);
-        evidence.set(a,{originalSubmission:v,verifiedServicePrice:{amountCents:BASE_CENTS,currency:'USD',source:'automatic'},files:pending?[]:[{
+        evidence.set(a,{originalSubmission:v,verifiedServicePrice:{amountCents:1900,currency:'USD',source:'automatic'},files:pending?[]:[{
           legacyFileId:f,storageLocation:'AET_App',fileId:'id:'+f,revision:'original-rev',contentHash:null,path:'/synthetic/'+a+'/degree.pdf',name:'degree.pdf',size:200}]});
       }
     }

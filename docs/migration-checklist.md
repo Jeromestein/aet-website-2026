@@ -15,6 +15,11 @@ Read [status](status.md) for current capability and [database architecture](data
 for the six-table model. The [previous detailed checklist](archive/migration-checklist-2026-11-11-before-lean-launch.md)
 preserves migration history and acceptance evidence.
 
+## Application checkout pricing
+
+- [x] Verify locally that pre-evaluation and formal evaluation charge one processing fee, including office-adjusted quotes. New pre-evaluations total USD 18.85.
+- [ ] Verify both fee breakdowns and the matching Stripe totals on Preview before rollout.
+
 ## CRM application history
 
 - [x] Combine historical and new applications before search, ordering, page counts and CSV export.
@@ -143,7 +148,7 @@ These checks do not activate hosted Production.
 - [x] Use one customer `/status` lookup for both services, including pre-evaluation
   submission, confirmation links, Stripe returns and old result paths on the new website.
 - [x] Save pre-evaluation contact/office/notes, require residence country and terms,
-  display USD 19.88, defer AI until documents are ready or explicitly skipped,
+  display the service price, processing fee and total, defer AI until documents are ready or explicitly skipped,
   and preserve service-specific retries plus existing formal retry fingerprints.
 - [x] Build the three-step credential application, shared 2026 pricing, exclusive
   document/course selection, education and mailing-address requirements.

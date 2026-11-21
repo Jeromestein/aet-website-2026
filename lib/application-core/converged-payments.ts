@@ -6,11 +6,12 @@ import type Stripe from 'stripe';
 import type { TransactionSql } from 'postgres';
 import { db,type Row } from '../preeval/db';
 import { configuration } from '../preeval/config';
-import { AppError,TOTAL_CENTS,resultPath,type Language } from '../preeval/domain';
+import { AppError,PREVIOUS_BASE_CENTS,resultPath,type Language } from '../preeval/domain';
 import { verifiedPreEvaluationStripeClient } from '../preeval/payments';
 import { applicationRecipient } from '../preeval/recipients';
 import { preEvaluationPaymentMode, preEvaluationPaymentTag, paymentModeMatches } from '../preeval/payment-mode';
 import { readConverged,providerAccount,publishConverged,setStatus } from './converged-store';
+import { checkoutTotal, applicationLineItems } from '../application/checkout-pricing';
 const intentId=(value:string|{id:string}|null)=>typeof value==='string'?value:value?.id;
 const client=verifiedPreEvaluationStripeClient;
 const mode=preEvaluationPaymentMode;
@@ -37,6 +38,9 @@ export async function checkoutConverged(id:string, locale?: Language) {
     if(a.payment_status==='waived')throw new AppError('payment_not_required',409);
     if(a.status==='cancelled')throw new AppError('application_cancelled',409);
     if(['paid','partially_refunded','refunded'].includes(a.payment_status))throw new AppError('already_paid',409);
+    const base = a.base_cents ?? PREVIOUS_BASE_CENTS;
+    const total = a.checkout_cents ?? checkoutTotal(base);
+    if (base <= 0 || total < base) throw new AppError('quote_required',409);
     let [p]=await tx`select * from ${coreTable(tx,'aet_payments')} where application_id=${id} and payment_status in ('creating','open') and provider_account=${account()} and provider_mode=${mode()} for update`;
     if(p?.checkout_session_id){
       const old=await (await client()).checkout.sessions.retrieve(p.checkout_session_id);
@@ -46,9 +50,9 @@ export async function checkoutConverged(id:string, locale?: Language) {
       await tx`update ${coreTable(tx,'aet_payments')} set payment_status='expired',updated_at=now() where id=${p.id}`;p=undefined!;
     }
     if(!p)[p]=await tx`insert into ${coreTable(tx,'aet_payments')}(application_id,amount_cents,payment_status,provider,provider_account,provider_mode,source)
-      values (${id},${TOTAL_CENTS},'creating','stripe',${account()},${mode()},'pre-evaluation') returning *`;
+      values (${id},${total},'creating','stripe',${account()},${mode()},'pre-evaluation') returning *`;
     const session=await (await client()).checkout.sessions.create({mode:'payment',allowed_payment_method_types:['card','alipay'],
-      line_items:[{price_data:{currency:'usd',product_data:{name:'Degree Equivalency Service',description:'19.00 + Stripe Fee: 0.88'},unit_amount:p.amount_cents},quantity:1}],
+      line_items:applicationLineItems('Degree Equivalency Service', base, p.amount_cents),
       client_reference_id:id,customer_email:applicationRecipient(a.email),
       metadata:{applicationId:id,paymentType:'degree-equivalency',pilot:preEvaluationPaymentTag()},
       success_url:configuration().origin+resultPath(locale ?? a.locale,id)+'&checkout=success',cancel_url:configuration().origin+resultPath(locale ?? a.locale,id)+'&checkout=cancelled',
@@ -67,7 +71,7 @@ export async function applyConvergedCheckout(s:Stripe.Checkout.Session,eventId:s
     const [p]=await tx`select * from ${coreTable(tx,'aet_payments')} where application_id=${id} and checkout_session_id=${s.id}
       and provider='stripe' and provider_account=${account()} and provider_mode=${mode()} for update`;
     if(!p)throw new AppError('unknown_payment',409);
-    if(s.client_reference_id!==id || s.currency!=='usd' || s.amount_total!==p.amount_cents || p.amount_cents!==TOTAL_CENTS)throw new AppError('invalid_payment');
+    if(s.client_reference_id!==id || s.currency!=='usd' || s.amount_total!==p.amount_cents)throw new AppError('invalid_payment');
     let refunded=p.refunded_cents>0;const intent=intentId(s.payment_intent);
     // Reconcile provider state even for a repeated event: a paid Session can later be refunded.
     if(s.payment_status==='paid'){

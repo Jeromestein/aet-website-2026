@@ -25,7 +25,7 @@ export default function CaseDrawer({ target,initial,initialTab='overview',cloudP
   const email=record?(formal?record.data.client.email:record.email):'';
   const educations:Education[]=record?(formal?record.data.educations:[{degree:record.education.degree_obtained,school:record.education.school_name,country:record.education.country_of_study,start:record.education.start_date,end:record.education.end_date}]):[];
   const files:WorkspaceFile[]=record?(record.files||[]).filter((f:any)=>!f.state||f.state==='ready').map((f:any)=>f.kind?f:{...f,kind:'document'}):[];
-  const amount=record?(formal?record.total:1988):null;
+  const amount=record?(formal?record.total:record.checkout_cents):null;
   const canVerifyPayment=formal?!cloudPreview:record?.payment_verification_enabled===true;
   const notes=record?(formal?record.staff_notes:record.notes):'';
   const notesKey=record?`${record.id}:${record.version||record.updated_at}`:'';

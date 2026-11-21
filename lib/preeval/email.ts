@@ -1,6 +1,8 @@
 import { coreTable } from '../application-core/connection';
 import { compact } from '../application-core/compact-files';
 import { enqueueCompact,flushCompactNotifications } from '../application-core/compact-notifications';
+import { PREVIOUS_BASE_CENTS } from './domain';
+import { pilotBase } from './saved-pricing';
 import { converged, workflowRows } from "../application-core/converged-store";
 import { isCoreApplication, coreProfile } from "../application-core/runtime";
 import { createCoreShadowReader } from "../application-core/reader";
@@ -49,13 +51,18 @@ export async function renderQueuedEmail(row: Row) {
     row.result_version !== app.result_version || (app.payment_status !== "paid" && !(converged() && app.payment_status === "waived")) || !app.result ||
     ["cancelled", "needs_information"].includes(app.status)
   )) throw new EmailReviewRequired("result_superseded_or_withheld");
-  if (await isCoreApplication(app.id)) {
+  const core = await isCoreApplication(app.id);
+  if (core) {
     Object.assign(app,await coreProfile(db(),app.id),{locale:'en'});
+    app.base_cents ??= PREVIOUS_BASE_CENTS;
     if (row.kind === 'result') {
       const result=await (await createCoreShadowReader(db())).status(app.id,{role:'customer',applicationId:app.id});
       if (!result.result || result.result_version!==row.result_version) throw new EmailReviewRequired('result_superseded_or_withheld');
       app.result=result.result;
     }
+  } else if (row.kind === 'confirmation' && app.base_cents == null) {
+    const [price] = await db()`select ${pilotBase(db())} as base from ${table('preeval.applications')} a where a.id=${app.id}`;
+    app.base_cents = price.base;
   }
   let message = "";
   if (row.kind === "information") {
@@ -64,7 +71,7 @@ export async function renderQueuedEmail(row: Row) {
     if (!request?.message) throw new EmailReviewRequired("information_request_missing");
     message = request.message;
   }
-  const [education] = await isCoreApplication(app.id) ? [app.education] : await db()`select school_name,degree_obtained,country_of_study,start_date,end_date from ${table("preeval.educations")}
+  const [education] = core ? [app.education] : await db()`select school_name,degree_obtained,country_of_study,start_date,end_date from ${table("preeval.educations")}
     where application_id=${app.id} order by id limit 1`;
   return customerEmail(app as EmailApplication, education as EmailEducation | undefined, row.kind, config.origin, message);
 }

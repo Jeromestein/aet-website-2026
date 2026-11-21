@@ -11,6 +11,7 @@ import { paymentModeMatches, preEvaluationPaymentMode as mode } from '../preeval
 import { applicationRecipient } from '../preeval/recipients';
 import { providerAccount } from './converged-store';
 import { readFormal, touchFormal, queueFormalNotification } from './formal-store';
+import { checkoutTotal, applicationLineItems } from '../application/checkout-pricing';
 const intentId=(value:string|{id:string}|null)=>typeof value==='string'?value:value?.id;
 const formalTag = () => mode() === 'live' ? 'aet-formal-2026-production' : 'aet-formal-2026-local';
 const account=()=>providerAccount();
@@ -45,9 +46,9 @@ export async function checkoutFormalCore(id:string) {
       await tx`update ${coreTable(tx,'aet_payments')} set payment_status='expired',updated_at=now() where id=${p.id}`;p=undefined!;
     }
     if(!p)[p]=await tx`insert into ${coreTable(tx,'aet_payments')}(application_id,amount_cents,payment_status,provider,provider_account,provider_mode,source)
-      values (${id},${a.amount_cents},'creating','stripe',${account()},${mode()},'formal-evaluation') returning *`;
+      values (${id},${a.checkout_cents ?? checkoutTotal(a.amount_cents)},'creating','stripe',${account()},${mode()},'formal-evaluation') returning *`;
     const session=await (await client()).checkout.sessions.create({mode:'payment',allowed_payment_method_types:['card','alipay'],
-      line_items:[{price_data:{currency:'usd',product_data:{name:'Formal Credential Evaluation',description:'Evaluation services and delivery shown on your application.'},unit_amount:p.amount_cents},quantity:1}],
+      line_items:applicationLineItems('Formal Credential Evaluation', a.amount_cents, p.amount_cents),
       client_reference_id:id,customer_email:applicationRecipient(a.email),
       metadata:{applicationId:id,paymentType:'formal-evaluation',pilot:formalTag()},
       success_url:configuration().origin+formalStatusPath(a as ApplicationRecord)+'&checkout=success',cancel_url:configuration().origin+formalStatusPath(a as ApplicationRecord)+'&checkout=cancelled',
@@ -66,7 +67,7 @@ export async function applyFormalCheckout(s:Stripe.Checkout.Session,eventId:stri
     const [p]=await tx`select * from ${coreTable(tx,'aet_payments')} where application_id=${id} and checkout_session_id=${s.id}
       and provider='stripe' and provider_account=${account()} and provider_mode=${mode()} and source='formal-evaluation' for update`;
     if(!p)throw new AppError('unknown_payment',409);
-    if(s.client_reference_id!==id || s.currency!=='usd' || s.amount_total!==p.amount_cents || p.amount_cents!==a.amount_cents)throw new AppError('invalid_payment');
+    if(s.client_reference_id!==id || s.currency!=='usd' || s.amount_total!==p.amount_cents || (p.amount_cents!==a.amount_cents && p.amount_cents!==checkoutTotal(a.amount_cents)))throw new AppError('invalid_payment');
     let refunded=p.refunded_cents>0;const intent=intentId(s.payment_intent);
     // Reconcile provider state even for a repeated event: a paid Session can later be refunded.
     if(s.payment_status==='paid'){

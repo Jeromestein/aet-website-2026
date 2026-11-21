@@ -20,7 +20,7 @@ describe("Application-ID lookup without customer accounts", () => {
 describe("Legacy-style confirmation and result emails", () => {
   it("includes the ID, education, exact price and reusable localized link", async () => {
     const { html } = await customerEmail(app, education, "confirmation", "http://localhost:3022");
-    for (const value of [id, "Test degree", "$19.00", "$0.88", "$19.88", `/zh/status?applicationId=${id}`]) expect(html).toContain(value);
+    for (const value of [id, "Test degree", "$18.00", "$0.85", "$18.85", `/zh/status?applicationId=${id}`]) expect(html).toContain(value);
     expect(html).not.toContain("24 hours"); expect(html).not.toContain("#token="); expect(html).not.toContain("PRIVATE RESULT");
   });
   it("escapes applicant, education, result and information text", async () => {

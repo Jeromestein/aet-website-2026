@@ -64,7 +64,8 @@ The retired four-step formal pilot redirects here. See
 - Charge only selected qualifications: first included, additional ones at catalog
   rates. Preserve education associations when switching. Translation remains a
   separate optional quoted add-on. Sidebar/review estimates must agree, include
-  selected report/shipping charges and exclude payment-processing fees.
+  selected report/shipping charges and exclude payment-processing fees. Show the
+  service subtotal, processing fee and amount due together before Stripe Checkout.
 - Place Report & delivery next. Default to PDF-only; offer PDF plus one mailed
   paper report and optional extra copies. Use shared report/shipping fees and
   preserve additional-copy price ranges. Required for paper: recipient, country,
@@ -142,8 +143,8 @@ document context through refresh and do not present a failed upload as saved.
 ## Dedicated pre-evaluation
 
 New applications use the general three-step form above. Include required residence
-country separately from study country, one education and USD 19.88 total (USD 19
-plus USD 0.88 processing). Review requires the existing terms and disclaimer.
+country separately from study country, one education and USD 18.85 total (USD 18
+plus USD 0.85 processing). Review requires the existing terms and disclaimer.
 Preserve per-service retry IDs, drafts and Start over. Submission opens the saved
 application's document section; never show an unsaved-preview notice for this
 connected service. Retain the existing result/status layout and saved URLs.

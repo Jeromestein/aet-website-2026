@@ -9,6 +9,7 @@ import { AppError } from '../preeval/domain';
 import { stripeClient } from '../preeval/payments';
 import { payableTotal, receiptPath, type ApplicationRecord } from './workflow';
 import { queuePaymentEmail } from './email';
+import { checkoutTotal, applicationLineItems } from '../application/checkout-pricing';
 const pilot = 'aet-formal-2026-local';
 export async function checkout(id: string) {
   if(formalCore())return checkoutFormalCore(id);
@@ -17,8 +18,8 @@ export async function checkout(id: string) {
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
     if (!app || app.status === 'cancelled') throw new AppError('application_locked', 409);
     if (['paid', 'partially_refunded', 'refunded'].includes(app.payment_status)) throw new AppError('already_paid', 409);
-    const amount = payableTotal(app as ApplicationRecord);
-    if (!amount || !Number.isSafeInteger(amount)) throw new AppError('quote_required', 409);
+    const base = payableTotal(app as ApplicationRecord);
+    if (!base || !Number.isSafeInteger(base)) throw new AppError('quote_required', 409);
     const [old] = await tx`select * from ${table("evaluation.payments")} where application_id=${id} and status in ('creating','open')`;
     if (old?.session_id) {
       const previous = await stripe.checkout.sessions.retrieve(old.session_id);
@@ -26,10 +27,11 @@ export async function checkout(id: string) {
       if (previous.payment_status === 'paid') throw new AppError('payment_reconciliation_required', 409);
       await tx`update ${table("evaluation.payments")} set status='expired',updated_at=now() where id=${old.id}`;
     }
+    const amount = old?.amount_cents ?? checkoutTotal(base);
     const [payment] = await tx`insert into ${table("evaluation.payments")}(application_id,amount_cents) values(${id},${amount}) returning id`;
     const session = await stripe.checkout.sessions.create({
       mode: 'payment', allowed_payment_method_types: ['card', 'alipay'],
-      line_items: [{ price_data: { currency: 'usd', product_data: { name: 'Formal Credential Evaluation', description: 'Evaluation services and delivery shown on your application.' }, unit_amount: amount }, quantity: 1 }],
+      line_items: applicationLineItems('Formal Credential Evaluation', base, amount),
       client_reference_id: id, customer_email: configuration().recipient,
       metadata: { applicationId: id, paymentType: 'formal-evaluation', pilot },
       success_url: configuration().origin + receiptPath(app.locale, id) + '&checkout=success',
@@ -51,7 +53,9 @@ export async function applyCheckout(session: Stripe.Checkout.Session, eventId: s
     const [app] = await tx`select * from ${table("evaluation.applications")} where id=${id} for update`;
     const [payment] = await tx`select * from ${table("evaluation.payments")} where application_id=${id} and session_id=${session.id} for update`;
     if (!app || !payment) throw new AppError('unknown_payment', 409);
-    if (session.client_reference_id !== id || session.currency !== 'usd' || session.amount_total !== payment.amount_cents || payment.amount_cents !== payableTotal(app as ApplicationRecord)) throw new AppError('invalid_payment');
+    const base = payableTotal(app as ApplicationRecord);
+    if (base === null || (payment.amount_cents !== base && payment.amount_cents !== checkoutTotal(base))) throw new AppError('invalid_payment');
+    if (session.client_reference_id !== id || session.currency !== 'usd' || session.amount_total !== payment.amount_cents) throw new AppError('invalid_payment');
     const refunded = await syncCheckoutRefund(tx, 'evaluation', payment, session, () => stripeClient());
     if (!(await tx`insert into ${table("evaluation.payment_events")}(id,type) values(${eventId},${eventType}) on conflict do nothing returning id`).length || refunded) return;
     if (session.payment_status === 'paid' && !['refunded', 'partially_refunded'].includes(payment.status)) {

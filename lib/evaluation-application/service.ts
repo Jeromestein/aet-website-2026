@@ -1,3 +1,4 @@
+import { checkoutTotal } from '../application/checkout-pricing';
 import { formalCore, readFormal, formalApplication } from '../application-core/formal-store';
 import { addFormalFile, formalStaffAction } from '../application-core/formal-actions';
 import { queueFeeUpdateEmail } from './email';
@@ -46,6 +47,9 @@ export async function application(id: string, admin: boolean): Promise<Applicati
   const files = await db()`select id,kind,name,bytes,input_version,created_at from ${table("evaluation.files")} where application_id=${id} and state='ready' order by created_at`;
   row.files = files.filter(f => admin || f.kind === 'document' || canDownloadReport(row as ApplicationRecord, f.id));
   row.total = payableTotal(row as ApplicationRecord);
+  const [attempt] = await db()`select amount_cents from ${table("evaluation.payments")} where application_id=${id}
+    and status in ('creating','open','paid','refunded','partially_refunded') order by created_at desc limit 1`;
+  row.checkoutTotal = attempt?.amount_cents ?? (row.total === null ? null : checkoutTotal(row.total));
   if (!admin) row.released_file_id = row.files.find((f: { kind: string }) => f.kind === 'report')?.id ?? null;
   if (admin) {
     const [privateFields] = await db()`select staff_notes from ${table("evaluation.applications")} where id=${id}`;

@@ -5,13 +5,15 @@ import { compact, compactFileRecords, reserveCompactFile, settleCompactFile } fr
 import { converged,submitConverged,staffConverged,workflowRows } from "../application-core/converged-store";
 import { coreRuntimeEnabled, isCoreApplication, submitCore, coreProfile, recordCoreFile, workflowMutation } from '../application-core/runtime';
 import { createCoreShadowReader } from '../application-core/reader';
+import { checkoutTotal } from '../application/checkout-pricing';
+import { pilotBase } from './saved-pricing';
 import { saveLegacyPreeval } from "../legacy-application/store";
 import { pauseForUpload, retryAnalysis } from "./ai-jobs";
 import { randomUUID } from "node:crypto";
 import { table, db, audit, type Row } from "./db";
 import { hash, authorize } from "./auth";
 import {
-  applicationSchema,
+  BASE_CENTS, PREVIOUS_BASE_CENTS, applicationSchema,
   AppError,
   validFile,
   resultSchema,
@@ -43,7 +45,7 @@ export async function submit(input: unknown) {
     const educationId = randomUUID();
     await saveLegacyPreeval(tx, created.id, educationId, v);
     await tx`insert into ${table("preeval.educations")}(id,application_id,school_name,country_of_study,degree_obtained,start_date,end_date) values (${educationId},${created.id},${v.schoolName},${v.countryOfStudy},${v.degreeObtained},${v.startDate},${v.endDate})`;
-    if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action) values (${created.id},'customer','application.submitted')`;
+    if(!sixTableMode(db())) await tx`insert into ${table("preeval.audit")}(application_id,actor,action,detail) values (${created.id},'customer','application.submitted',${tx.json({base_cents:BASE_CENTS})})`;
     return created;
   });
   await applicationEmail(app, "confirmation");
@@ -61,7 +63,7 @@ export async function application(id: string, staff = false) {
   // hide a successfully published result or fail the customer's status read.
   const [app] = core
     ? await workflowRows(db(), id, false)
-    : await db()`select a.*,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
+    : await db()`select a.*,${pilotBase(db())} as base_cents,row_to_json(e) as education from ${table("preeval.applications")} a join ${table("preeval.educations")} e on e.application_id=a.id where a.id=${id}`;
   if (!app) throw new AppError("not_found", 404);
   const [legacy] = core ? [] : await db()`select * from ${table("public.aet_core_applications")} where id=${id}`;
   if (legacy) {
@@ -80,7 +82,9 @@ export async function application(id: string, staff = false) {
     staff ||
     (canRelease(app.payment_status, app.status) && app.status === "completed" &&
       app.ai_status === "completed" && !app.uploads_pending);
+  const base = app.base_cents ?? PREVIOUS_BASE_CENTS;
   const response: Row = {
+    base_cents: base, checkout_cents: app.checkout_cents ?? checkoutTotal(base),
     id: app.id,
     first_name: app.first_name,
     last_name: app.last_name,

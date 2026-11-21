@@ -380,9 +380,9 @@ running by this acceptance.
   `{year, month}` in the existing education table. The unified form confirms the
   application first and opens the saved document page for optional uploads.
   Upload failures show a retry message on the saved application.
-- Legacy price: USD 19.00 plus the rounded legacy Stripe gross-up fee of 0.88;
-  checkout total is **USD 19.88**, calculated on the server. Card and Alipay are
-  enabled; acceptance exercised card payment.
+- New pre-evaluations have a USD 18.00 service price and a USD 0.85 processing
+  fee, totaling **USD 18.85**. Checkout calculates the fee from the saved
+  service price and retains the recorded amount for existing checkouts.
 - Status lookup opens the application directly from its complete Application ID,
   matching the legacy app. Confirmation emails include the ID, education summary,
   exact fee and a reusable application URL. No customer account, password or extra

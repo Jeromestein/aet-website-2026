@@ -7,7 +7,8 @@ import type { Sql, TransactionSql, PendingQuery } from 'postgres';
 import { z } from 'zod';
 import { db, table, type Row } from '../preeval/db';
 import { configuration } from '../preeval/config';
-import { AppError, TOTAL_CENTS } from '../preeval/domain';
+import { pilotBase, projectedTotal } from '../preeval/saved-pricing';
+import { AppError } from '../preeval/domain';
 import { WORKSPACE_PAGE_SIZE, type WorkspaceSnapshot } from './contracts';
 
 const officeNames = ['Boston','New York','Miami','San Francisco','Los Angeles'];
@@ -85,7 +86,7 @@ export function formalRecords(sql: Sql | TransactionSql) {
 export function legacyRecords(sql: Sql | TransactionSql) {
   return sql`${formalRecords(sql)} union all
       select 'preeval',a.id,concat_ws(' ',coalesce(l.first_name,a.first_name),nullif(trim(coalesce(l.middle_name,a.middle_name)),''),coalesce(l.last_name,a.last_name)),coalesce(l.email,a.email),a.office,
-        1,a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,${TOTAL_CENTS},'Pre-Evaluation',false,
+        1,a.status,a.payment_status,a.created_at,a.updated_at,'Preliminary degree equivalency',a.country,coalesce((select p.amount_cents from ${table('preeval.payments')} p where p.application_id=a.id order by p.created_at desc,p.id limit 1),${projectedTotal(sql,pilotBase(sql))}),'Pre-Evaluation',false,
         coalesce((select jsonb_agg(jsonb_build_object('degree',coalesce(e.degree_obtained,p.degree_obtained),'school',coalesce(e.school_name,p.school_name),'country',coalesce(e.country_of_study,p.country_of_study),'start',case when e.id is not null then concat(e.study_start_date->>'year','-',e.study_start_date->>'month') else p.start_date end,'end',case when e.id is not null then concat(e.study_end_date->>'year','-',e.study_end_date->>'month') else p.end_date end) order by p.id) from ${table('preeval.educations')} p left join ${table('public.aet_core_educations')} e on e.id=p.id and e.application_id=a.id where p.application_id=a.id),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',f.id,'kind','document','name',f.name,'bytes',f.bytes) order by f.created_at) from ${table('preeval.files')} f where f.application_id=a.id and f.state='ready'),'[]'::jsonb),
         coalesce((select jsonb_agg(jsonb_build_object('id',p.id,'session_id',p.session_id,'amount_cents',p.amount_cents,'status',p.status,'created_at',p.created_at) order by p.created_at desc) from ${table('preeval.payments')} p where p.application_id=a.id),'[]'::jsonb), null::jsonb

@@ -107,8 +107,9 @@ the plan/runtime supports the route's existing 300-second limit.
 
 Production uses the persisted applicant email for both mail and Checkout.
 `APPLICATION_TEST_EMAIL` is a Preview override, not a Production recipient switch.
-No Stripe Product/Price creation or publishable key is required by this server-side
-Checkout implementation: it creates a USD 19.88 line item (19.00 + 0.88).
+Server-side Checkout creates line items for the saved service subtotal and the
+processing fee. It does not require preconfigured Stripe prices or a publishable
+key. A new USD 18.00 pre-evaluation totals USD 18.85 under the updated pricing.
 Verify card and Alipay availability in the live merchant account before enabling
 Checkout; both are currently requested by the code.
 
@@ -227,7 +228,7 @@ to distinguish completed setup from pending live acceptance.
 4. Deploy the reviewed main release in the agreed window; verify startup, HTTPS
    origin, staff login/unassigned access, email assets and webhook routing. Do not
    advertise the new intake until controlled acceptance passes.
-5. With separate authorization for the payment, run one controlled USD 19.88 live
+5. With separate authorization for the payment, run one controlled USD 18.85 live
    application/upload/payment/result/email journey. Confirm the applicant receives
    both emails and the operator sees the same order/documents in CRM. Check a
    manual refund and existing refund-state synchronization; this is acceptance

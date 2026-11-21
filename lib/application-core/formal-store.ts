@@ -4,7 +4,8 @@ import type { Sql, TransactionSql } from 'postgres';
 import { db, type Row } from '../preeval/db';
 import { coreTable } from './connection';
 import { sixTableMode } from './convergence-mode';
-import { convergedPaymentState } from './converged-payment-state';
+import { checkoutTotal } from '../application/checkout-pricing';
+import { convergedPaymentState, recordedCheckoutTotal } from './converged-payment-state';
 import { AppError } from '../preeval/domain';
 import { canDownloadReport, payableTotal } from '../evaluation-application/workflow';
 import { toLegacyFormal, toLegacyEducation } from '../legacy-application/mapping';
@@ -32,7 +33,7 @@ export const formalRows = (sql: FormalDB) => sql`select a.*,s.id as service_id,c
   where a.primary_service='evaluation'`;
 export async function readFormal(id:string,sql:FormalDB=db(),lock=false):Promise<Row> {
   if(lock)await sql`select id from ${coreTable(sql,'aet_core_applications')} where id=${id} and primary_service='evaluation' for update`;
-  const [row]=await sql`select * from (${formalRows(sql)}) f where id=${id}`;
+  const [row]=await sql`select a.*,${recordedCheckoutTotal(sql)} as checkout_cents from (${formalRows(sql)}) a where a.id=${id}`;
   if(!row)throw new AppError('not_found',404);
   return row;
 }
@@ -83,6 +84,7 @@ export async function formalApplication(id:string,admin:boolean) {
   const files=await db()`select id,kind,name,bytes,input_version,created_at from (${formalFiles(db())}) f where application_id=${id} and state='ready' order by created_at`;
   row.files=files.filter(f=>admin||f.kind==='document'||canDownloadReport(row as never,f.id));
   row.total=payableTotal(row as never);
+  row.checkoutTotal=row.checkout_cents ?? (row.total === null ? null : checkoutTotal(row.total));
   if(admin){row.payments=await db()`select id,session_id,amount_cents,status,created_at from (${formalPayments(db())}) p where application_id=${id} order by created_at desc`;
     row.canEditAmount=canEditFormalAmount(row.status,row.payment_status,row.payments.length>0);
     row.audit=[];

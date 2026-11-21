@@ -151,6 +151,9 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   m.create.mockResolvedValue({id:'cs_test_'+id,livemode:false,url:'https://checkout.stripe.com/test',status:'open'});
   await checkout(id);
   expect(m.create.mock.lastCall?.[0].line_items[0].price_data.unit_amount).toBe(14000);
+  expect(after.checkoutTotal).toBe(14449);
+  expect(m.create.mock.lastCall?.[0].line_items[1].price_data).toMatchObject({unit_amount:449, product_data:{name:'Payment processing fee'}});
+  expect((await application(id,true)).payments?.[0].amount_cents).toBe(14449);
   const mail=vi.fn().mockResolvedValue('mail_adjusted');
   await flushFormalEmails(mail,id);
   await flushFormalEmails(mail,id);
@@ -164,11 +167,26 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   expect((await application(id,true)).canEditAmount).toBe(false);
   await expect(staffAction(id,attempt,'staff')).rejects.toMatchObject({code:'quote_locked'});
  });
+ it('honors a formal checkout opened before processing fees were added',async()=>{
+  const {id}=await saveApplication(input()),order=await application(id,false);
+  await sql()`insert into aet_preview_shared.aet_payments(application_id,amount_cents,payment_status,provider,provider_account,provider_mode,source,checkout_session_id)
+    values (${id},${order.total!},'open','stripe',${process.env.APPLICATION_CORE_PROVIDER_ACCOUNT!},'test','formal-evaluation',${'cs_'+id})`;
+  expect((await application(id,false)).checkoutTotal).toBe(order.total);
+  const session={id:'cs_'+id,livemode:false,mode:'payment',metadata:{pilot:'aet-formal-2026-local',applicationId:id},
+    client_reference_id:id,currency:'usd',amount_total:order.total,status:'expired',payment_status:'unpaid'} as unknown as Stripe.Checkout.Session;
+  await expect(applyCheckout({...session,amount_total:1},'wrong','checkout.session.expired')).rejects.toMatchObject({code:'invalid_payment'});
+  await applyCheckout(session,'expired','checkout.session.expired');
+  expect((await application(id,false)).checkoutTotal).toBe(order.total);
+  m.create.mockResolvedValue({id:'cs_retry_'+id,livemode:false,url:'https://checkout.example.invalid/retry'});
+  await checkout(id);
+  expect(m.create.mock.lastCall?.[0].line_items).toHaveLength(1);
+  expect(m.create.mock.lastCall?.[0].line_items[0].price_data.unit_amount).toBe(order.total);
+ });
  it('retains a single payment and receipt on repeated/out-of-order callbacks; refunds withhold reports',async()=>{
-  const a=await saveApplication(input()),r=await application(a.id,true),session:any={mode:'payment',id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
+  const a=await saveApplication(input()),r=await application(a.id,true),session:any={mode:'payment',id:'cs_'+a.id,livemode:false,client_reference_id:a.id,metadata:{pilot:'aet-formal-2026-local',applicationId:a.id},currency:'usd',amount_total:r.checkoutTotal,status:'complete',payment_status:'paid',payment_intent:'pi_'+a.id};
   m.create.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open'});
-  const charge:any={id:'ch_'+a.id,livemode:false,currency:'usd',amount:r.total,amount_refunded:0,payment_intent:session.payment_intent};
-  m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.total,latest_charge:charge});
+  const charge:any={id:'ch_'+a.id,livemode:false,currency:'usd',amount:r.checkoutTotal,amount_refunded:0,payment_intent:session.payment_intent};
+  m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.checkoutTotal,latest_charge:charge});
   await checkout(a.id);await Promise.all([applyCheckout(session,'evt_a','checkout.session.completed'),applyCheckout(session,'evt_a','checkout.session.completed')]);
   expect((await application(a.id,true)).payments).toHaveLength(1);expect((await application(a.id,true)).payment_status).toBe('paid');
   const n=(await readFormal(a.id)).notification_state.payment;expect(n.state).toBe('queued');
@@ -179,7 +197,7 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await sql()`insert into aet_preview_shared.aet_documents(id,application_id,storage_location,storage_file_id,storage_rev,original_filename,access_scope,upload_context) values(${docId},${a.id},'AET_App',${'id:doc_'+a.id},'1','degree.pdf','customer_input','{}'),(${reportId},${a.id},'AET_App',${'id:report_'+a.id},'1','report.pdf','staff_only','{"input_version":1}')`;
   let next=await application(a.id,true);await staffAction(a.id,{action:'status',version:next.version,status:'processing',message:''},'staff');next=await application(a.id,true);
   await staffAction(a.id,{action:'release',version:next.version,fileId:reportId},'staff');expect((await application(a.id,false)).files.some(f=>f.id===reportId)).toBe(true);
-  charge.amount_refunded=r.total;await handleStripeEvent({id:'evt_refund',type:'charge.refunded',livemode:false,data:{object:charge}} as Stripe.Event);
+  charge.amount_refunded=r.checkoutTotal;await handleStripeEvent({id:'evt_refund',type:'charge.refunded',livemode:false,data:{object:charge}} as Stripe.Event);
   expect((await application(a.id,false)).files.some(f=>f.id===reportId)).toBe(false);expect((await application(a.id,true)).payment_status).toBe('refunded');
   await applyCheckout(session,'evt_repeat','checkout.session.completed');expect((await application(a.id,true)).payment_status).toBe('refunded');
  });
@@ -208,14 +226,14 @@ describe.skipIf(!pg)('formal evaluation using six tables after retirement',()=>{
   await staffAction(r.id,{action:'quote',base:r.quote.min,additional:3500,explanation:'Synthetic translation quote',version:r.version},'staff');
   await flushFormalEmails(transport,r.id);r=await application(r.id,true);
   expect(r.total).toBe(r.quote.min+3500);
-  const session:any={mode:'payment',id:'cs_'+r.id,livemode:false,client_reference_id:r.id,metadata:{pilot:'aet-formal-2026-local',applicationId:r.id},currency:'usd',amount_total:r.total,status:'complete',payment_status:'paid',payment_intent:'pi_'+r.id};
+  const session:any={mode:'payment',id:'cs_'+r.id,livemode:false,client_reference_id:r.id,metadata:{pilot:'aet-formal-2026-local',applicationId:r.id},currency:'usd',amount_total:r.checkoutTotal,status:'complete',payment_status:'paid',payment_intent:'pi_'+r.id};
   m.create.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open'});
   m.retrieve.mockResolvedValue({...session,url:'https://checkout.stripe.com/synthetic',status:'open',payment_status:'unpaid'});
   await checkout(r.id);await checkout(r.id);
   expect(m.create.mock.lastCall?.[0].success_url).toContain(formalStatusPath(r));
   expect((await application(r.id,true)).payments).toHaveLength(1);
   r=await application(r.id,true);await expect(staffAction(r.id,{action:'quote',base:r.quote.min,additional:3500,explanation:'Changed quote',version:r.version},'staff')).rejects.toMatchObject({code:'quote_locked'});
-  m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.total,latest_charge:{id:'ch_'+r.id,livemode:false,currency:'usd',amount:r.total,amount_refunded:0,payment_intent:session.payment_intent}});
+  m.intent.mockResolvedValue({id:session.payment_intent,livemode:false,status:'succeeded',currency:'usd',amount:r.checkoutTotal,latest_charge:{id:'ch_'+r.id,livemode:false,currency:'usd',amount:r.checkoutTotal,amount_refunded:0,payment_intent:session.payment_intent}});
   await applyCheckout(session,'evt_unified','checkout.session.completed');await applyCheckout(session,'evt_unified','checkout.session.completed');
   await flushFormalEmails(transport,r.id);r=await application(r.id,true);
   await staffAction(r.id,{action:'status',status:'processing',message:'',version:r.version},'staff');

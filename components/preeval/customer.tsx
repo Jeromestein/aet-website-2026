@@ -17,10 +17,9 @@ import { copy, errorText, stateLabel } from "@/lib/preeval/copy";
 import { uploadDocuments, validateDocuments } from "@/lib/preeval/upload-client";
 import {
   BASE_CENTS,
-  FEE_CENTS,
-  TOTAL_CENTS,
   pathFor,
 } from "@/lib/preeval/domain";
+import { checkoutTotal } from "@/lib/application/checkout-pricing";
 import s from "./preeval.module.css";
 
 export async function api(path: string, body?: unknown) {
@@ -44,7 +43,7 @@ export async function api(path: string, body?: unknown) {
   if (!res.ok) throw new Error(data.error || "service_unavailable");
   return data;
 }
-export function Prices({ locale }: { locale: string }) {
+export function Prices({ locale, base = BASE_CENTS, total = checkoutTotal(base) }: { locale: string; base?: number; total?: number }) {
   const t = copy(locale),
     format = (n: number) =>
       new Intl.NumberFormat(locale, {
@@ -55,15 +54,15 @@ export function Prices({ locale }: { locale: string }) {
     <>
       <div className={s.summary}>
         <span>{t.price}</span>
-        <strong>{format(BASE_CENTS)}</strong>
+        <strong>{format(base)}</strong>
       </div>
       <div className={s.summary}>
         <span>{t.fee}</span>
-        <span>{format(FEE_CENTS)}</span>
+        <span>{format(total - base)}</span>
       </div>
       <div className={s.summary}>
         <strong>{t.total}</strong>
-        <strong>{format(TOTAL_CENTS)}</strong>
+        <strong>{format(total)}</strong>
       </div>
     </>
   );
@@ -513,7 +512,7 @@ export function ApplicationResult({
             ) &&
               app.status !== "cancelled" && (
                 <>
-                  <Prices locale={locale} />
+                  <Prices locale={locale} base={app.base_cents} total={app.checkout_cents} />
                   <div className={s.buttons}>
                     <button
                       className={s.button + " " + s.primary}

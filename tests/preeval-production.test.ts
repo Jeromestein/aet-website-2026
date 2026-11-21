@@ -150,7 +150,8 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     execFileSync(join(pg!,'initdb'),['-D',join(dir,'data'),'-U','core_rehearsal','-A','trust','--locale=C','--encoding=UTF8'],{stdio:'pipe'});
     execFileSync(join(pg!,'pg_ctl'),['-D',join(dir,'data'),'-l',join(dir,'pg.log'),'-o',`-F -k ${dir} -h '' -p 55452`,'-w','start'],{stdio:'pipe'}); started=true;
     const options={host:dir,port:55452,database:'postgres',max:3,onnotice:()=>{}};
-    admin=postgres({...options,username:'core_rehearsal'});
+    // The schema fixtures contain their own BEGIN/COMMIT blocks.
+    admin=postgres({...options,username:'core_rehearsal',max:1});
     await admin.unsafe('create role anon; create role authenticated; create role aet_runtime login; create table public.legacy_guard(id int);');
     // An empty copy of the accepted six-table contract, in this owned cluster only.
     const schema=readFileSync(new URL('../scripts/database/initialize-production.sql',import.meta.url),'utf8');
@@ -286,10 +287,10 @@ describe.skipIf(!pg)('Production runtime rehearsal on an owned local PostgreSQL 
     expect((await readCase()).completion).toBeNull();
     await checkoutFormalCore(id);
     expect(m.create.mock.calls[0][0]).toMatchObject({customer_email:data.email,metadata:{pilot:'aet-formal-2026-production'}});
-    const paid = {...sessions.get('cs_'+id)!,amount_total:11000,status:'complete',payment_status:'paid'} as Stripe.Checkout.Session;
+    const paid = {...sessions.get('cs_'+id)!,amount_total:11359,status:'complete',payment_status:'paid'} as Stripe.Checkout.Session;
     const pi='pi_'+id;
-    m.intent.mockResolvedValue({id:pi,livemode:true,status:'succeeded',currency:'usd',amount:11000,
-      latest_charge:{livemode:true,payment_intent:pi,currency:'usd',amount:11000,amount_refunded:0}});
+    m.intent.mockResolvedValue({id:pi,livemode:true,status:'succeeded',currency:'usd',amount:11359,
+      latest_charge:{livemode:true,payment_intent:pi,currency:'usd',amount:11359,amount_refunded:0}});
     expect((await webhook(paid,env.STRIPE_TEST_WEBHOOK_SECRET)).status).toBe(400);
     expect((await webhook(paid)).status).toBe(200);
     expect((await webhook(paid)).status).toBe(200);

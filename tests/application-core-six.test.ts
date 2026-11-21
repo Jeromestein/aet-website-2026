@@ -74,9 +74,9 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
   const service=async(id:string)=>(await sql()`select * from aet.aet_service_detail where application_id=${id}`)[0];
   const session=(id:string)=>({id:`cs_${id}`,livemode:false,mode:'payment',client_reference_id:id,metadata:{pilot:'aet-2026-local',applicationId:id},
     currency:'usd',amount_total:TOTAL_CENTS,payment_status:'paid',status:'complete',payment_intent:`pi_${id}`} as unknown as Stripe.Checkout.Session);
-  function charge(id:string,refunded=0){
-    const c={id:`ch_${id}`,livemode:false,currency:'usd',amount:TOTAL_CENTS,amount_refunded:refunded,payment_intent:`pi_${id}`};
-    m.intent.mockResolvedValue({id:`pi_${id}`,livemode:false,status:'succeeded',currency:'usd',amount:TOTAL_CENTS,latest_charge:c});return c;
+  function charge(id:string,refunded=0,amount=TOTAL_CENTS){
+    const c={id:`ch_${id}`,livemode:false,currency:'usd',amount,amount_refunded:refunded,payment_intent:`pi_${id}`};
+    m.intent.mockResolvedValue({id:`pi_${id}`,livemode:false,status:'succeeded',currency:'usd',amount,latest_charge:c});return c;
   }
   async function paid(id:string){await checkout(id);charge(id);await applyCheckout(session(id),`evt_${id}`,'checkout.session.completed');}
   async function uploaded(){const original=input();const {app}=await submit(original);await addFile(app.id,file(),'customer');await completeUploads(app.id);return app;}
@@ -126,6 +126,17 @@ describe.skipIf(!pgBin)('six-table pre-evaluation after physical retirement (own
     });
     m.create.mockReset().mockImplementation(async({client_reference_id:id}:{client_reference_id:string})=>({id:`cs_${id}`,livemode:false,metadata:{applicationId:id,pilot:'aet-2026-local'},amount_total:TOTAL_CENTS,status:'open',url:'https://checkout.example.invalid/test'}));
     m.retrieve.mockReset().mockImplementation(async(sessionId:string)=>({id:sessionId,livemode:false,metadata:{applicationId:sessionId.slice(3),pilot:'aet-2026-local'},amount_total:TOTAL_CENTS,status:'open',url:'https://checkout.example.invalid/test'}));
+  });
+  it.each([[1800,85,1885],[1900,88,1988]])('charges the saved pre-evaluation price of %i cents', async (base,fee,total)=>{
+    const {app}=await submit(input());
+    if(base===1900)await sql()`update aet.aet_service_detail set amount_cents=1900 where application_id=${app.id}`;
+    expect(await application(app.id)).toMatchObject({base_cents:base,checkout_cents:total});
+    await checkout(app.id);
+    expect(m.create.mock.lastCall?.[0].line_items.map((item:{price_data:{unit_amount:number}})=>item.price_data.unit_amount)).toEqual([base,fee]);
+    expect((await sql()`select amount_cents from aet.aet_payments where application_id=${app.id}`)[0].amount_cents).toBe(total);
+    charge(app.id,0,total);
+    await applyCheckout({...session(app.id),amount_total:total},'evt_price_'+app.id,'checkout.session.completed');
+    expect(await application(app.id)).toMatchObject({payment_status:'paid',checkout_cents:total});
   });
   it('has 6 canonical/runtime tables and no retired tables or replacement views',async()=>{
     const tables=await sql()`select tablename from pg_tables where schemaname='aet'`;

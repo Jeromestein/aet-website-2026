@@ -90,7 +90,7 @@ export async function coreEducation(sql: DB, id: string) {
 }
 export async function coreProfile(sql: DB, id: string): Promise<Row> {
   const [app] = await sql`select a.id,a.first_name,a.middle_name,a.last_name,a.email,a.residence_country as country,
-    a.office,s.staff_notes as notes from ${coreTable(sql,'aet_core_applications')} a join ${coreTable(sql,'aet_service_detail')} s on s.application_id=a.id
+    a.office,s.amount_cents as base_cents,s.staff_notes as notes from ${coreTable(sql,'aet_core_applications')} a join ${coreTable(sql,'aet_service_detail')} s on s.application_id=a.id
     where a.id=${id} and a.primary_service='pre-evaluation' and s.service_type='pre-evaluation'`;
   if (!app) throw new Error('Missing canonical pre-evaluation application');
   return { ...app, education:await coreEducation(sql,id) };

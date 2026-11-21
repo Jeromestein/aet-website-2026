@@ -11,7 +11,7 @@ export type CustomerStatus = {
  portalUrl: string | null;
  details?: {request: IntakeReceipt['data']['evaluationRequest']; delivery: IntakeReceipt['data']['evaluationDelivery']; quote: IntakeReceipt['quote']};
  email?: IntakeReceipt['email'];
- workflow?: {production?:boolean;canPay:boolean;message:string;confirmedQuote:ConfirmedQuote|null;report:{id:string;name:string}|null};
+ workflow?: {checkoutTotal?:number|null;production?:boolean;canPay:boolean;message:string;confirmedQuote:ConfirmedQuote|null;report:{id:string;name:string}|null};
  id: string; status: string; payment: string; submitted: string; paid: string; office: string | null; services: string; amount: number | null; completion: Completion | null; deadline: string | null;
  client: {name:string;country:string;street:string;city:string;phone:string;fax:string;email:string;purpose:string;notes:string};
  evaluee: {first:string;middle:string;last:string;birth:string;pronouns:string};

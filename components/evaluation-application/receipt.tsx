@@ -6,6 +6,8 @@ import type { ApplicationRecord } from '@/lib/evaluation-application/workflow';
 import { evaluationApi } from './api';
 import { ApplicationDetails } from './details';
 import { QuoteSummary } from './summary';
+import { PaymentTotals } from '@/components/application/payment-totals';
+import { checkoutTotal } from '@/lib/application/checkout-pricing';
 import s from './application.module.css';
 export function ApplicationReceipt({ locale, id }: { locale: string; id: string }) {
   const t = useTranslations('evaluationApplication'); const w = useTranslations('evaluationWorkflow');
@@ -53,8 +55,8 @@ export function ApplicationReceipt({ locale, id }: { locale: string; id: string 
       {!locked && <form onSubmit={upload} className={s.uploadForm}><label className={s.field}><span>{w('chooseFile')}</span><input name="file" type="file" required accept="application/pdf,image/png,image/jpeg" disabled={busy} /></label><p className={s.hint}>{w('fileRules')}</p><button className={s.secondary} disabled={busy}><Upload size={17} />{busy ? w('working') : w('upload')}</button></form>}
     </section>
     <section className={s.panel + ' ' + s.workflowPanel}><h2>{w('paymentHeading')}</h2><p className={s.hint}>{w('testPayment')}</p>
-      {record.total === null ? <div className={s.notice}>{w('awaitQuote')}</div> : <div className={s.total}><span>{w('confirmedTotal')}</span><strong>{money(record.total)}</strong>{record.confirmed_quote && <>{record.confirmed_quote.kind !== 'adjusted' && <p className={s.hint}>{w('baseAmount')}: {money(record.confirmed_quote.base)}<br />{w('additionalAmount')}: {money(record.confirmed_quote.additional)}</p>}<p className={s.hint}>{record.confirmed_quote.explanation}</p></>}</div>}
-      {record.status !== 'cancelled' && ['unpaid', 'pending'].includes(record.payment_status) && record.total !== null && <button className={s.primary} disabled={busy} onClick={() => run(async () => { const data = await evaluationApi<{ url: string }>(prefix + '/checkout', {}); location.assign(data.url); })}>{w('pay', { amount: money(record.total!) })}</button>}
+      {record.total === null ? <div className={s.notice}>{w('awaitQuote')}</div> : <div className={s.total}><PaymentTotals locale={locale} base={record.total} total={record.checkoutTotal ?? undefined} />{record.confirmed_quote && <>{record.confirmed_quote.kind !== 'adjusted' && <p className={s.hint}>{w('baseAmount')}: {money(record.confirmed_quote.base)}<br />{w('additionalAmount')}: {money(record.confirmed_quote.additional)}</p>}<p className={s.hint}>{record.confirmed_quote.explanation}</p></>}</div>}
+      {record.status !== 'cancelled' && ['unpaid', 'pending'].includes(record.payment_status) && record.total !== null && <button className={s.primary} disabled={busy} onClick={() => run(async () => { const data = await evaluationApi<{ url: string }>(prefix + '/checkout', {}); location.assign(data.url); })}>{w('pay', { amount: money(record.checkoutTotal ?? checkoutTotal(record.total!)) })}</button>}
       <button className={s.textButton} style={{ marginLeft: 16 }} disabled={busy} onClick={() => run(async () => { await evaluationApi(prefix + '/reconcile', {}); setNotice(w('refreshed')); })}><RefreshCw size={16} />{w('refreshPayment')}</button>
     </section>
     <section className={s.panel + ' ' + s.workflowPanel}><h2>{w('report')}</h2>{record.files.some(f => f.kind === 'report') ? record.files.filter(f => f.kind === 'report').map(f => <a key={f.id} className={s.secondary} href={`/api/evaluation/${prefix}/files/${f.id}`}><FileDown size={17} />{w('downloadReport')}</a>) : <p className={s.hint}>{w('reportPending')}</p>}</section>

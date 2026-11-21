@@ -19,7 +19,7 @@ import { applicationEmail, enqueueEmail, flushEmails, renderQueuedEmail, deliver
 
 const app = {
   id: "264b791e-b806-4b52-b79e-5229b7224df0", first_name: "Current applicant", last_name: "Test",
-  locale: "en", payment_status: "paid", status: "completed", result_version: 2,
+  base_cents: 1900, locale: "en", payment_status: "paid", status: "completed", result_version: 2,
   result: { result: "Current degree", reasoning: "Current assessment" },
 };
 const education = { school_name: "Current school", country_of_study: "GB", degree_obtained: "Current qualification", start_date: "2018", end_date: "2022" };

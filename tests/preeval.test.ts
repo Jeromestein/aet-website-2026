@@ -24,9 +24,9 @@ const valid = {
 };
 describe("Pre-evaluation business and access rules", () => {
   it("preserves the legacy gross-up and exact cents", () => {
-    expect(BASE_CENTS).toBe(1900);
-    expect(TOTAL_CENTS).toBe(1988);
-    expect(FEE_CENTS).toBe(88);
+    expect(BASE_CENTS).toBe(1800);
+    expect(TOTAL_CENTS).toBe(1885);
+    expect(FEE_CENTS).toBe(85);
   });
   it.each([
     "firstName",

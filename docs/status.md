@@ -33,6 +33,11 @@ The customer Status fee breakdown now shows the office adjustment and revised
 total together. The English desktop and Chinese mobile layouts passed local checks.
 See the [Preview CRM](https://aet-main-preview-meiyutechs-projects.vercel.app/admin/CRM?source=preview).
 
+Local checkout now uses one processing fee for both application types. New
+pre-evaluations cost USD 18.00 plus USD 0.85. Formal checkout uses the latest
+confirmed service subtotal. Existing checkout amounts are retained. Hosted
+acceptance of this pricing is pending.
+
 The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
 Production enables the gallery for staff. Preview keeps it closed. See
 [email gallery configuration](email-templates.md#gallery-release-switch).
@@ -110,7 +115,7 @@ gates are unchanged.
 
 The form saves contact/organization, phone, handling office, applicant identity,
 residence country, one education and customer notes in existing canonical fields.
-Review includes USD 19.88 and required terms. Successful submission opens the saved
+Review shows the saved pricing and requires acceptance of the terms. Successful submission opens the saved
 application's document section; AI waits for upload completion or an explicit
 no-documents choice on a pristine application. Failed uploads cannot be skipped.
 Pre-evaluation and formal Status share the saved-file list, drop zone and upload

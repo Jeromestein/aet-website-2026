@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         const [payment]=await db()`select max(paid_at) paid from (${formalPayments(db())}) p where application_id=${id} and status='paid'`;
         record.status=a.status;record.payment=a.payment_status;record.amount=a.total;record.paid=payment.paid?new Date(payment.paid).toISOString():'';
         const report=a.files.find((f:{kind:string})=>f.kind==='report');
-        record.workflow={production:productionMode(),canPay:!['cancelled','completed'].includes(a.status)&&['unpaid','pending'].includes(a.payment_status)&&a.total>0,message:a.customer_message,confirmedQuote:a.confirmed_quote,report:report?{id:report.id,name:report.name}:null};
+        record.workflow={checkoutTotal:a.checkoutTotal,production:productionMode(),canPay:!['cancelled','completed'].includes(a.status)&&['unpaid','pending'].includes(a.payment_status)&&a.total>0,message:a.customer_message,confirmedQuote:a.confirmed_quote,report:report?{id:report.id,name:report.name}:null};
       }
       return reply(withDocuments(record));
     }

@@ -2,11 +2,13 @@ import { converged,publishConverged } from "../application-core/converged-store"
 import { checkoutConverged,applyConvergedCheckout,reconcileConverged,refundConverged,cancelConverged } from "../application-core/converged-payments";
 import Stripe from "stripe";
 import { preEvaluationPaymentMode, paymentModeMatches } from './payment-mode';
-import { syncCoreWorkflow } from "../application-core/runtime";
+import { checkoutTotal, applicationLineItems } from '../application/checkout-pricing';
+import { pilotBase } from './saved-pricing';
+import { coreProfile, isCoreApplication, syncCoreWorkflow } from "../application-core/runtime";
 import { applyChargeRefund, syncCheckoutRefund } from "./stripe-refunds";
 import { table, db } from "./db";
 import { required, configuration, requireExternalServices } from "./config";
-import { TOTAL_CENTS, AppError, resultPath, type Language } from "./domain";
+import { PREVIOUS_BASE_CENTS, AppError, resultPath, type Language } from "./domain";
 import { applicationEmail } from "./email";
 
 // Existing formal-evaluation callers retain the cloud-preview restriction.
@@ -59,7 +61,7 @@ export async function checkout(id: string, locale?: Language) {
   const stripe = stripeClient("pre-evaluation");
   return await sql.begin(async (tx) => {
     const [app] =
-      await tx`select * from ${table("preeval.applications")} where id=${id} for update`;
+      await tx`select a.*,${pilotBase(tx)} as base_cents from ${table("preeval.applications")} a where a.id=${id} for update`;
     if (!app) throw new AppError("not_found", 404);
     if (app.status === "cancelled")
       throw new AppError("application_cancelled", 409);
@@ -74,26 +76,15 @@ export async function checkout(id: string, locale?: Language) {
         throw new AppError("payment_reconciliation_required", 409);
       await tx`update ${table("preeval.payments")} set status='expired',updated_at=now() where id=${existing.id}`;
     }
+    const base = (await isCoreApplication(id, tx) ? (await coreProfile(tx, id)).base_cents : app.base_cents) ?? PREVIOUS_BASE_CENTS;
+    const total = checkoutTotal(base);
     const [payment] =
-      await tx`insert into ${table("preeval.payments")}(application_id,amount_cents) values (${id},${TOTAL_CENTS}) returning id`;
+      await tx`insert into ${table("preeval.payments")}(application_id,amount_cents) values (${id},${total}) returning id`;
     const session = await stripe.checkout.sessions.create(
       {
         mode: "payment",
         allowed_payment_method_types: ["card", "alipay"],
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: "Degree Equivalency Service",
-                description:
-                  "Degree Equivalency Service Payment: 19.00 + Stripe Fee: 0.88",
-              },
-              unit_amount: TOTAL_CENTS,
-            },
-            quantity: 1,
-          },
-        ],
+        line_items: applicationLineItems("Degree Equivalency Service", base, total),
         client_reference_id: id,
         customer_email: configuration().recipient,
         metadata: {
@@ -137,8 +128,7 @@ export async function applyCheckout(
     if (
       session.client_reference_id !== id ||
       session.currency !== "usd" ||
-      session.amount_total !== payment.amount_cents ||
-      payment.amount_cents !== TOTAL_CENTS
+      session.amount_total !== payment.amount_cents
     )
       throw new AppError("invalid_payment");
     const refunded = await syncCheckoutRefund(tx, "preeval", payment, session, () => stripeClient("pre-evaluation"));
