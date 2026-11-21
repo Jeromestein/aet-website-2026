@@ -5,8 +5,9 @@ checks. **The 2026 application does not yet preserve every legacy URL.** The
 three public pre-evaluation URLs are retained, and formal status lookup is now
 restored locally. The GPA staff route was restored on October 22, leaving
 checkout and three other standalone staff-tool URLs for compatibility work.
-Production hostname behavior remains unverified. The October 16 table below
-retains its original HTTP results; use the dated updates for later changes.
+The October 16 table below retains its original HTTP results. For the verified
+Production pilot and the pending redirect from old pre-evaluation emails to
+the main site's `/status`, see the [cutover checklist](migration-checklist.md#legacy-pre-evaluation-email-links).
 
 ## GPA standalone page update — October 22, 2026
 

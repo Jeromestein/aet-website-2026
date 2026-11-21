@@ -1,7 +1,7 @@
-# Pre-evaluation Production Configuration Plan
+# Production Configuration for Evaluation Applications
 
-The November 11 plan below records the original release design. On November 19,
-the joint direct-link release was authorized on the www origin. Credential
+Production reopened the unified direct link on November 20 with
+`APPLICATIONS_ENABLED=true` on `https://www.americantranslationservice.com`. Credential
 evaluation shares the six-table runtime and live Stripe destination with
 pre-evaluation. It uses the saved applicant email, private application documents,
 employee office permissions and PDF publication. Public website Apply buttons
@@ -35,16 +35,17 @@ triggers were compared with the accepted Preview schema. See the
 - Accept the current mobile result/status checks for this release. Another full
   mobile payment run is not a launch blocker by the owner's decision. This does
   not turn an unperformed test into a passed test.
-- Keep cron/email recovery, additional analytics and historical migration deferred.
+- Keep scheduled email recovery and additional analytics deferred. Follow the
+  [legacy email cutover checklist](migration-checklist.md#legacy-pre-evaluation-email-links)
+  for remaining historical pre-evaluations.
 
-## Proposed origin and customer links
+## Production origin and customer links
 
-Propose `https://www.americantranslationservice.com` as `APP_ORIGIN` for the first
-release, subject to checking its existing Vercel binding before activation:
+The Production direct-link release uses `https://www.americantranslationservice.com`.
 
-| Purpose | Proposed path on that origin |
+| Purpose | Path on that origin |
 | --- | --- |
-| Apply | `/application` once both service paths are connected and accepted |
+| Apply | `/application` for both services during direct-link testing |
 | Existing dedicated pre-evaluation links | `/degree-equivalency-tool/application` (retain compatibility) |
 | Result | `/status?applicationId=ID` |
 | Retrieve an application | `/status` |
@@ -63,12 +64,12 @@ If `www` cannot serve the new flow without an unapproved website/domain cutover,
 resolve that before release rather than silently moving `app` or weakening the
 approved-origin guard. The current code does not accept arbitrary new subdomains.
 
-## Vercel configuration manifest — pre-evaluation only
+## Original pre-evaluation configuration manifest
 
-Apply these only to the **Production** environment of the existing project during
-the separately authorized release. Keep dev Preview's values intact. Resolve
-secret values from their owner/provider; never paste the local `.env.local` into
-Vercel or store filled values in this document.
+The November 11 manifest below records the original pre-evaluation setup. The
+[Production runtime guide](pre-evaluation-local.md#production-runtime) covers the
+shared runtime in use today. Keep Preview credentials separate and resolve secret
+values from the provider.
 
 | Setting | Proposed value or required source |
 | --- | --- |
@@ -169,13 +170,10 @@ username `aet_runtime.qrxztgdemfodemlcabcq`, rather than guessing a host or usin
 `postgres`. The existing client disables prepared statements in hosted modes, as
 required by [Supabase transaction pooling](https://supabase.com/docs/guides/database/connecting-to-postgres).
 
-New dedicated applications currently have no assigned office. Their document
-routing falls back to Miami in the original account:
-`/Team Files/AET2026/Miami/<applicant name> - <application ID>`.
-Ensure the operating staff member has the explicit unassigned-record permission.
-The East account's `/AET2026` root is supported but is not needed for the default
-new dedicated intake. Retain private File ID downloads and current file limits;
-no public file sharing or historical folder migration is needed.
+The unified form saves the handling office for each new application. During live
+acceptance, verify that staff assigned to that office can open the application
+and its private documents. Historical pre-evaluations without an office require
+explicit unassigned access in CRM. See the [document routing guide](dropbox.md).
 
 ## Stripe destination and manual refund procedure
 
@@ -211,9 +209,10 @@ and verify the state rather than editing payment amounts in the database.
 
 ## Release order and stop conditions
 
-All actions below are future work, after explicit authorization. First complete
-both workflows on dev Preview and extend this pre-evaluation configuration plan
-for credential evaluation; the current manifest cannot enable that service.
+The sequence below records the original rollout order. Both workflows have since
+passed on main Preview and the Production direct link is open. Use the
+[active checklist](migration-checklist.md#production-direct-link-release-and-remaining-acceptance)
+to distinguish completed setup from pending live acceptance.
 
 1. Confirm the canonical origin, live merchant account and operating staff owner.
    Snapshot existing Production configuration/deployment; confirm old app links
@@ -248,13 +247,3 @@ replay failed events. Removing a public link alone does not disable direct acces
 Do not drop tables, delete documents or assume old AET App can read new orders.
 A compatible pause/rollback method must be confirmed in the release review; this
 plan introduces no new kill-switch setting.
-
-## Preparation status
-
-Prepared: configuration names/values, proposed origin, six-table/credential
-boundaries, webhook event list, manual refund procedure, release and rollback
-sequence for pre-evaluation. Pending: credential runtime/configuration support,
-joint acceptance, actual Production configuration inventory, confirmed host and
-merchant ID, reviewed provisioning SQL, provider permission checks and authorized
-activation/live acceptance. No secret values, Production mutations, deployment,
-refund, commit or push were performed while preparing this document.

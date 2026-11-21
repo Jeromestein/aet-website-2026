@@ -1,33 +1,18 @@
 # AET Implementation Status
 
-## 2026-11-11 — Evaluation feed trial file
+## Current stage
 
-- Added `public/ads/aet-evaluation-feed.csv` with two standard evaluation
-  offerings, using the website's listed estimated prices of USD 100 and USD 180
-  and processing times of 7 and 8 business days. Descriptions retain the estimate
-  qualification; fixed payable totals and service-category eligibility remain
-  unverified. Availability reflects the services offered on the public site,
-  not a verified fulfillment-capacity check.
-- Validated two unique item IDs, all ten columns, UTF-8 CSV round-trip parsing,
-  price formats and HTTPS URLs. Both public image URLs and the evaluation page
-  returned HTTP 200; image responses were PNG.
-- Prepared for the owner's manual upload trial only. No Feed upload or campaign
-  activation was performed.
+**November 20, 2026.** Production accepts direct visits to `/application` for
+pre-evaluation and formal credential evaluation with `APPLICATIONS_ENABLED=true`.
+Signed-out English and Chinese visitors saw both choices. The public website
+Apply buttons still lead to the legacy portal.
 
-Updated November 19, 2026. The owner now requires **pre-evaluation and credential
-evaluation to launch together through `/application`**. The dedicated pre-evaluation
-journey is verified on earlier dev Preview; the unified pre-evaluation choice is
-now verified end to end on main Preview at `67a9cf1`. The unified credential
-journey also passed main Preview acceptance on November 12, including staff review,
-payment and manual PDF publication. Both use the six-table model. Translation remains deferred;
-Production briefly opened the unified application for manual acceptance on
-November 19. It is now closed with `APPLICATIONS_ENABLED=false`. The English
-and Chinese application pages redirect to the legacy formal application, and the
-dedicated pre-evaluation page redirects to the legacy pre-evaluation tool.
-The intake API returns 503. The gate also pauses new-system uploads, customer
-status lookups and application payment callbacks. The homepage links to both
-legacy services. Live acceptance of applicant email, file transfer, payment and
-staff PDF delivery remains pending.
+Both services passed end-to-end testing on main Preview. The
+[pre-evaluation check](archive/unified-preeval-preview-2026-11-12.md) covered
+document transfer, AI assessment, Sandbox payment, result release and email.
+The [formal evaluation check](archive/unified-credential-preview-2026-11-12.md)
+covered staff review, a revised quote, Sandbox payment and publication of a
+downloadable PDF. The next step is [controlled Production acceptance](#next-milestone).
 
 The Production CRM combines new evaluation applications with historical formal
 applications, imported orders and pre-evaluations. Employees can search, sort,
@@ -49,8 +34,22 @@ total together. The English desktop and Chinese mobile layouts passed local chec
 See the [Preview CRM](https://aet-main-preview-meiyutechs-projects.vercel.app/admin/CRM?source=preview).
 
 The staff email gallery and CRM Tools link now require `EMAIL_PREVIEW_ENABLED=true`;
-the default is closed, independently of customer application release. See
+Production enables the gallery for staff. Preview keeps it closed. See
 [email gallery configuration](email-templates.md#gallery-release-switch).
+
+## 2026-11-11 — Evaluation feed trial file
+
+- Added `public/ads/aet-evaluation-feed.csv` with two standard evaluation
+  offerings, using the website's listed estimated prices of USD 100 and USD 180
+  and processing times of 7 and 8 business days. Descriptions retain the estimate
+  qualification; fixed payable totals and service-category eligibility remain
+  unverified. Availability reflects the services offered on the public site,
+  not a verified fulfillment-capacity check.
+- Validated two unique item IDs, all ten columns, UTF-8 CSV round-trip parsing,
+  price formats and HTTPS URLs. Both public image URLs and the evaluation page
+  returned HTTP 200; image responses were PNG.
+- Prepared for the owner's manual upload trial only. No Feed upload or campaign
+  activation was performed.
 
 ## Terms and document requirements — November 17
 
@@ -80,9 +79,9 @@ This local cleanup does not change the joint Production release prerequisites.
 
 ## Guarded main integration — November 12
 
-Dev is integrated into main and the guarded main deployment is live. New
-application workflows remain closed in Production, public application links retain
-the old portal, and Calendar remains public. CRM requires employee sessions and
+At the November 12 integration, the guarded deployment kept Production application
+workflows closed. Public application links still led to the old portal and
+Calendar remained public. CRM requires employee sessions and
 office authorization. Missing Production staff configuration remains fail-closed.
 
 A dedicated [main Preview](https://aet-main-preview-meiyutechs-projects.vercel.app/zh/application)
@@ -98,25 +97,6 @@ locally; that change is not covered by the earlier hosted acceptance. Production
 verified unchanged by this Preview setup. Source fix `eac0b3c` is integrated into main. See [Preview acceptance](archive/main-preview-2026-11-12.md),
 [local integration verification](archive/guarded-main-integration-2026-11-12.md) and
 [prior main release history](archive/main-releases-through-2026-11-12.md).
-
-## Current stage
-
-**Both evaluation journeys now work on main Preview. The next milestone is
-credential Production-runtime support and joint release readiness.**
-The unified entry reuses pre-evaluation upload/AI/payment/result handling.
-Credential v2 intake now connects staff review, missing-material requests, fee
-confirmation, Stripe test payment and manual PDF publication. The owner can review
-the completed synthetic application in CRM Test; no Production activation occurred.
-
-The pre-evaluation Production-capable runtime and its
-[configuration plan](pre-evaluation-production-plan.md) are prepared, not activated;
-credential intake/fulfillment still needs Production support. Extend the plan for
-both services, confirm office ownership and complete separately authorized live
-acceptance before opening public entry links. The owner accepts existing mobile result/status checks and will handle
-refunds manually in Stripe Dashboard; no refund UI/API work is planned.
-Old Production tables/data remain long-term alongside the new schema and existing
-Preview tables. There is no deletion date or authorization to remove old tables.
-The six-table count describes the new business model, not the whole project.
 
 ## Unified entry — main Preview accepted, November 12
 
@@ -148,8 +128,8 @@ The subsequent [main Preview acceptance](archive/unified-preeval-preview-2026-11
 passed a fresh unified application, PDF upload/download hash check, AI analysis,
 USD 19.88 Stripe Sandbox payment, automatic result release, two delivered English
 emails and authenticated CRM Test list/details. Existing direct test webhook is
-unchanged; Stripe reports zero pending webhooks. Production deployment and
-configuration remain unchanged. Translation submission is still deferred.
+unchanged during that Preview check. Stripe reported zero pending webhooks.
+The November 12 run used the existing Production deployment and configuration. Translation submission is still deferred.
 
 ## Credential fulfillment — main Preview accepted, November 12
 
@@ -164,8 +144,8 @@ the controlled test recipient once, with no office CC. No tables or cron were ad
 
 [Acceptance evidence](archive/unified-credential-preview-2026-11-12.md) records the
 synthetic ID, provider receipts, checks and limitations. Formal reports are prepared
-by staff; postal dispatch remains an office task using the saved address. Production
-runtime/configuration and real-customer acceptance are still open.
+by staff; postal dispatch remains an office task using the saved address. That November 12 run covered Preview. See the [current stage](#current-stage)
+for Production acceptance.
 
 ## Module progress
 
@@ -173,18 +153,18 @@ runtime/configuration and real-customer acceptance are still open.
 | --- | --- | --- |
 | Public website | Localized service pages, shared pricing, content migration and redirects. On November 20, local checks matched the page, Open Graph and Twitter titles and descriptions to the [Chinese SEO copy](../content/seo/zh-page-metadata.json) for all 21 requested URLs. | Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
-| Shared database | Six shared tables serve Preview pre-evaluation and formal evaluation; all 32 old Preview source tables retired after acceptance | Prepare the same accepted structure in an empty Production target for new orders; preserve old Production tables/data long-term; history copying and translation are deferred |
-| Dedicated pre-evaluation | November 11 runtime Preview journey passed at `d6d4aa2`: upload/download, AI analysis, Stripe Sandbox payment, result release, customer/CRM reads and two delivered English emails; mobile result/status lookup passed | Unified entry accepted on main Preview November 12; next: joint release configuration and authorized live acceptance, including a manual Stripe refund/state check |
+| Shared database | Preview and Production each have the six-table business schema for both evaluation services. The original Production tables remain in place. | Preserve the original tables long-term. Reconcile remaining historical pre-evaluations before redirecting old email links. |
+| Pre-evaluation | The unified main Preview journey passed, including uploads, AI, Sandbox payment, result release and customer email. | Verify the live journey and a manual Stripe refund with its resulting customer and CRM state. |
 | Failure recovery | Both fixes verified on hosted dev Preview: failed upload replacement, stale-finish rejection, paid-result read recovery and direct webhook replay without duplicates | Broader mobile/provider recovery is deferred; manual refund/state verification remains in controlled live acceptance |
-| Unified `/application` | Three-step evaluation form, required fields, shared 2026 prices, delivery/address details, transactional formal intake and Status handoff; pre-evaluation accepted end to end on main Preview at `67a9cf1` | Joint Production runtime/configuration and release review; translation remains deferred |
-| Status and documents | Formal lookup, ordinary/chunked uploads, Dropbox File ID tracking and shared CRM file rows for formal and pre-evaluation cases with downloads, Dropbox previews and upload timestamps | East-account read scope, deployment migrations and broader hosted recovery checks |
+| Unified `/application` | Both services share the three-step form and Status handoff. The Production direct link is open for testing. | Verify both services in Production before switching the public Apply buttons. Translation intake stays on the legacy site. |
+| Status and documents | One lookup opens the matching evaluation by ID. Both services share the upload controls. Staff can download or preview supporting files from CRM. | Verify applicant uploads and downloads in both live journeys. Complete hosted recovery and East-account access checks. |
 | AICE calendar | Public `/admin/calendar` (Calendar) reads 22 dated records directly from [saved JSON](../data/aice/README.md), with month/week/schedule, organizer filters, timezone handling, contacts and source links; excludes four unverified leads and two undated records; CHEA and Montreal added November 16 ([source update](../data/aice/README.md#november-16-update)); artificial preview feed removed ([initial verification](archive/calendar-frontend-2026-11-12.md)) | Database design, ingestion, OpenAI-assisted refresh and scheduling remain deferred; historical saved sources, not a live feed |
 | Shared form controls | Global custom select arrow (14px right inset, 44px text clearance) and rounded field focus halo; composite shells share one ring. Local in-app desktop/mobile checks passed for CRM sample filters, calendar and Payment; earlier application/Blog focus checks passed | Hosted deployment not performed; CRM visual check used fictional preview records |
 | Link icon cleanup | Removed 33 diagonal outbound-arrow icons/text markers across website, CRM, Calendar, application samples, Payment and email preview; removed obsolete arrow-only table column and styling. Local desktop/mobile visual checks passed for CRM sidebar, calendar details and homepage service cards | Local source changes only; not deployed |
-| CRM and staff | Password login, office permissions, Live/Test views, read-only history, document/payment details and CSV | v2 Test intake supports office-scoped review, quote and report release; legacy employee migration/cutover stays off |
-| Payments | Standalone Payment, older local pilots and pre-evaluation Stripe Sandbox are separately implemented | Credential linked Sandbox Checkout/direct webhook accepted; live credential runtime and business rules remain open |
-| Email | Staff-only eight-category React Email gallery at `/admin/email-preview` accepted on main Preview November 17; [verification](archive/email-gallery-preview-2026-11-17.md). Branded templates, delivery metadata and request-scoped recovery; hosted confirmation/result mail delivered to the controlled test recipient | Applicant-address routing is tested offline on dev; five formal lifecycle notifications delivered in Preview; hosted real-customer acceptance remains open; scheduled recovery is deferred |
-| Fulfillment and migration | Delivery choices saved; older formal pilot can release a PDF; legacy GPA route restored | New-intake PDF delivery accepted in Preview; paper dispatch stays manual; Production cutover and old-app retirement remain open |
+| CRM and staff | Employee login and office permissions govern both new and historical applications. Staff can review new orders, edit eligible quotes and publish formal reports. | Verify office ownership and report delivery in the live journeys. Validate historical deadline bars in hosted CRM. |
+| Payments | Both application services use the signed Stripe webhook. Their Sandbox checkouts passed on main Preview. Standalone website Payment is separate. | Verify live payments for both services and manual Stripe refund handling for pre-evaluation. |
+| Email | Both pre-evaluation emails and all five formal notifications reached the controlled recipient on Preview. The staff template gallery is enabled in Production. | Verify delivery to the applicant during live acceptance. Scheduled recovery remains deferred. |
+| Fulfillment and migration | Formal PDF publication and download passed on main Preview. One historical pre-evaluation was verified in Production under its original ID, including its paid result and attachment. | Verify live delivery of a newly issued report. Staff handle postal dispatch. The [legacy email cutover](migration-checklist.md#legacy-pre-evaluation-email-links) is pending. |
 
 ## Current dev runtime verification — November 11
 
@@ -210,7 +190,7 @@ release by the owner; its prior verification boundary is unchanged.
 See [hosted runtime acceptance](archive/preeval-runtime-preview-2026-11-11.md).
 
 See [offline runtime acceptance and exclusions](archive/preeval-production-runtime-2026-11-11.md)
-and [configuration guide](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated).
+and [configuration guide](pre-evaluation-local.md#production-runtime).
 
 ## Earlier shared-table hosted acceptance — November 11
 
@@ -334,7 +314,7 @@ unchanged; this does not establish hosted historical acceptance.
 
 ## Latest integrated verification
 
-Current results are recorded [above](#current-dev-runtime-verification--november-11).
+See the [current stage](#current-stage) for the latest release evidence.
 The following list preserves the earlier recovery-integration evidence.
 
 - **Both recovery fixes are included:** result publication (`0d9a496`, merge
@@ -375,13 +355,12 @@ These are existing records; documentation cleanup did not rerun those checks.
 
 ## Next milestone
 
-Extend credential intake and fulfillment to the restricted Production runtime in
-code, then complete the joint release configuration plan and office-owner review.
-Prepare an additive empty Production target only when separately authorized;
-preserve all old Production tables. Activate both services together after controlled
-live acceptance. Translation stays on the old system. Historical import, richer
-tracking and scheduled email recovery remain deferred.
-Detailed tasks belong in the [active checklist](migration-checklist.md).
+Run one controlled Production application for each service through the direct
+link. Verify document transfer, payment, applicant email and office access in
+CRM. For pre-evaluation, check the released result and the state after a manual
+Stripe refund. For formal evaluation, publish the staff-prepared PDF and verify
+the customer download. Switch both public Apply buttons together after acceptance.
+Translation stays on its existing path. See the [release checklist](migration-checklist.md#production-direct-link-release-and-remaining-acceptance).
 
 ## Documentation maintenance
 

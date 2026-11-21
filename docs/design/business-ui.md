@@ -125,6 +125,15 @@ Use the same uploaded-file list, drop zone, queue and upload action on customer
 Status and the pre-evaluation result page. Each flow displays its own accepted
 formats and limits. Ready pre-evaluation files link to the authorized download.
 
+For formal applications with saved service details, show each selected service
+with its turnaround and associated qualifications. Use the summary banner only
+for records that lack those details.
+
+On local and Preview result pages, show Refresh and Check another application
+at the bottom. Pre-evaluation also offers Cancel there when the order is eligible.
+Hide this action group in Production. A pending formal payment keeps its refresh
+control in the Payment section and updates in place when the customer uses it.
+
 Document selection/upload actions are orange; saved rows, checkmarks and completion
 feedback are green. Keep file limits and office help compact/readable on phones.
 Completion audio supplements visible feedback. Preserve the saved application's
@@ -145,7 +154,11 @@ failed uploads and staff-requested materials must use the existing recovery flow
 
 Use `/application` for intake and `/status` for both services. Route by the
 Application ID and show the relevant documents, payment and result controls.
-Old pre-evaluation start and lookup addresses redirect to these pages.
+On the new website, old pre-evaluation start and lookup paths redirect to these pages.
+
+Below a released result, group two localized actions. **Continue To Credential
+Evaluation** opens `/application?service=evaluation` with formal evaluation
+selected. **Learn More About Credential Evaluation** opens `/evaluation`.
 
 Customers use the complete Application ID or reusable confirmation link. Add no
 registration, password or extra email-verification step; label lookup as application

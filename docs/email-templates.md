@@ -4,8 +4,7 @@ All eight categories use code-owned React Email templates and the 2026 website
 palette, complete AET logo, structured content and linked footer. Render from
 current application/business records when sending; never store subject or HTML.
 The staff-only gallery is `/admin/email-preview`, linked from CRM Tools as
-**Email Templates**. On main Preview it is available without a local server:
-https://aet-main-preview-meiyutechs-projects.vercel.app/admin/email-preview
+**Email Templates**. Staff can open the [Production gallery](https://www.americantranslationservice.com/admin/email-preview).
 
 The gallery renders the actual React Email templates with fictional fixtures from
 `lib/email/preview.ts`; it does not read customer records, queue notifications or
@@ -35,7 +34,7 @@ Staff email-link login and password recovery remain removed.
 `EMAIL_PREVIEW_ENABLED=true` enables the gallery and its CRM Tools link. Missing,
 false or malformed values hide the link and return the not-found page for direct
 access, before authentication is queried. Employee authentication is still required
-when enabled. Set `true` on Preview and `false` on Production; redeploy the affected
+when enabled. Set `true` on Production and `false` on Preview; redeploy the affected
 environment after changing the value. This switch does not enable customer
 applications or send email.
 

@@ -1,6 +1,6 @@
 # AET Release Checklist
 
-Updated November 19, 2026. The first release is **pre-evaluation and credential
+Updated November 20, 2026. The first release is **pre-evaluation and credential
 evaluation together, through the unified `/application` entry**.
 Develop primarily on `main`, with local or configured Preview testing.
 Merging code does not activate new application workflows in Production.
@@ -50,14 +50,16 @@ preserves migration history and acceptance evidence.
 
 ## Staff email previews
 
+- [x] November 20: enable the staff gallery in Production and close it on main Preview. Verified the Production staff sign-in redirect and main Preview HTTP 404.
+
 - [x] Gate the gallery route and CRM link with `EMAIL_PREVIEW_ENABLED` (default closed); retain employee authentication.
-- [x] Configure Preview `true` and Production `false`; verify 46 focused tests,
+- [x] Complete the initial Preview-only acceptance with 46 focused tests,
   clean-snapshot type checking, local closed-route UI and hosted Preview CRM/gallery access.
 
 - [x] Add an authenticated `/admin/email-preview` gallery and CRM Tools link for
   all eight business email categories, both information-request versions and quote states.
 - [x] Verify the hosted main Preview gallery on desktop/mobile and confirm
-  Production remains on its previous deployment. See [email gallery acceptance](archive/email-gallery-preview-2026-11-17.md).
+  Production remained on its previous deployment during the November 17 trial. See [email gallery acceptance](archive/email-gallery-preview-2026-11-17.md).
 
 ## Guarded integration into main
 
@@ -139,7 +141,7 @@ These checks do not activate hosted Production.
 - [x] Redirect the old pre-evaluation form and `/apply` into localized `/application`;
   retain saved status/result links and existing Production release gates.
 - [x] Use one customer `/status` lookup for both services, including pre-evaluation
-  submission, confirmation links, Stripe returns and old result bookmarks.
+  submission, confirmation links, Stripe returns and old result paths on the new website.
 - [x] Save pre-evaluation contact/office/notes, require residence country and terms,
   display USD 19.88, defer AI until documents are ready or explicitly skipped,
   and preserve service-specific retries plus existing formal retry fingerprints.
@@ -166,17 +168,12 @@ These checks do not activate hosted Production.
   supplement request, confirmed quote, Sandbox payment/direct webhook, private PDF
   draft, publication/download and five delivered notifications. See
   [credential acceptance](archive/unified-credential-preview-2026-11-12.md).
-- [ ] Complete joint release review, including intended office permissions and
-  Production-capable credential behavior. Refunds remain manual in Stripe.
 
 ### Production configuration plan
 
-- [x] Prepare the [Production configuration plan](pre-evaluation-production-plan.md):
-  proposed origin, settings, private six-table target, direct live webhook and
-  manual Stripe refund procedure for pre-evaluation. This is a documented plan,
-  not applied settings or a complete two-service release plan.
-- [ ] Extend that plan to the unified entry and credential workflow after the accepted
-  main Preview journeys and joint release review.
+- [x] Document the [Production configuration plan](pre-evaluation-production-plan.md)
+  for both services, including the www origin, private six-table schema, shared
+  live webhook and staff publication of formal reports.
 - [x] Accept current mobile result/status checks as sufficient for first release;
   do not add a mandatory second mobile payment run.
 - [x] Confirm Stripe Dashboard as the manual refund workflow; retain existing
@@ -191,21 +188,46 @@ These checks do not activate hosted Production.
 - [x] Close the Production pilot with `APPLICATIONS_ENABLED=false` on November 19.
   Verify the English and Chinese redirects, the legacy pre-evaluation destination,
   intake API rejection, and the signed-in staff CRM list (1,226 applications).
+- [x] Reopen the Production direct link on November 20. Verify that English and
+  Chinese applicants can see both evaluation options and that both homepages
+  still point to the legacy applications.
 
 - [x] Prepare an additive, empty Production copy of the current accepted Preview
   six-table structure and a restricted runtime role; compare schema parity and
   verify grants/backups. Preserve old Production tables/data and Preview tables.
-- [ ] Configure the chosen public origin, Production-only secrets, direct live
-  webhook and document location; verify email sender and AI runtime limits.
+- [ ] Confirm the AI runtime limits during live pre-evaluation acceptance.
 - [ ] Confirm the operating owner can find applications/documents and handle
   exceptional cases manually; publish contact/refund and service expectations.
-- [ ] Route both public evaluation entry points to the unified application after
-  joint acceptance; preserve historical links and keep translation on its old path.
-- [ ] Reconcile `main` changes, review the release diff, deploy only after approval,
-  and perform authorized controlled live acceptance for both services from the
-  unified entry, including credential PDF delivery, with rollback ready. Include
-  one manual Stripe refund and state check, using existing
-  behavior (both full and partial refunds currently hide the result).
+- [ ] Complete one controlled Production pre-evaluation from the direct link.
+  Verify upload/download, live payment, released result, applicant emails and
+  office visibility. Issue a manual Stripe refund and verify the customer and
+  CRM states. Both full and partial refunds currently hide the result.
+- [ ] Complete one controlled Production formal evaluation from the direct link.
+  Verify staff review, supporting documents, final quote, live payment, applicant
+  emails and customer download of the PDF published by the assigned office.
+- [ ] After both journeys pass, review the release diff and rollback procedure,
+  then switch both public evaluation buttons together with owner approval.
+  Keep translation and unresolved historical links on the old site.
+
+### Legacy pre-evaluation email links
+
+- [x] On November 20, verify one historical Production application at `/status` with
+  its original ID. The page showed the paid, completed assessment from the original
+  result email. The downloaded attachment matched the original file's content hash.
+- [ ] Before switching the old link for everyone, migrate the remaining pre-evaluations
+  under their original IDs. Reconcile payment and refund states, released results
+  and attachments. If the stored result is a placeholder, use the result actually
+  sent to the customer. Keep unresolved applications accessible on the old site.
+- [ ] At cutover, keep DNS and HTTPS active for `app.americantranslationservice.com`.
+  Redirect `https://app.americantranslationservice.com/degree-equivalency-tool/application/success?applicationId=ID`
+  to `https://www.americantranslationservice.com/status?applicationId=ID`, preserving the
+  exact ID. Scope the redirect to this result path so other legacy routes still work.
+- [ ] Before retiring the old pre-evaluation reads and writes, open original email
+  links while signed out and look up the same IDs on the main site. Verify that a
+  completed case shows the original result and downloadable files, and an unpaid
+  case keeps its payment status and result restrictions. Check that visiting a
+  migrated case triggers no new charge, assessment or email. Retain the old
+  Production tables and data after cutover.
 
 ## AICE calendar — separate frontend preview
 
@@ -225,8 +247,9 @@ These checks do not activate hosted Production.
 ## Deferred — not first-release blockers
 
 - [ ] Translation intake/fulfillment and its integration into the unified application.
-- [ ] Historical Production copying and eventual old-app shutdown, if separately
-  requested; retain original Production tables/data even after either action.
+- [ ] Complete remaining historical Production copying and eventual old-app shutdown
+  when authorized. Follow the [pre-evaluation email link checklist](#legacy-pre-evaluation-email-links)
+  for that service.
 - [ ] Rich tracking, audit dashboards, analytics and extensive operational reporting.
 - [ ] Scheduled email recovery/cron; reconsider only when failed mail volume warrants it.
 - [ ] Further AI tuning beyond the accepted baseline; automatic formal report generation.

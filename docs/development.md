@@ -103,12 +103,12 @@ script reads either naming scheme and writes the new database keys going forward
 
 | Variables | Requirement and current purpose |
 | --- | --- |
-| `APP_ENV`, `APP_ORIGIN` | Select local, configured Preview, or the separately authorized six-table Production runtime and its trusted origin. See [runtime modes](pre-evaluation-local.md#production-capable-runtime--implemented-on-dev-not-activated). |
+| `APP_ENV`, `APP_ORIGIN` | Select local, configured Preview, or the six-table Production runtime and its trusted origin. See [Production runtime](pre-evaluation-local.md#production-runtime). |
 | `APPLICATION_DATABASE_MODE`, `APPLICATION_DATABASE_URL` | Shared application storage. URL is required; mode defaults to local when absent, but cloud-preview must be explicit. Keep mode explicit in the template. This is separate from the live CRM connection. |
-| `APPLICATION_TEST_EMAIL` | Required in local/Preview only; controls pre-evaluation/legacy workflow recipients and the pre-evaluation test Checkout email. Production uses the stored applicant email. New formal intake uses its own fixed pilot recipient in `lib/application/intake.ts`; this is not a site-wide recipient override. Keep it even when optional mail dispatch is disabled. |
+| `APPLICATION_TEST_EMAIL` | Controlled recipient for application mail and test Checkout on the six-table local/Preview runtime. Both services use the saved applicant email in Production. |
 | `PREEVAL_AI_ENABLED`, `PREEVAL_OPENAI_MODEL` | Optional pre-evaluation AI capability and model override. Missing switch means off; the current model default is `gpt-6.1-sol`. The API key is required when AI is enabled. |
 | `PREEVAL_EMAIL_ENABLED` | Optional pre-evaluation Preview/Production mail opt-in; dispatch also requires an application ID. It does not control newer formal-intake confirmation mail, and the older local-database dispatcher bypasses this flag. |
-| `PREEVAL_STRIPE_MODE`, `PREEVAL_STRIPE_LIVE_WEBHOOK_SECRET` | Dedicated pre-evaluation mode and live endpoint secret. Test is the default; live requires the explicit main/Production configuration. Separate from the shared Payment page. |
+| `PREEVAL_STRIPE_MODE`, `PREEVAL_STRIPE_LIVE_WEBHOOK_SECRET` | Application payment mode and signing secret for the live webhook shared by both evaluation services. Test is the default. Live requires the configured main/Production deployment. The standalone Payment page has its own configuration. |
 | `PREEVAL_STRIPE_TEST_ENABLED` | Optional permission for pre-evaluation test payment calls in cloud-preview. Missing means no opt-in; local pilot behavior and formal-payment restrictions are unchanged. This does not select live/test mode for the shared Payment page. |
 | `DROPBOX_LEGACY_PILOT_ROOT` | Historical pilot-path compatibility. The saved-path resolver still requires it, even though new uploads use office/application folders. Retain it while those readers remain. |
 | `PREEVAL_AI_DAILY_RECOVERY_ENABLED` | Optional scheduled AI recovery only; absent/false disables that endpoint's work. On-demand AI does not require this switch. |

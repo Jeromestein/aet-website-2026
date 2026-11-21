@@ -5,12 +5,12 @@ Translation Services. Built with Next.js App Router, TypeScript and shared
 English, Chinese and Spanish customer pages; staff pages are English-only.
 The new system does not use Payload CMS.
 
-**The AET App replacement is still in progress.** The dedicated pre-evaluation
-flow has recorded local end-to-end acceptance, including Stripe Sandbox payment.
-The unified formal-evaluation application saves submissions and supports Status
-and documents; its staff-processing, payment and report-release journey is not
-complete. CRM Live uses existing business records. See the dated status below
-before treating any capability as deployed or ready for production.
+Pre-evaluation and formal credential evaluation share `/application` and
+`/status`. Both passed end-to-end testing on main Preview. As of November 20,
+2026, the Production entry is open by direct link for testing. Public website
+Apply buttons still lead to the old portal. The next release step is to verify
+both services with live payments, applicant emails, document transfer and final
+results before switching those buttons. See [current status](docs/status.md#current-stage).
 
 ## Start here
 
@@ -89,6 +89,8 @@ Staff routes have no language prefix. The existing app-domain address must remai
 compatible during the separately authorized migration; see
 [domain planning](docs/development.md#application-domains-and-staff-urls) and
 [legacy URL compatibility](docs/app-url-compatibility.md).
+Before retiring the old pre-evaluation tables from active use, follow the
+[checklist for preserving links in customer emails](docs/migration-checklist.md#legacy-pre-evaluation-email-links).
 
 ## Working rules
 

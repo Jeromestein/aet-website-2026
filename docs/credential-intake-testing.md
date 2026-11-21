@@ -1,17 +1,16 @@
 # Credential intake: database and email acceptance
 
-Current implementation: November 12, 2026. The unified entry supports both
-pre-evaluation and credential evaluation on the restricted main Preview. Credential
-staff review, supplement requests, fee confirmation, Sandbox payment/direct webhook,
-manual PDF publication and customer download have passed hosted acceptance.
-See [current evidence](archive/unified-credential-preview-2026-11-12.md),
-[checklist](migration-checklist.md) and [six-table model](database-architecture.md).
+**Main Preview.** The November 12 acceptance covered staff review, a request for
+missing documents, quote confirmation, Sandbox payment via signed webhook,
+manual PDF publication and customer download. Preview uses the six tables in
+`aet_preview_shared` and sends mail to the controlled recipient. Use
+`/application?service=evaluation`, customer `/status?source=preview` and staff
+`/admin/CRM?source=preview`. See the [acceptance record](archive/unified-credential-preview-2026-11-12.md).
 
-Current storage is the existing six tables under `aet_preview_shared`, with
-notification receipts in service details. Preview mail goes only to the controlled
-test recipient, without office CC. The new workflow uses `/application`, customer
-`/status?source=preview`, and authenticated `/admin/CRM?source=preview`.
-Production intake/fulfillment remains closed and requires separate runtime work.
+**Production.** As of November 20 the same application entry is open by direct
+link. New orders use the private `aet` schema and customer `/status`. Public
+Apply buttons still use the old portal. Live applicant email, file transfer,
+payment and staff PDF delivery are pending in the [release checklist](migration-checklist.md#production-direct-link-release-and-remaining-acceptance).
 
 **Historical reference below:** the October setup commands, schemas, port 3022,
 read-only restrictions and office CC describe the retired intake-only milestone.

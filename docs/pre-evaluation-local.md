@@ -10,13 +10,15 @@
 
 Start with the current configuration below. New pre-evaluation applications use
 `/application?service=pre-evaluation` (with the locale prefix when applicable).
-Old start and form URLs redirect there. Saved result links now redirect to
-`/status?applicationId=ID`. This integration passed
+On the new website, old start and form URLs redirect there. Saved result paths
+redirect to `/status?applicationId=ID`. Links sent from the legacy app subdomain
+follow the [legacy email cutover checklist](migration-checklist.md#legacy-pre-evaluation-email-links).
+The unified flow passed
 [fresh hosted main Preview acceptance](archive/unified-preeval-preview-2026-11-12.md). Use [current status](status.md) and the
 [active checklist](migration-checklist.md) for integrated progress and release gates.
 
 - [Production configuration and launch plan](pre-evaluation-production-plan.md)
-- [Production-capable runtime](#production-capable-runtime--implemented-on-dev-not-activated)
+- [Production runtime](#production-runtime)
 - [Current cloud preview](#current-cloud-preview--updated-october-22-2026)
 - [GPT execution and setup](#direct-gpt-analysis--october-20-2026)
 - [Owner-approved behavior](#owner-approved-behavior)
@@ -31,31 +33,29 @@ behavior. Staff password authentication is maintained in [staff-auth.md](staff-a
 
 ## Current cloud preview — updated October 22, 2026
 
-The heading anchor is retained for existing links; this section was refreshed
-November 11, 2026. Hosted dev uses `APP_ENV=preview`,
+Main Preview uses `APP_ENV=preview`,
 `APPLICATION_DATABASE_MODE=cloud-preview`, `APPLICATION_CORE_MODE=six-preview`
 and the restricted `aet_preview_runtime` role. It reads/writes only the six
-`aet_preview_shared` business tables. Local port 3022 keeps its existing owner-run
-server configuration. Do not replay old setup scripts against the current schema.
+`aet_preview_shared` business tables. Run local checks from the main checkout
+on port 3021. See the [main Preview setup](development.md#vercel-preview).
 
 Preview mail and Checkout use `APPLICATION_TEST_EMAIL`. Stripe is test-only;
 `PREEVAL_STRIPE_TEST_ENABLED=true` opts into provider calls and
 `PREEVAL_STRIPE_MODE` is `test` (also the default). Direct test webhook delivery
-is already configured on hosted dev. AI, email and Dropbox each keep their own
+is configured on main Preview. AI, email and Dropbox each keep their own
 explicit switches. No scheduled mail recovery or new tracking table is needed.
 
-## Production-capable runtime — implemented on dev, not activated
+## Production runtime
 
-This first release supports the **dedicated pre-evaluation** flow. It reuses the
-six-table contract for new applications in a separate private `aet` schema.
-Provisioning that schema/role, configuring hosted secrets and publishing are
-separate release tasks. No Production migration or provider configuration was
-performed by this implementation; existing AET App data remains in place.
-See the [configuration and launch plan](pre-evaluation-production-plan.md) for
-the proposed manifest, live webhook, manual Stripe refunds and release order.
+Pre-evaluation and formal evaluation use the same private `aet` schema for new
+Production orders. The direct application link reopened on November 20. Public
+Apply buttons still use the old site. See the [joint release checklist](migration-checklist.md#production-direct-link-release-and-remaining-acceptance)
+for the remaining live tests and the [configuration plan](pre-evaluation-production-plan.md)
+for provider settings and manual Stripe refunds.
 
 | Setting | Required Production value / behavior |
 | --- | --- |
+| `APPLICATIONS_ENABLED` | `true` opens the unified application on the configured Production deployment |
 | Deployment | Vercel Production on `main`; Preview/dev always fails the Production guard |
 | `APP_ENV`, `APPLICATION_DATABASE_MODE` | Both `production` |
 | `APPLICATION_CORE_MODE` | `six-production` |
@@ -72,16 +72,15 @@ the proposed manifest, live webhook, manual Stripe refunds and release order.
 
 Startup verifies the actual database role, cross-schema write isolation, exactly
 six tables, required runtime columns, RLS and non-public grants. It does not create
-or alter a database. Provision the empty target from the accepted six-table
-contract in a separately reviewed release migration; do not run the old sequence
-of pilot migrations or copy Preview records into Production.
+or alter a database. The [Production initialization](../scripts/database/initialize-production.sql)
+defines the separate six-table target. Retain the original Production tables.
 
 Production emails and Stripe Checkout use the stored applicant address, never a
 request-supplied override or `APPLICATION_TEST_EMAIL`. Signing secrets, provider
 mode, account, amount and application/session association remain checked. Test
 payment exemptions and imported test payments cannot unlock a Production result.
-Only pre-evaluation events are dispatched in the Production webhook; formal
-fulfillment is not enabled by this runtime.
+The signed `/api/pre-evaluation/stripe-webhook` endpoint dispatches events for
+both pre-evaluation and formal evaluation.
 
 New documents use `/Team Files/AET2026/<office>/<name> - <application ID>` in the
 original Dropbox account, or `/AET2026/...` in the East account. Preview continues
