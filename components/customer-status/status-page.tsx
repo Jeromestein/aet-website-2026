@@ -21,7 +21,13 @@ async function readStatus(applicationId: string, preview: boolean, signal?: Abor
  if(!response.ok) throw new Error(data.error);
  return data;
 }
-export function StatusPage({locale, initialId,preview=false}: {locale: Locale; initialId: string;preview?:boolean}) {
+type StatusPageProps = {
+ locale: Locale;
+ initialId: string;
+ preview?: boolean;
+ showFooterActions: boolean;
+};
+export function StatusPage({locale, initialId, preview=false, showFooterActions}: StatusPageProps) {
  const documents = useTranslations('documents');
  const t = statusCopy[locale]; const [id,setId] = useState(initialId); const [record,setRecord] = useState<CustomerStatus|null>(null);
  const [preEvaluationId,setPreEvaluationId] = useState('');
@@ -64,7 +70,7 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
  function submit(e:FormEvent){e.preventDefault();void check(id,true);}
  if (preEvaluationId) return <div className={preeval.page}>
   <main id="main-content" className={`${preeval.main} ${preeval.publicMain} ${preeval.narrow}`}>
-   <PreEvaluationResult key={preEvaluationId} locale={locale} id={preEvaluationId}/>
+   <PreEvaluationResult key={preEvaluationId} locale={locale} id={preEvaluationId} showFooterActions={showFooterActions}/>
   </main>
  </div>;
  return <main className={s.main} id="main-content">
@@ -82,10 +88,10 @@ export function StatusPage({locale, initialId,preview=false}: {locale: Locale; i
       {record.completion&&<div className={s.estimate}><strong>{t.due}: {record.completion.dueDate}</strong><p>{t.estimate}</p></div>}
      </section>
      <StatusSections key={record.source+record.id} record={record} locale={locale} onBusyChange={setUploading} onRefreshPayment={refreshPayment}/>
-     <div className={s.statusActions}>
+     {showFooterActions && <div className={s.statusActions}>
       <button type="button" disabled={uploading||busy} onClick={()=>void check(record.id)}>{documents('refresh')}</button>
       <button type="button" disabled={uploading} onClick={()=>location.assign(prefix+'/status')}>{documents('otherApplication')}</button>
-     </div>
+     </div>}
     </>}
    </div>
   </div>

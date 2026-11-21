@@ -338,9 +338,11 @@ export function ApplicationForm({ locale }: { locale: string }) {
 export function ApplicationResult({
   locale,
   id,
+  showFooterActions,
 }: {
   locale: string;
   id: string;
+  showFooterActions: boolean;
 }) {
   const openedDocuments = useRef(false);
   const t = copy(locale),
@@ -537,28 +539,30 @@ export function ApplicationResult({
             onBusyChange={value => setBusy(value ? 'recovery' : '')} onChange={() => { setError(''); void load(); }} />
         </PreevalDocumentUploader>
       </section>
-      <div className={s.buttons}>
-        <button
-          className={s.secondary}
-          onClick={() => action("reconcile")}
-          disabled={!!busy}
-        >
-          {t.refresh}
-        </button>
-        <a className={s.secondary} href={pathFor(locale, "/status")}>{t.checkAnother}</a>
-        {!["paid", "partially_refunded"].includes(app.payment_status) &&
-          app.status !== "cancelled" && (
-            <button
-              className={s.secondary}
-              onClick={() => {
-                if (confirm(t.cancelPrompt)) action("cancel");
-              }}
-              disabled={!!busy}
-            >
-              {t.cancel}
-            </button>
-          )}
-      </div>
+      {showFooterActions && (
+        <div className={s.buttons}>
+          <button
+            className={s.secondary}
+            onClick={() => action("reconcile")}
+            disabled={!!busy}
+          >
+            {t.refresh}
+          </button>
+          <a className={s.secondary} href={pathFor(locale, "/status")}>{t.checkAnother}</a>
+          {!["paid", "partially_refunded"].includes(app.payment_status) &&
+            app.status !== "cancelled" && (
+              <button
+                className={s.secondary}
+                onClick={() => {
+                  if (confirm(t.cancelPrompt)) action("cancel");
+                }}
+                disabled={!!busy}
+              >
+                {t.cancel}
+              </button>
+            )}
+        </div>
+      )}
       <p className={s.note}>{t.note}</p>
     </>
   );

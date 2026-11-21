@@ -14,5 +14,14 @@ export default async function Page({params,searchParams}: Props) {
   requireApplicationPage(false);
 
   const [{locale},query] = await Promise.all([params,searchParams]);
-  return <><Navigation /><StatusPage preview={query.source==='preview'} locale={locale} initialId={typeof query.applicationId === 'string' ? query.applicationId : ''} /><SiteFooter /></>;
+  return <>
+    <Navigation />
+    <StatusPage
+      locale={locale}
+      initialId={typeof query.applicationId === 'string' ? query.applicationId : ''}
+      preview={query.source === 'preview'}
+      showFooterActions={process.env.VERCEL_ENV !== 'production'}
+    />
+    <SiteFooter />
+  </>;
 }
