@@ -156,7 +156,7 @@ for Production acceptance.
 
 | Module | Implemented / recorded evidence | Still open |
 | --- | --- | --- |
-| Public website | Localized service pages, shared pricing, content migration and redirects. On November 20, local checks matched the page, Open Graph and Twitter titles and descriptions to the [Chinese SEO copy](../content/seo/zh-page-metadata.json) for all 21 requested URLs. | Retained-content review, official-host acceptance and ownership/indexing checks |
+| Public website | Localized service pages, shared pricing, content migration and redirects. On November 20, local checks matched the page, Open Graph and Twitter titles and descriptions to the [Chinese SEO copy](../content/seo/zh-page-metadata.json) for all 21 requested URLs. The local Next.js prerender manifest includes all 81 blog articles across three locales (243 URLs). | Verify article CDN cache hits after deployment. Retained-content review, official-host acceptance and ownership/indexing checks |
 | ChatGPT Ads measurement | Public page-view and Blog CTA click measurement retained from main; isolated from customer/staff routes | Real Pixel receipt and Ads Manager conversion-event setup; no completed-lead instrumentation |
 | Shared database | Preview and Production each have the six-table business schema for both evaluation services. The original Production tables remain in place. | Preserve the original tables long-term. Reconcile remaining historical pre-evaluations before redirecting old email links. |
 | Pre-evaluation | The unified main Preview journey passed, including uploads, AI, Sandbox payment, result release and customer email. | Verify the live journey and a manual Stripe refund with its resulting customer and CRM state. |

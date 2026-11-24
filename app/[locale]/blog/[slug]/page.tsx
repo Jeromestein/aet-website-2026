@@ -31,6 +31,12 @@ const copy = {
   es: { back: 'Volver al blog', contents: 'En este artículo', evaluation: 'Explorar servicios de evaluación', contact: 'Contactar con AET' },
 };
 
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return articles.map(({ slug }) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const entry = articles.find(article => article.slug === slug);
