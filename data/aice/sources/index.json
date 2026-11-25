@@ -274,5 +274,36 @@
     "captured_on": "2026-11-16",
     "file": "sources/2026-11-16/chea_zoom_details.json",
     "sha256": "63fac1995467e57156c2d59ac87d9a337c9d79d17f343648b8b951d5cd4df890"
+  },
+  {
+    "url": "https://www.aacrao.org/webinar/aacrao-presents-highlights-of-the-aice-credential-forum-current-credential-evaluation-topics-from-the-association-of-international-credential-evaluators/",
+    "captured_on": "2026-11-25",
+    "file": "sources/2026-11-25/aacrao_aice.json",
+    "sha256": "8fdb723bf3cb9fef40f038c08edef3aefe7a53af2320611921847039a2056265"
+  },
+  {
+    "url": "https://us06web.zoom.us/webinar/register/WN_4UOEExiTT-aQsfStR587Mg",
+    "captured_on": "2026-11-25",
+    "file": "sources/2026-11-25/aacrao_aice_zoom.json",
+    "sha256": "7f482d50120de5675b05b9d9e9b9cb8bfa16cf418b5f74faa998b0566c45f50f"
+  },
+  {
+    "url": "https://groningendeclaration.org/2026/09/02/whistler-canada-to-host-the-gdn-annual-meeting-2027/",
+    "captured_on": "2026-11-25",
+    "file": "sources/2026-11-25/gdn_annual.json",
+    "sha256": "306ec2a6e6b6318ea2199c6b39a4a986378f998521f164cbb0e3dc7caee1450a"
+  },
+  {
+    "url": "https://us02web.zoom.us/webinar/register/WN_tyMRc1NyR22mjURkbOAhXg",
+    "captured_on": "2026-11-18",
+    "file": "sources/2026-11-25/gdn_armenia_recovered.json",
+    "sha256": "1e37e7bfbfce4ec47d22ab295f15d34064caa0223d7418d9a25421ebafcb8b45",
+    "recovered_on": "2026-11-25"
+  },
+  {
+    "url": "https://www.enic.org.uk/our-role/news/1764",
+    "captured_on": "2026-11-25",
+    "file": "sources/2026-11-25/ukenic_dates.json",
+    "sha256": "2f118b0fd83341419e2a9f35fcfa43a979c6fdb3dfcb43c76d6fa7218b6d8dc8"
   }
 ]

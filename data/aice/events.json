@@ -1,5 +1,5 @@
 {
-  "saved_on": "2026-11-16",
+  "saved_on": "2026-11-25",
   "source_chat": "codex://threads/01a11367-a7b9-7462-81ad-51943513b56c",
   "note": "Saved public-source research, not a live feed. Original captures date from November 8–12, 2026; CHEA and Montreal records were verified and promoted from leads on November 16. saved_on records the archive update date, not re-verification of every event. AICE and related industry events; not all are AICE-hosted. Missing values remain null. Date ranges are inclusive; source time wording and uncertainty are preserved.",
   "events": [
@@ -161,6 +161,13 @@
       "notes": "TAICEP-hosted event with moderator Rebecca Murphy, listed as an AICE Affiliate. Contact appears on the registration site. No end time is inferred from the site’s generic webinar duration.",
       "calendar": {
         "start": "2026-11-12T10:00:00-05:00"
+      },
+      "free_registration": {
+        "verified_on": "2026-11-12",
+        "source_url": "https://www.taicep.org/taiceporgwp/professional-development/webinars/",
+        "source_files": [
+          "sources/2026-11-12/taicep_webinars.json"
+        ]
       }
     },
     {
@@ -248,7 +255,14 @@
         "start": "2026-11-19T14:00:00-05:00"
       },
       "verified_on": "2026-11-16",
-      "promoted_from": "chea-aim-20261119-lead"
+      "promoted_from": "chea-aim-20261119-lead",
+      "free_registration": {
+        "verified_on": "2026-11-16",
+        "source_url": "https://us02web.zoom.us/webinar/register/WN_GEbls2MWREmYojyo3W9bSQ",
+        "source_files": [
+          "sources/2026-11-16/chea_zoom_details.json"
+        ]
+      }
     },
     {
       "id": "aacrao-transfer-ai-20261120",
@@ -386,15 +400,95 @@
       "title": "UKENIC26 — Navigating change: shared challenges, collective solutions",
       "organizer": "UK ENIC",
       "contact": null,
-      "event_url": "https://www.enic.org.uk/our-role/news/1763",
-      "date": null,
-      "end_date": null,
+      "event_url": "https://www.enic.org.uk/our-role/news/1764",
+      "date": "2026-11-30",
+      "end_date": "2026-12-01",
       "time": null,
-      "source_url": "https://www.enic.org.uk/our-role/news/1763",
+      "source_url": "https://www.enic.org.uk/our-role/news/1764",
       "source_files": [
-        "sources/2026-11-12/ukenic.json"
+        "sources/2026-11-12/ukenic.json",
+        "sources/2026-11-25/ukenic_dates.json"
       ],
-      "notes": "The saved programme announcement confirms the event but omits its dates. Prior research reports November 30–December 1, 2026; that unarchived date evidence remains in research-notes.json. Date is deliberately null here. No AICE attendee is confirmed."
+      "notes": "Official announcement confirms November 30–December 1, 2026 at the QEII Centre, London. Standard two-day tickets: members GBP 507 + 20% VAT; non-members GBP 558 + 20% VAT. Daily start/end times are not specified in this source. No AICE attendee is confirmed.",
+      "verified_on": "2026-11-25"
+    },
+    {
+      "contact": "info@groningendeclaration.org",
+      "event_url": "https://us02web.zoom.us/webinar/register/WN_tyMRc1NyR22mjURkbOAhXg",
+      "end_date": null,
+      "time": "11:00 AM Eastern Time (America/New_York; EST); end time not published",
+      "source_files": [
+        "research-notes.json",
+        "sources/2026-11-08/gdn_contact.json",
+        "sources/2026-11-25/gdn_armenia_recovered.json"
+      ],
+      "id": "gdn-recognition-ai-20261125",
+      "title": "Advancing Trust in Academic Recognition: Verification, Digitalisation and the Future Role of AI in Armenia",
+      "organizer": "Groningen Declaration Network (GDN)",
+      "date": "2026-11-25",
+      "source_url": "https://us02web.zoom.us/webinar/register/WN_tyMRc1NyR22mjURkbOAhXg",
+      "research_turn_id": "01a18340-acff-7041-be71-4a20e50e5c02",
+      "notes": "Historical event. Public Zoom invitation and free registration were verified on November 18; the evidence was recovered from the research chat on November 25, when the registration page no longer displayed details. Speakers: Gayané Harutyunyan and Ani Hovhannisyan (ArmENIC), Joanne Duklas (GDN). AICE recommended the event; no AICE speaker is confirmed. Email is the general GDN office contact. End time, deadline and eligibility are not published.",
+      "calendar": {
+        "start": "2026-11-25T11:00:00-05:00"
+      },
+      "verified_on": "2026-11-18",
+      "promoted_from": "gdn-recognition-ai-20261125-lead",
+      "free_registration": {
+        "verified_on": "2026-11-18",
+        "source_url": "https://us02web.zoom.us/webinar/register/WN_tyMRc1NyR22mjURkbOAhXg",
+        "source_files": [
+          "sources/2026-11-25/gdn_armenia_recovered.json"
+        ]
+      }
+    },
+    {
+      "contact": "info@groningendeclaration.org",
+      "event_url": "https://groningendeclaration.org/2026/09/02/whistler-canada-to-host-the-gdn-annual-meeting-2027/",
+      "end_date": "2027-10-28",
+      "time": null,
+      "source_files": [
+        "research-notes.json",
+        "sources/2026-11-08/gdn_contact.json",
+        "sources/2026-11-25/gdn_annual.json"
+      ],
+      "id": "gdn-annual-20271026",
+      "title": "GDN Annual Meeting 2027 — Unlocking Global Talent Recognition",
+      "organizer": "Groningen Declaration Network (GDN), PCCAT and CAPLA",
+      "date": "2027-10-26",
+      "source_url": "https://groningendeclaration.org/2026/09/02/whistler-canada-to-host-the-gdn-annual-meeting-2027/",
+      "research_turn_id": "01a15f33-d283-7390-b49f-bd5fb228339e",
+      "notes": "Official September 2 announcement confirms October 26–28, 2027 at Hilton Whistler Resort & Spa, Whistler, British Columbia, Canada. Registration, fees, daily times and agenda are not yet published. Save-the-date entry only. Email is the general GDN office contact. Related industry event; AICE attendance is not confirmed.",
+      "verified_on": "2026-11-25",
+      "promoted_from": "gdn-annual-2027-lead"
+    },
+    {
+      "id": "aacrao-aice-forum-20261216",
+      "title": "AACRAO Presents: Highlights of the AICE Credential Forum — Current Credential Evaluation Topics from the Association of International Credential Evaluators",
+      "organizer": "AACRAO / AICE",
+      "contact": null,
+      "event_url": "https://us06web.zoom.us/webinar/register/WN_4UOEExiTT-aQsfStR587Mg",
+      "date": "2026-12-16",
+      "end_date": null,
+      "time": "2:00–3:00 PM Eastern Time (America/New_York; EST)",
+      "source_url": "https://www.aacrao.org/webinar/aacrao-presents-highlights-of-the-aice-credential-forum-current-credential-evaluation-topics-from-the-association-of-international-credential-evaluators/",
+      "source_files": [
+        "sources/2026-11-25/aacrao_aice.json",
+        "sources/2026-11-25/aacrao_aice_zoom.json"
+      ],
+      "notes": "Free online webinar about educational verification in the Dominican Republic, Haiti, Cuba and other Caribbean countries, including document forensics and fraud detection. Presenters: Aleks Morawski, Mandy Morrison, Garrett Seelinger, Barbara Glave and Julia Funaki. Register to receive joining information by email. Registration deadline, membership restrictions and AET eligibility are not specified.",
+      "calendar": {
+        "start": "2026-12-16T14:00:00-05:00",
+        "end": "2026-12-16T15:00:00-05:00"
+      },
+      "verified_on": "2026-11-25",
+      "free_registration": {
+        "verified_on": "2026-11-25",
+        "source_url": "https://us06web.zoom.us/webinar/register/WN_4UOEExiTT-aQsfStR587Mg",
+        "source_files": [
+          "sources/2026-11-25/aacrao_aice_zoom.json"
+        ]
+      }
     }
   ]
 }

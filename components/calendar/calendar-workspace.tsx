@@ -20,6 +20,9 @@ const zones = [
   { value: 'America/New_York', label: 'Eastern time' },
   { value: 'Asia/Shanghai', label: 'Beijing time' },
 ];
+function FreeBadge({ event }: { event: CalendarEvent }) {
+  return event.free_registration ? <span className={s.freeBadge} title="Free registration confirmed in the saved source">Free</span> : null;
+}
 function EventDetails({ event, timeZone, savedOn, onClose }: { event: CalendarEvent | null; timeZone: string; savedOn: string; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -39,6 +42,7 @@ function EventDetails({ event, timeZone, savedOn, onClose }: { event: CalendarEv
         <span className={`${s.badge} ${s[organizerGroup(event.organizer)]}`}><span className={s.dot} />{event.calendar?.presentation === 'series_start' ? 'Webinar series · first session shown' : event.calendar?.presentation === 'deadline' ? 'Submission deadline' : 'Event'}</span>
         <h2 id="calendar-event-title">{event.title}</h2>
         <p className={s.organizer}>{event.organizer}</p>
+        {event.free_registration && <div className={s.feeNote}><FreeBadge event={event} /><span>Registration · verified {dateLabel(event.free_registration.verified_on, { month: 'short' })} · <a href={event.free_registration.source_url} target="_blank" rel="noopener noreferrer">Fee source</a></span></div>}
         <div className={s.eventFacts}>
           <div><CalendarDays size={19} /><div><strong>{eventDateLabel(event, timeZone)}</strong><span>{eventTime(event, timeZone)}</span>{event.calendar?.start && event.time && <small>Source time: {event.time}</small>}</div></div>
         </div>
@@ -130,11 +134,12 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
                 listDayClass={s.listDay} listDayHeaderClass={s.listDayHeader} listItemEventBeforeClass={s.hideListDecoration}
                 eventContent={info => {
                   const event = info.event.extendedProps.reference as CalendarEvent;
-                  if (info.view.type === 'listMonth') return <div className={s.scheduleContent}><span className={s.eventDot} /><div><span className={s.eventTitle}>{event.title}</span><span className={s.eventMeta}>{eventTime(event, timeZone)} · {event.organizer}</span></div></div>;
+                  if (info.view.type === 'listMonth') return <div className={s.scheduleContent}><span className={s.eventDot} /><div><span className={s.eventTitle}>{event.title}</span><span className={s.eventMeta}>{eventTime(event, timeZone)} · {event.organizer}</span><FreeBadge event={event} /></div></div>;
                   const time = event.calendar?.start ? new Intl.DateTimeFormat('en-US', { timeZone, hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date(event.calendar.start)).replace(':00', '').replace(' AM', 'am').replace(' PM', 'pm') : '';
                   return <div className={s.eventContent} title={`${event.title} · ${eventTime(event, timeZone)}`}>
                     {event.calendar?.start && <><span className={s.eventDot} /><span className={s.eventTime}>{time}</span></>}
                     <span className={s.eventTitle}>{event.title}</span>
+                    <FreeBadge event={event} />
                   </div>;
                 }}
                 noEventsContent={() => <div className={s.emptyCalendar}><CalendarDays size={34} strokeWidth={1.25} /><h3>No events in this period</h3><p>{hasFilters ? 'Try a different search or clear your filters.' : 'Try another month.'}</p>{hasFilters && <button className={s.secondaryButton} onClick={reset}>Clear filters</button>}</div>}

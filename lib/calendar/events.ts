@@ -9,6 +9,7 @@ export type SavedEvent = {
   time: string | null;
   source_url: string;
   notes: string | null;
+  free_registration?: { verified_on: string; source_url: string; source_files: string[] };
   calendar?: { start?: string; end?: string; presentation?: string };
 };
 
