@@ -57,6 +57,8 @@ function EventDetails({ event, timeZone, savedOn, onClose }: { event: CalendarEv
 
 export default function CalendarWorkspace({ initialNow, events: sourceEvents, savedOn }: { initialNow: string; events: CalendarEvent[]; savedOn: string }) {
   const calendar = useRef<CalendarRef>(null);
+  const scheduleScroll = useRef<HTMLDivElement>(null);
+  const initialMobileScroll = useRef<boolean | null>(null);
   const [timeZone, setTimeZone] = useState('America/Los_Angeles');
   const [view, setView] = useState<View>('dayGridMonth');
   const [category, setCategory] = useState<Category>('all');
@@ -70,10 +72,28 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
   useEffect(() => {
     const mobile = window.matchMedia('(max-width: 760px)');
     const adapt = () => changeView(mobile.matches ? 'listMonth' : 'dayGridMonth');
+    initialMobileScroll.current ??= mobile.matches;
     adapt();
     mobile.addEventListener('change', adapt);
     return () => mobile.removeEventListener('change', adapt);
   }, [changeView]);
+
+  useEffect(() => {
+    if (view !== 'listMonth' || !initialMobileScroll.current || !period.start) return;
+    const frame = requestAnimationFrame(() => {
+      const scroller = scheduleScroll.current;
+      if (!scroller) return;
+      const days = Array.from(scroller.querySelectorAll<HTMLElement>(`.${s.listDayHeader}[data-date]`));
+      const target = days.find(day => day.dataset.date! >= today) ?? days.at(-1);
+      if (target) {
+        // Measure the day group because FullCalendar can pin its header.
+        const dayTop = target.parentElement!.getBoundingClientRect().top;
+        scroller.scrollTop += dayTop - scroller.getBoundingClientRect().top;
+      }
+      initialMobileScroll.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [view, period.start, today]);
 
   const filtered = useMemo(() => sourceEvents.filter(event =>
     (category === 'all' || organizerGroup(event.organizer) === category) &&
@@ -115,7 +135,7 @@ export default function CalendarWorkspace({ initialNow, events: sourceEvents, sa
         <label className={s.timeZone} data-focus-ring><Globe2 size={15} /><select aria-label="Display timezone" value={timeZone} onChange={e => setTimeZone(e.target.value)}>{zones.map(zone => <option key={zone.value} value={zone.value}>{zone.label}</option>)}</select></label>
       </div>
       <section className={`${s.calendarPanel} ${view === 'listMonth' ? s.scheduleView : view === 'timeGridWeek' ? s.weekView : s.monthView}`} aria-label="Event calendar">
-        <div className={s.calendarScroll}>
+        <div className={s.calendarScroll} ref={scheduleScroll}>
               <FullCalendar ref={calendar} plugins={[themePlugin, dayGridPlugin, timeGridPlugin, listPlugin]}
                 initialDate={today} initialView="dayGridMonth" timeZone={timeZone} locale="en" firstDay={0}
                 headerToolbar={false} height={view === 'listMonth' ? 'auto' : '100%'} expandRows fixedWeekCount={false} dayMaxEvents={3}
